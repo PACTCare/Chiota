@@ -4,14 +4,16 @@ Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat A
 The goal is to create a quantum secure chat app, in which you are the owner of your own data and nobody else! 
 
 Impressions of the current state:
+
 <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180326-123335.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180312-161520.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/chiotaDesktop.png" width="200">
 
 # Apk
-**Warning:** This app is in an early alpha status and really slow. In addition, you probably will lose all your contacts with the next snapshot. It’s not recommended to use any IOTA seed, which stores any valuable information or money. 
+**Warning:** This app is in an early alpha status and really slow. In addition, you probably will lose all your contacts with the next snapshot. Itâ€™s not recommended to use any IOTA seed, which stores any valuable information or money. 
+
 [ChiotaApp.apk](https://chiota.blob.core.windows.net/apks/ChiotaApp.apk)
 
 # How Chiota works?
-Currently, Chiota doesn’t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption. 
+Currently, Chiota doesnâ€™t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption. 
 There are several reasons for that:
 -	NTRU or some other form of key exchange is needed for the MAM-Layer anyway
 -	For the MAM Layer, you have a lot of different transactions and currently, the proof-of-work takes forever, so the goal is to reduce the number of necessary transactions
