@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.LoginPage">
+  <AbsoluteLayout BackgroundColor="#eaeaea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <StackLayout Orientation="Vertical" Padding="30" Spacing="30">
+      <BoxView HeightRequest="10"/>
+      <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
+      <Label Text="Remember your seed and feel free to change the randomly generated seed below!" TextColor="#ff0000"></Label>
+      <Frame BackgroundColor="#1d4999" HasShadow="False">
+        <StackLayout Orientation="Vertical" Spacing="10">
+          <Label Text="Seed " TextColor="White"></Label>
+          <Entry x:Name="RandomSeed" 
+                 BackgroundColor="#1d4999"
+                 Text="{Binding RandomSeed}"    
+                 PlaceholderColor="White" 
+                 HeightRequest="40"   
+                 IsPassword="False"  
+                 TextColor="White"/>
+          <StackLayout Orientation="Horizontal">
+            <Label Text="Store seed on your device:" Margin="0,0,5,0" TextColor="White"></Label>
+            <Switch IsToggled="{Binding StoreSeed}"></Switch>
+          </StackLayout>
+        </StackLayout>
+      </Frame>
+      <Button Command="{Binding SubmitCommand}" MinimumHeightRequest="80" Text="Login" TextColor="White"  
+              FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
+              BackgroundColor="#1d4999" />
+    </StackLayout>
+    <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
+                 BackgroundColor="White"
+                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+
+      <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
+
+      <Label Text="Addresses are generated..." FontSize="16" 
+             HorizontalOptions="Center"
+             TextColor="#1d4999"/>
+
+    </StackLayout>
+  </AbsoluteLayout>
+</ContentPage>  

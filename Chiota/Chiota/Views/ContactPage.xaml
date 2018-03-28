@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage Title="Contacts" 
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:templateSelector="clr-namespace:Chiota.TemplateSelector;assembly=Chiota"
+             x:Class="Chiota.Views.ContactPage">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add Contact" Clicked="HandleNewContactClick" Order="Secondary"></ToolbarItem>
+    <ToolbarItem Text="Logout" Clicked="HandleLogoutClick" Order="Secondary"></ToolbarItem>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <templateSelector:ContactTemplateSelector x:Key="ContactTemplateSelector"></templateSelector:ContactTemplateSelector>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <AbsoluteLayout BackgroundColor="#f5f5f5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <StackLayout BackgroundColor="#f5f5f5">
+      <SearchBar Placeholder="Search..." 
+                       PlaceholderColor="Gray" 
+                       TextChanged="Handler_TextChanged"/>
+      <ListView x:Name="ContactsList"
+                IsPullToRefreshEnabled="True"
+                Refreshing="ContactsList_OnRefreshing"
+            SeparatorVisibility="Default"
+            ItemTemplate="{StaticResource ContactTemplateSelector}" 
+            ItemsSource="{Binding Contacts}"
+            ItemSelected="Handle_ItemSelected"
+            HasUnevenRows="True">
+      </ListView>
+    </StackLayout>
+    <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
+                 BackgroundColor="White"
+                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+
+      <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
+
+      <Label Text="Proof-of-work in progress..." FontSize="16" 
+             HorizontalOptions="Center"
+             TextColor="#1d4999"/>
+
+    </StackLayout>
+  </AbsoluteLayout>
+</ContentPage>

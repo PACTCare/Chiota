@@ -1,0 +1,76 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MyDataTemplateSelector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TemplateSelector\MyDataTemplateSelector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.4" />
+    <PackageReference Include="RestSharp" Version="106.3.0-alpha0002" />
+    <PackageReference Include="Tangle.Net.Standard" Version="1.0.6.1" />
+    <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.6.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.1.0" />
+    <PackageReference Include="Xam.Plugin.Media" Version="3.1.3" />
+    <PackageReference Include="Xam.Plugin.SecureStorage" Version="1.0.11" />
+    <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="2.0.2" />
+    <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.0-beta14" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Downloads\NTRU-NET-master\NTRUEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
+      <DependentUpon>*.xaml</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\ChatPage.xaml.cs">
+      <DependentUpon>ChatPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SetupPage.xaml.cs">
+      <DependentUpon>SetupPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="CustomCells\ApprovedContactViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomCells\RequestContactViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\AddContact.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\ContactPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomCells\IncomingViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomCells\OutgoingViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

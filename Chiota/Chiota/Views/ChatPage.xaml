@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:templateSelector="clr-namespace:Chiota.TemplateSelector;assembly=Chiota"
+             x:Class="Chiota.Views.ChatPage">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <templateSelector:MyDataTemplateSelector x:Key="MessageTemplateSelector"></templateSelector:MyDataTemplateSelector>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+  <AbsoluteLayout BackgroundColor="#f5f5f5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+    <StackLayout  AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+      <ListView x:Name="MessagesListView" 
+                  Margin="2,0,2,0"
+                  ItemTemplate="{StaticResource MessageTemplateSelector}" 
+                  ItemsSource="{Binding Messages}"
+                  HasUnevenRows="True" 
+                  BackgroundColor="#f5f5f5"
+                  SeparatorVisibility="None">
+      </ListView>
+
+      <ScrollView Orientation="Horizontal" 
+                    BackgroundColor="#f5f5f5">
+        <StackLayout Orientation="Horizontal"
+                         BackgroundColor="#f5f5f5" 
+                         x:Name="QuickReplyStack"
+                         Margin="0"
+                         Padding="8,0,0,0" >
+        </StackLayout>
+      </ScrollView>
+
+      <Grid x:Name="MessageControls" RowSpacing="1" ColumnSpacing="2" Padding="5"
+          BackgroundColor="#f5f5f5"
+          HorizontalOptions="FillAndExpand">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"></ColumnDefinition>
+          <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Entry  Grid.Column="0" 
+                    TextColor="#1d4999"
+                    PlaceholderColor="#1d4999"
+                    x:Name="MessageEntry" 
+                    Completed="Handle_Completed"   
+                    Placeholder="Message" 
+                    Text="{Binding OutGoingText}"></Entry>
+        <Button Grid.Column="1" 
+                    BorderWidth="3.5"
+                    BorderColor="#ff0000"
+                    WidthRequest="44"
+                    HeightRequest="50"
+                    CornerRadius="25"
+                    BackgroundColor="#f5f5f5" 
+                    Command="{Binding SendCommand}"></Button>
+      </Grid>
+
+    </StackLayout>
+    <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
+                 BackgroundColor="White"
+                 AbsoluteLayout.LayoutFlags="PositionProportional"
+                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+
+      <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
+
+      <Label Text="Proof-of-work in progress..." FontSize="16" 
+              HorizontalOptions="Center"
+             TextColor="#1d4999"/>
+
+    </StackLayout>
+  </AbsoluteLayout>
+</ContentPage>
+

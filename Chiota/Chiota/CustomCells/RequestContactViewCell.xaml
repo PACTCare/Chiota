@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             x:Class="Chiota.CustomCells.RequestContactViewCell">
+  <ViewCell.View>
+    <StackLayout Orientation="Horizontal" >
+      <abstractions:CircleImage
+        Margin="12,0,12,0"
+        HeightRequest="60"
+        WidthRequest="60"
+        Aspect="AspectFill"
+        HorizontalOptions="Center"
+        VerticalOptions="Center" 
+        Source="{Binding ImageUrl}" >
+      </abstractions:CircleImage>
+      <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand" Margin="0,10,0,10">
+        <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
+        <StackLayout Orientation="Horizontal">
+          <Button Text="Accept" TextColor="White"  BackgroundColor="#5874ca" Command="{Binding AcceptCommand}"></Button>
+          <Button Text="Decline" TextColor="White" BackgroundColor="#5874ca" Command="{Binding DeclineCommand}"></Button>
+        </StackLayout>
+      </StackLayout>
+      
+    </StackLayout>
+  </ViewCell.View>
+</ViewCell>
