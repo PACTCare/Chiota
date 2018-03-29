@@ -19,10 +19,10 @@
 
     private readonly Seed seed;
 
-    public TangleMessenger(Seed seed, IIotaRepository repository)
+    public TangleMessenger(Seed seed)
     {
       this.seed = seed;
-      this.repository = repository;
+      this.repository = new RepositoryFactory().Create(false);
     }
 
     public async Task SendMessage(TryteString message, string address)
@@ -40,25 +40,6 @@
       bundle.AddTransfer(this.CreateTransfer(TryteString.FromAsciiString(serializeObject), address));
 
       await Task.Factory.StartNew(() => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
-    }
-
-    public async Task ContactRequest(User user, Contact contactInput)
-    {
-      // own contact data
-      var contact = new Contact
-      {
-        Name = user.Name,
-        ImageUrl = user.ImageUrl,
-        ContactAdress = user.RequestAddress,
-        Request = true,
-        Rejected = false,
-        ChatAdress = contactInput.ChatAdress
-      };
-
-      // add to contact list of other user
-      await this.SendJsonMessageAsync(
-        new SentDataWrapper<Contact> { Data = contact, Sender = user.Name },
-        contactInput.ContactAdress);
     }
 
     public List<TryteString> GetMessages(string adresse)

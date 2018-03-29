@@ -15,14 +15,14 @@
   {
     private const int SecurityNumber = 1;
 
-    public MamService(IIotaRepository repository, IMask mask, Seed seed)
+    public MamService(IMask mask, Seed seed)
     {
       var curl = new Curl();
       var treeFactory = new CurlMerkleTreeFactory(new CurlMerkleNodeFactory(curl), new CurlMerkleLeafFactory(new AddressGenerator(seed, SecurityNumber)));
       var mamFactory = new CurlMamFactory(curl, mask);
       var mamParser = new CurlMamParser(mask, treeFactory, curl);
-      this.ChannelFactory = new MamChannelFactory(mamFactory, treeFactory, repository);
-      this.SubscriptionFactory = new MamChannelSubscriptionFactory(repository, mamParser);
+      this.ChannelFactory = new MamChannelFactory(mamFactory, treeFactory, new RepositoryFactory().Create());
+      this.SubscriptionFactory = new MamChannelSubscriptionFactory(new RepositoryFactory().Create(), mamParser);
     }
  
     private MamChannelFactory ChannelFactory { get; }

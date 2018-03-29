@@ -12,7 +12,7 @@
 
     public BlobStorage()
     {
-      var storageAccount = CloudStorageAccount.Parse("");// <-Input Blog Storage Key
+      var storageAccount = CloudStorageAccount.Parse(""); // <-Input Blog Storage Key
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 

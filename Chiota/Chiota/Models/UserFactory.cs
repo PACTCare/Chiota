@@ -19,7 +19,7 @@
         PublicKeyAddress = addresses[1].Value,
         RequestAddress = addresses[2].Value,
         ApprovedAddress = addresses[3].Value,
-        TangleMessenger = new TangleMessengerFactory().Create(storeSeed)
+        TangleMessenger = new TangleMessenger(storeSeed)
     };
     }
 

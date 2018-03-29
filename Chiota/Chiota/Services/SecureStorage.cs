@@ -38,7 +38,7 @@
         RequestAddress = CrossSecureStorage.Current.GetValue(RequestAddressKey),
         ApprovedAddress = CrossSecureStorage.Current.GetValue(ApprovedAddressKey),
         PublicKeyAddress = CrossSecureStorage.Current.GetValue(PublicKeyAddressKey),
-        TangleMessenger = new TangleMessengerFactory().Create(storedSeed)
+        TangleMessenger = new TangleMessenger(storedSeed)
       };
 
       var ownDataWrappers = user.TangleMessenger.GetMessages(user.OwnDataAdress);
