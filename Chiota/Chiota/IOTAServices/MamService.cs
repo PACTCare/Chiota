@@ -8,7 +8,6 @@
   using Tangle.Net.Mam.Entity;
   using Tangle.Net.Mam.Merkle;
   using Tangle.Net.Mam.Services;
-  using Tangle.Net.Repository;
 
   // https://github.com/Felandil/tangle-.net/blob/master/Tangle.Net/Tangle.Net.Examples/Examples/Mam/MamExample.cs
   public class MamService

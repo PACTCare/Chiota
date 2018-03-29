@@ -22,7 +22,7 @@
     public TangleMessenger(Seed seed)
     {
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create(false);
+      this.repository = new RepositoryFactory().Create();
     }
 
     public async Task SendMessage(TryteString message, string address)

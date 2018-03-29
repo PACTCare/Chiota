@@ -104,10 +104,6 @@
 
     private async Task<User> StoreKeysAndRequestAdress(User user)
     {
-      // not sure this is necessary
-      const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
-      const string End = "9ENDEGUTALLESGUT9";
-
       user.NtruKeyPair = new NtruKex().CreateAsymmetricKeyPair();
       var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().ToTrytes();
       var privateKeyTrytes = user.NtruKeyPair.PrivateKey.ToBytes().ToTrytes();
@@ -125,12 +121,23 @@
 
       // encrypt private data
       var mamEncrypted = new CurlMask().Mask(TryteString.FromUtf8String(serializeObject), user.Seed);
-      await user.TangleMessenger.SendMessage(new TryteString(mamEncrypted + End), user.OwnDataAdress);
+      await this.SendParallelAsync(user, publicKeyTrytes, mamEncrypted);
+      return user;
+    }
+
+    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString mamEncrypted)
+    {
+      // not sure this is necessary
+      const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
+      const string End = "9ENDEGUTALLESGUT9";
+
+      var firstTransaction = user.TangleMessenger.SendMessage(new TryteString(mamEncrypted + End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json to big
       var requestAdressTrytes = new TryteString(publicKeyTrytes + LineBreak + user.RequestAddress + End);
-      await user.TangleMessenger.SendMessage(requestAdressTrytes, user.PublicKeyAddress);
-      return user;
+
+      var secondTransaction = user.TangleMessenger.SendMessage(requestAdressTrytes, user.PublicKeyAddress);
+      return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }
 }
