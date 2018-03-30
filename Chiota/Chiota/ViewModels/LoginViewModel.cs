@@ -103,7 +103,8 @@
           this.IsBusy = false;
           if (user.NtruKeyPair != null)
           {
-            await this.Navigation.PushModalAsync(new NavigationPage(new ContactPage(user)));
+            Application.Current.MainPage = new NavigationPage(new ContactPage(user));
+            await this.Navigation.PopToRootAsync(true);
           }
           else
           {

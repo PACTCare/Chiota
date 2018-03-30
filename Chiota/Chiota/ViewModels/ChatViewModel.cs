@@ -82,7 +82,7 @@
       this.IsBusy = true;
 
       // No json object, because of the 106 character limit
-      if (this.OutGoingText.Length > 106)
+      if (this.OutGoingText.Length > 105)
       {
         this.DisplayMessageTooLong();
       }
@@ -90,16 +90,30 @@
       {
         var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 
-        // encryption with public key of other user
-        var encryptedMessage = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
-        await this.user.TangleMessenger.SendMessage(new TryteString(encryptedMessage.ToTrytes() + "9CHIOTAYOURIOTACHATAPP9" + trytesDate + "9ENDEGUTALLESGUT9"), this.contact.ChatAdress);
+        // helps to identify who send the message
+        var signature = this.user.PublicKeyAddress.Substring(0, 30);
 
-        // needs to store own messages somehow, can not be decrypted later
-        this.Messages.Add(new MessageViewModel { Text = this.OutGoingText, IsIncoming = false, ProfileImage = this.profileImageUrl, MessagDateTime = DateTime.UtcNow });
+        // encryption with public key of other user
+        var encryptedForContact = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
+        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + "9CHIOTAYOUR9" + signature + "9IOTACHATAPP9" + trytesDate + "9ENDEGUTALLESGUT9");
+
+        // encryption with public key of user
+        var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruKeyPair.PublicKey, this.OutGoingText);
+        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + "9CHIOTAYOUR9" + signature + "9IOTACHATAPP9" + trytesDate + "9ENDEGUTALLESGUT9");
+
+        await this.SendParallelAsync(tryteContact, tryteUser);
       }
 
       this.IsBusy = false;
       this.OutGoingText = null;
+    }
+
+    private Task SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
+    {
+      var firstTransaction = this.user.TangleMessenger.SendMessage(tryteContact, this.contact.ChatAdress);
+      var secondTransaction = this.user.TangleMessenger.SendMessage(tryteUser, this.contact.ChatAdress);
+
+      return Task.WhenAll(firstTransaction, secondTransaction);
     }
 
     private async void GetMessagesAsync(ICollection<MessageViewModel> messages)
@@ -118,17 +132,20 @@
       if (messageList != null)
       {
         var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
-        for (var i = 0; i < sortedMessageList.Count && i >= this.postedCount; i++)
+        for (var i = 0; i < sortedMessageList.Count; i++)
         {
-          messages.Add(
-            new MessageViewModel
-            {
-              Text = sortedMessageList[i].Message,
-              IsIncoming = true,
-              MessagDateTime = sortedMessageList[i].Date,
-              ProfileImage = this.profileImageUrl
-            });
-          this.postedCount++;
+          if (i >= this.postedCount)
+          {
+            messages.Add(
+              new MessageViewModel
+              {
+                Text = sortedMessageList[i].Message,
+                IsIncoming = sortedMessageList[i].Signature == this.contact.PublicKeyAdress.Substring(0, 30),
+                MessagDateTime = sortedMessageList[i].Date,
+                ProfileImage = this.profileImageUrl
+              });
+            this.postedCount++;
+          }
         }
       }
     }

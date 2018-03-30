@@ -44,13 +44,21 @@
 
     public List<TryteString> GetMessages(string adresse)
     {
+      // transaction not found
       var adresses = new List<Address> { new Address(adresse) };
       var transactions = this.repository.FindTransactionsByAddresses(adresses);
       var messagesList = new List<TryteString>();
       foreach (var transactionsHash in transactions.Hashes)
       {
-        var bundle = this.repository.GetBundle(transactionsHash);
-        messagesList.Add(this.GetMessages(bundle));
+        try
+        {
+          var bundle = this.repository.GetBundle(transactionsHash);
+          messagesList.Add(this.GetMessages(bundle));
+        }
+        catch
+        {
+          // ignored
+        }
       }
 
       return messagesList;

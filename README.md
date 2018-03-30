@@ -15,7 +15,7 @@ There are several reasons for that:
 -	You need to store the state of the MAM Layer (root hash, channel keys, etc.). If you want to store these things quantum secure on the tangle it results in more messages and therefore additional PoW
 
 The disadvantage of the current system:
--	You are limited to 106 characters per transaction because the NTRU encryption needs more space 
+-	You are limited to 105 characters per transaction because the NTRU encryption needs more space 
 -	Advances in cryptanalysis may at some point break NTRU
 
 # Motivation
@@ -27,8 +27,11 @@ My name is David Hawig and I am the developer of Florence.chat. In May I will st
 We welcome any kind of help or contribution!
 
 # To-do/Contribute
+If you want to test this code, you have either to remove the blob storage (see Chiota/Chiota/Services/BlobStorage.cs) or replace it with your image storage. I currently store only links to image on the tangle. 
+
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
+- [ ] Handle loading problems (address not found, wrong kind of message, etc.)
 - [ ] Faster POW, Adress generation
 - [ ] Check for unique Address public key combination
 - [ ] Mam Integration

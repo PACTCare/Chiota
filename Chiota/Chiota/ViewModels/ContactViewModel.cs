@@ -43,13 +43,8 @@
     {
       while (true)
       {
-        var contacts = this.GetConctacts();
-        if (this.Contacts == null || contacts == null || contacts.Count > this.Contacts.Count)
-        {
-          this.Contacts = contacts;
-        }
-
-        await Task.Delay(12000);
+        this.Contacts = this.GetConctacts();
+        await Task.Delay(20000);
       }
     }
 

@@ -97,8 +97,9 @@
 
         this.IsBusy = false;
         this.AlreadyClicke = false;
-        await this.Navigation.PopAsync();
-        await this.Navigation.PushModalAsync(new NavigationPage(new Views.ContactPage(user)));
+
+        Application.Current.MainPage = new NavigationPage(new Views.ContactPage(user));
+        await this.Navigation.PopToRootAsync(true);
       }
     }
 

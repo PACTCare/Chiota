@@ -54,7 +54,8 @@
     private void HandleLogoutClick(object sender, EventArgs e)
     {
       new SecureStorage().DeleteUser();
-      this.Navigation.PushModalAsync(new LoginPage());
+      Application.Current.MainPage = new NavigationPage(new LoginPage());
+      this.Navigation.PopToRootAsync(true);
     }
   }
 }

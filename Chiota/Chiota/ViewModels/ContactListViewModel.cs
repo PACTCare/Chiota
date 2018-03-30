@@ -64,7 +64,6 @@
         };
 
         await this.SendParallelAsync(contact);
-
         this.isClicked = false;
       }
     }

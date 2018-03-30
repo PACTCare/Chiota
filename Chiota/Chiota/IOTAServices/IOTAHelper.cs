@@ -65,14 +65,16 @@
         try
         {
           var trytesString = tryte.ToString();
-          var indexBreak = trytesString.IndexOf("9CHIOTAYOURIOTACHATAPP9", StringComparison.Ordinal);
-          var messageTrytes = new TryteString(trytesString.Substring(0, indexBreak));
-          var dateTrytes = new TryteString(trytesString.Substring(indexBreak + 23, trytesString.Length - indexBreak - 23));
+          var firstBreak = trytesString.IndexOf("9CHIOTAYOUR9", StringComparison.Ordinal);
+          var secondBreak = trytesString.IndexOf("9IOTACHATAPP9", StringComparison.Ordinal);
+          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
+          var signature = trytesString.Substring(firstBreak + 12, 30);
+          var dateTrytes = new TryteString(trytesString.Substring(secondBreak + 13, trytesString.Length - secondBreak - 13));
 
           // can only decrypt messages from other user (send with own public key)!
           var decryptedMessage = ntruKex.Decrypt(keyPair, messageTrytes.ToBytes());
           var date = DateTime.Parse(dateTrytes.ToUtf8String());
-          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date };
+          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
           chatMessages.Add(chatMessage);
         }
         catch 
