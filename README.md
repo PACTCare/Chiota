@@ -27,7 +27,7 @@ My name is David Hawig and I am the developer of Florence.chat. In May I will st
 We welcome any kind of help or contribution!
 
 # To-do/Contribute
-If you want to test this code, you have either to remove the blob storage (see Chiota/Chiota/Services/BlobStorage.cs) or replace it with your image storage. I currently store only links to image on the tangle. 
+If you want to test this code, you have either to remove the blob storage (see Chiota/Chiota/Services/BlobStorage.cs) or replace it with your image storage. I currently store only links to images on the tangle. 
 
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
