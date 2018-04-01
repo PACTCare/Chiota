@@ -1,4 +1,4 @@
-﻿namespace Chiota.Views
+﻿namespace Chiota.CustomCells
 {
   using System;
 

@@ -6,6 +6,7 @@
 
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Views;
 
   using Newtonsoft.Json;
 
@@ -98,7 +99,7 @@
         this.IsBusy = false;
         this.AlreadyClicke = false;
 
-        Application.Current.MainPage = new NavigationPage(new Views.ContactPage(user));
+        Application.Current.MainPage = new NavigationPage(new ContactPage(user));
         await this.Navigation.PopToRootAsync(true);
       }
     }
@@ -132,12 +133,12 @@
       const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
       const string End = "9ENDEGUTALLESGUT9";
 
-      var firstTransaction = user.TangleMessenger.SendMessage(new TryteString(mamEncrypted + End), user.OwnDataAdress);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(mamEncrypted + End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json to big
       var requestAdressTrytes = new TryteString(publicKeyTrytes + LineBreak + user.RequestAddress + End);
 
-      var secondTransaction = user.TangleMessenger.SendMessage(requestAdressTrytes, user.PublicKeyAddress);
+      var secondTransaction = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }

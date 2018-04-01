@@ -9,6 +9,7 @@
     {
       this.InitializeComponent();
       LoadApplication(new Chiota.App());
+      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
     }
   }
 }

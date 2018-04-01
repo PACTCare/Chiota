@@ -41,7 +41,7 @@
         TangleMessenger = new TangleMessenger(storedSeed)
       };
 
-      var ownDataWrappers = user.TangleMessenger.GetMessages(user.OwnDataAdress);
+      var ownDataWrappers = user.TangleMessenger.GetMessages(user.OwnDataAdress, 3);
       user = IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
       return user;
     }

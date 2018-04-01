@@ -25,7 +25,8 @@
 
       Xamarin.Forms.Forms.Init(this, bundle);
 
-      // https://github.com/jamesmontemagno/app-monkeychat/blob/master/src/MonkeyChat.Droid/MainActivity.cs
+      ZXing.Net.Mobile.Forms.Android.Platform.Init();
+
       ImageCircleRenderer.Init();
 
       // Changes the notification icon
@@ -35,10 +36,10 @@
     }
 
     // https://github.com/jamesmontemagno/MediaPlugin#important-permission-information
-    public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+    public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
     {
+      ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
       PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
     }
   }
 }
-

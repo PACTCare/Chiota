@@ -4,10 +4,12 @@
 
 namespace Chiota
 {
+  using Chiota.CustomCells;
   using Chiota.Services;
-  using Chiota.Views;
 
   using Xamarin.Forms;
+
+  using ContactPage = Views.ContactPage;
 
   /// <summary>
   /// The app.

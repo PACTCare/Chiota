@@ -4,15 +4,17 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.CustomCells;
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
-  using Chiota.Views;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
 
   using Xamarin.Forms;
+
+  using ContactPage = Views.ContactPage;
 
   public class LoginViewModel : BaseViewModel
   {
@@ -89,7 +91,7 @@
           new SecureStorage().StoreUser(user);
         }
 
-        var ownDataWrappers = user.TangleMessenger.GetMessages(user.OwnDataAdress);
+        var ownDataWrappers = await user.TangleMessenger.GetMessagesAsync(user.OwnDataAdress, 3);
 
         if (ownDataWrappers == null || ownDataWrappers.Count == 0) 
         {

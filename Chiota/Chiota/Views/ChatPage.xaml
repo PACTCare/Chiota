@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:templateSelector="clr-namespace:Chiota.TemplateSelector;assembly=Chiota"
-             x:Class="Chiota.Views.ChatPage">
+             x:Class="Chiota.CustomCells.ChatPage">
   <ContentPage.Resources>
     <ResourceDictionary>
       <templateSelector:MyDataTemplateSelector x:Key="MessageTemplateSelector"></templateSelector:MyDataTemplateSelector>

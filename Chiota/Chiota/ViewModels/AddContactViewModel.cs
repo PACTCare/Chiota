@@ -12,17 +12,32 @@
 
   using Xamarin.Forms;
 
+  using ZXing.Net.Mobile.Forms;
+
   public class AddContactViewModel : BaseViewModel
   {
     private readonly User user;
 
+    private string qrSource;
+
     public AddContactViewModel(User user)
     {
       this.user = user;
+      this.QrSource = this.user.PublicKeyAddress;
       this.SubmitCommand = new Command(async () => { await this.AddContact(); });
     }
 
     public Action DisplayInvalidAdressPrompt { get; set; }
+
+    public string QrSource
+    {
+      get => this.qrSource;
+      set
+      {
+        this.qrSource = value;
+        this.RaisePropertyChanged();
+      }
+    }
 
     public string UserAdress => this.user.PublicKeyAddress;
 
@@ -49,7 +64,7 @@
         try
         {
           // get information from receiver adress 
-          var trytes = this.user.TangleMessenger.GetMessages(this.ReceiverAdress);
+          var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
           var contact = IotaHelper.FilterRequestInfos(trytes);
 
           if (contact?.PublicNtruKey != null && contact.ContactAdress != null)

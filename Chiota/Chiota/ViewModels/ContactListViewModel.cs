@@ -11,11 +11,14 @@
   {
     private readonly User user;
 
+    private readonly ViewCellObject viewCellObject;
+
     private bool isClicked;
 
-    public ContactListViewModel(User user)
+    public ContactListViewModel(User user, ViewCellObject viewCellObject)
     {
       this.user = user;
+      this.viewCellObject = viewCellObject;
       this.AcceptCommand = new Command(this.OnAccept);
       this.DeclineCommand = new Command(this.OnDecline);
     }
@@ -41,6 +44,7 @@
 
         // store as rejected on approved contact adress
         await this.user.TangleMessenger.SendJsonMessageAsync(new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name }, this.user.ApprovedAddress);
+        this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
     }
@@ -64,6 +68,7 @@
         };
 
         await this.SendParallelAsync(contact);
+        this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
     }

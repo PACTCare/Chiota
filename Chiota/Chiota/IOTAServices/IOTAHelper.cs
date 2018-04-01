@@ -3,6 +3,7 @@
   using System;
   using System.Collections.Generic;
   using System.Linq;
+  using System.Threading.Tasks;
 
   using Chiota.Models;
   using Chiota.Services;
@@ -57,7 +58,7 @@
       return contact;
     }
 
-    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteString> trytes, NtruKex ntruKex, IAsymmetricKeyPair keyPair)
+    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteString> trytes, NtruKex ntruKex, IAsymmetricKeyPair keyPair, DateTime lastPostDate)
     {
       var chatMessages = new List<ChatMessage>();
       foreach (var tryte in trytes)
@@ -67,28 +68,31 @@
           var trytesString = tryte.ToString();
           var firstBreak = trytesString.IndexOf("9CHIOTAYOUR9", StringComparison.Ordinal);
           var secondBreak = trytesString.IndexOf("9IOTACHATAPP9", StringComparison.Ordinal);
-          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
-          var signature = trytesString.Substring(firstBreak + 12, 30);
           var dateTrytes = new TryteString(trytesString.Substring(secondBreak + 13, trytesString.Length - secondBreak - 13));
-
-          // can only decrypt messages from other user (send with own public key)!
-          var decryptedMessage = ntruKex.Decrypt(keyPair, messageTrytes.ToBytes());
           var date = DateTime.Parse(dateTrytes.ToUtf8String());
-          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
-          chatMessages.Add(chatMessage);
+
+          // decrypt only if this is a new message
+          if (date > lastPostDate)
+          {
+            var signature = trytesString.Substring(firstBreak + 12, 30);
+            var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
+            var decryptedMessage = ntruKex.Decrypt(keyPair, messageTrytes.ToBytes());
+            var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
+            chatMessages.Add(chatMessage);
+          }
         }
-        catch 
+        catch
         {
-          continue;
+          // ignored
         }
       }
 
       return chatMessages;
     }
 
-    public static User UpdateUserWithTangleInfos(User user, IReadOnlyList<TryteString> ownDataWrappers)
+    public static User UpdateUserWithTangleInfos(User user, List<TryteString> ownDataWrappers)
     {
-      var trytes = user.TangleMessenger.GetMessages(user.PublicKeyAddress);
+      var trytes = user.TangleMessenger.GetMessages(user.PublicKeyAddress, 3);
       var contact = FilterRequestInfos(trytes);
       var decrypted = new CurlMask().Unmask(ownDataWrappers[0], user.Seed);
       var decryptedString = decrypted.ToUtf8String();
@@ -98,6 +102,30 @@
       IAsymmetricKey privateKey = new NTRUPrivateKey(new TryteString(decryptedUser.PrivateKey).ToBytes());
       user.NtruKeyPair = new NTRUKeyPair(contact.PublicNtruKey, privateKey);
       return user;
+    }
+
+    public static List<Hash> GetNewHashes(Tangle.Net.Repository.DataTransfer.TransactionHashList transactions, List<Hash> storedHashes)
+    {
+      var newHashes = new List<Hash>();
+      foreach (var transactionsHash in transactions.Hashes)
+      {
+        var isStored = false;
+        foreach (var storedHash in storedHashes)
+        {
+          if (transactionsHash.Value == storedHash.Value)
+          {
+            isStored = true;
+            break;
+          }
+        }
+
+        if (!isStored)
+        {
+          newHashes.Add(transactionsHash);
+        }
+      }
+
+      return newHashes;
     }
   }
 }

@@ -22,11 +22,12 @@
       <ListView x:Name="ContactsList"
                 IsPullToRefreshEnabled="True"
                 Refreshing="ContactsList_OnRefreshing"
-            SeparatorVisibility="Default"
-            ItemTemplate="{StaticResource ContactTemplateSelector}" 
-            ItemsSource="{Binding Contacts}"
-            ItemSelected="Handle_ItemSelected"
-            HasUnevenRows="True">
+                SeparatorVisibility="Default"
+                SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
+                ItemTemplate="{StaticResource ContactTemplateSelector}" 
+                ItemsSource="{Binding Contacts}"
+                ItemSelected="Handle_ItemSelected"
+                HasUnevenRows="True">
       </ListView>
     </StackLayout>
     <StackLayout IsVisible="{Binding IsBusy}" Padding="20"

@@ -15,6 +15,8 @@
   using Tangle.Net.Entity;
   using Tangle.Net.Utils;
 
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+
   using Xamarin.Forms;
 
   public class ChatViewModel : BaseViewModel
@@ -29,31 +31,36 @@
 
     private readonly NtruKex ntruKex;
 
-    private int postedCount;
+    private readonly ListView messagesListView;
+
+    private DateTime lastPostDate;
 
     private string outgoingText;
 
     private ObservableCollection<MessageViewModel> messagesList;
 
-    public ChatViewModel(Contact contact, User user)
+    public ChatViewModel(ListView messagesListView, Contact contact, User user)
     {
       this.ntruKex = new NtruKex();
-
       this.profileImageUrl = contact.ImageUrl;
       this.user = user;
-      this.contact = contact;
+      this.MessageLoop = true;
 
-      var trytes = this.user.TangleMessenger.GetMessages(this.contact.PublicKeyAdress);
-      var contactInfos = IotaHelper.FilterRequestInfos(trytes);
-      contact.PublicNtruKey = contactInfos.PublicNtruKey;
+      // reset hash short storage, because it's different for every chat
+      this.user.TangleMessenger.ShorStorageHashes = new List<Hash>();
+
+      this.contact = contact;
+      contact.PublicNtruKey = this.GetContactPublicKey(); 
 
       this.Messages = new ObservableCollection<MessageViewModel>();
-
+      this.messagesListView = messagesListView;
       this.GetMessagesAsync(this.Messages);
 
       this.OutGoingText = null;
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
+
+    public bool MessageLoop { get; set; }
 
     public string OutGoingText
     {
@@ -75,6 +82,13 @@
         this.messagesList = value;
         this.RaisePropertyChanged();
       }
+    }
+
+    private IAsymmetricKey GetContactPublicKey()
+    {
+      var trytes = this.user.TangleMessenger.GetMessages(this.contact.PublicKeyAdress);
+      var contactInfos = IotaHelper.FilterRequestInfos(trytes);
+      return contactInfos.PublicNtruKey;
     }
 
     private async Task SendMessage()
@@ -110,43 +124,55 @@
 
     private Task SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
     {
-      var firstTransaction = this.user.TangleMessenger.SendMessage(tryteContact, this.contact.ChatAdress);
-      var secondTransaction = this.user.TangleMessenger.SendMessage(tryteUser, this.contact.ChatAdress);
+      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteContact, this.contact.ChatAdress);
+      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(tryteUser, this.contact.ChatAdress);
 
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
 
     private async void GetMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      while (true)
+      while (this.MessageLoop)
       {
-        this.AddNewMessages(messages);
-        await Task.Delay(8000);
+        await this.AddNewMessagesAsync(messages);
+        await Task.Delay(9000);
       }
     }
 
-    private void AddNewMessages(ICollection<MessageViewModel> messages)
+    private async Task AddNewMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      var decryptedMessages = this.user.TangleMessenger.GetMessages(this.contact.ChatAdress);
-      var messageList = IotaHelper.FilterChatMessages(decryptedMessages, this.ntruKex, this.user.NtruKeyPair);
+      var encryptedMessages = await this.user.TangleMessenger.GetMessagesAsync(this.contact.ChatAdress);
+      var messageList = IotaHelper.FilterChatMessages(encryptedMessages, this.ntruKex, this.user.NtruKeyPair, this.lastPostDate);
       if (messageList != null)
       {
         var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
-        for (var i = 0; i < sortedMessageList.Count; i++)
+        foreach (var message in sortedMessageList)
         {
-          if (i >= this.postedCount)
+          // might cause problem when two messages send at the exact same time
+          if (message.Date > this.lastPostDate)
           {
             messages.Add(
               new MessageViewModel
-              {
-                Text = sortedMessageList[i].Message,
-                IsIncoming = sortedMessageList[i].Signature == this.contact.PublicKeyAdress.Substring(0, 30),
-                MessagDateTime = sortedMessageList[i].Date,
-                ProfileImage = this.profileImageUrl
-              });
-            this.postedCount++;
+                {
+                  Text = message.Message,
+                  IsIncoming = message.Signature == this.contact.PublicKeyAdress.Substring(0, 30),
+                  MessagDateTime = message.Date,
+                  ProfileImage = this.profileImageUrl
+                });
+            this.ScrollToNewMessage();
+            this.lastPostDate = message.Date;
           }
         }
+      }
+    }
+
+    private void ScrollToNewMessage()
+    {
+      var lastMessage = this.messagesListView?.ItemsSource?.Cast<object>()?.LastOrDefault();
+
+      if (lastMessage != null)
+      {
+        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, true);
       }
     }
   }

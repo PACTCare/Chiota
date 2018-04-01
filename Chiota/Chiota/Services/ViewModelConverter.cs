@@ -5,9 +5,9 @@
 
   public class ViewModelConverter
   {
-    public static ContactListViewModel ContactToViewModel(Contact contact, User user)
+    public static ContactListViewModel ContactToViewModel(Contact contact, User user, ViewCellObject viewCellObject)
     {
-      return new ContactListViewModel(user)
+      return new ContactListViewModel(user, viewCellObject)
                {
                  Name = contact.Name,
                  ImageUrl = contact.ImageUrl,

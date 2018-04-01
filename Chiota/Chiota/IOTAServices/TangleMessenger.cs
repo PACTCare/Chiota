@@ -13,6 +13,8 @@
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;
 
+  using Xamarin.Forms;
+
   public class TangleMessenger
   {
     private readonly IIotaRepository repository;
@@ -21,11 +23,14 @@
 
     public TangleMessenger(Seed seed)
     {
+      this.ShorStorageHashes = new List<Hash>();
       this.seed = seed;
       this.repository = new RepositoryFactory().Create();
     }
 
-    public async Task SendMessage(TryteString message, string address)
+    public List<Hash> ShorStorageHashes { get; set; }
+
+    public async Task SendMessageAsync(TryteString message, string address)
     {
       var bundle = new Bundle();
       bundle.AddTransfer(this.CreateTransfer(message, address));
@@ -42,9 +47,38 @@
       await Task.Factory.StartNew(() => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
     }
 
-    public List<TryteString> GetMessages(string adresse)
+    public async Task<List<TryteString>> GetMessagesAsync(string adresse, int retryNumber = 1)
     {
-      // transaction not found
+      var roundNumber = 0;
+      var messagesList = new List<TryteString>();
+      while (roundNumber < retryNumber && messagesList.Count == 0)
+      {
+        var adresses = new List<Address> { new Address(adresse) };
+        var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
+
+        // store hashes and load only new bundles
+        var newHashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+        foreach (var transactionsHash in newHashes)
+        {
+          try
+          {
+            this.ShorStorageHashes.Add(transactionsHash);
+            messagesList.Add(await this.MessageFromBundleOrStorage(transactionsHash));
+          }
+          catch
+          {
+            // ignored
+          }
+        }
+
+        roundNumber++;
+      }
+
+      return messagesList;
+    }
+
+    public List<TryteString> GetMessages(string adresse, int retryNumber = 0)
+    {
       var adresses = new List<Address> { new Address(adresse) };
       var transactions = this.repository.FindTransactionsByAddresses(adresses);
       var messagesList = new List<TryteString>();
@@ -89,10 +123,10 @@
       return new TryteString(messageTrytes.Substring(0, index));
     }
 
-    public List<T> GetJsonMessage<T>(string adresse)
+    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse)
     {
       var adresses = new List<Address> { new Address(adresse) };
-      var transactions = this.repository.FindTransactionsByAddresses(adresses);
+      var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
       var messagesList = new List<T>();
       foreach (var transactionsHash in transactions.Hashes)
       {
@@ -106,6 +140,27 @@
       }
 
       return messagesList;
+    }
+
+    private async Task<TryteString> MessageFromBundleOrStorage(Hash transactionsHash)
+    {
+      // todo upload them again after snapshot
+      TryteString message;
+      var hashString = transactionsHash.ToString();
+      if (Application.Current.Properties.ContainsKey(hashString))
+      {
+        var messageString = Application.Current.Properties[hashString] as string;
+        message = new TryteString(messageString);
+      }
+      else
+      {
+        var bundle = this.repository.GetBundle(transactionsHash);
+        message = this.GetMessages(bundle);
+        Application.Current.Properties[hashString] = message.ToString();
+        await Application.Current.SavePropertiesAsync();
+      }
+
+      return message;
     }
 
     private Transfer CreateTransfer(TryteString message, string adress)

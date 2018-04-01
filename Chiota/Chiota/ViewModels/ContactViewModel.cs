@@ -4,70 +4,109 @@
   using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.CustomCells;
   using Chiota.Models;
   using Chiota.Services;
 
+  using Xamarin.Forms;
+
   public class ContactViewModel : BaseViewModel
   {
-    private ObservableCollection<ContactListViewModel> contactListList;
+    private ObservableCollection<ContactListViewModel> contactList;
+
+    private readonly ViewCellObject viewCellObject;
 
     private readonly User user;
+
+    private ContactListViewModel selectedContact;
 
     public ContactViewModel(User user)
     {
       this.user = user;
+      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
+
+      // needs to be removed, ressource intensive
       this.UpdateContacts();
+    }
+
+
+    public ContactListViewModel SelectedContact
+    {
+      get => this.selectedContact;
+      set
+      {
+        if (this.selectedContact != value)
+        {
+          this.selectedContact = value;
+          this.RaisePropertyChanged();
+        }
+      }
     }
 
     public ObservableCollection<ContactListViewModel> Contacts
     {
-      get => this.contactListList;
+      get => this.contactList;
       set
       {
-        this.contactListList = value;
+        this.contactList = value;
         this.RaisePropertyChanged();
       }
     }
 
-    public void Search(string searchInput)
+    public INavigation Navigation { get; internal set; }
+
+    public async void Search(string searchInput)
     {
-      this.Contacts = this.GetConctacts(searchInput);
+      this.Contacts = await this.GetConctacts(searchInput);
     }
 
-    public void Refreshing()
+    public async void OpenChatPage(Contact contact)
     {
-      this.Contacts = this.GetConctacts();
+      this.SelectedContact = null;
+      await this.Navigation.PushAsync(new ChatPage(contact, this.user));
+    }
+
+    public async void Refreshing()
+    {
+      this.Contacts = await this.GetConctacts();
     }
 
     private async Task UpdateContacts()
     {
       while (true)
       {
-        this.Contacts = this.GetConctacts();
-        await Task.Delay(20000);
+        if (this.viewCellObject.RefreshContacts)
+        {
+          this.Contacts = await this.GetConctacts();
+          this.viewCellObject.RefreshContacts = false;
+        }
+
+        await Task.Delay(3000);
       }
     }
 
-    private ObservableCollection<ContactListViewModel> GetConctacts(string searchText = null)
+    private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
       var contacts = new ObservableCollection<ContactListViewModel>();
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
       // right now people can add themselfs to your contacts list, when they know your public key adress and approved contact adress
-      // in future store approved contact with MAM
-      var contactRequestList = this.user.TangleMessenger.GetJsonMessage<SentDataWrapper<Contact>>(this.user.RequestAddress);
-      var contactApprovedList = this.user.TangleMessenger.GetJsonMessage<SentDataWrapper<Contact>>(this.user.ApprovedAddress);
+      // in future store approved contacts with MAM
+      var contactRequestList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.RequestAddress);
+
+      var contactApprovedList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.ApprovedAddress);
 
       var contactsWithoutResponse = contactRequestList.Except(contactApprovedList, new ChatAdressComparer()).ToList();
 
       foreach (var contact in contactsWithoutResponse)
       {
-        contacts.Add(ViewModelConverter.ContactToViewModel(contact.Data, this.user));
+        var contactCell = ViewModelConverter.ContactToViewModel(contact.Data, this.user, this.viewCellObject);
+        contacts.Add(contactCell);
       }
 
       foreach (var contact in contactApprovedList.Where(c => !c.Data.Rejected))
       {
-        contacts.Add(ViewModelConverter.ContactToViewModel(contact.Data, this.user));
+        contacts.Add(ViewModelConverter.ContactToViewModel(contact.Data, this.user, this.viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))

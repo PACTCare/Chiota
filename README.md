@@ -31,16 +31,17 @@ If you want to test this code, you have either to remove the blob storage (see C
 
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
-- [ ] Handle loading problems (address not found, wrong kind of message, etc.)
-- [ ] Faster POW, Adress generation
+- [x] Qr codes for address sharing
+- [x] Performance improvements
 - [ ] Check for unique Address public key combination
+- [ ] Recovery after snapshot
 - [ ] Mam Integration
-- [ ] Improve/check implemented NTRU solution for key exchange
+- [ ] Improve/check NTRU solution or switch to SIDH (key only 564 bytes) for key exchange
 - [ ] iOS App
 - [ ] improve Windows App
 - [ ] Notifications (https://github.com/edsnider/LocalNotificationsPlugin)
-- [ ] Pictures of adress or qr codes
 - [ ] Unit testing
+- [ ] Code refactoring
 
 
 # Donate

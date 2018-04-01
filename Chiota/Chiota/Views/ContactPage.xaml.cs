@@ -2,6 +2,7 @@
 {
   using System;
 
+  using Chiota.CustomCells;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.ViewModels;
@@ -20,7 +21,7 @@
       this.user = user;
       if (user != null)
       {
-        this.BindingContext = new ContactViewModel(user);
+        this.BindingContext = new ContactViewModel(user) { Navigation = this.Navigation };
       }
     }
 
@@ -36,8 +37,7 @@
         return;
       }
 
-      await this.Navigation.PushAsync(new ChatPage(contact, this.user));
-      this.ContactsList.SelectedItem = null;
+      (this.BindingContext as ContactViewModel)?.OpenChatPage(contact);
     }
 
     private void HandleNewContactClick(object sender, EventArgs e)
