@@ -5,7 +5,7 @@ The goal is to create a quantum secure chat app, in which you are the owner of y
 
 Impressions of the current state:
 
-<img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123845.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123945.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124003.jpg" width="200"><img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124908.jpg" width="200">
+<img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123845.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123945.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124003.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124908.jpg" width="200">
 
 # How Chiota works?
 Currently, Chiota doesn’t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption. 
