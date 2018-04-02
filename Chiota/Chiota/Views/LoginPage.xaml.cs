@@ -1,4 +1,4 @@
-﻿namespace Chiota.CustomCells
+﻿namespace Chiota.Views
 {
   using System;
 
@@ -15,6 +15,7 @@
       this.InitializeComponent();
       NavigationPage.SetHasNavigationBar(this, false);
       var vm = new LoginViewModel { Navigation = this.Navigation };
+
       vm.DisplayInvalidLoginPrompt += () => this.DisplayAlert("Error", "Invalid seed, try again", "OK");
 
       this.RandomSeed.Completed += (object sender, EventArgs e) =>

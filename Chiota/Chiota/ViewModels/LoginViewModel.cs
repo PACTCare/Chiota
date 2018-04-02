@@ -4,7 +4,6 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.CustomCells;
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
@@ -15,11 +14,10 @@
   using Xamarin.Forms;
 
   using ContactPage = Views.ContactPage;
+  using SetupPage = Chiota.Views.SetupPage;
 
   public class LoginViewModel : BaseViewModel
   {
-    public Action DisplayInvalidLoginPrompt;
-
     private string randomSeed = Seed.Random().Value;
 
     private string username;
@@ -30,6 +28,8 @@
     {
       this.SubmitCommand = new Command(async () => { await this.Login(); });
     }
+
+    public Action DisplayInvalidLoginPrompt;
 
     public bool StoreSeed
     {
@@ -62,8 +62,6 @@
     }
 
     public ICommand SubmitCommand { get; protected set; }
-
-    public INavigation Navigation { get; internal set; }
 
     private async Task Login()
     {

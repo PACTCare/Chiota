@@ -5,7 +5,7 @@ The goal is to create a quantum secure chat app, in which you are the owner of y
 
 Impressions of the current state:
 
-<img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180326-123335.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180312-161520.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/chiotaDesktop.png" width="200">
+<img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123845.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123945.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124003.jpg" width="200"><img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124908.jpg" width="200">
 
 # How Chiota works?
 Currently, Chiota doesn’t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption. 
@@ -22,7 +22,8 @@ The disadvantage of the current system:
 During the process of creating the health care chatbot Florence, we found out that we can't use the technology to its full potential due to various problems with the current state of the healthcare system. **You as a patient should be in control of your healthcare data and a chatbot should support the private, secure and continuous communication between you and your healthcare provider network.** However, with the current technology that isn't possible. That is why we started to experiment with Iota. So, we have a huge interest in improving the technology for sharing data with the help of the tangle.
 
 # About us/me
-My name is David Hawig and I am the developer of Florence.chat. In May I will stop working at my current (secure) job and cofound a company (to do something meaningful) whose goal is to leverage Florence to support the communication between patients and healthcare providers. You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]florence[dot]chat).
+My name is David Hawig and I am the developer of Florence.chat. In May I will stop working at my current (secure) job and cofound a company (to do something meaningful) whose goal is to leverage Florence to support the communication between patients and healthcare providers. You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]florence[dot]chat). 
+My current Chiota Contact address is KCVVAPAZEVMVRBPCWYCQLNGECEAJTRMZEMUJJYNWSVEQQNPPHV9OWSOGS9EWEALWXEVOPCYGXCZXAQNTB
 
 We welcome any kind of help or contribution!
 

@@ -3,6 +3,8 @@
   using System.ComponentModel;
   using System.Runtime.CompilerServices;
 
+  using Xamarin.Forms;
+
   public class BaseViewModel : INotifyPropertyChanged
   {
     private bool isBusy;
@@ -18,6 +20,8 @@
         this.RaisePropertyChanged();
       }
     }
+
+    public INavigation Navigation { get; internal set; }
 
     public bool AlreadyClicke { get; set; }
 

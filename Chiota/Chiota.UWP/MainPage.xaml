@@ -7,5 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:forms="using:Xamarin.Forms.Platform.UWP"
     mc:Ignorable="d">
+
 </forms:WindowsPage>
 

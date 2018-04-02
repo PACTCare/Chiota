@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.CustomCells.SetupPage"
+             x:Class="Chiota.Views.SetupPage"
              xmlns:plugin="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
   <AbsoluteLayout BackgroundColor="#eaeaea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
     <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="24">
@@ -25,9 +25,9 @@
                  TextColor="White"/>
         </StackLayout>
       </Frame>
-      <Button Command="{Binding SubmitCommand}" MinimumHeightRequest="80" Text="Create account" TextColor="White"  
+      <Button Command="{Binding SubmitCommand}"  Text="Create account" TextColor="White"  
               FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
-              BackgroundColor="#1d4999" />
+              BackgroundColor="#5874ca" />
     </StackLayout>
     <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
                  BackgroundColor="White"

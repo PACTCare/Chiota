@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.CustomCells.LoginPage">
+             x:Class="Chiota.Views.LoginPage">
   <AbsoluteLayout BackgroundColor="#eaeaea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
     <StackLayout Orientation="Vertical" Padding="30" Spacing="30">
       <BoxView HeightRequest="10"/>
@@ -23,9 +23,9 @@
           </StackLayout>
         </StackLayout>
       </Frame>
-      <Button Command="{Binding SubmitCommand}" MinimumHeightRequest="80" Text="Login" TextColor="White"  
+      <Button Command="{Binding SubmitCommand}" Text="Login" TextColor="White"  
               FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
-              BackgroundColor="#1d4999" />
+              BackgroundColor="#5874ca" />
     </StackLayout>
     <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
                  BackgroundColor="White"

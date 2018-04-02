@@ -2,7 +2,6 @@
 {
   using System;
 
-  using Chiota.CustomCells;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.ViewModels;

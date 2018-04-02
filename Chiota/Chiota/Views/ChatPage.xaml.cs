@@ -1,4 +1,4 @@
-﻿namespace Chiota.CustomCells
+﻿namespace Chiota.Views
 {
   using System;
 
@@ -9,7 +9,7 @@
 
   public partial class ChatPage : ContentPage
   {
-    private ChatViewModel vm;
+    private readonly ChatViewModel vm;
 
     public ChatPage(Contact contact, User user)
     {

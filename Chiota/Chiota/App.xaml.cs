@@ -10,6 +10,7 @@ namespace Chiota
   using Xamarin.Forms;
 
   using ContactPage = Views.ContactPage;
+  using LoginPage = Chiota.Views.LoginPage;
 
   /// <summary>
   /// The app.

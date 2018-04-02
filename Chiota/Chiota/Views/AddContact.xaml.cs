@@ -1,4 +1,4 @@
-﻿namespace Chiota.CustomCells
+﻿namespace Chiota.Views
 {
   using System;
 
@@ -15,15 +15,17 @@
     public AddContact(User user)
     {
       this.InitializeComponent();
-      var vm = new AddContactViewModel(user);
+
+      var vm = new AddContactViewModel(user) { Navigation = this.Navigation }; 
 
       vm.DisplayInvalidAdressPrompt += () => this.DisplayAlert("Error", "Invalid adress, try again", "OK");
+      vm.SuccessfulRequestPrompt += () => this.DisplayAlert("Successful Request", "Your new contact needs to accept the request before you can chat with him!", "OK");
 
       this.ReceiverAdress.Completed += (object sender, EventArgs e) =>
         {
           vm.SubmitCommand.Execute(null);
         };
-      this.BindingContext = new AddContactViewModel(user);
+      this.BindingContext = vm;
     }
 
     private void AdressTapHandle(object sender, EventArgs e)

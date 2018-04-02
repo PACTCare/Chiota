@@ -58,8 +58,6 @@
 
     public ICommand SubmitCommand { get; protected set; }
 
-    public INavigation Navigation { get; internal set; }
-
     public async void AddImage()
     {
       await CrossMedia.Current.Initialize();

@@ -10,6 +10,8 @@
 
   using Xamarin.Forms;
 
+  using ChatPage = Chiota.Views.ChatPage;
+
   public class ContactViewModel : BaseViewModel
   {
     private ObservableCollection<ContactListViewModel> contactList;
@@ -52,8 +54,6 @@
         this.RaisePropertyChanged();
       }
     }
-
-    public INavigation Navigation { get; internal set; }
 
     public async void Search(string searchInput)
     {
