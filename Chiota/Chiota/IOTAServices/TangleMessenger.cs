@@ -154,7 +154,7 @@
       }
       else
       {
-        var bundle = this.repository.GetBundle(transactionsHash);
+        var bundle = await this.repository.GetBundleAsync(transactionsHash);
         message = this.GetMessages(bundle);
         Application.Current.Properties[hashString] = message.ToString();
         await Application.Current.SavePropertiesAsync();

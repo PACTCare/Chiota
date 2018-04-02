@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\NTRU-NET-master\NTRUEngine.csproj" />
+    <ProjectReference Include="..\NTRU-NET-master\NTRUEngine.csproj" />
   </ItemGroup>
 
   <ItemGroup>
