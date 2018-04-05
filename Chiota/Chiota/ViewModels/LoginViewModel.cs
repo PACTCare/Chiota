@@ -99,7 +99,7 @@
         }
         else
         {
-          user = IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
+          user = await IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
           this.IsBusy = false;
           if (user.NtruKeyPair != null)
           {

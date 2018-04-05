@@ -90,9 +90,9 @@
       return chatMessages;
     }
 
-    public static User UpdateUserWithTangleInfos(User user, List<TryteString> ownDataWrappers)
+    public static async Task<User> UpdateUserWithTangleInfos(User user, List<TryteString> ownDataWrappers)
     {
-      var trytes = user.TangleMessenger.GetMessages(user.PublicKeyAddress, 3);
+      var trytes = await user.TangleMessenger.GetMessagesAsync(user.PublicKeyAddress, 3);
       var contact = FilterRequestInfos(trytes);
       var decrypted = new CurlMask().Unmask(ownDataWrappers[0], user.Seed);
       var decryptedString = decrypted.ToUtf8String();

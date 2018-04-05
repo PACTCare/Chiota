@@ -20,22 +20,24 @@ namespace Chiota
     public App()
     {
       this.InitializeComponent();
+      this.MainPage = new NavigationPage(new LoginPage());
+    }
+
+    public static string AppName => "Chiota";
+
+    protected override async void OnStart()
+    {
+      // Handle when your app starts
       var secureStorage = new SecureStorage();
       if (secureStorage.CheckUserStored())
       {
-        this.MainPage = new NavigationPage(new ContactPage(secureStorage.GetUser()));
+        var user = await secureStorage.GetUser();
+        this.MainPage = new NavigationPage(new ContactPage(user));
       }
       else
       {
         this.MainPage = new NavigationPage(new LoginPage());
       }
-    }
-
-    public static string AppName => "Chiota";
-
-    protected override void OnStart()
-    {
-      // Handle when your app starts
     }
 
     protected override void OnSleep()

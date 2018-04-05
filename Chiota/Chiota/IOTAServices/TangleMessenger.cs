@@ -17,9 +17,9 @@
 
   public class TangleMessenger
   {
-    private readonly IIotaRepository repository;
-
     private readonly Seed seed;
+
+    private IIotaRepository repository;
 
     public TangleMessenger(Seed seed)
     {
@@ -53,6 +53,12 @@
       var messagesList = new List<TryteString>();
       while (roundNumber < retryNumber && messagesList.Count == 0)
       {
+        // try to update the repository
+        if (roundNumber > 0)
+        {
+          this.repository = new RepositoryFactory().Create();
+        }
+
         var adresses = new List<Address> { new Address(adresse) };
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
 
@@ -72,27 +78,6 @@
         }
 
         roundNumber++;
-      }
-
-      return messagesList;
-    }
-
-    public List<TryteString> GetMessages(string adresse, int retryNumber = 0)
-    {
-      var adresses = new List<Address> { new Address(adresse) };
-      var transactions = this.repository.FindTransactionsByAddresses(adresses);
-      var messagesList = new List<TryteString>();
-      foreach (var transactionsHash in transactions.Hashes)
-      {
-        try
-        {
-          var bundle = this.repository.GetBundle(transactionsHash);
-          messagesList.Add(this.GetMessages(bundle));
-        }
-        catch
-        {
-          // ignored
-        }
       }
 
       return messagesList;

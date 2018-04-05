@@ -21,7 +21,7 @@
               </zx:ZXingBarcodeImageView.BarcodeOptions>
             </zx:ZXingBarcodeImageView>
           </Frame>
-          <Label Text="Your Adress (tap to copy):" Margin="0,8,0,5" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
+          <Label Text="Your address (tap to copy):" Margin="0,8,0,5" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
           <Label Text="{Binding UserAdress}" Margin="0,5,0,0" FontSize="16" TextColor="#1d4999"></Label>
         </StackLayout>
         <Frame.GestureRecognizers>
@@ -35,7 +35,7 @@
           <Entry x:Name="ReceiverAdress" 
                  BackgroundColor="#1d4999"
                  Text="{Binding ReceiverAdress, Mode=TwoWay}" 
-                 Placeholder="Enter an adress"   
+                 Placeholder="Enter an address"   
                  PlaceholderColor="White" 
                  TextColor="White"/>
         </StackLayout>

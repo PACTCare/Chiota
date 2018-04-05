@@ -42,21 +42,17 @@
     public ChatViewModel(ListView messagesListView, Contact contact, User user)
     {
       this.ntruKex = new NtruKex();
+      this.Messages = new ObservableCollection<MessageViewModel>();
       this.profileImageUrl = contact.ImageUrl;
       this.user = user;
+      this.contact = contact;
+      this.messagesListView = messagesListView;
       this.MessageLoop = true;
+      this.OutGoingText = null;
 
       // reset hash short storage, because it's different for every chat
       this.user.TangleMessenger.ShorStorageHashes = new List<Hash>();
 
-      this.contact = contact;
-      contact.PublicNtruKey = this.GetContactPublicKey(); 
-
-      this.Messages = new ObservableCollection<MessageViewModel>();
-      this.messagesListView = messagesListView;
-      this.GetMessagesAsync(this.Messages);
-
-      this.OutGoingText = null;
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 
@@ -84,9 +80,15 @@
       }
     }
 
-    private IAsymmetricKey GetContactPublicKey()
+    public async void OnAppearing()
     {
-      var trytes = this.user.TangleMessenger.GetMessages(this.contact.PublicKeyAdress);
+      this.contact.PublicNtruKey = await this.GetContactPublicKey();
+      this.GetMessagesAsync(this.Messages);
+    }
+
+    private async Task<IAsymmetricKey> GetContactPublicKey()
+    {
+      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAdress);
       var contactInfos = IotaHelper.FilterRequestInfos(trytes);
       return contactInfos.PublicNtruKey;
     }

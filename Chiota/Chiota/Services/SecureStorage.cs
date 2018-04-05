@@ -1,5 +1,7 @@
 ﻿namespace Chiota.Services
 {
+  using System.Threading.Tasks;
+
   using Chiota.IOTAServices;
   using Chiota.Models;
 
@@ -28,7 +30,7 @@
              CrossSecureStorage.Current.HasKey(PublicKeyAddressKey);
     }
 
-    public User GetUser()
+    public async Task<User> GetUser()
     {
       var storedSeed = new Seed(CrossSecureStorage.Current.GetValue(SeedKey));
       var user = new User()
@@ -41,8 +43,8 @@
         TangleMessenger = new TangleMessenger(storedSeed)
       };
 
-      var ownDataWrappers = user.TangleMessenger.GetMessages(user.OwnDataAdress, 3);
-      user = IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
+      var ownDataWrappers = await user.TangleMessenger.GetMessagesAsync(user.OwnDataAdress, 3);
+      user = await IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
       return user;
     }
 

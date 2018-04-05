@@ -9,7 +9,7 @@
 
   public partial class ChatPage : ContentPage
   {
-    private readonly ChatViewModel vm;
+    private ChatViewModel vm;
 
     public ChatPage(Contact contact, User user)
     {
@@ -25,9 +25,17 @@
       this.BindingContext = this.vm;
     }
 
+    protected override void OnAppearing()
+    {
+      this.vm.OnAppearing();
+      base.OnAppearing();
+    }
+
     protected override void OnDisappearing()
     {
       this.vm.MessageLoop = false;
+      this.vm = null;
+      this.Navigation.PopAsync();
     }
 
     private void Handle_Completed(object sender, EventArgs e)
