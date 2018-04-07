@@ -20,9 +20,17 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#eaeaea" />
       </uap:VisualElements>
+      <Extensions>
+        <Extension Category="windows.backgroundTasks" EntryPoint="UWPRuntimeComponent.BackgroundTask">
+          <BackgroundTasks>
+            <Task Type="general" />
+          </BackgroundTasks>
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

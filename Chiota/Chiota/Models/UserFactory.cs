@@ -8,13 +8,13 @@
 
   public class UserFactory
   {
-    public User Create(Seed storeSeed, List<Address> addresses, string username = null, string imageUrl = null)
+    public User Create(Seed storeSeed, List<Address> addresses)
     {
       return new User()
       {
-        Name = username,
+        Name = null,
         Seed = storeSeed,
-        ImageUrl = imageUrl,
+        ImageUrl = null,
         OwnDataAdress = addresses[0].Value,
         PublicKeyAddress = addresses[1].Value,
         RequestAddress = addresses[2].Value,

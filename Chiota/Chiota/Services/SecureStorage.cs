@@ -43,9 +43,18 @@
         TangleMessenger = new TangleMessenger(storedSeed)
       };
 
-      var ownDataWrappers = await user.TangleMessenger.GetMessagesAsync(user.OwnDataAdress, 3);
-      user = await IotaHelper.UpdateUserWithTangleInfos(user, ownDataWrappers);
-      return user;
+      try
+      {
+        var tangleData = new UserDataOnTangle(user);
+        await tangleData.UpdateUserWithOwnDataAddress();
+        user = await tangleData.UpdateUserWithPublicKeyAddress();
+        return user;
+      }
+      catch
+      {
+        // incomplete => setup interrupted or not yet finished
+        return null;
+      }
     }
 
     public bool StoreUser(User user)

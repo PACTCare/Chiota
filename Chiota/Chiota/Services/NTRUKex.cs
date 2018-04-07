@@ -4,6 +4,8 @@
   using System.Linq;
   using System.Text;
 
+  using Tangle.Net.Utils;
+
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
@@ -18,7 +20,15 @@
     public IAsymmetricKeyPair CreateAsymmetricKeyPair()
     {
       var keyGen = new NTRUKeyGenerator(this.encParams);
-      return keyGen.GenerateKeyPair();
+      var keyPair = keyGen.GenerateKeyPair();
+
+      // publicKey sometimes has only 1025 bytes instead of 1026 after conversation?!
+      while (keyPair.PublicKey.ToBytes().ToTrytes().ToBytes().Length != 1026)
+      {
+        keyPair = keyGen.GenerateKeyPair();
+      }
+
+      return keyPair;
     }
 
     /// <summary>

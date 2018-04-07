@@ -28,7 +28,12 @@ namespace Chiota.Droid
 		{
 			global::Plugin.LocalNotifications.Resource.Drawable.plugin_lc_smallicon = global::Chiota.Droid.Resource.Drawable.plugin_lc_smallicon;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Chiota.Droid.Resource.Attribute.actionBarSize;
+			global::ZXing.Net.Mobile.Forms.Android.Resource.Layout.zxingscanneractivitylayout = global::Chiota.Droid.Resource.Layout.zxingscanneractivitylayout;
+			global::ZXing.Net.Mobile.Forms.Android.Resource.Layout.zxingscannerfragmentlayout = global::Chiota.Droid.Resource.Layout.zxingscannerfragmentlayout;
 			global::ZXing.Net.Mobile.Forms.Android.Resource.String.library_name = global::Chiota.Droid.Resource.String.library_name;
+			global::ZXing.Mobile.Resource.Id.contentFrame = global::Chiota.Droid.Resource.Id.contentFrame;
+			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::Chiota.Droid.Resource.Layout.zxingscanneractivitylayout;
+			global::ZXing.Mobile.Resource.Layout.zxingscannerfragmentlayout = global::Chiota.Droid.Resource.Layout.zxingscannerfragmentlayout;
 		}
 		
 		public partial class Animation
@@ -2350,26 +2355,26 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020135
-			public const int avd_hide_password_1 = 2130837813;
-			
 			// aapt resource value: 0x7f020136
-			public const int avd_hide_password_2 = 2130837814;
+			public const int avd_hide_password_1 = 2130837814;
 			
 			// aapt resource value: 0x7f020137
-			public const int avd_hide_password_3 = 2130837815;
+			public const int avd_hide_password_2 = 2130837815;
+			
+			// aapt resource value: 0x7f020138
+			public const int avd_hide_password_3 = 2130837816;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f020138
-			public const int avd_show_password_1 = 2130837816;
-			
 			// aapt resource value: 0x7f020139
-			public const int avd_show_password_2 = 2130837817;
+			public const int avd_show_password_1 = 2130837817;
 			
 			// aapt resource value: 0x7f02013a
-			public const int avd_show_password_3 = 2130837818;
+			public const int avd_show_password_2 = 2130837818;
+			
+			// aapt resource value: 0x7f02013b
+			public const int avd_show_password_3 = 2130837819;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;
@@ -3016,11 +3021,11 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f02012b
 			public const int notification_icon_background = 2130837803;
 			
-			// aapt resource value: 0x7f020133
-			public const int notification_template_icon_bg = 2130837811;
-			
 			// aapt resource value: 0x7f020134
-			public const int notification_template_icon_low_bg = 2130837812;
+			public const int notification_template_icon_bg = 2130837812;
+			
+			// aapt resource value: 0x7f020135
+			public const int notification_template_icon_low_bg = 2130837813;
 			
 			// aapt resource value: 0x7f02012c
 			public const int notification_tile_bg = 2130837804;
@@ -3035,13 +3040,16 @@ namespace Chiota.Droid
 			public const int plus = 2130837807;
 			
 			// aapt resource value: 0x7f020130
-			public const int splash_screen = 2130837808;
+			public const int reminder = 2130837808;
 			
 			// aapt resource value: 0x7f020131
-			public const int tooltip_frame_dark = 2130837809;
+			public const int splash_screen = 2130837809;
 			
 			// aapt resource value: 0x7f020132
-			public const int tooltip_frame_light = 2130837810;
+			public const int tooltip_frame_dark = 2130837810;
+			
+			// aapt resource value: 0x7f020133
+			public const int tooltip_frame_light = 2130837811;
 			
 			static Drawable()
 			{
@@ -3194,6 +3202,9 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f09008c
 			public const int container = 2131296396;
 			
+			// aapt resource value: 0x7f0900c8
+			public const int contentFrame = 2131296456;
+			
 			// aapt resource value: 0x7f090065
 			public const int contentPanel = 2131296357;
 			
@@ -3317,8 +3328,8 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f090060
 			public const int list_item = 2131296352;
 			
-			// aapt resource value: 0x7f0900c9
-			public const int masked = 2131296457;
+			// aapt resource value: 0x7f0900ca
+			public const int masked = 2131296458;
 			
 			// aapt resource value: 0x7f0900b8
 			public const int media_actions = 2131296440;
@@ -3650,8 +3661,8 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f090016
 			public const int view_offset_helper = 2131296278;
 			
-			// aapt resource value: 0x7f0900c8
-			public const int visible = 2131296456;
+			// aapt resource value: 0x7f0900c9
+			public const int visible = 2131296457;
 			
 			// aapt resource value: 0x7f0900aa
 			public const int volume_item_container = 2131296426;
@@ -3952,6 +3963,12 @@ namespace Chiota.Droid
 			
 			// aapt resource value: 0x7f030044
 			public const int tooltip = 2130903108;
+			
+			// aapt resource value: 0x7f030045
+			public const int zxingscanneractivitylayout = 2130903109;
+			
+			// aapt resource value: 0x7f030046
+			public const int zxingscannerfragmentlayout = 2130903110;
 			
 			static Layout()
 			{

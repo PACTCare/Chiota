@@ -7,6 +7,9 @@
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;
 
+  /// <summary>
+  /// The login page.
+  /// </summary>
   [XamlCompilation(XamlCompilationOptions.Compile)]
   public partial class LoginPage : ContentPage
   {

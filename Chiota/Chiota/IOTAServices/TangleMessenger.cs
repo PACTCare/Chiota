@@ -47,10 +47,10 @@
       await Task.Factory.StartNew(() => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
     }
 
-    public async Task<List<TryteString>> GetMessagesAsync(string adresse, int retryNumber = 1)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1)
     {
       var roundNumber = 0;
-      var messagesList = new List<TryteString>();
+      var messagesList = new List<TryteStringMessage>();
       while (roundNumber < retryNumber && messagesList.Count == 0)
       {
         // try to update the repository
@@ -127,21 +127,25 @@
       return messagesList;
     }
 
-    private async Task<TryteString> MessageFromBundleOrStorage(Hash transactionsHash)
+    private async Task<TryteStringMessage> MessageFromBundleOrStorage(Hash transactionsHash)
     {
       // todo upload them again after snapshot
-      TryteString message;
+      TryteStringMessage message = new TryteStringMessage();
       var hashString = transactionsHash.ToString();
       if (Application.Current.Properties.ContainsKey(hashString))
       {
+        // old messages
         var messageString = Application.Current.Properties[hashString] as string;
-        message = new TryteString(messageString);
+        message.Message = new TryteString(messageString);
+        message.Stored = true;
       }
       else
       {
+        // new messages
         var bundle = await this.repository.GetBundleAsync(transactionsHash);
-        message = this.GetMessages(bundle);
-        Application.Current.Properties[hashString] = message.ToString();
+        message.Message = this.GetMessages(bundle);
+        message.Stored = false;
+        Application.Current.Properties[hashString] = message.Message.ToString();
         await Application.Current.SavePropertiesAsync();
       }
 

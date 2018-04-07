@@ -4,13 +4,10 @@
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.CustomCells;
   using Chiota.Models;
   using Chiota.Services;
 
-  using Xamarin.Forms;
-
-  using ChatPage = Chiota.Views.ChatPage;
+  using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
   {
@@ -85,6 +82,7 @@
       }
     }
 
+    // Todo store contacts on device
     private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
       var contacts = new ObservableCollection<ContactListViewModel>();

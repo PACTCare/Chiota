@@ -26,12 +26,12 @@
     <PackageReference Include="RestSharp" Version="106.3.0-alpha0002" />
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.6.1" />
     <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.6.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="9.1.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="3.1.3" />
     <PackageReference Include="Xam.Plugin.SecureStorage" Version="1.0.11" />
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="2.0.2" />
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.0-beta14" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
 
@@ -52,6 +52,9 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\CheckSeedStoredPage.xaml.cs">
+      <DependentUpon>CheckSeedStoredPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\SetupPage.xaml.cs">
       <DependentUpon>SetupPage.xaml</DependentUpon>
     </Compile>
@@ -67,6 +70,9 @@
     <EmbeddedResource Update="Views\AddContact.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\CheckSeedStoredPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ContactPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -74,6 +80,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="CustomCells\OutgoingViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\GreyPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LoginPage.xaml">

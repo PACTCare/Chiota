@@ -9,6 +9,7 @@
   using System.Windows.Input;
 
   using Chiota.IOTAServices;
+  using Chiota.Messages;
   using Chiota.Models;
   using Chiota.Services;
 
@@ -23,7 +24,7 @@
   {
     public Action DisplayMessageTooLong;
 
-    private readonly string profileImageUrl;
+    public Action DisplayInvalidPublicKeyPrompt;
 
     private readonly User user;
 
@@ -33,8 +34,6 @@
 
     private readonly ListView messagesListView;
 
-    private DateTime lastPostDate;
-
     private string outgoingText;
 
     private ObservableCollection<MessageViewModel> messagesList;
@@ -43,11 +42,10 @@
     {
       this.ntruKex = new NtruKex();
       this.Messages = new ObservableCollection<MessageViewModel>();
-      this.profileImageUrl = contact.ImageUrl;
       this.user = user;
       this.contact = contact;
       this.messagesListView = messagesListView;
-      this.MessageLoop = true;
+      this.PageIsShown = true;
       this.OutGoingText = null;
 
       // reset hash short storage, because it's different for every chat
@@ -56,7 +54,7 @@
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 
-    public bool MessageLoop { get; set; }
+    public bool PageIsShown { get; set; }
 
     public string OutGoingText
     {
@@ -82,15 +80,39 @@
 
     public async void OnAppearing()
     {
+      // cancel if there is no interent
       this.contact.PublicNtruKey = await this.GetContactPublicKey();
-      this.GetMessagesAsync(this.Messages);
+      if (this.contact.PublicNtruKey == null)
+      {
+        // todo: delete contact
+        this.DisplayInvalidPublicKeyPrompt();
+        await this.Navigation.PopAsync();
+      }
+      else
+      {
+        this.GetMessagesAsync(this.Messages);
+      }
+
+      var messagestart = new StartLongRunningTaskMessage();
+      MessagingCenter.Send(messagestart, "StopLongRunningTaskMessage");
+    }
+
+    public void OnDisappearing()
+    {
+      var messagestart = new StartLongRunningTaskMessage();
+      MessagingCenter.Send(messagestart, "StartLongRunningTaskMessage");
     }
 
     private async Task<IAsymmetricKey> GetContactPublicKey()
     {
-      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAdress);
-      var contactInfos = IotaHelper.FilterRequestInfos(trytes);
-      return contactInfos.PublicNtruKey;
+      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAdress, 3);
+      var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
+      if (contactInfos == null || contactInfos.Count > 1)
+      {
+        return null;
+      }
+
+      return contactInfos[0].PublicNtruKey;
     }
 
     private async Task SendMessage()
@@ -111,11 +133,11 @@
 
         // encryption with public key of other user
         var encryptedForContact = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
-        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + "9CHIOTAYOUR9" + signature + "9IOTACHATAPP9" + trytesDate + "9ENDEGUTALLESGUT9");
+        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
         // encryption with public key of user
         var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruKeyPair.PublicKey, this.OutGoingText);
-        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + "9CHIOTAYOUR9" + signature + "9IOTACHATAPP9" + trytesDate + "9ENDEGUTALLESGUT9");
+        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
         await this.SendParallelAsync(tryteContact, tryteUser);
       }
@@ -134,7 +156,7 @@
 
     private async void GetMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      while (this.MessageLoop)
+      while (this.PageIsShown)
       {
         await this.AddNewMessagesAsync(messages);
         await Task.Delay(9000);
@@ -143,28 +165,15 @@
 
     private async Task AddNewMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      var encryptedMessages = await this.user.TangleMessenger.GetMessagesAsync(this.contact.ChatAdress);
-      var messageList = IotaHelper.FilterChatMessages(encryptedMessages, this.ntruKex, this.user.NtruKeyPair, this.lastPostDate);
-      if (messageList != null)
+      var newMessages = await IotaHelper.GetNewMessages(this.user.NtruKeyPair, this.contact, this.user.TangleMessenger);
+      if (newMessages.Count > 0)
       {
-        var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
-        foreach (var message in sortedMessageList)
+        foreach (var m in newMessages)
         {
-          // might cause problem when two messages send at the exact same time
-          if (message.Date > this.lastPostDate)
-          {
-            messages.Add(
-              new MessageViewModel
-                {
-                  Text = message.Message,
-                  IsIncoming = message.Signature == this.contact.PublicKeyAdress.Substring(0, 30),
-                  MessagDateTime = message.Date,
-                  ProfileImage = this.profileImageUrl
-                });
-            this.ScrollToNewMessage();
-            this.lastPostDate = message.Date;
-          }
+          messages.Add(m);
         }
+
+        this.ScrollToNewMessage();
       }
     }
 

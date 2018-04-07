@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.CheckSeedStoredPage">
+    <ContentPage.Content>
+    <StackLayout BackgroundColor="#f5f5f5" Orientation="Vertical" Padding="30" Spacing="30">
+      <BoxView HeightRequest="10"/>
+      <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
+      <Label Text="This is a check to make sure you saved your seed. If you have not saved your seed, please go back and do so." TextColor="#ff0000"></Label>
+      <Frame BackgroundColor="#1d4999" HasShadow="False">
+        <StackLayout Orientation="Vertical" Spacing="10">
+          <Label Text="Seed " TextColor="White"></Label>
+          <Entry x:Name="SeedInput" 
+                 BackgroundColor="#1d4999"
+                 Text="{Binding SeedInput}"    
+                 PlaceholderColor="White" 
+                 HeightRequest="40"   
+                 IsPassword="False"  
+                 TextColor="White"/>
+        </StackLayout>
+      </Frame>
+      <StackLayout Orientation="Vertical">
+        <Button Command="{Binding BackCommand}" Text="Back" TextColor="White"  
+                FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand"  
+                BackgroundColor="#5874ca" />
+      <Button Command="{Binding SubmitCommand}" Text="Check Seed" TextColor="White"  
+              FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand"  
+              BackgroundColor="#5874ca" />
+      </StackLayout>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

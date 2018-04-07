@@ -108,14 +108,6 @@
       var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().ToTrytes();
       var privateKeyTrytes = user.NtruKeyPair.PrivateKey.ToBytes().ToTrytes();
 
-      // publicKey sometimes has only 1025 bytes instead of 1026?!
-      while (publicKeyTrytes.ToBytes().Length != 1026)
-      {
-        user.NtruKeyPair = new NtruKex().CreateAsymmetricKeyPair();
-        publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().ToTrytes();
-        privateKeyTrytes = user.NtruKeyPair.PrivateKey.ToBytes().ToTrytes();
-      }
-
       var userData = new UserFactory().CreateUploadUser(user, privateKeyTrytes.ToString());
       var serializeObject = JsonConvert.SerializeObject(userData);
 
@@ -127,14 +119,10 @@
 
     private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString mamEncrypted)
     {
-      // not sure this is necessary
-      const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
-      const string End = "9ENDEGUTALLESGUT9";
-
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(mamEncrypted + End), user.OwnDataAdress);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(mamEncrypted + ChiotaIdentifier.End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json to big
-      var requestAdressTrytes = new TryteString(publicKeyTrytes + LineBreak + user.RequestAddress + End);
+      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaIdentifier.LineBreak + user.RequestAddress + ChiotaIdentifier.End);
 
       var secondTransaction = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
       return Task.WhenAll(firstTransaction, secondTransaction);

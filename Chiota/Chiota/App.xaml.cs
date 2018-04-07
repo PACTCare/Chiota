@@ -4,13 +4,14 @@
 
 namespace Chiota
 {
-  using Chiota.CustomCells;
+  using Chiota.Messages;
   using Chiota.Services;
+  using Chiota.Views;
 
   using Xamarin.Forms;
 
   using ContactPage = Views.ContactPage;
-  using LoginPage = Chiota.Views.LoginPage;
+  using LoginPage = Views.LoginPage;
 
   /// <summary>
   /// The app.
@@ -20,19 +21,24 @@ namespace Chiota
     public App()
     {
       this.InitializeComponent();
-      this.MainPage = new NavigationPage(new LoginPage());
+      this.MainPage = new GreyPage();
     }
 
     public static string AppName => "Chiota";
 
     protected override async void OnStart()
     {
-      // Handle when your app starts
+      // starts listening for messages
+      var messagestart = new StartLongRunningTaskMessage();
+      MessagingCenter.Send(messagestart, "StartLongRunningTaskMessage");
+
       var secureStorage = new SecureStorage();
       if (secureStorage.CheckUserStored())
       {
         var user = await secureStorage.GetUser();
-        this.MainPage = new NavigationPage(new ContactPage(user));
+
+        // user = null => setup probably interrupted
+        this.MainPage = user != null ? new NavigationPage(new ContactPage(user)) : new NavigationPage(new LoginPage());
       }
       else
       {

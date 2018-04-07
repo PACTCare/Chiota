@@ -46,11 +46,12 @@
         <Button Grid.Column="1" 
                     BorderWidth="3.5"
                     BorderColor="#ff0000"
-                    WidthRequest="44"
-                    HeightRequest="50"
-                    CornerRadius="25"
+                    WidthRequest="48"
+                    HeightRequest="48"
+                    CornerRadius="24"
                     BackgroundColor="#f5f5f5" 
-                    Command="{Binding SendCommand}"></Button>
+                    Command="{Binding SendCommand}">
+        </Button>
       </Grid>
 
     </StackLayout>

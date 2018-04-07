@@ -7,11 +7,9 @@
 
   using Chiota.Models;
   using Chiota.Services;
-
-  using Newtonsoft.Json;
+  using Chiota.ViewModels;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Mam.Services;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -28,58 +26,24 @@
       return seed != string.Empty && seed.All(c => "ABCDEFGHIJKLMNOPQRSTUVWXYZ9".Contains(c));
     }
 
-    public static Contact FilterRequestInfos(IEnumerable<TryteString> trytes)
-    {
-      var contact = new Contact();
-      var oneKeyAlreadyFound = false;
-      foreach (var tryte in trytes)
-      {
-        var trytesString = tryte.ToString();
-        if (!trytesString.Contains("9CHIOTAYOURIOTACHATAPP9"))
-        {
-          continue;
-        }
-
-        if (oneKeyAlreadyFound)
-        {
-          return null;
-        }
-
-        var index = trytesString.IndexOf("9CHIOTAYOURIOTACHATAPP9", StringComparison.Ordinal);
-        var publicKeyString = trytesString.Substring(0, index);
-        var bytesKey = new TryteString(publicKeyString).ToBytes();
-
-        contact.PublicNtruKey = new NTRUPublicKey(bytesKey);
-
-        contact.ContactAdress = trytesString.Substring(index + 23, 81);
-        oneKeyAlreadyFound = true;
-      }
-
-      return contact;
-    }
-
-    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteString> trytes, NtruKex ntruKex, IAsymmetricKeyPair keyPair, DateTime lastPostDate)
+    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
     {
       var chatMessages = new List<ChatMessage>();
       foreach (var tryte in trytes)
       {
         try
         {
-          var trytesString = tryte.ToString();
-          var firstBreak = trytesString.IndexOf("9CHIOTAYOUR9", StringComparison.Ordinal);
-          var secondBreak = trytesString.IndexOf("9IOTACHATAPP9", StringComparison.Ordinal);
-          var dateTrytes = new TryteString(trytesString.Substring(secondBreak + 13, trytesString.Length - secondBreak - 13));
+          var trytesString = tryte.Message.ToString();
+          var firstBreak = trytesString.IndexOf(ChiotaIdentifier.FirstBreak, StringComparison.Ordinal);
+          var secondBreak = trytesString.IndexOf(ChiotaIdentifier.SecondBreak, StringComparison.Ordinal);
+          var dateTrytes = new TryteString(trytesString.Substring(secondBreak + ChiotaIdentifier.SecondBreak.Length, trytesString.Length - secondBreak - ChiotaIdentifier.SecondBreak.Length));
           var date = DateTime.Parse(dateTrytes.ToUtf8String());
 
-          // decrypt only if this is a new message
-          if (date > lastPostDate)
-          {
-            var signature = trytesString.Substring(firstBreak + 12, 30);
-            var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
-            var decryptedMessage = ntruKex.Decrypt(keyPair, messageTrytes.ToBytes());
-            var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
-            chatMessages.Add(chatMessage);
-          }
+          var signature = trytesString.Substring(firstBreak + ChiotaIdentifier.FirstBreak.Length, 30);
+          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
+          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
+          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
+          chatMessages.Add(chatMessage);
         }
         catch
         {
@@ -90,18 +54,27 @@
       return chatMessages;
     }
 
-    public static async Task<User> UpdateUserWithTangleInfos(User user, List<TryteString> ownDataWrappers)
+    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
-      var trytes = await user.TangleMessenger.GetMessagesAsync(user.PublicKeyAddress, 3);
-      var contact = FilterRequestInfos(trytes);
-      var decrypted = new CurlMask().Unmask(ownDataWrappers[0], user.Seed);
-      var decryptedString = decrypted.ToUtf8String();
-      var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(decryptedString);
-      user.Name = decryptedUser.Name;
-      user.ImageUrl = decryptedUser.ImageUrl;
-      IAsymmetricKey privateKey = new NTRUPrivateKey(new TryteString(decryptedUser.PrivateKey).ToBytes());
-      user.NtruKeyPair = new NTRUKeyPair(contact.PublicNtruKey, privateKey);
-      return user;
+      var messages = new List<MessageViewModel>();
+      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAdress);
+      var messageList = FilterChatMessages(encryptedMessages, keyPair);
+      if (messageList != null)
+      {
+        var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
+        foreach (var message in sortedMessageList)
+        {
+          messages.Add(new MessageViewModel
+                   {
+                     Text = message.Message,
+                     IsIncoming = message.Signature == contact.PublicKeyAdress.Substring(0, 30),
+                     MessagDateTime = message.Date,
+                     ProfileImage = contact.ImageUrl
+                   });
+        }
+      }
+
+      return messages;
     }
 
     public static List<Hash> GetNewHashes(Tangle.Net.Repository.DataTransfer.TransactionHashList transactions, List<Hash> storedHashes)
@@ -126,6 +99,43 @@
       }
 
       return newHashes;
+    }
+
+    /// <summary>
+    /// Filters Transactions for public key and contact address
+    /// </summary>
+    /// <param name="trytes">Transactions in List form</param>
+    /// <returns>null if more than one key</returns>
+    public static List<Contact> GetPublicKeysAndContactAddresses(IEnumerable<TryteStringMessage> trytes)
+    {
+      var contacts = new List<Contact>();
+      foreach (var tryte in trytes)
+      {
+        var trytesString = tryte.Message.ToString();
+        if (!trytesString.Contains(ChiotaIdentifier.LineBreak))
+        {
+          continue;
+        }
+
+        try
+        {
+          var index = trytesString.IndexOf(ChiotaIdentifier.LineBreak, StringComparison.Ordinal);
+          var publicKeyString = trytesString.Substring(0, index);
+          var bytesKey = new TryteString(publicKeyString).ToBytes();
+          var contact = new Contact
+                          {
+                            PublicNtruKey = new NTRUPublicKey(bytesKey),
+                            ContactAdress = trytesString.Substring(index + ChiotaIdentifier.LineBreak.Length, 81)
+                          };
+          contacts.Add(contact);
+        }
+        catch
+        {
+          // ignored
+        }
+      }
+
+      return contacts;
     }
   }
 }
