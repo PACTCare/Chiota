@@ -35,22 +35,31 @@
           var contactApprovedList = await user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(user.ApprovedAddress);
 
           // currently no messages for contact request due to perfomance issues
+          // show only one new message
+          var contactNotificationId = 0;
           foreach (var contact in contactApprovedList.Where(c => !c.Data.Rejected))
           {
             var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.Data.ChatAdress);
 
-            foreach (var unused in encryptedMessages.Where(c => !c.Stored))
+            // don't send a reminder for every new message
+            if (encryptedMessages.Any(c => !c.Stored))
             {
+              var intent = Application.Context.PackageManager.GetLaunchIntentForPackage(Application.Context.PackageName);
+              intent.AddFlags(ActivityFlags.ClearTop);
+              var pendingIntent = PendingIntent.GetActivity(Application.Context, 0, intent, PendingIntentFlags.UpdateCurrent);
               var builder = new NotificationCompat.Builder(Application.Context)
                 .SetAutoCancel(true) // Dismiss from the notif. area when clicked
+                .SetContentIntent(pendingIntent)
                 .SetContentTitle(contact.Data.Name) // Set its title
                 .SetContentText("New Message from " + contact.Data.Name)
                 .SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification))
                 .SetSmallIcon(Resource.Drawable.reminder);
               var notification = builder.Build();
               var notificationManager = Application.Context.GetSystemService(Context.NotificationService) as NotificationManager;
-              notificationManager?.Notify(0, notification);
+              notificationManager?.Notify(contactNotificationId, notification);
             }
+
+            contactNotificationId++;
           }
         }
       }

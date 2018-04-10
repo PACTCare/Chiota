@@ -46,7 +46,6 @@
       this.user = user;
       this.contact = contact;
       this.messagesListView = messagesListView;
-      this.PageIsShown = true;
       this.OutGoingText = null;
 
       // reset hash short storage, because it's different for every chat
@@ -81,7 +80,7 @@
 
     public async void OnAppearing()
     {
-      // cancel if there is no interent
+      this.PageIsShown = true;
       this.contact.PublicNtruKey = await this.GetContactPublicKey();
       if (this.contact.PublicNtruKey == null)
       {

@@ -14,7 +14,7 @@
   [XamlCompilation(XamlCompilationOptions.Compile)]
   public partial class ChatPage : ContentPage
   {
-    private ChatViewModel vm;
+    private readonly ChatViewModel vm;
 
     public ChatPage(Contact contact, User user)
     {
@@ -34,15 +34,14 @@
 
     protected override void OnAppearing()
     {
-      this.vm.OnAppearing();
+      this.vm?.OnAppearing();
       base.OnAppearing();
     }
 
     protected override void OnDisappearing()
     {
       this.vm.PageIsShown = false;
-      this.vm = null;
-      this.Navigation.PopAsync();
+      base.OnDisappearing();
     }
 
     private void OnTextChanged(object sender, EventArgs e)

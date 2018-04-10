@@ -1,6 +1,8 @@
 ﻿namespace Chiota.IOTAServices
 {
+  using System;
   using System.Collections.Generic;
+  using System.Threading.Tasks;
 
   using RestSharp;
 
@@ -51,8 +53,15 @@
     {
       try
       {
-        var nodeInfo = node.GetNodeInfo();
-        return nodeInfo.LatestMilestoneIndex == nodeInfo.LatestSolidSubtangleMilestoneIndex;
+        // Timeout after 5 seconds
+        var task = Task.Run(() => node.GetNodeInfo());
+        if (task.Wait(TimeSpan.FromSeconds(5)))
+        {
+          var nodeInfo = task.Result;
+          return nodeInfo.LatestMilestoneIndex == nodeInfo.LatestSolidSubtangleMilestoneIndex;
+        }
+
+        return false;
       }
       catch
       {

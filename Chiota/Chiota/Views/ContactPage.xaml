@@ -15,7 +15,7 @@
   </ContentPage.Resources>
 
   <AbsoluteLayout BackgroundColor="#f5f5f5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-    <StackLayout BackgroundColor="#f5f5f5">
+    <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
       <SearchBar Placeholder="Search..." 
                        PlaceholderColor="Gray" 
                        TextChanged="Handler_TextChanged"/>
