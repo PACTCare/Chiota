@@ -30,21 +30,27 @@
 
     public List<Hash> ShorStorageHashes { get; set; }
 
-    public async Task SendMessageAsync(TryteString message, string address)
+    public async Task SendMessageAsync(TryteString message, string address, int retryNumber = 3)
     {
-      var bundle = new Bundle();
-      bundle.AddTransfer(this.CreateTransfer(message, address));
+      var roundNumber = 0;
+      while (roundNumber < retryNumber)
+      {
+        this.UpdateNode(roundNumber);
 
-      await Task.Factory.StartNew(() => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
-    }
+        var bundle = new Bundle();
+        bundle.AddTransfer(this.CreateTransfer(message, address));
 
-    public async Task SendJsonMessageAsync<T>(SentDataWrapper<T> data, string address)
-    {
-      var serializeObject = JsonConvert.SerializeObject(data);
-      var bundle = new Bundle();
-      bundle.AddTransfer(this.CreateTransfer(TryteString.FromAsciiString(serializeObject), address));
-
-      await Task.Factory.StartNew(() => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
+        try
+        {
+          await Task.Factory.StartNew(
+            () => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
+          break;
+        }
+        catch
+        {
+          roundNumber++;
+        }
+      }
     }
 
     public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1)
@@ -53,11 +59,7 @@
       var messagesList = new List<TryteStringMessage>();
       while (roundNumber < retryNumber && messagesList.Count == 0)
       {
-        // try to update the repository
-        if (roundNumber > 0)
-        {
-          this.repository = new RepositoryFactory().Create();
-        }
+        this.UpdateNode(roundNumber);
 
         var adresses = new List<Address> { new Address(adresse) };
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
@@ -83,9 +85,71 @@
       return messagesList;
     }
 
-    public TryteString GetMessages(Bundle bundle)
+    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse, int retryNumber = 1)
+    {
+      var roundNumber = 0;
+      var messagesList = new List<T>();
+
+      while (roundNumber < retryNumber && messagesList.Count == 0)
+      {
+        this.UpdateNode(roundNumber);
+
+        var adresses = new List<Address> { new Address(adresse) };
+        var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
+
+        // store hashes and load only new bundles
+        var newHashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+        foreach (var transactionsHash in newHashes)
+        {
+          this.ShorStorageHashes.Add(transactionsHash);
+
+          var hashString = transactionsHash.ToString();
+          if (Application.Current.Properties.ContainsKey(hashString))
+          {
+            var messageString = Application.Current.Properties[hashString] as string;
+            var deserializedObject = JsonConvert.DeserializeObject<T>(messageString);
+            messagesList.Add(deserializedObject);
+          }
+          else
+          {
+            var bundle = await this.repository.GetBundleAsync(transactionsHash);
+            var messages = bundle.GetMessages();
+            foreach (var message in messages)
+            {
+              try
+              {
+                var deserializedObject = JsonConvert.DeserializeObject<T>(message);
+                messagesList.Add(deserializedObject);
+                Application.Current.Properties[hashString] = message;
+                await Application.Current.SavePropertiesAsync();
+              }
+              catch
+              {
+                // ignored
+              }
+            }
+          }
+        }
+
+        roundNumber++;
+      }
+
+      return messagesList;
+    }
+
+    private void UpdateNode(int roundNumber)
+    {
+      if (roundNumber > 0)
+      {
+        this.repository = new RepositoryFactory().Create();
+      }
+    }
+
+    private TryteString GetMessages(Bundle bundle)
     {
       var messageTrytes = string.Empty;
+
+      // multiple message per bundle?
       foreach (var transaction in bundle.Transactions)
       {
         if (transaction.Value < 0)
@@ -99,38 +163,19 @@
         }
       }
 
-      if (!messageTrytes.Contains("9ENDEGUTALLESGUT9"))
+      if (!messageTrytes.Contains(ChiotaIdentifier.End))
       {
         return null;
       }
 
-      var index = messageTrytes.IndexOf("9ENDEGUTALLESGUT9", StringComparison.Ordinal);
+      var index = messageTrytes.IndexOf(ChiotaIdentifier.End, StringComparison.Ordinal);
       return new TryteString(messageTrytes.Substring(0, index));
-    }
-
-    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse)
-    {
-      var adresses = new List<Address> { new Address(adresse) };
-      var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-      var messagesList = new List<T>();
-      foreach (var transactionsHash in transactions.Hashes)
-      {
-        var bundle = this.repository.GetBundle(transactionsHash);
-
-        var messages = bundle.GetMessages();
-        foreach (var message in messages)
-        {
-          messagesList.Add(JsonConvert.DeserializeObject<T>(message));
-        }
-      }
-
-      return messagesList;
     }
 
     private async Task<TryteStringMessage> MessageFromBundleOrStorage(Hash transactionsHash)
     {
       // todo upload them again after snapshot
-      TryteStringMessage message = new TryteStringMessage();
+      var message = new TryteStringMessage();
       var hashString = transactionsHash.ToString();
       if (Application.Current.Properties.ContainsKey(hashString))
       {
@@ -158,7 +203,7 @@
       {
         Address = new Address(adress),
         Message = message,
-        Tag = new Tag("CHIOTAYOURIOTACHATAPP"),
+        Tag = new Tag(ChiotaIdentifier.Tag),
         Timestamp = Timestamp.UnixSecondsTimestamp
       };
     }

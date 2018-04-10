@@ -35,11 +35,12 @@ Currently, there are the following points on my to-do list:
 - [x] Qr codes for address sharing
 - [x] Performance improvements
 - [x] Check for unique Address public key combination
-- [ ] Improve Notifications/Background Tasks (Android 8.0, Sound, Windows, etc.)
+- [x] Notifications
+- [ ] Chatbot integration
 - [ ] Recovery after snapshot
 - [ ] Mam Integration
 - [ ] Improve/check NTRU solution or switch to SIDH (key only 564 bytes) for key exchange
-- [ ] iOS App
+- [ ] Windows/iOS App
 - [ ] Unit testing
 - [ ] Code refactoring
 

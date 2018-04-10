@@ -4,7 +4,6 @@
 
 namespace Chiota
 {
-  using Chiota.Messages;
   using Chiota.Services;
   using Chiota.Views;
 
@@ -28,10 +27,6 @@ namespace Chiota
 
     protected override async void OnStart()
     {
-      // starts listening for messages
-      var messagestart = new StartLongRunningTaskMessage();
-      MessagingCenter.Send(messagestart, "StartLongRunningTaskMessage");
-
       var secureStorage = new SecureStorage();
       if (secureStorage.CheckUserStored())
       {

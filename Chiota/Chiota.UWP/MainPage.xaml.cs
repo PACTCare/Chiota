@@ -1,45 +1,74 @@
 ﻿namespace Chiota.UWP
 {
   using System;
-  using System.Linq;
+  using System.Diagnostics;
   using System.Threading.Tasks;
 
-  using Chiota.Models;
-  using Chiota.Services;
-
-  using Plugin.LocalNotifications;
-
   using Windows.ApplicationModel.Background;
-  using Windows.UI.Xaml;
 
   /// <summary>
-  /// An empty page that can be used on its own or navigated to within a Frame.
+  /// The main page.
   /// </summary>
   public sealed partial class MainPage
   {
+    private const string BackgroundTaskName = "MyBackgroundTask";
+
     public MainPage()
     {
       this.InitializeComponent();
+
+      // ApplicationView.PreferredLaunchViewSize = new Size(600, 850);
+      // ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
       this.LoadApplication(new Chiota.App());
 
       ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
 
       if (this.IsRegistered())
       {
-        this.Deregister();
+        this.Unregister();
       }
 
-      this.Loaded += this.MainPageLoaded;
+      this.Register();
     }
 
-    private async void MainPageLoaded(object sender, RoutedEventArgs e)
+    private async Task Register()
     {
-      await this.BackgroundTask();
+      BackgroundExecutionManager.RemoveAccess();
+
+      await BackgroundExecutionManager.RequestAccessAsync();
+
+      var builder = new BackgroundTaskBuilder
+                      {
+                        Name = BackgroundTaskName,
+                        TaskEntryPoint =
+                          "UWPRuntimeComponent.BackgroundTask"
+      };
+
+      // builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, false));
+      builder.SetTrigger(new TimeTrigger(15, false));
+
+      var task = builder.Register();
+
+      task.Completed += this.Task_Completed;
+
+      Debug.WriteLine("[PeriodicBackgroundService] Background task registered");
     }
 
-    private void Deregister()
+    private async void Task_Completed(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-      var taskName = "BackgroundTask";
+      var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
+      var key = BackgroundTaskName;
+      var message = settings.Values[key];
+
+      // Run your background task code here
+      // notification here
+      Debug.WriteLine("[PeriodicBackgroundService] Background task completed");
+    }
+
+    private void Unregister()
+    {
+      var taskName = BackgroundTaskName;
 
       foreach (var task in BackgroundTaskRegistration.AllTasks)
       {
@@ -52,7 +81,7 @@
 
     private bool IsRegistered()
     {
-      var taskName = "BackgroundTask";
+      var taskName = BackgroundTaskName;
 
       foreach (var task in BackgroundTaskRegistration.AllTasks)
       {
@@ -63,51 +92,6 @@
       }
 
       return false;
-    }
-
-    private async Task BackgroundTask()
-    {
-      BackgroundExecutionManager.RemoveAccess();
-
-      await BackgroundExecutionManager.RequestAccessAsync();
-
-      var builder = new BackgroundTaskBuilder
-                      {
-                        Name = "BackgroundTask",
-                        TaskEntryPoint = "UWPRuntimeComponent.BackgroundTask"
-                      };
-
-      builder.SetTrigger(new TimeTrigger(15, false));
-      var task = builder.Register();
-      task.Completed += this.TaskCompleted;
-    }
-
-    private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
-    {
-      var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-      var key = "BackgroundTask";
-      var message = settings.Values[key].ToString();
-
-      // Run your background task code here
-      var secureStorage = new SecureStorage();
-      if (secureStorage.CheckUserStored())
-      {
-        var user = await secureStorage.GetUser();
-        if (user != null)
-        {
-          var contactApprovedList = await user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(user.ApprovedAddress);
-
-          // Todo also message for a new contact request
-          foreach (var contact in contactApprovedList.Where(c => !c.Data.Rejected))
-          {
-            var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.Data.ChatAdress);
-            foreach (var unused in encryptedMessages.Where(c => !c.Stored))
-            {
-              CrossLocalNotifications.Current.Show(contact.Data.Name, "New Message from " + contact.Data.Name);
-            }
-          }
-        }
-      }
     }
   }
 }

@@ -9,7 +9,6 @@
   using System.Windows.Input;
 
   using Chiota.IOTAServices;
-  using Chiota.Messages;
   using Chiota.Models;
   using Chiota.Services;
 
@@ -25,6 +24,8 @@
     public Action DisplayMessageTooLong;
 
     public Action DisplayInvalidPublicKeyPrompt;
+
+    private const int CharacterLimit = 105;
 
     private readonly User user;
 
@@ -92,15 +93,18 @@
       {
         this.GetMessagesAsync(this.Messages);
       }
-
-      var messagestart = new StartLongRunningTaskMessage();
-      MessagingCenter.Send(messagestart, "StopLongRunningTaskMessage");
     }
 
-    public void OnDisappearing()
+    public void MessageRestriction(Entry entry)
     {
-      var messagestart = new StartLongRunningTaskMessage();
-      MessagingCenter.Send(messagestart, "StartLongRunningTaskMessage");
+      var val = entry.Text; 
+
+      if (val?.Length > CharacterLimit)
+      {
+        val = val.Remove(val.Length - 1);
+        entry.Text = val; 
+        this.DisplayMessageTooLong();
+      }
     }
 
     private async Task<IAsymmetricKey> GetContactPublicKey()
@@ -119,8 +123,7 @@
     {
       this.IsBusy = true;
 
-      // No json object, because of the 106 character limit
-      if (this.OutGoingText.Length > 105)
+      if (this.OutGoingText.Length > CharacterLimit)
       {
         this.DisplayMessageTooLong();
       }
@@ -140,6 +143,7 @@
         var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
         await this.SendParallelAsync(tryteContact, tryteUser);
+        await this.AddNewMessagesAsync(this.Messages);
       }
 
       this.IsBusy = false;

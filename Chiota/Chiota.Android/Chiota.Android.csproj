@@ -94,9 +94,6 @@
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle">
       <Version>2.0.2</Version>
     </PackageReference>
-    <PackageReference Include="Xam.Plugins.Notifier">
-      <Version>3.0.0-beta14</Version>
-    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="2.5.1.444934" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="26.1.0.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="26.1.0.1" />
@@ -114,8 +111,8 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\Scrollbardisabledrenderer.cs" />
-    <Compile Include="Services\BackgroundReceiver.cs" />
-    <Compile Include="Services\PeriodicTaskService.cs" />
+    <Compile Include="Services\NotificationsTask.cs" />
+    <Compile Include="Services\PeriodicJob.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>

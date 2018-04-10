@@ -8,6 +8,8 @@
   using Chiota.Models;
   using Chiota.Services;
 
+  using Newtonsoft.Json;
+
   using Tangle.Net.Entity;
 
   using Xamarin.Forms;
@@ -118,7 +120,8 @@
           };
 
           // encrypt contact request? too much infos needed here for one message needs to get request adress plus chatadress 
-          await this.user.TangleMessenger.SendJsonMessageAsync(new SentDataWrapper<Contact> { Data = requestContact, Sender = this.user.Name }, contacts[0].ContactAdress);
+          var sentData = new SentDataWrapper<Contact> { Data = requestContact, Sender = this.user.Name };
+          await this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), contacts[0].ContactAdress);
           this.SuccessfulRequestPrompt();
         }
       }

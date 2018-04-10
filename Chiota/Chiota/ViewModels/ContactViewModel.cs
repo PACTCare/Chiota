@@ -90,9 +90,9 @@
 
       // right now people can add themselfs to your contacts list, when they know your public key adress and approved contact adress
       // in future store approved contacts with MAM
-      var contactRequestList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.RequestAddress);
+      var contactRequestList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.RequestAddress, 3);
 
-      var contactApprovedList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.ApprovedAddress);
+      var contactApprovedList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.ApprovedAddress, 3);
 
       var contactsWithoutResponse = contactRequestList.Except(contactApprovedList, new ChatAdressComparer()).ToList();
 

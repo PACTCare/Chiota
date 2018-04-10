@@ -3,6 +3,7 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.IOTAServices;
   using Chiota.Models;
 
   using Xamarin.Forms;
@@ -43,7 +44,8 @@
         };
 
         // store as rejected on approved contact adress
-        await this.user.TangleMessenger.SendJsonMessageAsync(new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name }, this.user.ApprovedAddress);
+        var sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
+        await this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
@@ -77,7 +79,8 @@
     private Task SendParallelAsync(Contact contact)
     {
       // store as approved on own adress
-      var firstTransaction = this.user.TangleMessenger.SendJsonMessageAsync(new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name }, this.user.ApprovedAddress);
+      var sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
+      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.user.ApprovedAddress);
 
       contact.Name = this.user.Name;
       contact.ImageUrl = this.user.ImageUrl;
@@ -85,7 +88,8 @@
       contact.PublicKeyAdress = this.user.PublicKeyAddress;
 
       // store on other users approved contact address
-      var secondTransaction = this.user.TangleMessenger.SendJsonMessageAsync(new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name }, this.ContactAdress);
+      sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
+      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.ContactAdress);
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }

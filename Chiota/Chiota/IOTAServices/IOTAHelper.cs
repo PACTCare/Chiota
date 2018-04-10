@@ -9,6 +9,8 @@
   using Chiota.Services;
   using Chiota.ViewModels;
 
+  using Newtonsoft.Json;
+
   using Tangle.Net.Entity;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
@@ -16,6 +18,12 @@
 
   public class IotaHelper
   {
+    public static TryteString ObjectToTryteString<T>(T data)
+    {
+      var serializeObject = JsonConvert.SerializeObject(data);
+      return TryteString.FromAsciiString(serializeObject);
+    }
+
     public static bool CorrectSeedAdressChecker(string seed)
     {
       if (seed == null)
@@ -59,6 +67,7 @@
       var messages = new List<MessageViewModel>();
       var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAdress);
       var messageList = FilterChatMessages(encryptedMessages, keyPair);
+
       if (messageList != null)
       {
         var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
@@ -68,7 +77,7 @@
                    {
                      Text = message.Message,
                      IsIncoming = message.Signature == contact.PublicKeyAdress.Substring(0, 30),
-                     MessagDateTime = message.Date,
+                     MessagDateTime = message.Date.ToLocalTime(),
                      ProfileImage = contact.ImageUrl
                    });
         }

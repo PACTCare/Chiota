@@ -9,5 +9,7 @@
     public static string FirstBreak => "9CHIOTAYOUR9";
 
     public static string SecondBreak => "9IOTACHATAPP9";
+
+    public static string Tag => "CHIOTAYOURIOTACHATAPP";
   }
 }
