@@ -28,7 +28,7 @@ My current Chiota contact address is KCVVAPAZEVMVRBPCWYCQLNGECEAJTRMZEMUJJYNWSVE
 We welcome any kind of help or contribution!
 
 # To-do/Contribute
-If you want to test this code, you have either to remove the blob storage (see Chiota/Chiota/Services/BlobStorage.cs) or replace it with your image storage. I currently store only links to images on the tangle. 
+If you want to test this code, you have either to remove the blob storage (see [BlobStorage.cs](https://github.com/Noc2/Chiota/blob/master/Chiota/Chiota/Services/BlobStorage.cs#L15)) or replace it with your image storage. I currently store only links to images on the tangle. 
 
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
