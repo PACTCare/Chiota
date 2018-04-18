@@ -5,6 +5,10 @@
 
   using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services;
+
+  using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -34,18 +38,10 @@
       {
         this.isClicked = true;
 
-        var contact = new Contact
-        {
-          Name = this.Name,
-          ContactAdress = this.ContactAdress,
-          ImageUrl = this.ImageUrl,
-          Request = false,
-          Rejected = true
-        };
+        var encryptedDecline = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAdress + ChiotaIdentifier.Rejected);
+        var tryteString = new TryteString(encryptedDecline.ToTrytes() + ChiotaIdentifier.End);
 
-        // store as rejected on approved contact adress
-        var sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
-        await this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.user.ApprovedAddress);
+        await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
@@ -57,39 +53,35 @@
       {
         this.isClicked = true;
 
-        var contact = new Contact
-        {
-          Name = this.Name,
-          ImageUrl = this.ImageUrl,
-          ContactAdress = this.ContactAdress,
-          ChatAdress = this.ChatAdress,
-          PublicKeyAdress = this.PublicKeyAdress,
-          PublicNtruKey = null,
-          Request = false,
-          Rejected = false
-        };
+        await this.SendParallelAcceptAsync();
 
-        await this.SendParallelAsync(contact);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
     }
 
     // parallelize = only await for second PoW, when remote PoW 
-    private Task SendParallelAsync(Contact contact)
+    private Task SendParallelAcceptAsync()
     {
+      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAdress + ChiotaIdentifier.Accepted);
+      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaIdentifier.End);
+
       // store as approved on own adress
-      var sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
-      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.user.ApprovedAddress);
+      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
 
-      contact.Name = this.user.Name;
-      contact.ImageUrl = this.user.ImageUrl;
-      contact.ContactAdress = this.user.ApprovedAddress;
-      contact.PublicKeyAdress = this.user.PublicKeyAddress;
+      var contact = new Contact
+                      {
+                        Name = this.user.Name,
+                        ImageUrl = this.user.ImageUrl,
+                        ChatAdress = this.ChatAdress,
+                        ContactAdress = this.user.ApprovedAddress,
+                        PublicKeyAdress = this.user.PublicKeyAddress,
+                        Rejected = false,
+                        Request = false
+                      };
 
-      // store on other users approved contact address
-      sentData = new SentDataWrapper<Contact> { Data = contact, Sender = this.user.Name };
-      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(sentData), this.ContactAdress);
+      // send data to request address, other user needs to automaticly add it to his own approved contact address
+      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAdress);
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }

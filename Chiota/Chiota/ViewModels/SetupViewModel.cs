@@ -14,7 +14,6 @@
   using Plugin.Media.Abstractions;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Mam.Services;
   using Tangle.Net.Utils;
 
   using Xamarin.Forms;
@@ -92,7 +91,12 @@
           user.ImageUrl = await new BlobStorage().UploadToBlob(user.PublicKeyAddress, this.mediaFile.Path);
         }
 
-        user = await this.StoreKeysAndRequestAdress(user);
+        user = await this.StoreDataOnTangle(user);
+
+        if (user.StoreSeed)
+        {
+          new SecureStorage().StoreUser(user);
+        }
 
         this.IsBusy = false;
         this.AlreadyClicke = false;
@@ -102,18 +106,14 @@
       }
     }
 
-    private async Task<User> StoreKeysAndRequestAdress(User user)
+    private async Task<User> StoreDataOnTangle(User user)
     {
-      user.NtruKeyPair = new NtruKex().CreateAsymmetricKeyPair();
-      var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().ToTrytes();
-      var privateKeyTrytes = user.NtruKeyPair.PrivateKey.ToBytes().ToTrytes();
+      var publicKeyTrytes = user.NtruChatPair.PublicKey.ToBytes().ToTrytes();
 
-      var userData = new UserFactory().CreateUploadUser(user, privateKeyTrytes.ToString());
+      var userData = new UserFactory().CreateUploadUser(user);
       var serializeObject = JsonConvert.SerializeObject(userData);
-
-      // encrypt private data
-      var mamEncrypted = new CurlMask().Mask(TryteString.FromUtf8String(serializeObject), user.Seed);
-      await this.SendParallelAsync(user, publicKeyTrytes, mamEncrypted);
+     
+      await this.SendParallelAsync(user, publicKeyTrytes, TryteString.FromUtf8String(serializeObject));
       return user;
     }
 

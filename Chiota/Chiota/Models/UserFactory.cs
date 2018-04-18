@@ -3,6 +3,7 @@
   using System.Collections.Generic;
 
   using Chiota.IOTAServices;
+  using Chiota.Services;
 
   using Tangle.Net.Entity;
 
@@ -15,6 +16,7 @@
         Name = null,
         Seed = storeSeed,
         ImageUrl = null,
+        StoreSeed = false,
         OwnDataAdress = addresses[0].Value,
         PublicKeyAddress = addresses[1].Value,
         RequestAddress = addresses[2].Value,
@@ -23,13 +25,12 @@
     };
     }
 
-    public OwnDataUser CreateUploadUser(User user, string privateKey)
+    public OwnDataUser CreateUploadUser(User user)
     {
       return new OwnDataUser()
       {
         Name = user.Name,
         ImageUrl = user.ImageUrl,
-        PrivateKey = privateKey
       };
     }
   }

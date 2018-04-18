@@ -4,14 +4,14 @@
 
   using Chiota.Models;
 
-  public class ChatAdressComparer : IEqualityComparer<SentDataWrapper<Contact>>
+  public class ChatAdressComparer : IEqualityComparer<Contact>
   {
-    public int GetHashCode(SentDataWrapper<Contact> co)
+    public int GetHashCode(Contact co)
     {
-      return co == null ? 0 : co.Data.ContactAdress.GetHashCode();
+      return co == null ? 0 : co.ChatAdress.GetHashCode();
     }
 
-    public bool Equals(SentDataWrapper<Contact> x1, SentDataWrapper<Contact> x2)
+    public bool Equals(Contact x1, Contact x2)
     {
       if (ReferenceEquals(x1, x2))
       {
@@ -23,7 +23,7 @@
         return false;
       }
 
-      return x1.Data.ContactAdress == x2.Data.ContactAdress;
+      return x1.ChatAdress == x2.ChatAdress;
     }
   }
 }

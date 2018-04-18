@@ -118,7 +118,7 @@ namespace VTDev.Libraries.CEXEngine.Crypto.Prng
         {
             if (Seed == null)
                 throw new CryptoRandomException("DGCPrng:Ctor", "Seed can not be null!", new ArgumentNullException());
-            if (GetMinimumSeedSize(DigestEngine) < Seed.Length)
+            if (GetMinimumSeedSize(DigestEngine) > Seed.Length) // <= David: < to >??
                 throw new CryptoRandomException("DGCPrng:Ctor", String.Format("The state seed is too small! must be at least {0} bytes", GetMinimumSeedSize(DigestEngine)), new ArgumentException());
             if (BufferSize < 128)
                 throw new CryptoRandomException("DGCPrng:Ctor", "BufferSize must be at least 128 bytes!", new ArgumentException());

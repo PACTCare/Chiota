@@ -4,8 +4,9 @@
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.Models;
-  using Chiota.Services;
+  using IOTAServices;
+  using Models;
+  using Services;
 
   using ChatPage = Views.ChatPage;
 
@@ -22,89 +23,113 @@
     public ContactViewModel(User user)
     {
       this.user = user;
-      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
-
-      // needs to be removed, ressource intensive
-      this.UpdateContacts();
+      viewCellObject = new ViewCellObject() { RefreshContacts = true };
     }
 
+    public bool PageIsShown { get; set; }
 
     public ContactListViewModel SelectedContact
     {
-      get => this.selectedContact;
+      get => selectedContact;
       set
       {
-        if (this.selectedContact != value)
+        if (selectedContact != value)
         {
-          this.selectedContact = value;
-          this.RaisePropertyChanged();
+          selectedContact = value;
+          RaisePropertyChanged();
         }
       }
     }
 
     public ObservableCollection<ContactListViewModel> Contacts
     {
-      get => this.contactList;
+      get => contactList;
       set
       {
-        this.contactList = value;
-        this.RaisePropertyChanged();
+        contactList = value;
+        RaisePropertyChanged();
       }
+    }
+
+    public void OnAppearing()
+    {
+      PageIsShown = true;
+      viewCellObject.RefreshContacts = true;
+      this.UpdateContacts();
+    }
+
+    public void OnDisappearing()
+    {
+      PageIsShown = false;
     }
 
     public async void Search(string searchInput)
     {
-      this.Contacts = await this.GetConctacts(searchInput);
+      Contacts = await GetConctacts(searchInput);
     }
 
     public async void OpenChatPage(Contact contact)
     {
-      this.SelectedContact = null;
-      await this.Navigation.PushAsync(new ChatPage(contact, this.user));
+      SelectedContact = null;
+      await Navigation.PushAsync(new ChatPage(contact, user));
     }
 
     public async void Refreshing()
     {
-      this.Contacts = await this.GetConctacts();
+      Contacts = await GetConctacts();
     }
 
     private async Task UpdateContacts()
     {
-      while (true)
+      // var count = 0;
+      while (PageIsShown)
       {
-        if (this.viewCellObject.RefreshContacts)
+        if (viewCellObject.RefreshContacts ) 
         {
-          this.Contacts = await this.GetConctacts();
-          this.viewCellObject.RefreshContacts = false;
+          Contacts = await GetConctacts();
+          viewCellObject.RefreshContacts = false;
         }
 
         await Task.Delay(3000);
       }
     }
 
-    // Todo store contacts on device
     private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
       var contacts = new ObservableCollection<ContactListViewModel>();
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      // right now people can add themselfs to your contacts list, when they know your public key adress and approved contact adress
-      // in future store approved contacts with MAM
-      var contactRequestList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.RequestAddress, 3);
+      var contactTaskList = user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
+      var approvedContactsTrytes = user.TangleMessenger.GetMessagesAsync(user.ApprovedAddress, 3);
 
-      var contactApprovedList = await this.user.TangleMessenger.GetJsonMessageAsync<SentDataWrapper<Contact>>(this.user.ApprovedAddress, 3);
+      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, user.NtruContactPair);
+      var contactRequestList = await contactTaskList;
 
-      var contactsWithoutResponse = contactRequestList.Except(contactApprovedList, new ChatAdressComparer()).ToList();
+      var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+
+      // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
+      if (contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)
+      {
+        approvedContacts = Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+      }
+
+      var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+
+      
 
       foreach (var contact in contactsWithoutResponse)
       {
-        var contactCell = ViewModelConverter.ContactToViewModel(contact.Data, this.user, this.viewCellObject);
-        contacts.Add(contactCell);
+        if (contact.Request)
+        {
+          var contactCell = ViewModelConverter.ContactToViewModel(contact, user, viewCellObject);
+          contacts.Add(contactCell);
+        }
       }
 
-      foreach (var contact in contactApprovedList.Where(c => !c.Data.Rejected))
+      foreach (var contact in approvedContacts.Where(c => !c.Rejected))
       {
-        contacts.Add(ViewModelConverter.ContactToViewModel(contact.Data, this.user, this.viewCellObject));
+        contact.Request = false;
+        contacts.Add(ViewModelConverter.ContactToViewModel(contact, user, viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))
@@ -114,7 +139,7 @@
 
       foreach (var contact in contacts)
       {
-        if (searchText != null && contact.Name.ToLower().StartsWith(searchText.ToLower()))
+        if (contact.Name.ToLower().StartsWith(searchText.ToLower()))
         {
           searchContacts.Add(contact);
         }

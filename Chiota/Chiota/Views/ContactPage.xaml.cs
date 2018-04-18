@@ -27,12 +27,24 @@
       }
     }
 
-    void Handler_TextChanged(object sender, TextChangedEventArgs e)
+    protected override void OnAppearing()
+    {
+      (this.BindingContext as ContactViewModel)?.OnAppearing();
+      base.OnAppearing();
+    }
+
+    protected override void OnDisappearing()
+    {
+      (this.BindingContext as ContactViewModel)?.OnDisappearing();
+      base.OnDisappearing();
+    }
+
+    private void Handler_TextChanged(object sender, TextChangedEventArgs e)
     {
       (this.BindingContext as ContactViewModel)?.Search(e.NewTextValue);
     }
 
-    async void Handle_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void Handle_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
       if (!(e.SelectedItem is Contact contact))
       {

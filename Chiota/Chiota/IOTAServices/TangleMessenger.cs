@@ -4,7 +4,7 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
-  using Chiota.Models;
+  using Models;
 
   using Newtonsoft.Json;
 
@@ -25,7 +25,7 @@
     {
       this.ShorStorageHashes = new List<Hash>();
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create();
+      this.repository = new RepositoryFactory().Create(false);
     }
 
     public List<Hash> ShorStorageHashes { get; set; }
@@ -42,8 +42,7 @@
 
         try
         {
-          await Task.Factory.StartNew(
-            () => this.repository.SendTransfer(this.seed, bundle, SecurityLevel.Medium, 27, 14));
+          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, 14);
           break;
         }
         catch
@@ -53,7 +52,7 @@
       }
     }
 
-    public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1, bool returnOnlyNew = true)
     {
       var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
@@ -64,9 +63,13 @@
         var adresses = new List<Address> { new Address(adresse) };
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
 
-        // store hashes and load only new bundles
-        var newHashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
-        foreach (var transactionsHash in newHashes)
+        var hashes = transactions.Hashes;
+        if (returnOnlyNew)
+        {
+          hashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+        }
+
+        foreach (var transactionsHash in hashes)
         {
           try
           {
@@ -85,7 +88,7 @@
       return messagesList;
     }
 
-    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse, int retryNumber = 1)
+    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse, int retryNumber = 1, bool returnOnlyNew = true)
     {
       var roundNumber = 0;
       var messagesList = new List<T>();
@@ -97,9 +100,13 @@
         var adresses = new List<Address> { new Address(adresse) };
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
 
-        // store hashes and load only new bundles
-        var newHashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
-        foreach (var transactionsHash in newHashes)
+        var hashes = transactions.Hashes;
+        if (returnOnlyNew)
+        {
+          hashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+        }
+
+        foreach (var transactionsHash in hashes)
         {
           this.ShorStorageHashes.Add(transactionsHash);
 

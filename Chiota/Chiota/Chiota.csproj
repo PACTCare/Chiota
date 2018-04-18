@@ -22,10 +22,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.4" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
     <PackageReference Include="RestSharp" Version="106.3.0-alpha0002" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.6.1" />
-    <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.6.0" />
+    <PackageReference Include="Tangle.Net.Standard" Version="1.0.7" />
+    <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.1" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="3.1.3" />
     <PackageReference Include="Xam.Plugin.SecureStorage" Version="1.0.11" />

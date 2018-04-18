@@ -1,6 +1,7 @@
 ﻿namespace Chiota.ViewModels
 {
   using System;
+  using System.Collections.Generic;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -10,7 +11,10 @@
   using Chiota.Views;
 
   using Tangle.Net.Cryptography;
+  using Tangle.Net.Cryptography.Curl;
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -84,18 +88,18 @@
         // 1. public key address 
         // 2. request address
         // 3. approved address
-        var addresses = await Task.Factory.StartNew(() => new AddressGenerator(seed, SecurityLevel.Low).GetAddresses(0, 4));
+        var addresses = await this.GenerateAddressParallel(seed, 4);
         var user = new UserFactory().Create(seed, addresses);
+        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
+        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
 
-        if (this.storeSeed)
-        {
-          new SecureStorage().StoreUser(user);
-        }
+        // if first time only store seed after finished setup
+        user.StoreSeed = this.StoreSeed;
 
         this.dataOnTangle = new UserDataOnTangle(user);
         user = await this.dataOnTangle.UpdateUserWithOwnDataAddress();
 
-        if (user.Name == null) 
+        if (user.Name == null)
         {
           this.IsBusy = false;
           this.AlreadyClicke = false;
@@ -103,9 +107,14 @@
         }
         else
         {
-          user = await this.dataOnTangle.UpdateUserWithPublicKeyAddress();
+          user = await this.dataOnTangle.UniquePublicKey();
+          if (user.StoreSeed)
+          {
+            new SecureStorage().StoreUser(user);
+          }
+
           this.IsBusy = false;
-          if (user.NtruKeyPair != null)
+          if (user.NtruChatPair != null)
           {
             Application.Current.MainPage = new NavigationPage(new ContactPage(user));
             await this.Navigation.PopToRootAsync(true);
@@ -116,6 +125,26 @@
           }
         }
       }
-    }   
+    }
+
+    private async Task<List<Address>> GenerateAddressParallel(Seed seed, int numberOfAddresses)
+    {
+      var addresses = new List<Address>();
+      var taskList = new List<Task<List<Address>>>();
+      for (var i = 0; i < numberOfAddresses; i++)
+      {
+        var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
+        var localI = i;
+        taskList.Add(Task.Run(() => addressGenerator.GetAddresses(seed, SecurityLevel.Medium, localI, 1)));
+      }
+
+      var array = await Task.WhenAll(taskList.ToArray());
+      foreach (var address in array)
+      {
+        addresses.AddRange(address);
+      }
+
+      return addresses;
+    }
   }
 }

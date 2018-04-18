@@ -11,5 +11,9 @@
     public static string SecondBreak => "9IOTACHATAPP9";
 
     public static string Tag => "CHIOTAYOURIOTACHATAPP";
+
+    public static string Rejected => "rejected";
+
+    public static string Accepted => "accepted";
   }
 }

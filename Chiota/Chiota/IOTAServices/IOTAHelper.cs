@@ -42,13 +42,13 @@
         try
         {
           var trytesString = tryte.Message.ToString();
-          var firstBreak = trytesString.IndexOf(ChiotaIdentifier.FirstBreak, StringComparison.Ordinal);
-          var secondBreak = trytesString.IndexOf(ChiotaIdentifier.SecondBreak, StringComparison.Ordinal);
-          var dateTrytes = new TryteString(trytesString.Substring(secondBreak + ChiotaIdentifier.SecondBreak.Length, trytesString.Length - secondBreak - ChiotaIdentifier.SecondBreak.Length));
+          var firstBreakIndex = trytesString.IndexOf(ChiotaIdentifier.FirstBreak, StringComparison.Ordinal);
+          var secondBreakIndex = trytesString.IndexOf(ChiotaIdentifier.SecondBreak, StringComparison.Ordinal);
+          var dateTrytes = new TryteString(trytesString.Substring(secondBreakIndex + ChiotaIdentifier.SecondBreak.Length, trytesString.Length - secondBreakIndex - ChiotaIdentifier.SecondBreak.Length));
           var date = DateTime.Parse(dateTrytes.ToUtf8String());
 
-          var signature = trytesString.Substring(firstBreak + ChiotaIdentifier.FirstBreak.Length, 30);
-          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreak));
+          var signature = trytesString.Substring(firstBreakIndex + ChiotaIdentifier.FirstBreak.Length, 30);
+          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
           var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
           var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
           chatMessages.Add(chatMessage);
@@ -60,6 +60,47 @@
       }
 
       return chatMessages;
+    }
+
+    public static List<Contact> FilterApprovedContacts(
+      IEnumerable<TryteStringMessage> trytes,
+      IAsymmetricKeyPair keyPair)
+    {
+      var approvedContacts = new List<Contact>();
+      foreach (var tryte in trytes)
+      {
+        try
+        {
+          var decryptedMessage = new NtruKex().Decrypt(keyPair, tryte.Message.ToBytes());
+
+          var chatAddress = decryptedMessage.Substring(0, 81);
+
+          // length accepted = rejected 
+          var substring = decryptedMessage.Substring(81, ChiotaIdentifier.Rejected.Length);      
+
+          var contact = new Contact { ChatAdress = chatAddress };
+          if (substring.Contains(ChiotaIdentifier.Accepted))
+          {
+            contact.Rejected = false;
+          }
+          else if (substring.Contains(ChiotaIdentifier.Rejected))
+          {
+            contact.Rejected = true;
+          }
+          else
+          {
+            continue;
+          }
+
+          approvedContacts.Add(contact);
+        }
+        catch
+        {
+          // ignored
+        }
+      }
+
+      return approvedContacts;
     }
 
     public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)

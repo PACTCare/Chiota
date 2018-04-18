@@ -20,10 +20,17 @@
 
     public string PublicKeyAddress { get; set; }
 
+    public bool StoreSeed { get; set; }
+
     /// <summary>
-    /// Gets or sets KeyPair
+    /// Gets or sets approved Contact Key Pair 
     /// </summary>
-    public IAsymmetricKeyPair NtruKeyPair { get; set; }
+    public IAsymmetricKeyPair NtruContactPair { get; set; }
+
+    /// <summary>
+    /// Gets or sets Chat Key Pair
+    /// </summary>
+    public IAsymmetricKeyPair NtruChatPair { get; set; }
 
     /// <summary>
     /// Gets or sets Seed, never upload or store!

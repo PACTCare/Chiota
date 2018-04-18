@@ -39,6 +39,8 @@
 
     private ObservableCollection<MessageViewModel> messagesList;
 
+    private bool isRunning;
+
     public ChatViewModel(ListView messagesListView, Contact contact, User user)
     {
       this.ntruKex = new NtruKex();
@@ -96,12 +98,12 @@
 
     public void MessageRestriction(Entry entry)
     {
-      var val = entry.Text; 
+      var val = entry.Text;
 
       if (val?.Length > CharacterLimit)
       {
         val = val.Remove(val.Length - 1);
-        entry.Text = val; 
+        entry.Text = val;
         this.DisplayMessageTooLong();
       }
     }
@@ -138,7 +140,7 @@
         var tryteContact = new TryteString(encryptedForContact.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
         // encryption with public key of user
-        var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruKeyPair.PublicKey, this.OutGoingText);
+        var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText);
         var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
         await this.SendParallelAsync(tryteContact, tryteUser);
@@ -168,15 +170,22 @@
 
     private async Task AddNewMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      var newMessages = await IotaHelper.GetNewMessages(this.user.NtruKeyPair, this.contact, this.user.TangleMessenger);
-      if (newMessages.Count > 0)
+      // makes sure that it only one run at a time
+      if (!this.isRunning)
       {
-        foreach (var m in newMessages)
+        this.isRunning = true;
+        var newMessages = await IotaHelper.GetNewMessages(this.user.NtruChatPair, this.contact, this.user.TangleMessenger);
+        if (newMessages.Count > 0)
         {
-          messages.Add(m);
+          foreach (var m in newMessages)
+          {
+            messages.Add(m);
+          }
+
+          this.ScrollToNewMessage();
         }
 
-        this.ScrollToNewMessage();
+        this.isRunning = false;
       }
     }
 

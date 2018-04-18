@@ -8,6 +8,7 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+  using VTDev.Libraries.CEXEngine.Crypto.Prng;
 
   public class NtruKex
   {
@@ -17,15 +18,27 @@
 
     private readonly NTRUParameters encParams = NTRUParamSets.APR2011743FAST; // N743, q2048 , EES743EP1 
 
-    public IAsymmetricKeyPair CreateAsymmetricKeyPair()
+    public IAsymmetricKeyPair CreateAsymmetricKeyPair(string seed, string saltAddress)
     {
-      var keyGen = new NTRUKeyGenerator(this.encParams);
-      var keyPair = keyGen.GenerateKeyPair();
+      IAsymmetricKeyPair keyPair = null;
 
-      // publicKey sometimes has only 1025 bytes instead of 1026 after conversation?!
-      while (keyPair.PublicKey.ToBytes().ToTrytes().ToBytes().Length != 1026)
+      var passphrase = Encoding.UTF8.GetBytes(seed);
+      var salt = Encoding.UTF8.GetBytes(saltAddress);
+      
+      var keyGen = new NTRUKeyGenerator(this.encParams, false);
+      
+      while (keyPair == null || keyPair.PublicKey.ToBytes().ToTrytes().ToBytes().Length != 1026)
       {
-        keyPair = keyGen.GenerateKeyPair();
+        try
+        {
+          keyPair = keyGen.GenerateKeyPair(passphrase, salt);
+        }
+        catch
+        {
+          // ignored
+        }
+
+        keyGen.Dispose();
       }
 
       return keyPair;

@@ -43,11 +43,13 @@
         TangleMessenger = new TangleMessenger(storedSeed)
       };
 
+      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
+      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
       try
       {
         var tangleData = new UserDataOnTangle(user);
         await tangleData.UpdateUserWithOwnDataAddress();
-        user = await tangleData.UpdateUserWithPublicKeyAddress();
+        user = await tangleData.UniquePublicKey();
         return user;
       }
       catch
