@@ -18,7 +18,7 @@
 
     private readonly User user;
 
-    private ObservableCollection<ContactListViewModel> contacts;
+    private readonly ObservableCollection<ContactListViewModel> contacts;
 
     private ContactListViewModel selectedContact;
 
@@ -134,7 +134,7 @@
         var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAdress.Contains(contact.ChatAdress));
         if (itemToRemove != null)
         {
-          this.Contacts.Remove(itemToRemove);
+          this.contacts.Remove(itemToRemove);
         }
 
         this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject));
