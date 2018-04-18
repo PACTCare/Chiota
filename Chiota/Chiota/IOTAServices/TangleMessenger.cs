@@ -25,7 +25,7 @@
     {
       this.ShorStorageHashes = new List<Hash>();
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create(false);
+      this.repository = new RepositoryFactory().Create();
     }
 
     public List<Hash> ShorStorageHashes { get; set; }

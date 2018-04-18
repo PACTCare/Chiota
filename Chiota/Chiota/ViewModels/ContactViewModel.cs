@@ -18,76 +18,79 @@
 
     private readonly User user;
 
+    private ObservableCollection<ContactListViewModel> contacts;
+
     private ContactListViewModel selectedContact;
 
     public ContactViewModel(User user)
     {
+      this.contacts = new ObservableCollection<ContactListViewModel>();
       this.user = user;
-      viewCellObject = new ViewCellObject() { RefreshContacts = true };
+      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
     }
 
     public bool PageIsShown { get; set; }
 
     public ContactListViewModel SelectedContact
     {
-      get => selectedContact;
+      get => this.selectedContact;
       set
       {
-        if (selectedContact != value)
+        if (this.selectedContact != value)
         {
-          selectedContact = value;
-          RaisePropertyChanged();
+          this.selectedContact = value;
+          this.RaisePropertyChanged();
         }
       }
     }
 
     public ObservableCollection<ContactListViewModel> Contacts
     {
-      get => contactList;
+      get => this.contactList;
       set
       {
-        contactList = value;
-        RaisePropertyChanged();
+        this.contactList = value;
+        this.RaisePropertyChanged();
       }
     }
 
     public void OnAppearing()
     {
-      PageIsShown = true;
-      viewCellObject.RefreshContacts = true;
+      this.PageIsShown = true;
+      this.viewCellObject.RefreshContacts = true;
       this.UpdateContacts();
     }
 
     public void OnDisappearing()
     {
-      PageIsShown = false;
+      this.PageIsShown = false;
     }
 
     public async void Search(string searchInput)
     {
-      Contacts = await GetConctacts(searchInput);
+      this.Contacts = await this.GetConctacts(searchInput);
     }
 
     public async void OpenChatPage(Contact contact)
     {
-      SelectedContact = null;
-      await Navigation.PushAsync(new ChatPage(contact, user));
+      this.SelectedContact = null;
+      await this.Navigation.PushAsync(new ChatPage(contact, this.user));
     }
 
     public async void Refreshing()
     {
-      Contacts = await GetConctacts();
+      this.Contacts = await this.GetConctacts();
     }
 
     private async Task UpdateContacts()
     {
       // var count = 0;
-      while (PageIsShown)
+      while (this.PageIsShown)
       {
-        if (viewCellObject.RefreshContacts ) 
+        if (this.viewCellObject.RefreshContacts)
         {
-          Contacts = await GetConctacts();
-          viewCellObject.RefreshContacts = false;
+          this.Contacts = await this.GetConctacts();
+          this.viewCellObject.RefreshContacts = false;
         }
 
         await Task.Delay(3000);
@@ -96,13 +99,12 @@
 
     private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
-      var contacts = new ObservableCollection<ContactListViewModel>();
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactTaskList = user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
-      var approvedContactsTrytes = user.TangleMessenger.GetMessagesAsync(user.ApprovedAddress, 3);
+      var contactTaskList = this.user.TangleMessenger.GetJsonMessageAsync<Contact>(this.user.RequestAddress, 3);
+      var approvedContactsTrytes = this.user.TangleMessenger.GetMessagesAsync(this.user.ApprovedAddress, 3);
 
-      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, user.NtruContactPair);
+      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, this.user.NtruContactPair);
       var contactRequestList = await contactTaskList;
 
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
@@ -110,34 +112,40 @@
       // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
       if (contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)
       {
-        approvedContacts = Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+        approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
       }
 
       var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-
-      
 
       foreach (var contact in contactsWithoutResponse)
       {
         if (contact.Request)
         {
-          var contactCell = ViewModelConverter.ContactToViewModel(contact, user, viewCellObject);
-          contacts.Add(contactCell);
+          var contactCell = ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject);
+          this.contacts.Add(contactCell);
         }
       }
 
       foreach (var contact in approvedContacts.Where(c => !c.Rejected))
       {
         contact.Request = false;
-        contacts.Add(ViewModelConverter.ContactToViewModel(contact, user, viewCellObject));
+
+        // remove request from list
+        var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAdress.Contains(contact.ChatAdress));
+        if (itemToRemove != null)
+        {
+          this.Contacts.Remove(itemToRemove);
+        }
+
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))
       {
-        return contacts;
+        return this.contacts;
       }
 
-      foreach (var contact in contacts)
+      foreach (var contact in this.contacts)
       {
         if (contact.Name.ToLower().StartsWith(searchText.ToLower()))
         {
