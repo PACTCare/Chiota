@@ -25,6 +25,8 @@
 
     public Action DisplayInvalidPublicKeyPrompt;
 
+    public Action DisplayMessageSendErrorPrompt;
+
     private const int CharacterLimit = 105;
 
     private readonly User user;
@@ -143,7 +145,12 @@
         var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText);
         var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
 
-        await this.SendParallelAsync(tryteContact, tryteUser);
+        var sendFeedback = await this.SendParallelAsync(tryteContact, tryteUser);
+        if (sendFeedback.Any(c => c == false))
+        {
+          this.DisplayMessageSendErrorPrompt();
+        }
+
         await this.AddNewMessagesAsync(this.Messages);
       }
 
@@ -151,7 +158,7 @@
       this.OutGoingText = null;
     }
 
-    private Task SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
+    private Task<bool[]> SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
     {
       var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteContact, this.contact.ChatAdress);
       var secondTransaction = this.user.TangleMessenger.SendMessageAsync(tryteUser, this.contact.ChatAdress);

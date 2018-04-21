@@ -12,6 +12,8 @@
 
   public class RepositoryFactory
   {
+    private const int WaitSeconds = 5;
+
     private readonly List<string> nodeUriList = new List<string>
                                                   {
                                                     "https://field.carriota.com:443", // pow test 13 seconds
@@ -55,7 +57,7 @@
       {
         // Timeout after 5 seconds
         var task = Task.Run(() => node.GetNodeInfo());
-        if (task.Wait(TimeSpan.FromSeconds(5)))
+        if (task.Wait(TimeSpan.FromSeconds(WaitSeconds)))
         {
           var nodeInfo = task.Result;
           return nodeInfo.LatestMilestoneIndex == nodeInfo.LatestSolidSubtangleMilestoneIndex;

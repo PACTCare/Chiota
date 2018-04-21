@@ -8,7 +8,7 @@ Impressions of the current state:
 <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180406-180427.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123945.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180406-180148.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124908.jpg" width="200">
 
 # How Chiota works?
-Chiota doesn’t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption. 
+Chiota doesn’t use the MAM Layer for sending secure messages. Instead, it uses the NTRU Encryption (see [NTRU Key Exchange for IOTA](https://github.com/Noc2/Chiota/wiki/NTRU-Key-Exchange-for-IOTA) for more details). 
 There are several reasons for that:
 -	NTRU or some other form of key exchange is needed for the MAM-Layer anyway
 -	For the MAM Layer, you have a lot of different transactions and currently, the proof-of-work takes really long, so the goal is to reduce the number of necessary transactions

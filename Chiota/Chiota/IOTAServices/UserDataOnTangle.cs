@@ -43,7 +43,7 @@
       // more than one key at this address
       if (contacts.Count > 1)
       {
-        // generate a new public key address based on changed seed until you find a unused address 
+        // generate a new public key address based on a changed seed until you find an unused address 
         // this way the attacker doesn't know the next public key address
         List<Contact> newContacts;
         var addresses = new List<Address> { new Address(contacts[0].ContactAdress) };

@@ -17,6 +17,8 @@
 
   public class TangleMessenger
   {
+    private const int WaitSeconds = 30;
+
     private readonly Seed seed;
 
     private IIotaRepository repository;
@@ -30,7 +32,7 @@
 
     public List<Hash> ShorStorageHashes { get; set; }
 
-    public async Task SendMessageAsync(TryteString message, string address, int retryNumber = 3)
+    public async Task<bool> SendMessageAsync(TryteString message, string address, int retryNumber = 3)
     {
       var roundNumber = 0;
       while (roundNumber < retryNumber)
@@ -43,13 +45,15 @@
         try
         {
           await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, 14);
-          break;
+          return true;
         }
         catch
         {
           roundNumber++;
         }
       }
+
+      return false;
     }
 
     public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1, bool returnOnlyNew = true)

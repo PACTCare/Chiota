@@ -4,42 +4,31 @@
   using System.Linq;
   using System.Text;
 
-  using Tangle.Net.Utils;
-
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
-  using VTDev.Libraries.CEXEngine.Crypto.Prng;
 
   public class NtruKex
   {
-    private const int MaxTextSize = 106; 
+    private const int MaxTextSize = 105;
 
     private const int EncryptedTextSize = 1022;
 
-    private readonly NTRUParameters encParams = NTRUParamSets.APR2011743FAST; // N743, q2048 , EES743EP1 
+    private readonly NTRUParameters encParams = NTRUParamSets.APR2011743FAST; // Alternative EES743EP1 
 
+    /// <summary>
+    /// Creates a NTRU Keypair based on your seed and one address
+    /// </summary>
+    /// <param name="seed">String of your seed</param>
+    /// <param name="saltAddress">String of your address</param>
+    /// <returns>Key Pair</returns>
     public IAsymmetricKeyPair CreateAsymmetricKeyPair(string seed, string saltAddress)
     {
-      IAsymmetricKeyPair keyPair = null;
-
       var passphrase = Encoding.UTF8.GetBytes(seed);
       var salt = Encoding.UTF8.GetBytes(saltAddress);
-      
-      var keyGen = new NTRUKeyGenerator(this.encParams, false);
-      
-      while (keyPair == null || keyPair.PublicKey.ToBytes().ToTrytes().ToBytes().Length != 1026)
-      {
-        try
-        {
-          keyPair = keyGen.GenerateKeyPair(passphrase, salt);
-        }
-        catch
-        {
-          // ignored
-        }
 
-        keyGen.Dispose();
-      }
+      // Can not be parallel!
+      var keyGen = new NTRUKeyGenerator(this.encParams, false);
+      var keyPair = keyGen.GenerateKeyPair(passphrase, salt);
 
       return keyPair;
     }
@@ -55,7 +44,7 @@
       var bytes = new List<byte[]>();
       using (var cipher = new NTRUEncrypt(this.encParams))
       {
-        var splitText = this.SplitByLength(input, MaxTextSize - 1);
+        var splitText = this.SplitByLength(input, MaxTextSize);
         foreach (var text in splitText)
         {
           cipher.Initialize(publicKey);
@@ -67,17 +56,23 @@
       return bytes.SelectMany(a => a).ToArray();
     }
 
-    public string Decrypt(IAsymmetricKeyPair privateKey, byte[] encryptedText)
+    /// <summary>
+    /// Decrypts a byte array
+    /// </summary>
+    /// <param name="keyPair">The correct key pair</param>
+    /// <param name="encryptedText">The encrypted byte array</param>
+    /// <returns>Decrypted string</returns>
+    public string Decrypt(IAsymmetricKeyPair keyPair, byte[] encryptedText)
     {
       var splitArray = encryptedText.Select((x, i) => new { Key = i / EncryptedTextSize, Value = x })
         .GroupBy(x => x.Key, x => x.Value, (k, g) => g.ToArray())
         .ToArray();
-      var decryptedText = "";
+      var decryptedText = string.Empty;
       foreach (var bytes in splitArray)
       {
         using (var cipher = new NTRUEncrypt(this.encParams))
         {
-          cipher.Initialize(privateKey);
+          cipher.Initialize(keyPair);
           var dec = cipher.Decrypt(bytes);
           decryptedText += Encoding.UTF8.GetString(dec);
         }

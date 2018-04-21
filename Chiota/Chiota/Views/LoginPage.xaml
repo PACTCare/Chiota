@@ -6,7 +6,7 @@
     <StackLayout Orientation="Vertical" Padding="30" Spacing="30">
       <BoxView HeightRequest="10"/>
       <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
-      <Label Text="Remember your seed and feel free to change the randomly generated seed below!" TextColor="#ff0000"></Label>
+      <Label Text="Remember your seed and feel free to change the randomly generated seed below for additional security!" TextColor="#ff0000"></Label>
       <Frame BackgroundColor="#1d4999" HasShadow="False">
         <StackLayout Orientation="Vertical" Spacing="10">
           <Label Text="Seed " TextColor="White"></Label>

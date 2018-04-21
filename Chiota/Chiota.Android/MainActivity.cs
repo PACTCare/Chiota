@@ -48,6 +48,7 @@
 
     private void WireUpLongRunningTask()
     {
+      // https://stackoverflow.com/questions/38344220/job-scheduler-not-running-on-android-n
       var javaClass = Java.Lang.Class.FromType(typeof(PeriodicJob));
       var compName = new ComponentName(this, javaClass);
       var jobInfo = new JobInfo.Builder(1, compName)

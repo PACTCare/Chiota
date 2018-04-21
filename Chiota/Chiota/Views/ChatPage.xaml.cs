@@ -29,6 +29,7 @@
       this.vm = new ChatViewModel(MessagesListView, contact, user) { Navigation = this.Navigation }; 
       this.vm.DisplayMessageTooLong += () => this.DisplayAlert("Error", "Sorry, only 105 characters per message are allowed!", "OK");
       this.vm.DisplayInvalidPublicKeyPrompt += () => this.DisplayAlert("Error", "Invalid public key! You contact needs to give you a new contact address.", "OK");
+      this.vm.DisplayMessageSendErrorPrompt += () => this.DisplayAlert("Error", "Your message couldn’t be sent.", "OK");
       this.BindingContext = this.vm;
     }
 

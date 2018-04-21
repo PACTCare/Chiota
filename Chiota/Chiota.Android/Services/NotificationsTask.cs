@@ -1,6 +1,4 @@
-﻿using Chiota.IOTAServices;
-
-namespace Chiota.Droid.Services
+﻿namespace Chiota.Droid.Services
 {
   using System.Linq;
   using System.Threading.Tasks;
@@ -11,8 +9,10 @@ namespace Chiota.Droid.Services
   using Android.OS;
   using Android.Support.V4.App;
 
+  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+
   using Java.Lang;
 
   using Resource = Resource;
@@ -34,17 +34,21 @@ namespace Chiota.Droid.Services
         var user = await secureStorage.GetUser();
         if (user != null)
         {
+          // request list is needed for information
+          var contactTaskList = user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
           var approvedContactsTrytes = user.TangleMessenger.GetMessagesAsync(user.ApprovedAddress, 3);
-          var contactApprovedList = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, user.NtruContactPair);
+
+          var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, user.NtruContactPair);
+          var contactRequestList = await contactTaskList;
+
+          var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
 
           // currently no messages for contact request due to perfomance issues
-          // show only one new message
           var contactNotificationId = 0;
-          foreach (var contact in contactApprovedList.Where(c => !c.Rejected))
+          foreach (var contact in approvedContacts.Where(c => !c.Rejected))
           {
             var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAdress);
 
-            // don't send a reminder for every new message
             if (encryptedMessages.Any(c => !c.Stored))
             {
               var intent = Application.Context.PackageManager.GetLaunchIntentForPackage(Application.Context.PackageName);
@@ -53,7 +57,7 @@ namespace Chiota.Droid.Services
               var builder = new NotificationCompat.Builder(Application.Context)
                 .SetAutoCancel(true) // Dismiss from the notif. area when clicked
                 .SetContentIntent(pendingIntent)
-                .SetContentTitle(contact.Name) // Set its title
+                .SetContentTitle("Chiota") 
                 .SetContentText("New Message from " + contact.Name)
                 .SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification))
                 .SetSmallIcon(Resource.Drawable.reminder);

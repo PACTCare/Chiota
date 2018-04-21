@@ -14,7 +14,6 @@
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 

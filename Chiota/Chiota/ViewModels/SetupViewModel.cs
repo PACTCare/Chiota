@@ -117,11 +117,11 @@
       return user;
     }
 
-    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString mamEncrypted)
+    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString tryteString)
     {
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(mamEncrypted + ChiotaIdentifier.End), user.OwnDataAdress);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(tryteString + ChiotaIdentifier.End), user.OwnDataAdress);
 
-      // only way to store it with one transaction, json to big
+      // only way to store it with one transaction, json too big
       var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaIdentifier.LineBreak + user.RequestAddress + ChiotaIdentifier.End);
 
       var secondTransaction = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
