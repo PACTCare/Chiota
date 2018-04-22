@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.Views.LoginPage">
-  <AbsoluteLayout BackgroundColor="#f5f5f5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-    <StackLayout Orientation="Vertical" Padding="30" Spacing="30">
-      <BoxView HeightRequest="10"/>
+             x:Class="Chiota.Views.LoginPage"
+             BackgroundColor="#f5f5f5">
+  <AbsoluteLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+    <StackLayout Orientation="Vertical" 
+                 Padding="30,20,30,20" Spacing="20">
       <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
       <Label Text="Remember your seed and feel free to change the randomly generated seed below for additional security!" TextColor="#ff0000"></Label>
       <Frame BackgroundColor="#1d4999" HasShadow="False">

@@ -3,7 +3,8 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:templateSelector="clr-namespace:Chiota.TemplateSelector;assembly=Chiota"
-             x:Class="Chiota.Views.ContactPage">
+             x:Class="Chiota.Views.ContactPage"
+             BackgroundColor="#f5f5f5">
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Add Contact" Clicked="HandleNewContactClick" Order="Secondary"></ToolbarItem>
     <ToolbarItem Text="Logout" Clicked="HandleLogoutClick" Order="Secondary"></ToolbarItem>
@@ -13,12 +14,13 @@
       <templateSelector:ContactTemplateSelector x:Key="ContactTemplateSelector"></templateSelector:ContactTemplateSelector>
     </ResourceDictionary>
   </ContentPage.Resources>
-
-  <AbsoluteLayout BackgroundColor="#f5f5f5" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+  <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
     <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
       <SearchBar Placeholder="Search..." 
+                 HeightRequest="45"
                        PlaceholderColor="Gray" 
-                       TextChanged="Handler_TextChanged"/>
+                       TextChanged="Handler_TextChanged">
+      </SearchBar>
       <ListView x:Name="ContactsList"
                 IsPullToRefreshEnabled="True"
                 Refreshing="ContactsList_OnRefreshing"

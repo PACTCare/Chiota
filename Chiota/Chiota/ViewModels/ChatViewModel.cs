@@ -198,7 +198,7 @@
 
     private void ScrollToNewMessage()
     {
-      var lastMessage = this.messagesListView?.ItemsSource?.Cast<object>()?.LastOrDefault();
+      var lastMessage = this.messagesListView?.ItemsSource?.Cast<object>().LastOrDefault();
 
       if (lastMessage != null)
       {

@@ -11,7 +11,7 @@
 
   using Xamarin.Forms;
 
-  [Service(Name = "ChiotaApp.ChiotaApp.PeriodicJob", Permission = "android.permission.BIND_JOB_SERVICE")]
+  [Service(Name = "chiotaapp.chiotaapp.PeriodicJob", Permission = "android.permission.BIND_JOB_SERVICE")]
   public class PeriodicJob : JobService
   {
     private CancellationTokenSource cts;

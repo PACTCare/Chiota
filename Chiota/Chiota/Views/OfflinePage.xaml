@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.OfflinePage"
+             BackgroundColor="#f5f5f5">
+  <ContentPage.Content>
+    <StackLayout VerticalOptions="CenterAndExpand"  HorizontalOptions="CenterAndExpand">
+      <Image WidthRequest="160" 
+             HeightRequest="160" 
+             Source="iota.png" />
+      <Label Text="You are currently offline!" 
+             TextColor="Red" FontSize="22" />
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

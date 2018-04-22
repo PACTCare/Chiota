@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.Views.CheckSeedStoredPage">
+             x:Class="Chiota.Views.CheckSeedStoredPage"
+             BackgroundColor="#f5f5f5">
     <ContentPage.Content>
-    <StackLayout BackgroundColor="#f5f5f5" Orientation="Vertical" Padding="30" Spacing="30">
-      <BoxView HeightRequest="10"/>
+    <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"
+                 Padding="30,20,30,20" Spacing="20">
       <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
       <Label Text="This is a check to make sure you saved your seed. If you have not saved your seed, please go back and do so." TextColor="#ff0000"></Label>
       <Frame BackgroundColor="#1d4999" HasShadow="False">

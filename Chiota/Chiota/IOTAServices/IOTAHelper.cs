@@ -2,6 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.Globalization;
   using System.Linq;
   using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@
           var firstBreakIndex = trytesString.IndexOf(ChiotaIdentifier.FirstBreak, StringComparison.Ordinal);
           var secondBreakIndex = trytesString.IndexOf(ChiotaIdentifier.SecondBreak, StringComparison.Ordinal);
           var dateTrytes = new TryteString(trytesString.Substring(secondBreakIndex + ChiotaIdentifier.SecondBreak.Length, trytesString.Length - secondBreakIndex - ChiotaIdentifier.SecondBreak.Length));
-          var date = DateTime.Parse(dateTrytes.ToUtf8String());
+          var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
 
           var signature = trytesString.Substring(firstBreakIndex + ChiotaIdentifier.FirstBreak.Length, 30);
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));

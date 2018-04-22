@@ -27,6 +27,7 @@
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.7" />
     <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.1" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
+    <PackageReference Include="Xam.Plugin.Connectivity" Version="3.1.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="3.1.3" />
     <PackageReference Include="Xam.Plugin.SecureStorage" Version="1.0.11" />
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="2.0.2" />
@@ -48,6 +49,9 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\AddContactPage.xaml.cs">
+      <DependentUpon>AddContactPage.xaml</DependentUpon>
+    </Compile>
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
@@ -66,7 +70,7 @@
     <EmbeddedResource Update="CustomCells\RequestContactViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\AddContact.xaml">
+    <EmbeddedResource Update="Views\AddContactPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\CheckSeedStoredPage.xaml">
@@ -85,6 +89,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\OfflinePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

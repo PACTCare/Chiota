@@ -2,10 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.Views.SetupPage"
-             xmlns:plugin="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
-  <AbsoluteLayout BackgroundColor="#eaeaea" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-    <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="24">
-      <BoxView HeightRequest="10"/>
+             xmlns:plugin="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             BackgroundColor="#eaeaea">
+  <AbsoluteLayout  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+    <StackLayout Orientation="Vertical" Padding="30,20,30,20" Spacing="20">
       <plugin:CircleImage
         HeightRequest="160"
         WidthRequest="160"

@@ -142,6 +142,9 @@
     <PackageReference Include="Tangle.Net.Standard.Mam">
       <Version>0.9.0.1</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.Connectivity">
+      <Version>3.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
       <Version>3.1.3</Version>
     </PackageReference>

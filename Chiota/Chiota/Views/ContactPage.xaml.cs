@@ -56,7 +56,7 @@
 
     private void HandleNewContactClick(object sender, EventArgs e)
     {
-      this.Navigation.PushAsync(new AddContact(this.user));
+      this.Navigation.PushAsync(new AddContactPage(this.user));
     }
 
     private void ContactsList_OnRefreshing(object sender, EventArgs e)

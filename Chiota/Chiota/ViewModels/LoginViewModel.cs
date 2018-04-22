@@ -25,8 +25,6 @@
 
     private string randomSeed = Seed.Random().Value;
 
-    private string username;
-
     private bool storeSeed;
 
     private UserDataOnTangle dataOnTangle;
@@ -53,16 +51,6 @@
       set
       {
         this.randomSeed = value;
-        this.RaisePropertyChanged();
-      }
-    }
-
-    public string Username
-    {
-      get => this.username;
-      set
-      {
-        this.username = value;
         this.RaisePropertyChanged();
       }
     }
