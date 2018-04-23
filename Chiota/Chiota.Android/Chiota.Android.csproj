@@ -53,9 +53,10 @@
     <BundleAssemblies>false</BundleAssemblies>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
-    <EnableProguard>true</EnableProguard>
-    <AndroidLinkMode>Full</AndroidLinkMode>
+    <EnableProguard>false</EnableProguard>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <AndroidSupportedAbis />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />

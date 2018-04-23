@@ -11,6 +11,7 @@
 
   using ImageCircle.Forms.Plugin.Droid;
 
+  using Plugin.CurrentActivity;
   using Plugin.Permissions;
 
   using Xamarin.Forms;
@@ -33,6 +34,7 @@
 
       // ToolbarResource = Resource.Id.toolbar;
       base.OnCreate(bundle);
+      CrossCurrentActivity.Current.Activity = this;
 
       Forms.Init(this, bundle);
 
