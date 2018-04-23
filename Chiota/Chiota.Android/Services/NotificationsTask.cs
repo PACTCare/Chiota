@@ -66,15 +66,27 @@
                   0,
                   intent,
                   PendingIntentFlags.UpdateCurrent);
-                var builder = new NotificationCompat.Builder(Application.Context)
+
+                var notificationManager =
+                  Application.Context.GetSystemService(Context.NotificationService) as NotificationManager;
+
+                var builder = new NotificationCompat.Builder(Application.Context, "channel-chiota")
                   .SetAutoCancel(true) // Dismiss from the notif. area when clicked
                   .SetContentIntent(pendingIntent).SetContentTitle("Chiota")
                   .SetContentText("New Message from " + contact.Name)
                   .SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification))
                   .SetSmallIcon(Resource.Drawable.reminder);
+
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                {
+                  var mChannel = new NotificationChannel("channel-chiota", "Chiota", NotificationImportance.High);
+                  mChannel.EnableVibration(true);
+                  mChannel.LockscreenVisibility = NotificationVisibility.Public;
+                  notificationManager?.CreateNotificationChannel(mChannel);
+                }
+
                 var notification = builder.Build();
-                var notificationManager =
-                  Application.Context.GetSystemService(Context.NotificationService) as NotificationManager;
+
                 notificationManager?.Notify(contactNotificationId, notification);
               }
 
