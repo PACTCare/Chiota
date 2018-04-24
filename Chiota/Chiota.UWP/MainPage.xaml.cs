@@ -17,12 +17,9 @@
     {
       this.InitializeComponent();
 
-      // ApplicationView.PreferredLaunchViewSize = new Size(600, 850);
-      // ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
 
       this.LoadApplication(new Chiota.App());
-
-      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
 
       if (this.IsRegistered())
       {

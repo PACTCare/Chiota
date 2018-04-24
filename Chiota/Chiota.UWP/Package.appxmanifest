@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="77420afe-d019-4e84-8952-de64e36e299c" Publisher="CN=david" Version="0.1.2.0" />
-  <mp:PhoneIdentity PhoneProductId="77420afe-d019-4e84-8952-de64e36e299c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="55427Noc2.Chiota" Publisher="CN=E8171C74-A62F-4E42-8C8F-66B93C0754CD" Version="0.3.4.0" />
+  <mp:PhoneIdentity PhoneProductId="f0fb23ed-4306-47ef-9c2e-e261c96129b3" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Chiota.UWP</DisplayName>
-    <PublisherDisplayName>david</PublisherDisplayName>
+    <DisplayName>Chiota</DisplayName>
+    <PublisherDisplayName>Noc2</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -15,10 +15,14 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Chiota.UWP.App">
-      <uap:VisualElements DisplayName="Chiota.UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Chiota.UWP" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="Chiota" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Your IOTA Chat App" BackgroundColor="transparent">
+        <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#eaeaea" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape" />
+        </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="UWPRuntimeComponent.BackgroundTask">

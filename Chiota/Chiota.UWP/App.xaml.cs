@@ -1,11 +1,13 @@
 ﻿namespace Chiota.UWP
 {
   using System;
+  using System.Collections.Generic;
+  using System.Reflection;
+
+  using ImageCircle.Forms.Plugin.UWP;
 
   using Windows.ApplicationModel;
   using Windows.ApplicationModel.Activation;
-  using Windows.Foundation;
-  using Windows.UI.ViewManagement;
   using Windows.UI.Xaml;
   using Windows.UI.Xaml.Controls;
   using Windows.UI.Xaml.Navigation;
@@ -16,6 +18,7 @@
   sealed partial class App : Application
   {
     /// <summary>
+    /// Initializes a new instance of the <see cref="App"/> class. 
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
@@ -43,7 +46,16 @@
 
         rootFrame.NavigationFailed += OnNavigationFailed;
 
-        Xamarin.Forms.Forms.Init(e);
+        var assembliesToInclude = new List<Assembly>
+                                               {
+                                                 typeof(ZXing.Net.Mobile.Forms.WindowsUniversal.
+                                                   ZXingScannerViewRenderer).GetTypeInfo().Assembly,
+                                                 typeof(ZXing.Net.Mobile.Forms.ZXingScannerPage)
+                                                   .GetTypeInfo().Assembly,
+                                                 typeof(ImageCircleRenderer).GetTypeInfo().Assembly
+                                               };
+
+        Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
         if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
         {
@@ -63,6 +75,7 @@
           // parameter
           rootFrame.Navigate(typeof(MainPage), e.Arguments);
         }
+
         // Ensure the current window is active
         Window.Current.Activate();
       }

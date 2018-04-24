@@ -6,7 +6,9 @@
 
   using RestSharp;
 
+  using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.ProofOfWork;
+  using Tangle.Net.ProofOfWork.HammingNonce;
   using Tangle.Net.Repository;
   using Tangle.Net.Repository.Client;
 
@@ -23,11 +25,11 @@
                                                     "https://iri2.iota.fm:443" // pow test 16 seconds
                                                   };
 
-    public RestIotaRepository Create(bool remote = true)
+    public RestIotaRepository Create(bool remote = true, bool bit64 = false)
     {
       var iotaClient = new RestIotaClient(new RestClient("https://nodes.iota.fm:443")); // pow test 3 seconds 
 
-      var node = GenerateNode(remote, iotaClient);
+      var node = GenerateNode(remote, iotaClient, bit64);
 
       if (NoteIsHealthy(node))
       {
@@ -46,9 +48,16 @@
       return node;
     }
 
-    private static RestIotaRepository GenerateNode(bool remote, IIotaClient iotaClient)
+    private static RestIotaRepository GenerateNode(bool remote, IIotaClient iotaClient, bool bit64 = false)
     {
-      return remote ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient)) : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
+      if (bit64)
+      {
+        return remote ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient)) : new RestIotaRepository(iotaClient, new PoWService(new HammingNonceDiver(CurlMode.CurlP27, Mode._64bit)));
+      }
+      else
+      {
+        return remote ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient)) : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
+      }
     }
 
     private static bool NoteIsHealthy(IIotaNodeRepository node)

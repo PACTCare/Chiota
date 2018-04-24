@@ -16,10 +16,10 @@
   </ContentPage.Resources>
   <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
     <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
-      <SearchBar Placeholder="Search..." 
-                 HeightRequest="45"
-                       PlaceholderColor="Gray" 
-                       TextChanged="Handler_TextChanged">
+      <SearchBar x:Name="SearchBar"
+                 Placeholder="Search..." 
+                 PlaceholderColor="Gray" 
+                 TextChanged="Handler_TextChanged">
       </SearchBar>
       <ListView x:Name="ContactsList"
                 IsPullToRefreshEnabled="True"
@@ -28,7 +28,7 @@
                 SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
                 ItemTemplate="{StaticResource ContactTemplateSelector}" 
                 ItemsSource="{Binding Contacts}"
-                ItemSelected="Handle_ItemSelected"
+                ItemSelected="HandleItemSelected"
                 HasUnevenRows="True">
       </ListView>
     </StackLayout>

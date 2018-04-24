@@ -21,6 +21,15 @@
     {
       this.InitializeComponent();
       this.user = user;
+
+      switch (Device.RuntimePlatform)
+      {
+        // Android 7 doesn't show searchbar without it, on windows it's too big
+        case Device.Android:
+          this.SearchBar.HeightRequest = 45;
+          break;
+      }
+
       if (user != null)
       {
         this.BindingContext = new ContactViewModel(user) { Navigation = this.Navigation };
@@ -44,7 +53,7 @@
       (this.BindingContext as ContactViewModel)?.Search(e.NewTextValue);
     }
 
-    private async void Handle_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private void HandleItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
       if (!(e.SelectedItem is Contact contact))
       {

@@ -37,6 +37,9 @@
           <ColumnDefinition Width="*"></ColumnDefinition>
           <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <Entry  x:Name="MessageEntry" 
                 Grid.Column="0" 
                 TextColor="#1d4999"

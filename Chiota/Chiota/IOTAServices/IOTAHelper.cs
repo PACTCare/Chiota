@@ -50,6 +50,8 @@
 
           var signature = trytesString.Substring(firstBreakIndex + ChiotaIdentifier.FirstBreak.Length, 30);
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
+
+          // todo decrypt doesn't work for Jana
           var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
           var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
           chatMessages.Add(chatMessage);
@@ -108,6 +110,7 @@
     {
       var messages = new List<MessageViewModel>();
       var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAdress);
+
       var messageList = FilterChatMessages(encryptedMessages, keyPair);
 
       if (messageList != null)

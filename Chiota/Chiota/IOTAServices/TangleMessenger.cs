@@ -17,8 +17,6 @@
 
   public class TangleMessenger
   {
-    private const int WaitSeconds = 30;
-
     private readonly Seed seed;
 
     private IIotaRepository repository;
@@ -27,7 +25,7 @@
     {
       this.ShorStorageHashes = new List<Hash>();
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create();
+      this.repository = new RepositoryFactory().Create(false);
     }
 
     public List<Hash> ShorStorageHashes { get; set; }
@@ -65,6 +63,7 @@
         this.UpdateNode(roundNumber);
 
         var adresses = new List<Address> { new Address(adresse) };
+
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
 
         var hashes = transactions.Hashes;
@@ -185,7 +184,7 @@
 
     private async Task<TryteStringMessage> MessageFromBundleOrStorage(Hash transactionsHash)
     {
-      // todo upload them again after snapshot
+      // table storage as a backup service for snapshots
       var message = new TryteStringMessage();
       var hashString = transactionsHash.ToString();
       if (Application.Current.Properties.ContainsKey(hashString))
