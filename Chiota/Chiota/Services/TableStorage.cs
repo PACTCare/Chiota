@@ -6,9 +6,10 @@
   using Microsoft.WindowsAzure.Storage.Table;
 
   // https://docs.microsoft.com/de-de/azure/cosmos-db/table-storage-how-to-use-dotnet
+  // Used to store data for snapshots
   public class TableStorage
   {
-    private const string ConnectionString = "";
+    private const string ConnectionString = ""; // <= Put your table storage string here
 
     // suggestions to use tag name as table name
     private const string TableName = "CHIOTAYOURIOTACHATAPP";

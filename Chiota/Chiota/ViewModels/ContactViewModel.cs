@@ -32,14 +32,15 @@
     {
       this.bots = new List<BotObject>();
 
-      this.bots.Add(new BotObject()
-      {
-        BotName = "Florence",
-        BotSlogan = "Your health assistant",
-        BotId = "Florence",
-        DirectLineSecret = "", // <= your direct line secret
-        ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
-      });
+      // Add your own microsoft bot-framework bot here:
+      //this.bots.Add(new BotObject()
+      //{
+      //  BotName = "Florence",
+      //  BotSlogan = "Your health assistant",
+      //  BotId = "Florence",
+      //  DirectLineSecret = "", // <= your direct line secret
+      //  ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
+      //});
 
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.user = user;

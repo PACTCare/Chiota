@@ -77,7 +77,7 @@
       this.ScrollToNewMessage();
       await this.connection.SendMessageAsync(this.outgoingText);
       this.CreateTyping();
-      this.outgoingText = null;
+      this.OutGoingText = null;
     }
 
     /// <summary>
