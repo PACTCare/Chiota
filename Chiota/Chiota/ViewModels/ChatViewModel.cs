@@ -53,7 +53,7 @@
       this.OutGoingText = null;
 
       // reset hash short storage, because it's different for every chat
-      this.user.TangleMessenger.ShorStorageHashes = new List<Hash>();
+      this.user.TangleMessenger.ShortStorageHashes = new List<Hash>();
 
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }

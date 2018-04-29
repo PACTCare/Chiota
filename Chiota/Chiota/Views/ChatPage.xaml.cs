@@ -26,7 +26,7 @@
 
       this.Title = contact.Name;
       (this.MessageEntry as Entry).TextChanged += this.OnTextChanged;
-      this.vm = new ChatViewModel(MessagesListView, contact, user) { Navigation = this.Navigation }; 
+      this.vm = new ChatViewModel(this.MessagesListView, contact, user) { Navigation = this.Navigation }; 
       this.vm.DisplayMessageTooLong += () => this.DisplayAlert("Error", "Sorry, only 105 characters per message are allowed!", "OK");
       this.vm.DisplayInvalidPublicKeyPrompt += () => this.DisplayAlert("Error", "Invalid public key! You contact needs to give you a new contact address.", "OK");
       this.vm.DisplayMessageSendErrorPrompt += () => this.DisplayAlert("Error", "Your message couldn’t be sent.", "OK");
@@ -53,7 +53,7 @@
       }
     }
 
-    private void Handle_Completed(object sender, EventArgs e)
+    private void HandleCompleted(object sender, EventArgs e)
     {
       (this.BindingContext as ChatViewModel)?.SendCommand.Execute(null);
     }

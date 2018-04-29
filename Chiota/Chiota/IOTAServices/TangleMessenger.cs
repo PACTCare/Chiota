@@ -23,12 +23,12 @@
 
     public TangleMessenger(Seed seed)
     {
-      this.ShorStorageHashes = new List<Hash>();
+      this.ShortStorageHashes = new List<Hash>();
       this.seed = seed;
       this.repository = new RepositoryFactory().Create(false);
     }
 
-    public List<Hash> ShorStorageHashes { get; set; }
+    public List<Hash> ShortStorageHashes { get; set; }
 
     public async Task<bool> SendMessageAsync(TryteString message, string address, int retryNumber = 3)
     {
@@ -64,19 +64,21 @@
 
         var adresses = new List<Address> { new Address(adresse) };
 
+        // Todo Change Address, so less transactions to load
+        // Store old tranactions hashs
         var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-
+        
         var hashes = transactions.Hashes;
         if (returnOnlyNew)
         {
-          hashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+          hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
         }
 
         foreach (var transactionsHash in hashes)
         {
           try
           {
-            this.ShorStorageHashes.Add(transactionsHash);
+            this.ShortStorageHashes.Add(transactionsHash);
             messagesList.Add(await this.MessageFromBundleOrStorage(transactionsHash));
           }
           catch
@@ -106,12 +108,12 @@
         var hashes = transactions.Hashes;
         if (returnOnlyNew)
         {
-          hashes = IotaHelper.GetNewHashes(transactions, this.ShorStorageHashes);
+          hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
         }
 
         foreach (var transactionsHash in hashes)
         {
-          this.ShorStorageHashes.Add(transactionsHash);
+          this.ShortStorageHashes.Add(transactionsHash);
 
           var hashString = transactionsHash.ToString();
           if (Application.Current.Properties.ContainsKey(hashString))

@@ -1,8 +1,12 @@
 ﻿namespace Chiota.ViewModels
 {
+  using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Linq;
   using System.Threading.Tasks;
+
+  using Chiota.Chatbot;
+  using Chiota.Views;
 
   using IOTAServices;
   using Models;
@@ -20,10 +24,23 @@
 
     private readonly ObservableCollection<ContactListViewModel> contacts;
 
+    private readonly List<BotObject> bots;
+
     private ContactListViewModel selectedContact;
 
     public ContactViewModel(User user)
     {
+      this.bots = new List<BotObject>();
+
+      this.bots.Add(new BotObject()
+      {
+        BotName = "Florence",
+        BotSlogan = "Your health assistant",
+        BotId = "Florence",
+        DirectLineSecret = "", // <= your direct line secret
+        ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
+      });
+
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.user = user;
       this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
@@ -74,7 +91,17 @@
     public async void OpenChatPage(Contact contact)
     {
       this.SelectedContact = null;
-      await this.Navigation.PushAsync(new ChatPage(contact, this.user));
+
+      // alternativ BotPage
+      if (contact.ContactAdress == null)
+      {
+        var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAdress);
+        await this.Navigation.PushAsync(new BotChatPage(bot));
+      }
+      else
+      {
+        await this.Navigation.PushAsync(new ChatPage(contact, this.user));
+      }
     }
 
     public async void Refreshing()
@@ -99,6 +126,22 @@
 
     private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
+      // Bots
+      if (this.contacts.Count == 0)
+      {
+        foreach (var b in this.bots)
+        {
+          var botContact = new Contact()
+          {
+            Name = b.BotName,
+            ChatAdress = b.BotSlogan,
+            ImageUrl = b.ImageUrl,
+            Rejected = false
+          };
+          this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
+        }
+      }
+
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
       var contactTaskList = this.user.TangleMessenger.GetJsonMessageAsync<Contact>(this.user.RequestAddress, 3);

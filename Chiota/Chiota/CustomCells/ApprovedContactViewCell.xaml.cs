@@ -4,11 +4,11 @@
   using Xamarin.Forms.Xaml;
 
   [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ApprovedContactViewCell : ViewCell
-	{
-		public ApprovedContactViewCell()
-		{
-			InitializeComponent();
-		}
+  public partial class ApprovedContactViewCell : ViewCell
+  {
+    public ApprovedContactViewCell()
+    {
+      InitializeComponent();
+    }
   }
 }

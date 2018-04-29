@@ -80,5 +80,10 @@
       Application.Current.MainPage = new NavigationPage(new LoginPage());
       this.Navigation.PopToRootAsync(true);
     }
+
+    private void HandlePolicyClick(object sender, EventArgs e)
+    {
+      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota"));
+    }
   }
 }
