@@ -9,7 +9,7 @@ The only information I have access to is your uploaded user image. You can use C
 
 # Contact information:
 If you have any questions about this Privacy Policy, please contact me, David Hawig:
--	david.hawig@florence.chat
+-	david [dot] hawig [at] florence [dot] chat
 -	https://github.com/Noc2/Chiota
 
 # Personal information Chiota needs accesses to: 
