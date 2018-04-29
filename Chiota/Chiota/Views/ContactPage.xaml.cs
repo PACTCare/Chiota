@@ -83,7 +83,7 @@
 
     private void HandlePolicyClick(object sender, EventArgs e)
     {
-      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota"));
+      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
     }
   }
 }
