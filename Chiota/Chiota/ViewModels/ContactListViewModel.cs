@@ -38,8 +38,8 @@
       {
         this.isClicked = true;
 
-        var encryptedDecline = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAdress + ChiotaIdentifier.Rejected);
-        var tryteString = new TryteString(encryptedDecline.ToTrytes() + ChiotaIdentifier.End);
+        var encryptedDecline = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Rejected);
+        var tryteString = new TryteString(encryptedDecline.ToTrytes() + ChiotaConstants.End);
 
         await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
@@ -63,8 +63,8 @@
     // parallelize = only await for second PoW, when remote PoW 
     private Task SendParallelAcceptAsync()
     {
-      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAdress + ChiotaIdentifier.Accepted);
-      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaIdentifier.End);
+      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Accepted);
+      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End);
 
       // store as approved on own adress
       var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
@@ -73,15 +73,15 @@
                       {
                         Name = this.user.Name,
                         ImageUrl = this.user.ImageUrl,
-                        ChatAdress = this.ChatAdress,
-                        ContactAdress = this.user.ApprovedAddress,
-                        PublicKeyAdress = this.user.PublicKeyAddress,
+                        ChatAddress = this.ChatAddress,
+                        ContactAddress = this.user.ApprovedAddress,
+                        PublicKeyAddress = this.user.PublicKeyAddress,
                         Rejected = false,
                         Request = false
                       };
 
       // send data to request address, other user needs to automaticly add it to his own approved contact address
-      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAdress);
+      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }

@@ -4,12 +4,14 @@
   using System.Linq;
   using System.Text;
 
+  using Chiota.Models;
+
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   public class NtruKex
   {
-    private const int MaxTextSize = 105;
+    private const int MaxTextSize = ChiotaConstants.CharacterLimit; // 105
 
     private const int EncryptedTextSize = 1022;
 

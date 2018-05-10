@@ -8,11 +8,11 @@
 
     public string ImageUrl { get; set; }
 
-    public string ContactAdress { get; set; }
+    public string ContactAddress { get; set; }
 
-    public string ChatAdress { get; set; }
+    public string ChatAddress { get; set; }
 
-    public string PublicKeyAdress { get; set; }
+    public string PublicKeyAddress { get; set; }
 
     public IAsymmetricKey PublicNtruKey { get; set; }
 

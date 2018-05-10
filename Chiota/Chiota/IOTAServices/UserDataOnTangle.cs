@@ -46,7 +46,7 @@
         // generate a new public key address based on a changed seed until you find an unused address 
         // this way the attacker doesn't know the next public key address
         List<Contact> newContacts;
-        var addresses = new List<Address> { new Address(contacts[0].ContactAdress) };
+        var addresses = new List<Address> { new Address(contacts[0].ContactAddress) };
         do
         {
           var newSeed = this.user.Seed.ToString().Substring(0, 75) + addresses[0].ToString().Substring(0, 6);
@@ -58,7 +58,7 @@
 
           if (newContacts == null || newContacts.Count == 0)
           {
-            var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().ToTrytes() + ChiotaIdentifier.LineBreak + this.user.RequestAddress + ChiotaIdentifier.End);
+            var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().ToTrytes() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
             await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, addresses[0].ToString());
           }
 

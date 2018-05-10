@@ -5,6 +5,8 @@
   using System.Collections.ObjectModel;
   using System.Globalization;
   using System.Linq;
+  using System.Text;
+  using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -27,8 +29,6 @@
 
     public Action DisplayMessageSendErrorPrompt;
 
-    private const int CharacterLimit = 105;
-
     private readonly User user;
 
     private readonly Contact contact;
@@ -42,6 +42,8 @@
     private ObservableCollection<MessageViewModel> messagesList;
 
     private bool isRunning;
+
+    private int messageNumber;
 
     public ChatViewModel(ListView messagesListView, Contact contact, User user)
     {
@@ -102,7 +104,7 @@
     {
       var val = entry.Text;
 
-      if (val?.Length > CharacterLimit)
+      if (val?.Length > ChiotaConstants.CharacterLimit)
       {
         val = val.Remove(val.Length - 1);
         entry.Text = val;
@@ -112,7 +114,7 @@
 
     private async Task<IAsymmetricKey> GetContactPublicKey()
     {
-      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAdress, 3);
+      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAddress, 3);
       var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
       if (contactInfos == null || contactInfos.Count > 1)
       {
@@ -126,7 +128,7 @@
     {
       this.IsBusy = true;
 
-      if (this.OutGoingText.Length > CharacterLimit)
+      if (this.OutGoingText.Length > ChiotaConstants.CharacterLimit)
       {
         this.DisplayMessageTooLong();
       }
@@ -139,11 +141,11 @@
 
         // encryption with public key of other user
         var encryptedForContact = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
-        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
+        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         // encryption with public key of user
         var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText);
-        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaIdentifier.FirstBreak + signature + ChiotaIdentifier.SecondBreak + trytesDate + ChiotaIdentifier.End);
+        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         var sendFeedback = await this.SendParallelAsync(tryteContact, tryteUser);
         if (sendFeedback.Any(c => c == false))
@@ -160,8 +162,8 @@
 
     private Task<bool[]> SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
     {
-      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteContact, this.contact.ChatAdress);
-      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(tryteUser, this.contact.ChatAdress);
+      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteContact, this.contact.ChatAddress);
+      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(tryteUser, this.contact.ChatAddress);
 
       return Task.WhenAll(firstTransaction, secondTransaction);
     }
@@ -187,12 +189,33 @@
           foreach (var m in newMessages)
           {
             messages.Add(m);
+            await this.GenerateNewAddress();
           }
 
           this.ScrollToNewMessage();
         }
 
         this.isRunning = false;
+      }
+    }
+
+    private async Task GenerateNewAddress()
+    {
+      this.messageNumber++;
+      if (this.messageNumber >= ChiotaConstants.MessagesOnAddress)
+      {
+        // next chat address is generated based on decrypted messages to make sure nobody excapt the people chatting know the next address
+        // it's also based on an incrementing Trytestring, so if you always send the same messages it won't result in the same next address
+        var rgx = new Regex("[^A-Z]");
+        var incrementPart = Helper.TryteStringIncrement(this.contact.ChatAddress.Substring(0, 15));
+        var str = incrementPart + rgx.Replace(this.Messages[3].Text.ToUpper(), string.Empty)
+                                + rgx.Replace(this.Messages[1].Text.ToUpper(), string.Empty)
+                                + rgx.Replace(this.Messages[2].Text.ToUpper(), string.Empty);
+        str = str.Truncate(70);
+        this.contact.ChatAddress = str + this.contact.ChatAddress.Substring(str.Length);
+        this.messageNumber = 0;
+        this.isRunning = false;
+        await this.AddNewMessagesAsync(this.Messages);
       }
     }
 

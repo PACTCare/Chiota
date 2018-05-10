@@ -103,9 +103,9 @@
         {
           this.DisplayInvalidAdressPrompt();
         }
-        else if (contacts[0]?.PublicNtruKey != null && contacts[0].ContactAdress != null)
+        else if (contacts[0]?.PublicNtruKey != null && contacts[0].ContactAddress != null)
         {
-          await this.SendParallel(contacts[0].ContactAdress);
+          await this.SendParallel(contacts[0].ContactAddress);
 
           this.SuccessfulRequestPrompt();
         }
@@ -124,18 +124,18 @@
       var requestContact = new Contact()
                              {
                                // faster than generating adresses
-                               ChatAdress = Seed.Random().ToString(),
+                               ChatAddress = Seed.Random().ToString(),
                                Name = this.user.Name,
                                ImageUrl = this.user.ImageUrl,
-                               ContactAdress = this.user.RequestAddress,
+                               ContactAddress = this.user.RequestAddress,
                                Request = true,
                                Rejected = false,
                                PublicNtruKey = null,
-                               PublicKeyAdress = this.user.PublicKeyAddress
+                               PublicKeyAddress = this.user.PublicKeyAddress
                              };
 
-      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAdress + ChiotaIdentifier.Accepted);
-      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaIdentifier.End);
+      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
+      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End);
 
       // automaticly add to own accept list, so contact is shown as soon as it as accepted by the other user
       var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);

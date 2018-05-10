@@ -43,12 +43,12 @@
         try
         {
           var trytesString = tryte.Message.ToString();
-          var firstBreakIndex = trytesString.IndexOf(ChiotaIdentifier.FirstBreak, StringComparison.Ordinal);
-          var secondBreakIndex = trytesString.IndexOf(ChiotaIdentifier.SecondBreak, StringComparison.Ordinal);
-          var dateTrytes = new TryteString(trytesString.Substring(secondBreakIndex + ChiotaIdentifier.SecondBreak.Length, trytesString.Length - secondBreakIndex - ChiotaIdentifier.SecondBreak.Length));
+          var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
+          var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
+          var dateTrytes = new TryteString(trytesString.Substring(secondBreakIndex + ChiotaConstants.SecondBreak.Length, trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length));
           var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
 
-          var signature = trytesString.Substring(firstBreakIndex + ChiotaIdentifier.FirstBreak.Length, 30);
+          var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
 
           // todo decrypt doesn't work for Jana
@@ -79,14 +79,14 @@
           var chatAddress = decryptedMessage.Substring(0, 81);
 
           // length accepted = rejected 
-          var substring = decryptedMessage.Substring(81, ChiotaIdentifier.Rejected.Length);      
+          var substring = decryptedMessage.Substring(81, ChiotaConstants.Rejected.Length);      
 
-          var contact = new Contact { ChatAdress = chatAddress };
-          if (substring.Contains(ChiotaIdentifier.Accepted))
+          var contact = new Contact { ChatAddress = chatAddress };
+          if (substring.Contains(ChiotaConstants.Accepted))
           {
             contact.Rejected = false;
           }
-          else if (substring.Contains(ChiotaIdentifier.Rejected))
+          else if (substring.Contains(ChiotaConstants.Rejected))
           {
             contact.Rejected = true;
           }
@@ -109,7 +109,7 @@
     public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
       var messages = new List<MessageViewModel>();
-      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAdress);
+      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress);
 
       var messageList = FilterChatMessages(encryptedMessages, keyPair);
 
@@ -121,7 +121,7 @@
           messages.Add(new MessageViewModel
                    {
                      Text = message.Message,
-                     IsIncoming = message.Signature == contact.PublicKeyAdress.Substring(0, 30),
+                     IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
                      MessagDateTime = message.Date.ToLocalTime(),
                      ProfileImage = contact.ImageUrl
                    });
@@ -166,20 +166,20 @@
       foreach (var tryte in trytes)
       {
         var trytesString = tryte.Message.ToString();
-        if (!trytesString.Contains(ChiotaIdentifier.LineBreak))
+        if (!trytesString.Contains(ChiotaConstants.LineBreak))
         {
           continue;
         }
 
         try
         {
-          var index = trytesString.IndexOf(ChiotaIdentifier.LineBreak, StringComparison.Ordinal);
+          var index = trytesString.IndexOf(ChiotaConstants.LineBreak, StringComparison.Ordinal);
           var publicKeyString = trytesString.Substring(0, index);
           var bytesKey = new TryteString(publicKeyString).ToBytes();
           var contact = new Contact
                           {
                             PublicNtruKey = new NTRUPublicKey(bytesKey),
-                            ContactAdress = trytesString.Substring(index + ChiotaIdentifier.LineBreak.Length, 81)
+                            ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
                           };
           contacts.Add(contact);
         }

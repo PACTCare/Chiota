@@ -34,7 +34,8 @@
                 Grid.Column="0" 
                 TextColor="#1d4999"
                 PlaceholderColor="#1d4999"
-                Completed="HandleCompleted"   
+                Completed="HandleCompleted" 
+                Keyboard="Chat"
                     Placeholder="Message" 
                     Text="{Binding OutGoingText}"></Entry>
         <Button Grid.Column="1" 

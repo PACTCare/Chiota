@@ -18,6 +18,7 @@
 
     private readonly List<string> nodeUriList = new List<string>
                                                   {
+                                                    "https://nodes.iota.fm:443",  // pow test 3 seconds 
                                                     "https://field.carriota.com:443", // pow test 13 seconds
                                                     "https://trinity.iota.fm:443", // pow test 6 seconds
                                                     "https://nodes.testnet.iota.org:443/", // pow test 8 seconds
@@ -25,9 +26,9 @@
                                                     "https://iri2.iota.fm:443" // pow test 16 seconds
                                                   };
 
-    public RestIotaRepository Create(bool remote = true, bool bit64 = false)
+    public RestIotaRepository Create(bool remote, int roundNumber = 0, bool bit64 = false)
     {
-      var iotaClient = new RestIotaClient(new RestClient("https://nodes.iota.fm:443")); // pow test 3 seconds 
+      var iotaClient = new RestIotaClient(new RestClient(this.nodeUriList[roundNumber])); 
 
       var node = GenerateNode(remote, iotaClient, bit64);
 

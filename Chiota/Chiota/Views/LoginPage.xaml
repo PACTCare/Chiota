@@ -12,6 +12,7 @@
         <StackLayout Orientation="Vertical" Spacing="10">
           <Label Text="Seed " TextColor="White"></Label>
           <Entry x:Name="RandomSeed" 
+                 AutomationId="RandomSeedId"
                  BackgroundColor="#1d4999"
                  Text="{Binding RandomSeed}"    
                  PlaceholderColor="White" 
@@ -24,7 +25,10 @@
           </StackLayout>
         </StackLayout>
       </Frame>
-      <Button Command="{Binding SubmitCommand}" Text="Login" TextColor="White"  
+      <Button Command="{Binding SubmitCommand}"
+              AutomationId="SubmitButtonId"
+              Text="Login" 
+              TextColor="White"  
               FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
               BackgroundColor="#5874ca" />
     </StackLayout>
@@ -35,7 +39,9 @@
 
       <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
 
-      <Label Text="Addresses are generated..." FontSize="16" 
+      <Label Text="Addresses are generated..." 
+             AutomationId="AddressLabelId"
+             FontSize="16" 
              HorizontalOptions="Center"
              TextColor="#1d4999"/>
 

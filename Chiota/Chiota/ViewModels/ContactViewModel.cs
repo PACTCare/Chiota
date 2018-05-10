@@ -33,14 +33,14 @@
       this.bots = new List<BotObject>();
 
       // Add your own microsoft bot-framework bot here:
-      //this.bots.Add(new BotObject()
-      //{
-      //  BotName = "Florence",
-      //  BotSlogan = "Your health assistant",
-      //  BotId = "Florence",
-      //  DirectLineSecret = "", // <= your direct line secret
-      //  ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
-      //});
+      this.bots.Add(new BotObject()
+      {
+        BotName = "Florence",
+        BotSlogan = "Your health assistant",
+        BotId = "Florence",
+        DirectLineSecret = "", // <= your direct line secret
+        ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
+      });
 
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.user = user;
@@ -94,9 +94,9 @@
       this.SelectedContact = null;
 
       // alternativ BotPage
-      if (contact.ContactAdress == null)
+      if (contact.ContactAddress == null)
       {
-        var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAdress);
+        var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
         await this.Navigation.PushAsync(new BotChatPage(bot));
       }
       else
@@ -135,7 +135,8 @@
           var botContact = new Contact()
           {
             Name = b.BotName,
-            ChatAdress = b.BotSlogan,
+            ChatAddress = b.BotSlogan,
+            ContactAddress = b.BotSlogan,
             ImageUrl = b.ImageUrl,
             Rejected = false
           };
@@ -175,7 +176,7 @@
         contact.Request = false;
 
         // remove request from list
-        var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAdress.Contains(contact.ChatAdress));
+        var itemToRemove = this.contacts.SingleOrDefault(r => r.ContactAddress.Contains(contact.ContactAddress));
         if (itemToRemove != null)
         {
           this.contacts.Remove(itemToRemove);

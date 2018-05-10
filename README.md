@@ -36,8 +36,8 @@ Currently, there are the following points on my to-do list:
 - [x] Performance improvements
 - [x] Check for unique Address public key combination
 - [x] Notifications
+- [x] Change address after a certain number of messages 
 - [ ] Chatbot integration
-- [ ] Change address after a certain number of messages 
 - [ ] Recovery after snapshot
 - [ ] Improve/check NTRU solution or switch to SIDH (key only 564 bytes) for key exchange
 - [ ] Windows/iOS App

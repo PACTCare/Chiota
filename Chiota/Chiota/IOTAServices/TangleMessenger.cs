@@ -11,12 +11,15 @@
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
+  using Tangle.Net.Repository.DataTransfer;
   using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
   public class TangleMessenger
   {
+    private const bool RemotePow = true;
+
     private readonly Seed seed;
 
     private IIotaRepository repository;
@@ -25,7 +28,7 @@
     {
       this.ShortStorageHashes = new List<Hash>();
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create(false);
+      this.repository = new RepositoryFactory().Create(RemotePow);
     }
 
     public List<Hash> ShortStorageHashes { get; set; }
@@ -58,36 +61,37 @@
     {
       var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
-      while (roundNumber < retryNumber && messagesList.Count == 0)
+      TransactionHashList transactions;
+
+      while (roundNumber < retryNumber)
       {
-        this.UpdateNode(roundNumber);
-
-        var adresses = new List<Address> { new Address(adresse) };
-
-        // Todo Change Address, so less transactions to load
-        // Store old tranactions hashs
-        var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-        
-        var hashes = transactions.Hashes;
-        if (returnOnlyNew)
+        try
         {
-          hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
-        }
+          this.UpdateNode(roundNumber);
+          var adresses = new List<Address> { new Address(adresse) };
 
-        foreach (var transactionsHash in hashes)
-        {
-          try
+          // Todo Change Address, so less transactions to load
+          // Store old tranactions hashs
+          // this always returns all 
+          transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
+          var hashes = transactions.Hashes;
+          if (returnOnlyNew)
+          {
+            hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
+          }
+
+          foreach (var transactionsHash in hashes)
           {
             this.ShortStorageHashes.Add(transactionsHash);
             messagesList.Add(await this.MessageFromBundleOrStorage(transactionsHash));
           }
-          catch
-          {
-            // ignored
-          }
-        }
 
-        roundNumber++;
+          retryNumber = 0;
+        }
+        catch
+        {
+          roundNumber++;
+        }
       }
 
       return messagesList;
@@ -98,52 +102,52 @@
       var roundNumber = 0;
       var messagesList = new List<T>();
 
-      while (roundNumber < retryNumber && messagesList.Count == 0)
+      while (roundNumber < retryNumber)
       {
-        this.UpdateNode(roundNumber);
-
-        var adresses = new List<Address> { new Address(adresse) };
-        var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-
-        var hashes = transactions.Hashes;
-        if (returnOnlyNew)
+        try
         {
-          hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
-        }
+          this.UpdateNode(roundNumber);
 
-        foreach (var transactionsHash in hashes)
-        {
-          this.ShortStorageHashes.Add(transactionsHash);
+          var adresses = new List<Address> { new Address(adresse) };
+          var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
 
-          var hashString = transactionsHash.ToString();
-          if (Application.Current.Properties.ContainsKey(hashString))
+          var hashes = transactions.Hashes;
+          if (returnOnlyNew)
           {
-            var messageString = Application.Current.Properties[hashString] as string;
-            var deserializedObject = JsonConvert.DeserializeObject<T>(messageString);
-            messagesList.Add(deserializedObject);
+            hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
           }
-          else
+
+          foreach (var transactionsHash in hashes)
           {
-            var bundle = await this.repository.GetBundleAsync(transactionsHash);
-            var messages = bundle.GetMessages();
-            foreach (var message in messages)
+            this.ShortStorageHashes.Add(transactionsHash);
+
+            var hashString = transactionsHash.ToString();
+            if (Application.Current.Properties.ContainsKey(hashString))
             {
-              try
+              var messageString = Application.Current.Properties[hashString] as string;
+              var deserializedObject = JsonConvert.DeserializeObject<T>(messageString);
+              messagesList.Add(deserializedObject);
+            }
+            else
+            {
+              var bundle = await this.repository.GetBundleAsync(transactionsHash);
+              var messages = bundle.GetMessages();
+              foreach (var message in messages)
               {
                 var deserializedObject = JsonConvert.DeserializeObject<T>(message);
                 messagesList.Add(deserializedObject);
                 Application.Current.Properties[hashString] = message;
                 await Application.Current.SavePropertiesAsync();
               }
-              catch
-              {
-                // ignored
-              }
             }
           }
-        }
 
-        roundNumber++;
+          retryNumber = 0;
+        }
+        catch
+        {
+          roundNumber++;
+        }
       }
 
       return messagesList;
@@ -153,7 +157,7 @@
     {
       if (roundNumber > 0)
       {
-        this.repository = new RepositoryFactory().Create();
+        this.repository = new RepositoryFactory().Create(RemotePow, roundNumber);
       }
     }
 
@@ -175,12 +179,12 @@
         }
       }
 
-      if (!messageTrytes.Contains(ChiotaIdentifier.End))
+      if (!messageTrytes.Contains(ChiotaConstants.End))
       {
         return null;
       }
 
-      var index = messageTrytes.IndexOf(ChiotaIdentifier.End, StringComparison.Ordinal);
+      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
       return new TryteString(messageTrytes.Substring(0, index));
     }
 
@@ -215,7 +219,7 @@
       {
         Address = new Address(adress),
         Message = message,
-        Tag = new Tag(ChiotaIdentifier.Tag),
+        Tag = new Tag(ChiotaConstants.Tag),
         Timestamp = Timestamp.UnixSecondsTimestamp
       };
     }

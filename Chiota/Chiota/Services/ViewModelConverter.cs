@@ -11,9 +11,9 @@
                {
                  Name = contact.Name,
                  ImageUrl = contact.ImageUrl,
-                 ChatAdress = contact.ChatAdress,
-                 ContactAdress = contact.ContactAdress,
-                 PublicKeyAdress = contact.PublicKeyAdress,
+                 ChatAddress = contact.ChatAddress,
+                 ContactAddress = contact.ContactAddress,
+                 PublicKeyAddress = contact.PublicKeyAddress,
                  PublicNtruKey = contact.PublicNtruKey,
                  Request = contact.Request,
                  Rejected = contact.Rejected

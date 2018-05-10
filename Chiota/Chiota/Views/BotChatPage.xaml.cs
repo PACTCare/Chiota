@@ -14,6 +14,7 @@
     public BotChatPage(BotObject bot)
     {
       this.InitializeComponent();
+      this.Title = bot.BotName;
       this.BindingContext = new BotChatViewModel(bot, this.MessagesListView, this.QuickReplyStack) { Navigation = this.Navigation };
     }
 

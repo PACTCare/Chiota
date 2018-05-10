@@ -3,11 +3,10 @@
   using System.Collections.Generic;
 
   using Chiota.IOTAServices;
-  using Chiota.Services;
 
   using Tangle.Net.Entity;
 
-  public class UserFactory
+  public class UserFactory : IUserFactory
   {
     public User Create(Seed storeSeed, List<Address> addresses)
     {

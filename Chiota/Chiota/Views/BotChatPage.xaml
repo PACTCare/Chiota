@@ -43,6 +43,7 @@
                 Grid.Column="0" 
                 TextColor="#1d4999"
                 PlaceholderColor="#1d4999"
+                Keyboard="Chat"
                 Completed="HandleCompleted"   
                     Placeholder="Message" 
                     Text="{Binding OutGoingText}"></Entry>

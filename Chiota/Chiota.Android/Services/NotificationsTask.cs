@@ -54,7 +54,7 @@
             var contactNotificationId = 0;
             foreach (var contact in approvedContacts.Where(c => !c.Rejected))
             {
-              var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAdress);
+              var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
 
               if (encryptedMessages.Any(c => !c.Stored))
               {

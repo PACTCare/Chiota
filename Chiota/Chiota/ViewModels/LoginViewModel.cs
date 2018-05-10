@@ -28,7 +28,7 @@
     private bool storeSeed;
 
     private UserDataOnTangle dataOnTangle;
-
+ 
     public LoginViewModel()
     {
       this.StoreSeed = true;

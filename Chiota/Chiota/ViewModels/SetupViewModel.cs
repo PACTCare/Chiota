@@ -119,10 +119,10 @@
 
     private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString tryteString)
     {
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(tryteString + ChiotaIdentifier.End), user.OwnDataAdress);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(tryteString + ChiotaConstants.End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json too big
-      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaIdentifier.LineBreak + user.RequestAddress + ChiotaIdentifier.End);
+      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
 
       var secondTransaction = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
       return Task.WhenAll(firstTransaction, secondTransaction);

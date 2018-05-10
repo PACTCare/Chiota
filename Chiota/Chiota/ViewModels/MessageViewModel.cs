@@ -6,8 +6,6 @@
   {
     private string text;
 
-    private string attachementUrl;
-
     private string imageSource;
 
     private string profileImage;
@@ -62,18 +60,6 @@
       set
       {
         this.isIncoming = value;
-        this.RaisePropertyChanged();
-      }
-    }
-
-    public bool HasAttachement => !string.IsNullOrEmpty(this.attachementUrl);
-
-    public string AttachementUrl
-    {
-      get => this.attachementUrl;
-      set
-      {
-        this.attachementUrl = value;
         this.RaisePropertyChanged();
       }
     }
