@@ -94,9 +94,9 @@
       this.SelectedContact = null;
 
       // alternativ BotPage
-      if (contact.ContactAddress == null)
+      var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
+      if (bot != null)
       {
-        var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
         await this.Navigation.PushAsync(new BotChatPage(bot));
       }
       else

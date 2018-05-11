@@ -1,17 +1,19 @@
 ﻿namespace Chiota.IOTAServices
 {
-  using System;
   using System.Collections.Generic;
   using System.Threading.Tasks;
+
+  using Chiota.Persistence;
 
   using Models;
 
   using Newtonsoft.Json;
 
+  using SQLite;
+
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
-  using Tangle.Net.Repository.DataTransfer;
   using Tangle.Net.Utils;
 
   using Xamarin.Forms;
@@ -22,16 +24,20 @@
 
     private readonly Seed seed;
 
+    private readonly SQLiteAsyncConnection connection;
+
     private IIotaRepository repository;
 
     public TangleMessenger(Seed seed)
     {
-      this.ShortStorageHashes = new List<Hash>();
       this.seed = seed;
       this.repository = new RepositoryFactory().Create(RemotePow);
+      this.ShortStorageAddressList = new List<string>();
+      this.connection = DependencyService.Get<ISqlLiteDb>().GetConnection();
+      this.connection.CreateTableAsync<SqlLiteMessage>();
     }
 
-    public List<Hash> ShortStorageHashes { get; set; }
+    public List<string> ShortStorageAddressList { get; set; }
 
     public async Task<bool> SendMessageAsync(TryteString message, string address, int retryNumber = 3)
     {
@@ -57,33 +63,53 @@
       return false;
     }
 
-    public async Task<List<TryteStringMessage>> GetMessagesAsync(string adresse, int retryNumber = 1, bool returnOnlyNew = true)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false)
     {
       var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
-      TransactionHashList transactions;
+      var tableList = new List<SqlLiteMessage>();
+      var shortStorageHashes = new List<Hash>();
 
-      while (roundNumber < retryNumber)
+      try
+      {
+        tableList = await this.GetLocalStoredInformation(addresse);
+        var alreadyLoaded = this.AddressLoadedChack(addresse);
+        foreach (var sqlLiteMessage in tableList)
+        {
+          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+          var message = new TryteStringMessage { Message = new TryteString(sqlLiteMessage.MessageTryteString), Stored = true };
+          if (!alreadyLoaded)
+          {
+            messagesList.Add(message);
+          }
+        }
+      }
+      catch
+      {
+        // ignored
+      }
+
+      // if more than 2*Chiotaconstants.MessagesOnAddress messages on address, don't try to load new messages
+      var chatCheck = true;
+      if (getChatMessages)
+      {
+        chatCheck = tableList.Count < (2 * ChiotaConstants.MessagesOnAddress);
+      }
+
+      while (roundNumber < retryNumber && chatCheck)
       {
         try
         {
           this.UpdateNode(roundNumber);
-          var adresses = new List<Address> { new Address(adresse) };
 
-          // Todo Change Address, so less transactions to load
-          // Store old tranactions hashs
-          // this always returns all 
-          transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-          var hashes = transactions.Hashes;
-          if (returnOnlyNew)
-          {
-            hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
-          }
+          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
 
           foreach (var transactionsHash in hashes)
           {
-            this.ShortStorageHashes.Add(transactionsHash);
-            messagesList.Add(await this.MessageFromBundleOrStorage(transactionsHash));
+            var bundle = await this.repository.GetBundleAsync(transactionsHash);
+            var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
+            await this.StoreLocal(addresse, transactionsHash,  message.Message.ToString());
+            messagesList.Add(message);
           }
 
           retryNumber = 0;
@@ -97,48 +123,49 @@
       return messagesList;
     }
 
-    public async Task<List<T>> GetJsonMessageAsync<T>(string adresse, int retryNumber = 1, bool returnOnlyNew = true)
+    public async Task<List<T>> GetJsonMessageAsync<T>(string addresse, int retryNumber = 1)
     {
       var roundNumber = 0;
       var messagesList = new List<T>();
+      var shortStorageHashes = new List<Hash>();
+
+      try
+      {
+        var tableList = await this.GetLocalStoredInformation(addresse);
+        var alreadyLoaded = this.AddressLoadedChack(addresse);
+
+        foreach (var sqlLiteMessage in tableList)
+        {
+          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+
+          if (!alreadyLoaded)
+          {
+            var deserializedObject = JsonConvert.DeserializeObject<T>(sqlLiteMessage.MessageTryteString);
+            messagesList.Add(deserializedObject);
+          }
+        }
+      }
+      catch
+      {
+        // ignored
+      }
 
       while (roundNumber < retryNumber)
       {
         try
         {
           this.UpdateNode(roundNumber);
-
-          var adresses = new List<Address> { new Address(adresse) };
-          var transactions = await this.repository.FindTransactionsByAddressesAsync(adresses);
-
-          var hashes = transactions.Hashes;
-          if (returnOnlyNew)
-          {
-            hashes = IotaHelper.GetNewHashes(transactions, this.ShortStorageHashes);
-          }
+          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
 
           foreach (var transactionsHash in hashes)
           {
-            this.ShortStorageHashes.Add(transactionsHash);
-
-            var hashString = transactionsHash.ToString();
-            if (Application.Current.Properties.ContainsKey(hashString))
+            var bundle = await this.repository.GetBundleAsync(transactionsHash);
+            var messages = bundle.GetMessages();
+            foreach (var message in messages)
             {
-              var messageString = Application.Current.Properties[hashString] as string;
-              var deserializedObject = JsonConvert.DeserializeObject<T>(messageString);
+              await this.StoreLocal(addresse, transactionsHash, message);
+              var deserializedObject = JsonConvert.DeserializeObject<T>(message);
               messagesList.Add(deserializedObject);
-            }
-            else
-            {
-              var bundle = await this.repository.GetBundleAsync(transactionsHash);
-              var messages = bundle.GetMessages();
-              foreach (var message in messages)
-              {
-                var deserializedObject = JsonConvert.DeserializeObject<T>(message);
-                messagesList.Add(deserializedObject);
-                Application.Current.Properties[hashString] = message;
-                await Application.Current.SavePropertiesAsync();
-              }
             }
           }
 
@@ -151,6 +178,42 @@
       }
 
       return messagesList;
+    }
+
+    private bool AddressLoadedChack(string addresse)
+    {
+      var alreadyLoaded = this.ShortStorageAddressList.Contains(addresse);
+      if (!alreadyLoaded)
+      {
+        this.ShortStorageAddressList.Add(addresse);
+      }
+
+      return alreadyLoaded;
+    }
+
+    private async Task StoreLocal(string addresse, Hash transactionsHash, string message)
+    {
+      var sqlLiteMessage = new SqlLiteMessage
+      {
+        TransactionHash = transactionsHash.ToString(),
+        ChatAddress = addresse,
+        MessageTryteString = message
+      };
+      await this.connection.InsertAsync(sqlLiteMessage);
+    }
+
+    private async Task<List<Hash>> GetNewHashes(string addresse, List<Hash> shortStorageHashes)
+    {
+      var addresses = new List<Address> { new Address(addresse) };
+      var transactions = await this.repository.FindTransactionsByAddressesAsync(addresses);
+      return IotaHelper.FilterNewHashes(transactions, shortStorageHashes);
+    }
+
+    private async Task<List<SqlLiteMessage>> GetLocalStoredInformation(string addresse)
+    {
+      return await this.connection.QueryAsync<SqlLiteMessage>(
+               "SELECT * FROM SqlLiteMessage WHERE ChatAddress = ? ORDER BY Id",
+               addresse);
     }
 
     private void UpdateNode(int roundNumber)
@@ -161,63 +224,11 @@
       }
     }
 
-    private TryteString GetMessages(Bundle bundle)
-    {
-      var messageTrytes = string.Empty;
-
-      // multiple message per bundle?
-      foreach (var transaction in bundle.Transactions)
-      {
-        if (transaction.Value < 0)
-        {
-          continue;
-        }
-
-        if (!transaction.Fragment.IsEmpty)
-        {
-          messageTrytes += transaction.Fragment.Value;
-        }
-      }
-
-      if (!messageTrytes.Contains(ChiotaConstants.End))
-      {
-        return null;
-      }
-
-      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
-      return new TryteString(messageTrytes.Substring(0, index));
-    }
-
-    private async Task<TryteStringMessage> MessageFromBundleOrStorage(Hash transactionsHash)
-    {
-      // table storage as a backup service for snapshots
-      var message = new TryteStringMessage();
-      var hashString = transactionsHash.ToString();
-      if (Application.Current.Properties.ContainsKey(hashString))
-      {
-        // old messages
-        var messageString = Application.Current.Properties[hashString] as string;
-        message.Message = new TryteString(messageString);
-        message.Stored = true;
-      }
-      else
-      {
-        // new messages
-        var bundle = await this.repository.GetBundleAsync(transactionsHash);
-        message.Message = this.GetMessages(bundle);
-        message.Stored = false;
-        Application.Current.Properties[hashString] = message.Message.ToString();
-        await Application.Current.SavePropertiesAsync();
-      }
-
-      return message;
-    }
-
-    private Transfer CreateTransfer(TryteString message, string adress)
+    private Transfer CreateTransfer(TryteString message, string address)
     {
       return new Transfer
       {
-        Address = new Address(adress),
+        Address = new Address(address),
         Message = message,
         Tag = new Tag(ChiotaConstants.Tag),
         Timestamp = Timestamp.UnixSecondsTimestamp

@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
     <PackageReference Include="RestSharp" Version="106.3.0-alpha0002" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.7" />
     <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />

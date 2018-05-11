@@ -40,13 +40,13 @@
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.PublicKeyAddress, 3);
       var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
 
-      // more than one key at this address
-      if (contacts.Count > 1)
+      // more than one key at this address or something is wrong with the key
+      if (contacts.Count > 1 || contacts.Count == 0)
       {
         // generate a new public key address based on a changed seed until you find an unused address 
         // this way the attacker doesn't know the next public key address
         List<Contact> newContacts;
-        var addresses = new List<Address> { new Address(contacts[0].ContactAddress) };
+        var addresses = new List<Address> { new Address(this.user.PublicKeyAddress) };
         do
         {
           var newSeed = this.user.Seed.ToString().Substring(0, 75) + addresses[0].ToString().Substring(0, 6);

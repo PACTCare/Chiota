@@ -5,7 +5,6 @@
   using System.Collections.ObjectModel;
   using System.Globalization;
   using System.Linq;
-  using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using System.Windows.Input;
@@ -54,8 +53,8 @@
       this.messagesListView = messagesListView;
       this.OutGoingText = null;
 
-      // reset hash short storage, because it's different for every chat
-      this.user.TangleMessenger.ShortStorageHashes = new List<Hash>();
+      // reset, checks again for invalid public key below and loads again the messages
+      this.user.TangleMessenger.ShortStorageAddressList = new List<string>();
 
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
@@ -116,7 +115,7 @@
     {
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAddress, 3);
       var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
-      if (contactInfos == null || contactInfos.Count > 1)
+      if (contactInfos == null || contactInfos.Count == 0 || contactInfos.Count > 1)
       {
         return null;
       }
@@ -208,9 +207,10 @@
         // it's also based on an incrementing Trytestring, so if you always send the same messages it won't result in the same next address
         var rgx = new Regex("[^A-Z]");
         var incrementPart = Helper.TryteStringIncrement(this.contact.ChatAddress.Substring(0, 15));
-        var str = incrementPart + rgx.Replace(this.Messages[3].Text.ToUpper(), string.Empty)
-                                + rgx.Replace(this.Messages[1].Text.ToUpper(), string.Empty)
-                                + rgx.Replace(this.Messages[2].Text.ToUpper(), string.Empty);
+        
+        var str = incrementPart + rgx.Replace(this.Messages[this.Messages.Count - 1].Text.ToUpper(), string.Empty)
+                                + rgx.Replace(this.Messages[this.Messages.Count - 3].Text.ToUpper(), string.Empty)
+                                + rgx.Replace(this.Messages[this.Messages.Count - 2].Text.ToUpper(), string.Empty);
         str = str.Truncate(70);
         this.contact.ChatAddress = str + this.contact.ChatAddress.Substring(str.Length);
         this.messageNumber = 0;

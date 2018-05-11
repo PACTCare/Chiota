@@ -51,7 +51,6 @@
           var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
 
-          // todo decrypt doesn't work for Jana
           var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
           var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
           chatMessages.Add(chatMessage);
@@ -106,10 +105,37 @@
       return approvedContacts;
     }
 
+    public static TryteString ExtractMessage(Bundle bundle)
+    {
+      var messageTrytes = string.Empty;
+
+      // multiple message per bundle?
+      foreach (var transaction in bundle.Transactions)
+      {
+        if (transaction.Value < 0)
+        {
+          continue;
+        }
+
+        if (!transaction.Fragment.IsEmpty)
+        {
+          messageTrytes += transaction.Fragment.Value;
+        }
+      }
+
+      if (!messageTrytes.Contains(ChiotaConstants.End))
+      {
+        return null;
+      }
+
+      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
+      return new TryteString(messageTrytes.Substring(0, index));
+    }
+
     public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
       var messages = new List<MessageViewModel>();
-      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress);
+      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
 
       var messageList = FilterChatMessages(encryptedMessages, keyPair);
 
@@ -131,7 +157,7 @@
       return messages;
     }
 
-    public static List<Hash> GetNewHashes(Tangle.Net.Repository.DataTransfer.TransactionHashList transactions, List<Hash> storedHashes)
+    public static List<Hash> FilterNewHashes(Tangle.Net.Repository.DataTransfer.TransactionHashList transactions, List<Hash> storedHashes)
     {
       var newHashes = new List<Hash>();
       foreach (var transactionsHash in transactions.Hashes)
