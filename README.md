@@ -39,10 +39,10 @@ Currently, there are the following points on my to-do list:
 - [x] Check for unique Address public key combination
 - [x] Notifications
 - [x] Change address after a certain number of messages 
-- [ ] Chatbot integration
-- [ ] Recovery after snapshot
-- [ ] Improve/check NTRU solution or switch to SIDH (key only 564 bytes) for key exchange
-- [ ] Windows/iOS App
+- [x] Chatbot integration
+- [x] Local SQLite Database for storage of encrypted messages (snapshot)
+- [ ] Improve performance/Fix errors
+- [ ] Android versions/iOS App
 - [ ] Unit testing
 - [ ] Code refactoring
 
