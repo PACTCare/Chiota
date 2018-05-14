@@ -15,13 +15,16 @@
         Source="{Binding ImageUrl}" >
       </abstractions:CircleImage>
       <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand" Margin="0,10,0,10">
-        <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
+        <StackLayout Orientation="Horizontal">
+          <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
+          <Label Text="{Binding PoWText}" FontSize="16" TextColor="#ff0000"></Label>
+        </StackLayout>
         <StackLayout Orientation="Horizontal">
           <Button Text="Accept" TextColor="White"  BackgroundColor="#5874ca" Command="{Binding AcceptCommand}"></Button>
           <Button Text="Decline" TextColor="White" BackgroundColor="#5874ca" Command="{Binding DeclineCommand}"></Button>
         </StackLayout>
       </StackLayout>
-      
+
     </StackLayout>
   </ViewCell.View>
 </ViewCell>

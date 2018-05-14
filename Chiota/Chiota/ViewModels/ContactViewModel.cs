@@ -152,7 +152,20 @@
       var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, this.user.NtruContactPair);
       var contactRequestList = await contactTaskList;
 
+      // all infos are taken from contactRequestList
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+      
+      // decline info is stored on contactsOnApproveAddress
+      for (int i = 0; i < approvedContacts.Count; i++)
+      {
+        foreach (var c in contactsOnApproveAddress)
+        {
+          if (approvedContacts[i].ChatAddress == c.ChatAddress)
+          {
+            approvedContacts[i].Rejected = c.Rejected;
+          }
+        }
+      }
 
       // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
       if (contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)

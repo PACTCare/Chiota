@@ -6,6 +6,9 @@
 
   using Chiota.Models;
 
+  using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
+
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
@@ -31,6 +34,16 @@
       // Can not be parallel!
       var keyGen = new NTRUKeyGenerator(this.encParams, false);
       var keyPair = keyGen.GenerateKeyPair(passphrase, salt);
+
+      // For some reason the transformation sometime changes a byte!
+      var testBytes = new TryteString(keyPair.PublicKey.ToBytes().ToTrytes().ToString()).ToBytes();
+      while (testBytes.Length != 1026)
+      {
+        saltAddress = saltAddress.Substring(0, saltAddress.Length - 1);
+        var newSalt = Encoding.UTF8.GetBytes(saltAddress);
+        keyPair = keyGen.GenerateKeyPair(passphrase, newSalt);
+        testBytes = new TryteString(keyPair.PublicKey.ToBytes().ToTrytes().ToString()).ToBytes();
+      }
 
       return keyPair;
     }

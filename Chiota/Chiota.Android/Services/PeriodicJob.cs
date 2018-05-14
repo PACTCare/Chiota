@@ -7,10 +7,6 @@
   using Android.App.Job;
   using Android.OS;
 
-  using Chiota.Messages;
-
-  using Xamarin.Forms;
-
   [Service(Name = "chiotaapp.chiotaapp.PeriodicJob", Permission = "android.permission.BIND_JOB_SERVICE")]
   public class PeriodicJob : JobService
   {
@@ -32,14 +28,6 @@
             }
             catch (OperationCanceledException)
             {
-            }
-            finally
-            {
-              if (this.cts.IsCancellationRequested)
-              {
-                var message = new CancelledMessage();
-                Device.BeginInvokeOnMainThread(() => MessagingCenter.Send(message, "CancelledMessage"));
-              }
             }
           },
         this.cts.Token);

@@ -195,7 +195,6 @@ namespace VTDev.Libraries.CEXEngine.Numeric
         /// <returns>Returns a string representation of this in decimal form</returns>
         internal static String ToDecimalScaledString(BigInteger Value, int Scale)
         {   
-            //ToDo: too proceedural, break this up.. j.u.
             int sign = Value._sign;
             int numberLength = Value._numberLength;
             int[] digits = Value._digits;

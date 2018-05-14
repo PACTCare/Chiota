@@ -13,9 +13,8 @@
 
     public TrytesEntity()
     {
-
     }
 
-    public string TryteStringMessage { get; set; }
+    public string MessageTryteString { get; set; }
   }
 }

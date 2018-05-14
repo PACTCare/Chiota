@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Persistence;
+  using Chiota.Services;
 
   using Models;
 
@@ -26,6 +27,8 @@
 
     private readonly SQLiteAsyncConnection connection;
 
+    // private readonly TableStorage tableStorage;
+
     private IIotaRepository repository;
 
     public TangleMessenger(Seed seed)
@@ -35,6 +38,10 @@
       this.ShortStorageAddressList = new List<string>();
       this.connection = DependencyService.Get<ISqlLiteDb>().GetConnection();
       this.connection.CreateTableAsync<SqlLiteMessage>();
+
+      // this.tableStorage = new TableStorage();
+
+      // this.tableStorage.CreateTable();
     }
 
     public List<string> ShortStorageAddressList { get; set; }
@@ -72,7 +79,7 @@
 
       try
       {
-        tableList = await this.GetLocalStoredInformation(addresse);
+        tableList = await this.GetStoredTransactions(addresse);
         var alreadyLoaded = this.AddressLoadedChack(addresse);
         foreach (var sqlLiteMessage in tableList)
         {
@@ -108,7 +115,7 @@
           {
             var bundle = await this.repository.GetBundleAsync(transactionsHash);
             var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
-            await this.StoreLocal(addresse, transactionsHash,  message.Message.ToString());
+            await this.StoreTransaction(addresse, transactionsHash, message.Message.ToString());
             messagesList.Add(message);
           }
 
@@ -131,7 +138,7 @@
 
       try
       {
-        var tableList = await this.GetLocalStoredInformation(addresse);
+        var tableList = await this.GetStoredTransactions(addresse);
         var alreadyLoaded = this.AddressLoadedChack(addresse);
 
         foreach (var sqlLiteMessage in tableList)
@@ -163,7 +170,7 @@
             var messages = bundle.GetMessages();
             foreach (var message in messages)
             {
-              await this.StoreLocal(addresse, transactionsHash, message);
+              await this.StoreTransaction(addresse, transactionsHash, message);
               var deserializedObject = JsonConvert.DeserializeObject<T>(message);
               messagesList.Add(deserializedObject);
             }
@@ -191,7 +198,7 @@
       return alreadyLoaded;
     }
 
-    private async Task StoreLocal(string addresse, Hash transactionsHash, string message)
+    private async Task StoreTransaction(string addresse, Hash transactionsHash, string message)
     {
       var sqlLiteMessage = new SqlLiteMessage
       {
@@ -199,6 +206,8 @@
         ChatAddress = addresse,
         MessageTryteString = message
       };
+
+      // await this.tableStorage.Insert(sqlLiteMessage);
       await this.connection.InsertAsync(sqlLiteMessage);
     }
 
@@ -209,11 +218,19 @@
       return IotaHelper.FilterNewHashes(transactions, shortStorageHashes);
     }
 
-    private async Task<List<SqlLiteMessage>> GetLocalStoredInformation(string addresse)
+    private async Task<List<SqlLiteMessage>> GetStoredTransactions(string addresse)
     {
-      return await this.connection.QueryAsync<SqlLiteMessage>(
+      var tableList = await this.connection.QueryAsync<SqlLiteMessage>(
                "SELECT * FROM SqlLiteMessage WHERE ChatAddress = ? ORDER BY Id",
                addresse);
+
+      // means no data found local
+      // if (tableList == null || tableList.Count == 0)
+      // {
+      //  tableList = await this.tableStorage.GetTableContent(addresse);
+      // }
+
+      return tableList;
     }
 
     private void UpdateNode(int roundNumber)

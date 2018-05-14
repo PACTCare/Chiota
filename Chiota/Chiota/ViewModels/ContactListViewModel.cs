@@ -18,44 +18,61 @@
 
     private readonly ViewCellObject viewCellObject;
 
+    private string poWText;
+
     private bool isClicked;
 
     public ContactListViewModel(User user, ViewCellObject viewCellObject)
     {
       this.user = user;
+      this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
-      this.AcceptCommand = new Command(this.OnAccept);
-      this.DeclineCommand = new Command(this.OnDecline);
+      this.AcceptCommand = new Command(async () => { await this.OnAccept(); });
+      this.DeclineCommand = new Command(async () => { await this.OnDecline(); });
     }
 
     public ICommand AcceptCommand { get; protected set; }
 
     public ICommand DeclineCommand { get; protected set; }
 
-    private async void OnDecline()
+    public string PoWText
+    {
+      get => this.poWText;
+      set
+      {
+        this.poWText = value;
+        this.RaisePropertyChanged();
+      }
+    }
+
+    private async Task OnDecline()
     {
       if (!this.isClicked)
       {
         this.isClicked = true;
+        this.PoWText = " Proof-of-work in progress!";
 
         var encryptedDecline = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Rejected);
         var tryteString = new TryteString(encryptedDecline.ToTrytes() + ChiotaConstants.End);
 
         await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
+        this.PoWText = string.Empty;
         this.isClicked = false;
       }
     }
 
-    private async void OnAccept()
+    private async Task OnAccept()
     {
       if (!this.isClicked)
       {
         this.isClicked = true;
+        this.PoWText = " Proof-of-work in progress!";
 
         await this.SendParallelAcceptAsync();
 
         this.viewCellObject.RefreshContacts = true;
+        this.PoWText = string.Empty;
         this.isClicked = false;
       }
     }

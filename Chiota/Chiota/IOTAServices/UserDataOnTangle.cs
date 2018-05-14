@@ -54,6 +54,8 @@
           addresses = await Task.Factory.StartNew(() => addressGenerator.GetAddresses(new Seed(newSeed), SecurityLevel.Medium, 0, 1));
 
           var testtrytes = await this.user.TangleMessenger.GetMessagesAsync(addresses[0].ToString(), 3);
+          
+          // returns also null if something wrong with ntru key pair
           newContacts = IotaHelper.GetPublicKeysAndContactAddresses(testtrytes);
 
           if (newContacts == null || newContacts.Count == 0)
