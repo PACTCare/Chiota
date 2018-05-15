@@ -1,6 +1,8 @@
 ﻿namespace Chiota.Services
 {
+  using System;
   using System.Collections.Generic;
+  using System.Diagnostics;
   using System.Linq;
   using System.Text;
 
@@ -11,11 +13,10 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+  using VTDev.Libraries.CEXEngine.Exceptions;
 
   public class NtruKex
   {
-    private const int MaxTextSize = ChiotaConstants.CharacterLimit; // 105
-
     private const int EncryptedTextSize = 1022;
 
     private readonly NTRUParameters encParams = NTRUParamSets.APR2011743FAST; // Alternative EES743EP1 
@@ -59,7 +60,7 @@
       var bytes = new List<byte[]>();
       using (var cipher = new NTRUEncrypt(this.encParams))
       {
-        var splitText = this.SplitByLength(input, MaxTextSize);
+        var splitText = this.SplitByLength(input, ChiotaConstants.CharacterLimit);
         foreach (var text in splitText)
         {
           cipher.Initialize(publicKey);
@@ -87,9 +88,17 @@
       {
         using (var cipher = new NTRUEncrypt(this.encParams))
         {
-          cipher.Initialize(keyPair);
-          var dec = cipher.Decrypt(bytes);
-          decryptedText += Encoding.UTF8.GetString(dec);
+          try
+          {
+            cipher.Initialize(keyPair);
+            var dec = cipher.Decrypt(bytes);
+            decryptedText += Encoding.UTF8.GetString(dec);
+          }
+          catch (CryptoAsymmetricException e)
+          {
+            Trace.WriteLine(e);
+            decryptedText = null;
+          }
         }
       }
 

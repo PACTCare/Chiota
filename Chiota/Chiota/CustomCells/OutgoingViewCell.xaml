@@ -26,8 +26,7 @@
         <Frame Grid.Row="0" 
                Grid.Column="1"
                OutlineColor="Transparent" 
-               HasShadow="False" 
-               BackgroundColor="#f5f5f5">
+               HasShadow="False">
         </Frame>
         <Frame CornerRadius="10" 
                Padding="10,8,10,8" 

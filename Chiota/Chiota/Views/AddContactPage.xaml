@@ -22,7 +22,7 @@
           </zx:ZXingBarcodeImageView>
         </Frame>
         <Label Text="Your address (tap to copy):" Margin="0,8,0,0" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
-        <Label Text="{Binding UserAdress}" Margin="0,5,0,0" FontSize="16" TextColor="#1d4999"></Label>
+        <Label Text="{Binding UserAddress}" Margin="0,5,0,0" FontSize="16" TextColor="#1d4999"></Label>
       <Frame.GestureRecognizers>
         <TapGestureRecognizer
             Tapped="AdressTapHandle" 

@@ -4,7 +4,6 @@
   using System.Threading.Tasks;
 
   using Chiota.Persistence;
-  using Chiota.Services;
 
   using Models;
 
@@ -229,7 +228,6 @@
       // {
       //  tableList = await this.tableStorage.GetTableContent(addresse);
       // }
-
       return tableList;
     }
 

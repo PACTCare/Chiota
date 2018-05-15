@@ -16,7 +16,7 @@
       </abstractions:CircleImage>
       <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand">
         <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
-        <Label Text="{Binding ChatAdress}" FontSize="10" TextColor="Gray"></Label>
+        <Label Text="{Binding ChatAddress}" FontSize="10" TextColor="Gray"></Label>
       </StackLayout>
     </StackLayout>
   </ViewCell.View>

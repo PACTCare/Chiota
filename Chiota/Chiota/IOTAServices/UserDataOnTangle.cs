@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Models;
+  using Chiota.Services;
 
   using Newtonsoft.Json;
 
@@ -24,12 +25,21 @@
 
     public async Task<User> UpdateUserWithOwnDataAddress()
     {
-      var ownDataWrappers = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
-      if (ownDataWrappers != null && ownDataWrappers.Count > 0)
+      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
+      foreach (var tryte in trytes)
       {
-        var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(ownDataWrappers[0].Message.ToUtf8String());
-        this.user.Name = decryptedUser.Name;
-        this.user.ImageUrl = decryptedUser.ImageUrl;
+        try
+        {
+          var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.ToBytes());
+
+          var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(decrypted);
+          this.user.Name = decryptedUser.Name;
+          this.user.ImageUrl = ChiotaConstants.ImagePath + decryptedUser.ImageUrl;
+        }
+        catch
+        {
+          // ignored
+        }
       }
 
       return this.user;
@@ -54,7 +64,7 @@
           addresses = await Task.Factory.StartNew(() => addressGenerator.GetAddresses(new Seed(newSeed), SecurityLevel.Medium, 0, 1));
 
           var testtrytes = await this.user.TangleMessenger.GetMessagesAsync(addresses[0].ToString(), 3);
-          
+
           // returns also null if something wrong with ntru key pair
           newContacts = IotaHelper.GetPublicKeysAndContactAddresses(testtrytes);
 

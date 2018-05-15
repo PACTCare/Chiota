@@ -8,7 +8,7 @@
   {
     public ApprovedContactViewCell()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
   }
 }

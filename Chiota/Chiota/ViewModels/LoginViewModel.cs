@@ -70,15 +70,20 @@
         this.AlreadyClicke = true;
         var seed = new Seed(this.RandomSeed);
 
-        // 4 addresses needed: 
+        // 4 addresses needed
         // 0. own user data address (encrypted, MAM or private key)
         // 1. public key address 
         // 2. request address
         // 3. approved address
-        var addresses = await this.GenerateAddressParallel(seed, 4);
+        // addresses can be generated based on each other to make it faster
+        var addresses = await this.GenerateAddressParallel(seed, 2);
+        addresses.Add(Helper.GenerateAddress(addresses[0]));
+        addresses.Add(Helper.GenerateAddress(addresses[1]));
+
         var user = new UserFactory().Create(seed, addresses);
-        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
-        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
+        var ntru = new NtruKex();
+        user.NtruChatPair = ntru.CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
+        user.NtruContactPair = ntru.CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
 
         // if first time only store seed after finished setup
         user.StoreSeed = this.StoreSeed;

@@ -52,8 +52,11 @@
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
 
           var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
-          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
-          chatMessages.Add(chatMessage);
+          if (decryptedMessage != null)
+          {
+            var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
+            chatMessages.Add(chatMessage);
+          }
         }
         catch
         {
@@ -78,7 +81,7 @@
           var chatAddress = decryptedMessage.Substring(0, 81);
 
           // length accepted = rejected 
-          var substring = decryptedMessage.Substring(81, ChiotaConstants.Rejected.Length);      
+          var substring = decryptedMessage.Substring(81, ChiotaConstants.Rejected.Length);
 
           var contact = new Contact { ChatAddress = chatAddress };
           if (substring.Contains(ChiotaConstants.Accepted))
@@ -139,18 +142,18 @@
 
       var messageList = FilterChatMessages(encryptedMessages, keyPair);
 
-      if (messageList != null)
+      if (messageList != null && messageList.Count > 0)
       {
         var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
         foreach (var message in sortedMessageList)
         {
           messages.Add(new MessageViewModel
-                   {
-                     Text = message.Message,
-                     IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
-                     MessagDateTime = message.Date.ToLocalTime(),
-                     ProfileImage = contact.ImageUrl
-                   });
+          {
+            Text = message.Message,
+            IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
+            MessagDateTime = message.Date.ToLocalTime(),
+            ProfileImage = contact.ImageUrl
+          });
         }
       }
 
@@ -203,10 +206,10 @@
           var publicKeyString = trytesString.Substring(0, index);
           var bytesKey = new TryteString(publicKeyString).ToBytes();
           var contact = new Contact
-                          {
-                            PublicNtruKey = new NTRUPublicKey(bytesKey),
-                            ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
-                          };
+          {
+            PublicNtruKey = new NTRUPublicKey(bytesKey),
+            ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
+          };
           contacts.Add(contact);
         }
         catch

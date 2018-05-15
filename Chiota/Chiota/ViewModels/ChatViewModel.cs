@@ -53,9 +53,6 @@
       this.messagesListView = messagesListView;
       this.OutGoingText = null;
 
-      // reset, checks again for invalid public key below and loads again the messages
-      this.user.TangleMessenger.ShortStorageAddressList = new List<string>();
-
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 

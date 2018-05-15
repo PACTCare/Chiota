@@ -1,7 +1,9 @@
 ﻿namespace Chiota.ViewModels
 {
+  using System;
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
+  using System.Diagnostics;
   using System.Linq;
   using System.Threading.Tasks;
 
@@ -22,9 +24,9 @@
 
     private readonly User user;
 
-    private readonly ObservableCollection<ContactListViewModel> contacts;
-
     private readonly List<BotObject> bots;
+
+    private ObservableCollection<ContactListViewModel> contacts;
 
     private ContactListViewModel selectedContact;
 
@@ -76,11 +78,14 @@
     {
       this.PageIsShown = true;
       this.viewCellObject.RefreshContacts = true;
+      this.contacts = new ObservableCollection<ContactListViewModel>();
       this.UpdateContacts();
     }
 
     public void OnDisappearing()
     {
+      // resets everything, reloads new messages contacts, public key check, etc.
+      this.user.TangleMessenger.ShortStorageAddressList = new List<string>();
       this.PageIsShown = false;
     }
 
@@ -127,22 +132,7 @@
 
     private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
     {
-      // Bots
-      if (this.contacts.Count == 0)
-      {
-        foreach (var b in this.bots)
-        {
-          var botContact = new Contact()
-          {
-            Name = b.BotName,
-            ChatAddress = b.BotSlogan,
-            ContactAddress = b.BotSlogan,
-            ImageUrl = b.ImageUrl,
-            Rejected = false
-          };
-          this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
-        }
-      }
+      this.AddBotsToContacts();
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
@@ -154,7 +144,7 @@
 
       // all infos are taken from contactRequestList
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-      
+
       // decline info is stored on contactsOnApproveAddress
       for (int i = 0; i < approvedContacts.Count; i++)
       {
@@ -192,7 +182,14 @@
         var itemToRemove = this.contacts.SingleOrDefault(r => r.ContactAddress.Contains(contact.ContactAddress));
         if (itemToRemove != null)
         {
-          this.contacts.Remove(itemToRemove);
+          try
+          {
+            this.contacts.Remove(itemToRemove);
+          }
+          catch (Exception e)
+          {
+            Trace.WriteLine(e);
+          }
         }
 
         this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject));
@@ -212,6 +209,25 @@
       }
 
       return searchContacts;
+    }
+
+    private void AddBotsToContacts()
+    {
+      if (this.contacts.Count == 0)
+      {
+        foreach (var b in this.bots)
+        {
+          var botContact = new Contact()
+          {
+            Name = b.BotName,
+            ChatAddress = b.BotSlogan,
+            ContactAddress = b.BotSlogan,
+            ImageUrl = b.ImageUrl,
+            Rejected = false
+          };
+          this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
+        }
+      }
     }
   }
 }

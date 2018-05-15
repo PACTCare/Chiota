@@ -88,7 +88,7 @@
 
         if (this.mediaFile?.Path != null)
         {
-          user.ImageUrl = await new BlobStorage().UploadToBlob(user.PublicKeyAddress, this.mediaFile.Path);
+          user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path);
         }
 
         user = await this.StoreDataOnTangle(user);
@@ -113,13 +113,14 @@
       var userData = new UserFactory().CreateUploadUser(user);
       var serializeObject = JsonConvert.SerializeObject(userData);
      
-      await this.SendParallelAsync(user, publicKeyTrytes, TryteString.FromUtf8String(serializeObject));
+      await this.SendParallelAsync(user, publicKeyTrytes, serializeObject);
       return user;
     }
 
-    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, TryteString tryteString)
+    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, string serializeObject)
     {
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(tryteString + ChiotaConstants.End), user.OwnDataAdress);
+      var encryptedAccept = new NtruKex().Encrypt(user.NtruContactPair.PublicKey, serializeObject);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json too big
       var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);

@@ -29,7 +29,9 @@
       return new OwnDataUser()
       {
         Name = user.Name,
-        ImageUrl = user.ImageUrl,
+
+        // store only filename plus type on tangle
+        ImageUrl = user.ImageUrl.Replace(ChiotaConstants.ImagePath, string.Empty)
       };
     }
   }

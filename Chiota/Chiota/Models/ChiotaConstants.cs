@@ -20,5 +20,7 @@
 
     // used for changing the address after 10 or more decryptable! messages
     public const int MessagesOnAddress = 10;
+
+    public const string ImagePath = "https://chiota.blob.core.windows.net/userimages/";
   }
 }

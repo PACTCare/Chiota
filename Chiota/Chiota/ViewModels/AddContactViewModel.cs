@@ -55,7 +55,7 @@
       }
     }
 
-    public string UserAdress => this.user.PublicKeyAddress;
+    public string UserAddress => this.user.PublicKeyAddress;
 
     public ICommand SubmitCommand { get; set; }
 

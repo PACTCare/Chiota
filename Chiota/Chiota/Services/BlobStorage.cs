@@ -3,6 +3,8 @@
   using System.IO;
   using System.Threading.Tasks;
 
+  using Chiota.Models;
+
   using Microsoft.WindowsAzure.Storage;
   using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -16,14 +18,14 @@
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 
-    public async Task<string> UploadToBlob(string adressString, string path)
+    public async Task<string> UploadToBlob(string imageName, string path)
     {
       // Retrieve reference to a previously created container.
       var container = this.blobClient.GetContainerReference("userimages");
 
       var imageType = path.Split('.');
 
-      var fileName = adressString + "." + imageType[imageType.Length - 1];
+      var fileName = imageName + "." + imageType[imageType.Length - 1];
 
       // Retrieve reference to a blob named "myblob".
       var blockBlob = container.GetBlockBlobReference(fileName);
@@ -36,7 +38,7 @@
         await blockBlob.UploadFromStreamAsync(fileStream);
       }
 
-      return "https://chiota.blob.core.windows.net/userimages/" + fileName;
+      return ChiotaConstants.ImagePath + fileName;
     }
   }
 }
