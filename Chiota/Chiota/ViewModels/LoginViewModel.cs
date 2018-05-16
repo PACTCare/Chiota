@@ -81,9 +81,8 @@
         addresses.Add(Helper.GenerateAddress(addresses[1]));
 
         var user = new UserFactory().Create(seed, addresses);
-        var ntru = new NtruKex();
-        user.NtruChatPair = ntru.CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
-        user.NtruContactPair = ntru.CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
+        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
+        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
 
         // if first time only store seed after finished setup
         user.StoreSeed = this.StoreSeed;

@@ -309,7 +309,7 @@ namespace VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU
     public static readonly NTRUParameters EES1499EP1 = new NTRUParameters(new byte[] { 2, 1, 1, 65 }, 1499, 2048, 79, 79, 0, 256, 13, 17, 19, true, true, false, Digests.SHA512, Prngs.CTRPrng);
 
     /// <summary>
-    /// Not sure this implementation is correct!!!! EES743EPS uses uses product-form polynomials
+    /// Not sure this implementation is correct! EES743EPS uses product-form polynomials
     /// https://github.com/tbuktu/libntru/blob/master/src/encparams.c
     /// https://eprint.iacr.org/2015/708.pdf
     /// dg = N/3 = 247

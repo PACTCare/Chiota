@@ -44,7 +44,6 @@
       //  ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
       //});
 
-      this.contacts = new ObservableCollection<ContactListViewModel>();
       this.user = user;
       this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
     }
@@ -76,9 +75,9 @@
 
     public void OnAppearing()
     {
+      this.contacts = new ObservableCollection<ContactListViewModel>();
       this.PageIsShown = true;
       this.viewCellObject.RefreshContacts = true;
-      this.contacts = new ObservableCollection<ContactListViewModel>();
       this.UpdateContacts();
     }
 
@@ -126,7 +125,7 @@
           this.viewCellObject.RefreshContacts = false;
         }
 
-        await Task.Delay(5000);
+        await Task.Delay(4000);
       }
     }
 

@@ -57,7 +57,6 @@
 
         await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
-        this.PoWText = string.Empty;
         this.isClicked = false;
       }
     }
@@ -72,7 +71,6 @@
         await this.SendParallelAcceptAsync();
 
         this.viewCellObject.RefreshContacts = true;
-        this.PoWText = string.Empty;
         this.isClicked = false;
       }
     }

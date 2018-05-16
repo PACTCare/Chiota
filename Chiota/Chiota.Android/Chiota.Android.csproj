@@ -85,7 +85,7 @@
       <Version>1.4.118</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard">
-      <Version>1.0.7</Version>
+      <Version>1.0.7.1</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard.Mam">
       <Version>0.9.0.2</Version>
