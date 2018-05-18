@@ -17,13 +17,13 @@
     private const int WaitSeconds = 5;
 
     private readonly List<string> nodeUriList = new List<string>
-                                                  {
-                                                    "https://nodes.iota.fm:443",  // pow test 3 seconds 
-                                                    "https://field.carriota.com:443", // pow test 13 seconds
-                                                    "https://trinity.iota.fm:443", // pow test 6 seconds
-                                                    "https://nodes.testnet.iota.org:443/", // pow test 8 seconds
-                                                    "https://iotanode.us:443", // pow test 10 seconds
-                                                    "https://iri2.iota.fm:443" // pow test 16 seconds
+                                                  {  
+                                                    "https://field.carriota.com:443", 
+                                                    "https://nodes.iota.fm:443",  
+                                                    "https://trinity.iota.fm:443", 
+                                                    "https://nodes.testnet.iota.org:443/", 
+                                                    "https://iotanode.us:443", 
+                                                    "https://iri2.iota.fm:443" 
                                                   };
 
     public RestIotaRepository Create(bool remote, int roundNumber = 0, bool bit64 = false)

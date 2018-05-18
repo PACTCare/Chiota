@@ -51,7 +51,7 @@
           var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
           var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
 
-          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.ToBytes());
+          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.DecodeBytesFromTryteString());
           if (decryptedMessage != null)
           {
             var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
@@ -76,7 +76,7 @@
       {
         try
         {
-          var decryptedMessage = new NtruKex().Decrypt(keyPair, tryte.Message.ToBytes());
+          var decryptedMessage = new NtruKex().Decrypt(keyPair, tryte.Message.DecodeBytesFromTryteString());
 
           var chatAddress = decryptedMessage.Substring(0, 81);
 
@@ -204,7 +204,7 @@
         {
           var index = trytesString.IndexOf(ChiotaConstants.LineBreak, StringComparison.Ordinal);
           var publicKeyString = trytesString.Substring(0, index);
-          var bytesKey = new TryteString(publicKeyString).ToBytes();
+          var bytesKey = new TryteString(publicKeyString).DecodeBytesFromTryteString();
           var contact = new Contact
           {
             PublicNtruKey = new NTRUPublicKey(bytesKey),

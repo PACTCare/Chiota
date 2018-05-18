@@ -9,6 +9,8 @@
 
   using Tangle.Net.Entity;
 
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
+
   public class SecureStorage
   {
     private const string SeedKey = "Seed";
@@ -20,6 +22,14 @@
     private const string ApprovedAddressKey = "ApprovedAddress";
 
     private const string PublicKeyAddressKey = "approvedAdressKey";
+
+    private const string ChatPublicKey = "ChatPublicKey";
+
+    private const string ChatPrivateKey = "ChatPrivateKey";
+
+    private const string ContactPublicKey = "ContactPublicKey";
+
+    private const string ContactPrivateKey = "ContactPrivateKey";
 
     public bool CheckUserStored()
     {
@@ -40,11 +50,17 @@
         RequestAddress = CrossSecureStorage.Current.GetValue(RequestAddressKey),
         ApprovedAddress = CrossSecureStorage.Current.GetValue(ApprovedAddressKey),
         PublicKeyAddress = CrossSecureStorage.Current.GetValue(PublicKeyAddressKey),
-        TangleMessenger = new TangleMessenger(storedSeed)
+        TangleMessenger = new TangleMessenger(storedSeed),
       };
 
-      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
-      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
+      var chatPublicKey = new NTRUPublicKey(new TryteString(CrossSecureStorage.Current.GetValue(ChatPublicKey)).DecodeBytesFromTryteString());
+      var chatPrivateKey = new NTRUPrivateKey(new TryteString(CrossSecureStorage.Current.GetValue(ChatPrivateKey)).DecodeBytesFromTryteString());
+
+      var contactPublicKey = new NTRUPublicKey(new TryteString(CrossSecureStorage.Current.GetValue(ContactPublicKey)).DecodeBytesFromTryteString());
+      var contactPrivateKey = new NTRUPrivateKey(new TryteString(CrossSecureStorage.Current.GetValue(ContactPrivateKey)).DecodeBytesFromTryteString());
+
+      user.NtruChatPair = new NTRUKeyPair(chatPublicKey, chatPrivateKey);
+      user.NtruContactPair = new NTRUKeyPair(contactPublicKey, contactPrivateKey);
 
       try
       {
@@ -69,6 +85,10 @@
         CrossSecureStorage.Current.SetValue(RequestAddressKey, user.RequestAddress);
         CrossSecureStorage.Current.SetValue(ApprovedAddressKey, user.ApprovedAddress);
         CrossSecureStorage.Current.SetValue(PublicKeyAddressKey, user.PublicKeyAddress);
+        CrossSecureStorage.Current.SetValue(ChatPublicKey, user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString());
+        CrossSecureStorage.Current.SetValue(ChatPrivateKey, user.NtruChatPair.PrivateKey.ToBytes().EncodeBytesAsString());
+        CrossSecureStorage.Current.SetValue(ContactPublicKey, user.NtruContactPair.PublicKey.ToBytes().EncodeBytesAsString());
+        CrossSecureStorage.Current.SetValue(ContactPrivateKey, user.NtruContactPair.PrivateKey.ToBytes().EncodeBytesAsString());
         return true;
       }
       catch
@@ -84,6 +104,10 @@
       CrossSecureStorage.Current.DeleteKey(RequestAddressKey);
       CrossSecureStorage.Current.DeleteKey(PublicKeyAddressKey);
       CrossSecureStorage.Current.DeleteKey(PublicKeyAddressKey);
+      CrossSecureStorage.Current.DeleteKey(ChatPrivateKey);
+      CrossSecureStorage.Current.DeleteKey(ChatPublicKey);
+      CrossSecureStorage.Current.DeleteKey(ContactPrivateKey);
+      CrossSecureStorage.Current.DeleteKey(ContactPublicKey);
     }
   }
 }

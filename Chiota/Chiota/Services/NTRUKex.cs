@@ -7,17 +7,15 @@
 
   using Chiota.Models;
 
-  using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
-
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
-  using VTDev.Libraries.CEXEngine.Exceptions;
+  using VTDev.Libraries.CEXEngine.CryptoException;
 
   public class NtruKex
   {
     private const int EncryptedTextSize = 1022;
 
+    // APR2011743FAST
     private readonly NTRUParameters encParams = NTRUParamSets.APR2011743FAST; // Alternative EES743EP1 
 
     /// <summary>
@@ -28,24 +26,14 @@
     /// <returns>Key Pair</returns>
     public IAsymmetricKeyPair CreateAsymmetricKeyPair(string seed, string saltAddress)
     {
-      IAsymmetricKeyPair keyPair;
-      byte[] testBytes;
       var passphrase = Encoding.UTF8.GetBytes(seed);
-      
+      var salt = Encoding.UTF8.GetBytes(saltAddress);
+
       // Can not be parallel!
       var keyGen = new NTRUKeyGenerator(this.encParams, false);
+      var keys = keyGen.GenerateKeyPair(passphrase, salt);
 
-      // For some reason the transformation sometime changes a byte!
-      do
-      {
-        saltAddress = saltAddress.Substring(0, saltAddress.Length - 1);
-        var newSalt = Encoding.UTF8.GetBytes(saltAddress);
-        keyPair = keyGen.GenerateKeyPair(passphrase, newSalt);
-        testBytes = new TryteString(keyPair.PublicKey.ToBytes().ToTrytes().ToString()).ToBytes();
-      }
-      while (testBytes.Length != 1026);
-
-      return keyPair;
+      return keys;
     }
 
     /// <summary>
@@ -56,30 +44,19 @@
     /// <returns>byte array</returns>
     public byte[] Encrypt(IAsymmetricKey publicKey, string input)
     {
-      byte[] byteArry;
-      byte[] testBytes;
-
-      // For some reason the transformation sometime changes a byte!
-      do
+      var bytes = new List<byte[]>();
+      using (var cipher = new NTRUEncrypt(this.encParams))
       {
-        var bytes = new List<byte[]>();
-        using (var cipher = new NTRUEncrypt(this.encParams))
+        var splitText = this.SplitByLength(input, ChiotaConstants.CharacterLimit);
+        foreach (var text in splitText)
         {
-          var splitText = this.SplitByLength(input, ChiotaConstants.CharacterLimit);
-          foreach (var text in splitText)
-          {
-            cipher.Initialize(publicKey);
-            var data = Encoding.UTF8.GetBytes(text);
-            bytes.Add(cipher.Encrypt(data));
-          }
+          cipher.Initialize(publicKey);
+          var data = Encoding.UTF8.GetBytes(text);
+          bytes.Add(cipher.Encrypt(data));
         }
-
-        byteArry = bytes.SelectMany(a => a).ToArray();
-        testBytes = new TryteString(byteArry.ToTrytes().ToString()).ToBytes();
       }
-      while (testBytes.Length != EncryptedTextSize);
-      
-      return byteArry;
+
+      return bytes.SelectMany(a => a).ToArray();
     }
 
     /// <summary>
@@ -94,6 +71,7 @@
         .GroupBy(x => x.Key, x => x.Value, (k, g) => g.ToArray())
         .ToArray();
       var decryptedText = string.Empty;
+
       foreach (var bytes in splitArray)
       {
         using (var cipher = new NTRUEncrypt(this.encParams))

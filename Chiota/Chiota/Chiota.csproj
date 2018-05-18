@@ -27,7 +27,7 @@
     <PackageReference Include="RestSharp" Version="106.3.0-alpha0002" />
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.7.1" />
-    <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.2" />
+    <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.3" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.1.1" />
     <PackageReference Include="Xam.Plugin.Media" Version="3.2.1" />
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NTRU-NET-master\NTRUEngine.csproj" />
+    <ProjectReference Include="..\CEXEngine\CEXEngine.csproj" />
   </ItemGroup>
 
   <ItemGroup>

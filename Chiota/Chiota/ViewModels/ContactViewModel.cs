@@ -20,11 +20,11 @@
   {
     private ObservableCollection<ContactListViewModel> contactList;
 
-    private readonly ViewCellObject viewCellObject;
-
     private readonly User user;
 
     private readonly List<BotObject> bots;
+
+    private ViewCellObject viewCellObject;
 
     private ObservableCollection<ContactListViewModel> contacts;
 
@@ -32,20 +32,8 @@
 
     public ContactViewModel(User user)
     {
-      this.bots = new List<BotObject>();
-
-      // Add your own microsoft bot-framework bot here:
-      //this.bots.Add(new BotObject()
-      //{
-      //  BotName = "Florence",
-      //  BotSlogan = "Your health assistant",
-      //  BotId = "Florence",
-      //  DirectLineSecret = "", // <= your direct line secret
-      //  ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
-      //});
-
+      this.bots = new BotList().ReturnBotList();
       this.user = user;
-      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
     }
 
     public bool PageIsShown { get; set; }
@@ -77,7 +65,7 @@
     {
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.PageIsShown = true;
-      this.viewCellObject.RefreshContacts = true;
+      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
       this.UpdateContacts();
     }
 

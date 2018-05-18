@@ -1,4 +1,0 @@
-This code implements inventions covered by claims of U.S. patents
- 7,308,097 
-owned by Security Innovation, Inc. (www.securityinnovation.com).
-In addition, international patents may apply.

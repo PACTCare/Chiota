@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F63F1625-804A-431D-99A7-8D636B0766DE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VTDev.Libraries.CEXEngine</RootNamespace>
+    <AssemblyName>CEXEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\CEXEngine.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\CEXEngine.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\CEXEngine.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CryptoException\CryptoFileTransferException.cs" />
+    <Compile Include="CryptoException\CryptoNetworkingException.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Common\AsymmetricContainer.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Common\AsymmetricUtils.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmKeyRequestedArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmKeySynchronizedArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmFileRequestArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\DtmParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmErrorFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmErrorSeverityFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmExchangeFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmTransferFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmMessageFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmFileInfoSruct.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmForwardKeyStruct.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Support\DtmBufferSizes.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Support\DtmFileTransfer.cs" />
+    <Compile Include="Crypto\Common\Compare.cs" />
+    <Compile Include="Crypto\Drbg\RngParams.cs" />
+    <Compile Include="Crypto\Kdf\IKdf.cs" />
+    <Compile Include="Crypto\Mac\MacDescription.cs" />
+    <Compile Include="Crypto\Mac\MacParams.cs" />
+    <Compile Include="Crypto\Digest\Blake2B512.cs" />
+    <Compile Include="Crypto\Digest\Blake2S256.cs" />
+    <Compile Include="Crypto\Digest\Support\Blake2Params.cs" />
+    <Compile Include="Crypto\Enumeration\EncodingSchemes.cs" />
+    <Compile Include="Crypto\Helper\CipherFromDescription.cs" />
+    <Compile Include="Crypto\Helper\MacFromDescription.cs" />
+    <Compile Include="Crypto\Processing\Structure\MacKey.cs" />
+    <Compile Include="Crypto\Helper\BlockCipherFromName.cs" />
+    <Compile Include="Crypto\Helper\CipherModeFromName.cs" />
+    <Compile Include="Crypto\Helper\DigestFromName.cs" />
+    <Compile Include="Crypto\Helper\PaddingFromName.cs" />
+    <Compile Include="Crypto\Helper\PrngFromName.cs" />
+    <Compile Include="Crypto\Helper\SeedGeneratorFromName.cs" />
+    <Compile Include="Crypto\Helper\StreamCipherFromName.cs" />
+    <Compile Include="Crypto\Processing\Structure\VolumeHeader.cs" />
+    <Compile Include="Crypto\Seed\CTRRsg.cs" />
+    <Compile Include="Crypto\Seed\EntropyPool.cs" />
+    <Compile Include="Crypto\Seed\ISCRsg.cs" />
+    <Compile Include="Crypto\Seed\SP20Rsg.cs" />
+    <Compile Include="Documentation.cs" />
+    <Compile Include="Networking\PacketBuffer.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmerticGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmetricCipher.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmetricKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmetricKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmetricParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Interfaces\IAsymmetricSign.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmDataReceivedArgs.cs" />
+    <Compile Include="Networking\TcpServer.cs" />
+    <Compile Include="Networking\TcpSocket.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\DtmKex.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmErrorArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmServiceFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmEstablishedArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmForwardingFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmClientStruct.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmIdentityStruct.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmIdentityArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Argument\DtmPacketArgs.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\DtmParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2Matrix.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2mField.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2mMatrix.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2mVector.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nElement.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nField.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nONBElement.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nONBField.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nPolynomialElement.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2nPolynomialField.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2Polynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GF2Vector.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\GoppaCode.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\IGFElement.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\Matrix.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\Permutation.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\PolynomialGF2mSmallM.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\PolynomialRingGF2.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\PolynomialRingGF2m.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\RandomDegree.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\Algebra\Vector.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\CCA2Conversions.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\CCA2Primitives.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\FujisakiCipher.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\IMPKCCiphers.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\KobaraImaiCipher.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\PointchevalCipher.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCEncrypt.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCKeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCPrivateKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCPublicKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCSign.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Flag\DtmPacketFlags.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Arithmetic\BigIntEuclidean.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Arithmetic\IntEuclidean.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Arithmetic\SchonhageStrassen.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Curve\Curve25519.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Encode\ArrayEncoder.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Encode\IndexGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUEncrypt.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUKeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUPrivateKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\NTRUPublicKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\BigDecimalPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\BigIntPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\DenseTernaryPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\IntegerPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\IPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\ITernaryPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\LongPolynomial2.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\LongPolynomial5.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\ModularResultant.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\PolynomialGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\ProductFormPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\Resultant.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\NTRU\Polynomial\SparseTernaryPolynomial.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\Arithmetic\FFT.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\Arithmetic\NTT256.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\Arithmetic\NTT512.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEEncrypt.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEKeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEPrivateKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWEPublicKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\RLWE\RLWESign.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Arithmetic\GMSSLeaf.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Arithmetic\GMSSRootCalc.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Arithmetic\GMSSRootSig.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Arithmetic\Treehash.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSKeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSPrivateKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSPublicKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\GMSSSign.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Utility\GMSSRandom.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Utility\GMSSUtil.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Utility\WinternitzOTSignature.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\GMSS\Utility\WinternitzOTSVerify.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\Arithmetic\ComputeInField.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\Arithmetic\GF2Field.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\Arithmetic\MapLayer.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\Arithmetic\RainbowUtil.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWKeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWKeyPair.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWParameters.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWParamSets.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWPrivateKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWPublicKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Sign\RNBW\RNBWSign.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Stream\ChaCha20.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\IBlockCipher.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Stream\IStreamCipher.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\RHX.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Stream\Salsa20.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\SHX.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\THX.cs" />
+    <Compile Include="Crypto\Digest\IDigest.cs" />
+    <Compile Include="Crypto\Digest\Keccak256.cs" />
+    <Compile Include="Crypto\Digest\Keccak512.cs" />
+    <Compile Include="Crypto\Digest\SHA256.cs" />
+    <Compile Include="Crypto\Digest\SHA512.cs" />
+    <Compile Include="Crypto\Digest\Skein1024.cs" />
+    <Compile Include="Crypto\Digest\Skein256.cs" />
+    <Compile Include="Crypto\Digest\Skein512.cs" />
+    <Compile Include="Crypto\Enumeration\AsymmetricEngines.cs" />
+    <Compile Include="Crypto\Enumeration\BlockCiphers.cs" />
+    <Compile Include="Crypto\Enumeration\BlockSizes.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\Encrypt\McEliece\MPKCCiphers\CCA2Ciphers.cs" />
+    <Compile Include="Crypto\Enumeration\CipherModes.cs" />
+    <Compile Include="Crypto\Enumeration\Digests.cs" />
+    <Compile Include="Crypto\Enumeration\Drbgs.cs" />
+    <Compile Include="Crypto\Enumeration\IVSizes.cs" />
+    <Compile Include="Crypto\Enumeration\Kdfs.cs" />
+    <Compile Include="Crypto\Enumeration\KeyPolicies.cs" />
+    <Compile Include="Crypto\Enumeration\KeyScope.cs" />
+    <Compile Include="Crypto\Enumeration\KeySizes.cs" />
+    <Compile Include="Crypto\Enumeration\Macs.cs" />
+    <Compile Include="Crypto\Enumeration\PackageKeyStates.cs" />
+    <Compile Include="Crypto\Enumeration\PaddingModes.cs" />
+    <Compile Include="Crypto\Enumeration\Prngs.cs" />
+    <Compile Include="Crypto\Enumeration\RoundCounts.cs" />
+    <Compile Include="Crypto\Enumeration\SeedGenerators.cs" />
+    <Compile Include="Crypto\Enumeration\StreamCiphers.cs" />
+    <Compile Include="Crypto\Enumeration\SymmetricEngines.cs" />
+    <Compile Include="Crypto\Enumeration\VolumeKeyStates.cs" />
+    <Compile Include="Crypto\Drbg\SBG.cs" />
+    <Compile Include="Crypto\Processing\Factory\KeyFactory.cs" />
+    <Compile Include="Crypto\Processing\Factory\VolumeFactory.cs" />
+    <Compile Include="Crypto\Prng\CTRPrng.cs" />
+    <Compile Include="Crypto\Prng\DGCPrng.cs" />
+    <Compile Include="Crypto\Prng\SP20Prng.cs" />
+    <Compile Include="Crypto\Seed\CSPRsg.cs" />
+    <Compile Include="Crypto\Seed\ISeed.cs" />
+    <Compile Include="Crypto\Processing\PacketCipher.cs" />
+    <Compile Include="Crypto\Processing\CompressionCipher.cs" />
+    <Compile Include="Crypto\Processing\VolumeCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Crypto\Processing\Structure\CipherKey.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmPacketStruct.cs" />
+    <Compile Include="CryptoException\CryptoAsymmetricException.cs" />
+    <Compile Include="CryptoException\CryptoAsymmetricSignException.cs" />
+    <Compile Include="CryptoException\CryptoGeneratorException.cs" />
+    <Compile Include="CryptoException\CryptoHashException.cs" />
+    <Compile Include="CryptoException\CryptoKeyExchangeException.cs" />
+    <Compile Include="CryptoException\CryptoMacException.cs" />
+    <Compile Include="CryptoException\CryptoProcessingException.cs" />
+    <Compile Include="CryptoException\CryptoRandomException.cs" />
+    <Compile Include="Crypto\Kdf\KDF2.cs" />
+    <Compile Include="Crypto\Kdf\PBKDF2.cs" />
+    <Compile Include="Crypto\Common\CipherDescription.cs" />
+    <Compile Include="Crypto\Processing\Structure\KeyAuthority.cs" />
+    <Compile Include="Crypto\Processing\Factory\PackageFactory.cs" />
+    <Compile Include="Crypto\Processing\Structure\PackageKey.cs" />
+    <Compile Include="Crypto\Processing\Structure\VolumeKey.cs" />
+    <Compile Include="Crypto\Processing\Structure\MessageDescription.cs" />
+    <Compile Include="Crypto\Mac\CMAC.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\ISO7816.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\TBC.cs" />
+    <Compile Include="Crypto\Prng\BBSG.cs" />
+    <Compile Include="Crypto\Drbg\DGC.cs" />
+    <Compile Include="Crypto\Prng\CCG.cs" />
+    <Compile Include="Crypto\Prng\IRandom.cs" />
+    <Compile Include="Crypto\Prng\CSPPrng.cs" />
+    <Compile Include="Crypto\Prng\MODEXPG.cs" />
+    <Compile Include="Crypto\Prng\PBPRng.cs" />
+    <Compile Include="Crypto\Prng\QCG1.cs" />
+    <Compile Include="Crypto\Prng\QCG2.cs" />
+    <Compile Include="Crypto\Prng\SecureRandom.cs" />
+    <Compile Include="Crypto\Drbg\CMG.cs" />
+    <Compile Include="Crypto\Kdf\HKDF.cs" />
+    <Compile Include="Crypto\Drbg\IDrbg.cs" />
+    <Compile Include="Crypto\Common\KeyGenerator.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\OFB.cs" />
+    <Compile Include="Crypto\Processing\CipherStream.cs" />
+    <Compile Include="Crypto\Processing\DigestStream.cs" />
+    <Compile Include="Crypto\Processing\MacStream.cs" />
+    <Compile Include="Crypto\Processing\Structure\PackageInfo.cs" />
+    <Compile Include="Crypto\Cipher\Asymmetric\KEX\DTM\Structure\DtmSessionStruct.cs" />
+    <Compile Include="CryptoException\CryptoSocketException.cs" />
+    <Compile Include="CryptoException\CryptoSymmetricException.cs" />
+    <Compile Include="Numeric\BigDecimal.cs" />
+    <Compile Include="Numeric\BigEndian.cs" />
+    <Compile Include="Numeric\BigInteger.cs" />
+    <Compile Include="Numeric\BigMath.cs" />
+    <Compile Include="Numeric\BitLevel.cs" />
+    <Compile Include="Numeric\Conversion.cs" />
+    <Compile Include="Numeric\Division.cs" />
+    <Compile Include="Numeric\Elementary.cs" />
+    <Compile Include="Numeric\LittleEndian.cs" />
+    <Compile Include="Numeric\Logical.cs" />
+    <Compile Include="Numeric\MathContext.cs" />
+    <Compile Include="Numeric\Multiplication.cs" />
+    <Compile Include="Numeric\Primality.cs" />
+    <Compile Include="Numeric\RoundingModes.cs" />
+    <Compile Include="Queue\JitterQueue.cs" />
+    <Compile Include="Crypto\Common\KeyParams.cs" />
+    <Compile Include="Queue\WaitQueue.cs" />
+    <Compile Include="Crypto\Mac\HMAC.cs" />
+    <Compile Include="Crypto\Mac\IMac.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\CBC.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\CFB.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\CTR.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\ECB.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Mode\ICipherMode.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\IPadding.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\PKCS7.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\X923.cs" />
+    <Compile Include="Crypto\Cipher\Symmetric\Block\Padding\ZeroPad.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SecureDelete.cs" />
+    <Compile Include="Tools\Evaluate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\Compressor.cs" />
+    <Compile Include="Tools\Ent.cs" />
+    <Compile Include="Tools\NetworkTools.cs" />
+    <Compile Include="Crypto\Common\ArrayEx.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utility\ArrayUtils.cs" />
+    <Compile Include="Utility\BigIntUtils.cs" />
+    <Compile Include="Utility\ByteUtils.cs" />
+    <Compile Include="Utility\CharUtils.cs" />
+    <Compile Include="Tools\DirectoryTools.cs" />
+    <Compile Include="Tools\DriveTools.cs" />
+    <Compile Include="Tools\FileTools.cs" />
+    <Compile Include="Tools\HexConverter.cs" />
+    <Compile Include="Utility\IntUtils.cs" />
+    <Compile Include="Utility\NetworkUtils.cs" />
+    <Compile Include="Utility\ParallelUtils.cs" />
+    <Compile Include="Utility\RegistryUtils.cs" />
+    <Compile Include="Utility\SystemUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt" />
+    <Content Include="Patents.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

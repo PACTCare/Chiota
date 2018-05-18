@@ -88,7 +88,7 @@
       <Version>1.0.7.1</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard.Mam">
-      <Version>0.9.0.2</Version>
+      <Version>0.9.0.3</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
       <Version>9.1.1</Version>
@@ -173,10 +173,6 @@
     <ProjectReference Include="..\Chiota\Chiota.csproj">
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NTRU-NET-master\NTRUEngine.csproj">
-      <Project>{a25c6ab8-531e-4a7e-9968-305003d56332}</Project>
-      <Name>NTRUEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

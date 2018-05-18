@@ -14,7 +14,6 @@
   using Plugin.Media.Abstractions;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -108,19 +107,19 @@
 
     private async Task<User> StoreDataOnTangle(User user)
     {
-      var publicKeyTrytes = user.NtruChatPair.PublicKey.ToBytes().ToTrytes();
+      var publicKeyTrytes = user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString();
 
       var userData = new UserFactory().CreateUploadUser(user);
       var serializeObject = JsonConvert.SerializeObject(userData);
      
-      await this.SendParallelAsync(user, publicKeyTrytes, serializeObject);
+      await this.SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
       return user;
     }
 
     private Task SendParallelAsync(User user, TryteString publicKeyTrytes, string serializeObject)
     {
       var encryptedAccept = new NtruKex().Encrypt(user.NtruContactPair.PublicKey, serializeObject);
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End), user.OwnDataAdress);
+      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End), user.OwnDataAdress);
 
       // only way to store it with one transaction, json too big
       var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);

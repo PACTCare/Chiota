@@ -9,7 +9,6 @@
   using Chiota.Services;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -135,7 +134,7 @@
                              };
 
       var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
-      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End);
+      var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);
 
       // automaticly add to own accept list, so contact is shown as soon as it as accepted by the other user
       var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);

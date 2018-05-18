@@ -14,7 +14,6 @@
   using Chiota.Services;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
@@ -137,11 +136,11 @@
 
         // encryption with public key of other user
         var encryptedForContact = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
-        var tryteContact = new TryteString(encryptedForContact.ToTrytes() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
+        var tryteContact = new TryteString(encryptedForContact.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         // encryption with public key of user
         var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText);
-        var tryteUser = new TryteString(encryptedForUser.ToTrytes() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
+        var tryteUser = new TryteString(encryptedForUser.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         var sendFeedback = await this.SendParallelAsync(tryteContact, tryteUser);
         if (sendFeedback.Any(c => c == false))

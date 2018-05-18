@@ -18,8 +18,8 @@
 
     public const int CharacterLimit = 105;
 
-    // used for changing the address after 10 or more decryptable! messages
-    public const int MessagesOnAddress = 10;
+    // used for changing the address after 6 or more decryptable! messages
+    public const int MessagesOnAddress = 6;
 
     public const string ImagePath = "https://chiota.blob.core.windows.net/userimages/";
   }

@@ -8,7 +8,6 @@
   using Chiota.Services;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -53,7 +52,7 @@
         this.PoWText = " Proof-of-work in progress!";
 
         var encryptedDecline = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Rejected);
-        var tryteString = new TryteString(encryptedDecline.ToTrytes() + ChiotaConstants.End);
+        var tryteString = new TryteString(encryptedDecline.EncodeBytesAsString() + ChiotaConstants.End);
 
         await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
@@ -79,7 +78,7 @@
     private Task SendParallelAcceptAsync()
     {
       var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Accepted);
-      var tryteString = new TryteString(encryptedAccept.ToTrytes() + ChiotaConstants.End);
+      var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);
 
       // store as approved on own adress
       var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);

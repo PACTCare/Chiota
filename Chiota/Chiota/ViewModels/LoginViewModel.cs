@@ -28,7 +28,7 @@
     private bool storeSeed;
 
     private UserDataOnTangle dataOnTangle;
- 
+
     public LoginViewModel()
     {
       this.StoreSeed = true;
@@ -81,8 +81,8 @@
         addresses.Add(Helper.GenerateAddress(addresses[1]));
 
         var user = new UserFactory().Create(seed, addresses);
-        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.OwnDataAdress);
-        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString(), user.ApprovedAddress);
+        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().Substring(0, 40).ToLower(), user.OwnDataAdress); // user.Seed.ToString() "Hallo Welt"
+        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().Substring(40, 40).ToLower(), user.ApprovedAddress); // user.Seed.ToString()
 
         // if first time only store seed after finished setup
         user.StoreSeed = this.StoreSeed;

@@ -191,7 +191,7 @@
       <Version>1.0.7.1</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard.Mam">
-      <Version>0.9.0.2</Version>
+      <Version>0.9.0.3</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
       <Version>9.1.1</Version>

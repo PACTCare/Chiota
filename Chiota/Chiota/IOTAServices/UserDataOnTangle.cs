@@ -12,7 +12,6 @@
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   public class UserDataOnTangle
   {
@@ -30,7 +29,7 @@
       {
         try
         {
-          var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.ToBytes());
+          var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
 
           var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(decrypted);
           this.user.Name = decryptedUser.Name;
@@ -70,7 +69,7 @@
 
           if (newContacts == null || newContacts.Count == 0)
           {
-            var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().ToTrytes() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
+            var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
             await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, addresses[0].ToString());
           }
 
