@@ -1,5 +1,5 @@
 # Chiota
-Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat App based on [Felandils C# .NET Port of the IOTA lib](https://github.com/Felandil/tangle-.net), who also helped with this app, [Steppenwolfe65 NTRU-NET](https://github.com/Steppenwolfe65/NTRU-NET) and [jamesmontemagnos MonkeyChat](https://github.com/jamesmontemagno/app-monkeychat).  
+Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat App based on [Felandils C# .NET Port of the IOTA lib](https://github.com/Felandil/tangle-.net), who also helped with this app, [Steppenwolfe65 CEX-NET](https://github.com/Steppenwolfe65/CEX-NET) and [jamesmontemagnos MonkeyChat](https://github.com/jamesmontemagno/app-monkeychat).  
 
 The goal is to create a quantum secure chat app, in which you are the owner of your own data and nobody else! 
 
