@@ -1,7 +1,6 @@
 ﻿namespace Chiota.ViewModels
 {
   using System;
-  using System.Collections.Generic;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -76,13 +75,15 @@
         // 2. request address
         // 3. approved address
         // addresses can be generated based on each other to make it faster
-        var addresses = await this.GenerateAddressParallel(seed, 2);
+        var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
+        var addresses = addressGenerator.GetAddresses(seed, SecurityLevel.Medium, 0, 2);
+
+        // var addresses = await this.GenerateAddressParallel(seed, 2);
         addresses.Add(Helper.GenerateAddress(addresses[0]));
         addresses.Add(Helper.GenerateAddress(addresses[1]));
 
         var user = new UserFactory().Create(seed, addresses);
-        user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().Substring(0, 40).ToLower(), user.OwnDataAdress); // user.Seed.ToString() "Hallo Welt"
-        user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().Substring(40, 40).ToLower(), user.ApprovedAddress); // user.Seed.ToString()
+        user = IotaHelper.GenerateKeys(user);
 
         // if first time only store seed after finished setup
         user.StoreSeed = this.StoreSeed;
@@ -116,26 +117,6 @@
           }
         }
       }
-    }
-
-    private async Task<List<Address>> GenerateAddressParallel(Seed seed, int numberOfAddresses)
-    {
-      var addresses = new List<Address>();
-      var taskList = new List<Task<List<Address>>>();
-      for (var i = 0; i < numberOfAddresses; i++)
-      {
-        var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
-        var localI = i;
-        taskList.Add(Task.Run(() => addressGenerator.GetAddresses(seed, SecurityLevel.Medium, localI, 1)));
-      }
-
-      var array = await Task.WhenAll(taskList.ToArray());
-      foreach (var address in array)
-      {
-        addresses.AddRange(address);
-      }
-
-      return addresses;
     }
   }
 }

@@ -25,6 +25,13 @@
       return TryteString.FromAsciiString(serializeObject);
     }
 
+    public static User GenerateKeys(User user)
+    {
+      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress); 
+      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.ApprovedAddress);
+      return user;
+    }
+
     public static bool CorrectSeedAdressChecker(string seed)
     {
       if (seed == null)

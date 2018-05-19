@@ -15,7 +15,7 @@
 
   public class UserDataOnTangle
   {
-    private readonly User user;
+    private User user;
 
     public UserDataOnTangle(User user)
     {
@@ -27,17 +27,13 @@
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
       foreach (var tryte in trytes)
       {
-        try
-        {
-          var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
+        var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
 
+        if (decrypted != null)
+        {
           var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(decrypted);
           this.user.Name = decryptedUser.Name;
           this.user.ImageUrl = ChiotaConstants.ImagePath + decryptedUser.ImageUrl;
-        }
-        catch
-        {
-          // ignored
         }
       }
 
