@@ -126,7 +126,7 @@
       var contactTaskList = this.user.TangleMessenger.GetJsonMessageAsync<Contact>(this.user.RequestAddress, 3);
       var approvedContactsTrytes = this.user.TangleMessenger.GetMessagesAsync(this.user.ApprovedAddress, 3);
 
-      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, this.user.NtruContactPair);
+      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, this.user);
       var contactRequestList = await contactTaskList;
 
       // all infos are taken from contactRequestList

@@ -85,7 +85,7 @@
       <Version>1.4.118</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard">
-      <Version>1.0.7.1</Version>
+      <Version>1.0.7.2</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard.Mam">
       <Version>0.9.0.3</Version>
@@ -170,6 +170,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\image_splash_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CEXEngine\CEXEngine.csproj">
+      <Project>{f63f1625-804a-431d-99a7-8d636b0766de}</Project>
+      <Name>CEXEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Chiota\Chiota.csproj">
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>

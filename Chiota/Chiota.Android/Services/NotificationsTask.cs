@@ -42,9 +42,7 @@
             var contactTaskList = user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
             var approvedContactsTrytes = user.TangleMessenger.GetMessagesAsync(user.ApprovedAddress, 3);
 
-            var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(
-              await approvedContactsTrytes,
-              user.NtruContactPair);
+            var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, user);
             var contactRequestList = await contactTaskList;
 
             var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer())
@@ -58,36 +56,7 @@
 
               if (encryptedMessages.Any(c => !c.Stored))
               {
-                var intent =
-                  Application.Context.PackageManager.GetLaunchIntentForPackage(Application.Context.PackageName);
-                intent.AddFlags(ActivityFlags.ClearTop);
-                var pendingIntent = PendingIntent.GetActivity(
-                  Application.Context,
-                  0,
-                  intent,
-                  PendingIntentFlags.UpdateCurrent);
-
-                var notificationManager =
-                  Application.Context.GetSystemService(Context.NotificationService) as NotificationManager;
-
-                var builder = new NotificationCompat.Builder(Application.Context, "channel-chiota")
-                  .SetAutoCancel(true) // Dismiss from the notif. area when clicked
-                  .SetContentIntent(pendingIntent).SetContentTitle("Chiota")
-                  .SetContentText("New Message from " + contact.Name)
-                  .SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification))
-                  .SetSmallIcon(Resource.Drawable.reminder);
-
-                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-                {
-                  var mChannel = new NotificationChannel("channel-chiota", "Chiota", NotificationImportance.High);
-                  mChannel.EnableVibration(true);
-                  mChannel.LockscreenVisibility = NotificationVisibility.Public;
-                  notificationManager?.CreateNotificationChannel(mChannel);
-                }
-
-                var notification = builder.Build();
-
-                notificationManager?.Notify(contactNotificationId, notification);
+                this.CreateNotification(contactNotificationId, contact);
               }
 
               contactNotificationId++;
@@ -97,6 +66,39 @@
       }
 
       return true;
+    }
+
+    private void CreateNotification(int contactNotificationId, Contact contact)
+    {
+      var intent = Application.Context.PackageManager.GetLaunchIntentForPackage(Application.Context.PackageName);
+      intent.AddFlags(ActivityFlags.ClearTop);
+      var pendingIntent = PendingIntent.GetActivity(
+        Application.Context,
+        0,
+        intent,
+        PendingIntentFlags.UpdateCurrent);
+
+      var notificationManager =
+        Application.Context.GetSystemService(Context.NotificationService) as NotificationManager;
+
+      var builder = new NotificationCompat.Builder(Application.Context, "channel-chiota")
+        .SetAutoCancel(true) // Dismiss from the notif. area when clicked
+        .SetContentIntent(pendingIntent).SetContentTitle("Chiota")
+        .SetContentText("New Message from " + contact.Name)
+        .SetSound(RingtoneManager.GetDefaultUri(RingtoneType.Notification))
+        .SetSmallIcon(Resource.Drawable.reminder);
+
+      if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+      {
+        var mChannel = new NotificationChannel("channel-chiota", "Chiota", NotificationImportance.High);
+        mChannel.EnableVibration(true);
+        mChannel.LockscreenVisibility = NotificationVisibility.Public;
+        notificationManager?.CreateNotificationChannel(mChannel);
+      }
+
+      var notification = builder.Build();
+
+      notificationManager?.Notify(contactNotificationId, notification);
     }
   }
 }

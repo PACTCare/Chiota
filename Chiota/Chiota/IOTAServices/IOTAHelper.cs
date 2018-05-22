@@ -76,14 +76,14 @@
 
     public static List<Contact> FilterApprovedContacts(
       IEnumerable<TryteStringMessage> trytes,
-      IAsymmetricKeyPair keyPair)
+      User user)
     {
       var approvedContacts = new List<Contact>();
       foreach (var tryte in trytes)
       {
         try
         {
-          var decryptedMessage = new NtruKex().Decrypt(keyPair, tryte.Message.DecodeBytesFromTryteString());
+          var decryptedMessage = new NtruKex().Decrypt(user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
 
           var chatAddress = decryptedMessage.Substring(0, 81);
 
