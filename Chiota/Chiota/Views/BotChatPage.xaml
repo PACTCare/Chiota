@@ -39,14 +39,13 @@
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Entry  x:Name="MessageEntry" 
-                Grid.Column="0" 
+        <Entry  Grid.Column="0" 
                 TextColor="#1d4999"
                 PlaceholderColor="#1d4999"
                 Keyboard="Chat"
                 Completed="HandleCompleted"   
-                    Placeholder="Message" 
-                    Text="{Binding OutGoingText}"></Entry>
+                Placeholder="Message" 
+                Text="{Binding OutGoingText}"></Entry>
         <Button Grid.Column="1" 
                     BorderWidth="4"
                     BorderColor="#ff0000"

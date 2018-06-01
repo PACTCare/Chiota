@@ -1,6 +1,5 @@
 ﻿namespace Chiota.Chatbot
 {
-  using System;
   using System.Threading.Tasks;
 
   using Microsoft.Bot.Connector.DirectLine;

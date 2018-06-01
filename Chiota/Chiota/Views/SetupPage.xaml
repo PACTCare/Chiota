@@ -2,16 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.Views.SetupPage"
-             xmlns:plugin="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              BackgroundColor="#eaeaea">
   <AbsoluteLayout  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
     <StackLayout Orientation="Vertical" Padding="30,20,30,20" Spacing="20">
-      <plugin:CircleImage
+      <controls:CircleImage
         HeightRequest="160"
         WidthRequest="160"
         Aspect="AspectFill"
         HorizontalOptions="Center"
-        VerticalOptions="Center" Source="{Binding ImageSource}" ></plugin:CircleImage>
+        VerticalOptions="Center" Source="{Binding ImageSource}" ></controls:CircleImage>
       <!--<Image HorizontalOptions="Center" WidthRequest="140" HeightRequest="140" Source="{Binding ImageSource}"/>-->
       <Label Text="Once created your name seed combination cannot be changed!" TextColor="#ff0000"></Label>
       <Frame BackgroundColor="#1d4999" HasShadow="False">

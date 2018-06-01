@@ -55,8 +55,6 @@
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 
-    public bool PageIsShown { get; set; }
-
     public string OutGoingText
     {
       get => this.outgoingText;
@@ -79,6 +77,8 @@
       }
     }
 
+    private bool PageIsShown { get; set; }
+
     public async void OnAppearing()
     {
       this.PageIsShown = true;
@@ -93,6 +93,13 @@
       {
         this.GetMessagesAsync(this.Messages);
       }
+    }
+
+    public void OnDisappearing()
+    {
+      // resets everything, reloads new messages contacts, public key check, etc.
+      this.user.TangleMessenger.ShortStorageAddressList = new List<string>();
+      this.PageIsShown = false;
     }
 
     public void MessageRestriction(Entry entry)
@@ -135,11 +142,11 @@
         var signature = this.user.PublicKeyAddress.Substring(0, 30);
 
         // encryption with public key of other user
-        var encryptedForContact = this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText);
+        var encryptedForContact = await Task.Run(() => this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText));
         var tryteContact = new TryteString(encryptedForContact.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         // encryption with public key of user
-        var encryptedForUser = this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText);
+        var encryptedForUser = await Task.Run(() => this.ntruKex.Encrypt(this.user.NtruChatPair.PublicKey, this.OutGoingText));
         var tryteUser = new TryteString(encryptedForUser.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
 
         var sendFeedback = await this.SendParallelAsync(tryteContact, tryteUser);

@@ -2,7 +2,7 @@
 <ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.IncomingViewCell"
-             xmlns:plugin="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin">
 
     <Grid ColumnSpacing="2" Padding="5">
         <Grid.ColumnDefinitions>
@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         
         <Image Grid.Row="0" Grid.Column="1" Source="{Binding ImageSource}" />
-        <plugin:CircleImage
+        <controls:CircleImage
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="0,0,4,0"
@@ -26,19 +26,20 @@
                     WidthRequest="40"
                     Aspect="AspectFill"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center" Source="{Binding ProfileImage}" ></plugin:CircleImage>
+                    VerticalOptions="Center" Source="{Binding ProfileImage}" ></controls:CircleImage>
         <Frame CornerRadius="10" 
                Padding="10,8,10,8" 
                Grid.Row="1" 
                Grid.Column="1" 
-               OutlineColor="Transparent" 
+               BorderColor="Transparent" 
                HasShadow="False" 
                BackgroundColor="#e1e2e1">
             <Label TextColor="Black" FontSize="16" Text="{Binding Text}" />
         </Frame>
         <Frame Grid.Row="1" 
                Grid.Column="2"
-               OutlineColor="Transparent" 
+               BorderColor="Transparent" 
+               BackgroundColor="Transparent"
                HasShadow="False">
         </Frame>
         <Label FontSize="Micro" 

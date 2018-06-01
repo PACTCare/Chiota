@@ -75,8 +75,8 @@
         // 2. request address
         // 3. approved address
         // addresses can be generated based on each other to make it faster
-        var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
-        var addresses = addressGenerator.GetAddresses(seed, SecurityLevel.Medium, 0, 2);
+        var addressGenerator = await Task.Run(() => new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper())));
+        var addresses = await Task.Run(() => addressGenerator.GetAddresses(seed, SecurityLevel.Medium, 0, 2));
 
         // var addresses = await this.GenerateAddressParallel(seed, 2);
         addresses.Add(Helper.GenerateAddress(addresses[0]));

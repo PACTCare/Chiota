@@ -25,14 +25,15 @@
                       VerticalOptions="Center" Source="https://florenceblob.blob.core.windows.net/thumbnails/David_klein.JPG" ></plugin:CircleImage>-->
         <Frame Grid.Row="0" 
                Grid.Column="1"
-               OutlineColor="Transparent" 
+               BackgroundColor="Transparent"
+               BorderColor="Transparent" 
                HasShadow="False">
         </Frame>
         <Frame CornerRadius="10" 
                Padding="10,8,10,8" 
                Grid.Row="0" 
                Grid.Column="2"
-               OutlineColor="Transparent" 
+               BorderColor="Transparent" 
                HasShadow="False" 
                BackgroundColor="#5874ca">
             <Label TextColor="White" FontSize="16" HorizontalTextAlignment="End" Text="{Binding Text}" />

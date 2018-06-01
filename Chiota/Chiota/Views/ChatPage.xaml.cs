@@ -41,7 +41,7 @@
 
     protected override void OnDisappearing()
     {
-      this.vm.PageIsShown = false;
+      this.vm?.OnDisappearing();
       base.OnDisappearing();
     }
 

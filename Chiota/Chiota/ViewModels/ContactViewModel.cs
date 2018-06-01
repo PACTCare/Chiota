@@ -145,7 +145,7 @@
       }
 
       // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
-      if (contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)
+      if (this.Contacts != null && contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)
       {
         approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
       }

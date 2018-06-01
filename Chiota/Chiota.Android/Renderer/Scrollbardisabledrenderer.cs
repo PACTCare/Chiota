@@ -24,9 +24,6 @@ namespace Chiota.Droid
                 e.OldElement.PropertyChanged -= this.OnElementPropertyChanged;
 
             e.NewElement.PropertyChanged += this.OnElementPropertyChanged;
-
-
-
         }
 
         protected void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)

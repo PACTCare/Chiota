@@ -74,9 +74,9 @@
     private async Task SendMessage()
     {
       this.Messages.Add(new MessageViewModel { Text = this.outgoingText, IsIncoming = false, MessagDateTime = DateTime.Now });
+      this.CreateTyping();
       this.ScrollToNewMessage();
       await this.connection.SendMessageAsync(this.outgoingText);
-      this.CreateTyping();
       this.OutGoingText = null;
     }
 
@@ -115,7 +115,8 @@
                         MessagDateTime = DateTime.Now,
                         ProfileImage = this.profileImageUrl
                       });
-                    this.quickReplyStack.Children.Clear(); // clear befor new buttons or quick replies
+
+                    this.quickReplyStack.Children.Clear();
                     if (heroCard.Buttons != null)
                     {
                       foreach (var button in heroCard.Buttons)
@@ -155,7 +156,7 @@
                   MessagDateTime = DateTime.Now,
                   ProfileImage = this.profileImageUrl
                 });
-              this.quickReplyStack.Children.Clear();
+              this.quickReplyStack.Children.Clear(); 
               if (activity.SuggestedActions != null)
               {
                 foreach (var quickReply in activity.SuggestedActions.Actions)
@@ -182,7 +183,7 @@
       var lastMessage = this.messagesListView?.ItemsSource?.Cast<object>().LastOrDefault();
       if (lastMessage != null)
       {
-        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, true);
+        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, false);
       }
     }
 
@@ -207,9 +208,9 @@
           async () =>
         {
           this.messagesList.Add(new MessageViewModel { Text = buttonText, IsIncoming = false, MessagDateTime = DateTime.Now, ProfileImage = this.profileImageUrl });
+          this.CreateTyping();
           this.ScrollToNewMessage();
           await this.connection.SendMessageAsync(buttonText);
-          this.CreateTyping();
         })
       };
       this.quickReplyStack.Children.Add(buttonOne);

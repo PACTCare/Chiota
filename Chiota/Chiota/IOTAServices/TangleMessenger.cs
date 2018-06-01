@@ -27,7 +27,6 @@
     private readonly SQLiteAsyncConnection connection;
 
     // private readonly TableStorage tableStorage;
-
     private IIotaRepository repository;
 
     public TangleMessenger(Seed seed)
@@ -39,7 +38,6 @@
       this.connection.CreateTableAsync<SqlLiteMessage>();
 
       // this.tableStorage = new TableStorage();
-
       // this.tableStorage.CreateTable();
     }
 

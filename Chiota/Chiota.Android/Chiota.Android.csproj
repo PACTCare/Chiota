@@ -79,7 +79,7 @@
       <Version>1.8.2</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
-      <Version>106.3.0-alpha0002</Version>
+      <Version>106.3.0</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.4.118</Version>
@@ -91,19 +91,19 @@
       <Version>0.9.0.3</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
-      <Version>9.1.1</Version>
+      <Version>9.2.0</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Connectivity">
       <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Media">
-      <Version>3.2.1</Version>
+      <Version>4.0.0.9</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.SecureStorage">
       <Version>1.0.11</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle">
-      <Version>2.0.2</Version>
+      <Version>3.0.0.5</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2" />

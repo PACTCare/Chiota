@@ -32,14 +32,24 @@
       return user;
     }
 
-    public static bool CorrectSeedAdressChecker(string seed)
+    public static bool CorrectSeedAdressChecker(string seedOrAddress)
     {
-      if (seed == null)
+      if (seedOrAddress == null)
       {
         return false;
       }
 
-      return seed != string.Empty && seed.All(c => "ABCDEFGHIJKLMNOPQRSTUVWXYZ9".Contains(c));
+      const string AllowableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
+
+      foreach (char c in seedOrAddress)
+      {
+        if (!AllowableLetters.Contains(c.ToString()))
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
