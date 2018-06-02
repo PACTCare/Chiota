@@ -22,7 +22,7 @@
       var vm = new AddContactViewModel(user) { Navigation = this.Navigation }; 
 
       vm.DisplayInvalidAdressPrompt += () => this.DisplayAlert("Error", "Invalid address, try again", "OK");
-      vm.SuccessfulRequestPrompt += () => this.DisplayAlert("Successful Request", "Your new contact needs to accept the request before you can chat with him!", "OK");
+      vm.SuccessfulRequestPrompt += () => this.DisplayAlert("Successful Request", "Your new contact needs to accept the request before you can start chatting!", "OK");
 
       this.ReceiverAdress.Completed += (object sender, EventArgs e) =>
         {
@@ -31,7 +31,7 @@
       this.BindingContext = vm;
     }
 
-    private void AdressTapHandle(object sender, EventArgs e)
+    private void AddressTapHandle(object sender, EventArgs e)
     {
       (this.BindingContext as AddContactViewModel)?.AddAdressToClipboard();
       this.DisplayAlert("Copied", "The address has been copied to your clipboard.", "OK");

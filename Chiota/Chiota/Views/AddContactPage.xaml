@@ -8,7 +8,13 @@
              Title="Add Contact">
   <AbsoluteLayout  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
     <StackLayout  Orientation="Vertical" Padding="30,0,30,0">
-      <Frame BackgroundColor="#1d4999" HasShadow="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="152" HeightRequest="152"  Padding="6,6,6,6">
+      <Frame BackgroundColor="#1d4999" 
+             HasShadow="False"
+             HorizontalOptions="CenterAndExpand" 
+             VerticalOptions="CenterAndExpand"
+             WidthRequest="152" 
+             HeightRequest="152"  
+             Padding="6,6,6,6">
           <zx:ZXingBarcodeImageView
               BarcodeFormat="QR_CODE"
               BarcodeValue="{Binding QrSource}"
@@ -21,28 +27,26 @@
             </zx:ZXingBarcodeImageView.BarcodeOptions>
           </zx:ZXingBarcodeImageView>
         </Frame>
-        <Label Text="Your address (tap to copy):" Margin="0,8,0,0" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
-        <Label Text="{Binding UserAddress}" Margin="0,5,0,0" FontSize="16" TextColor="#1d4999"></Label>
+        <Label Text="Your address (tap to copy):" Margin="0,5,0,0" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
+        <Label Text="{Binding UserAddress}" Margin="0,0,0,0" FontSize="16" TextColor="#1d4999"></Label>
       <Frame.GestureRecognizers>
         <TapGestureRecognizer
-            Tapped="AdressTapHandle" 
+            Tapped="AddressTapHandle" 
             NumberOfTapsRequired="1" />
       </Frame.GestureRecognizers>
-      <Frame BackgroundColor="#1d4999" HasShadow="False">
-        <StackLayout Orientation="Vertical" Margin="0">
+      <Frame BackgroundColor="#1d4999" HasShadow="False">        
           <Entry x:Name="ReceiverAdress" 
                  BackgroundColor="#1d4999"
                  Text="{Binding ReceiverAdress, Mode=TwoWay}" 
                  Placeholder="Enter an address"   
                  PlaceholderColor="White" 
                  TextColor="White"/>
-        </StackLayout>
       </Frame>
-      <Button Command="{Binding ScanCommand}" Text="Scan Barcode" TextColor="White"  
-              FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand" 
-              BackgroundColor="#5874ca" />
       <Button Command="{Binding SubmitCommand}" Text="Add Contact" TextColor="White"  
               FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand"  
+              BackgroundColor="#5874ca" />
+      <Button Command="{Binding ScanCommand}" Text="Scan Barcode" TextColor="White"  
+              FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand" 
               BackgroundColor="#5874ca" />
     </StackLayout>
     <StackLayout IsVisible="{Binding IsBusy}" Padding="20"

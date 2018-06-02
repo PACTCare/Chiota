@@ -46,7 +46,7 @@
     public ChatViewModel(ListView messagesListView, Contact contact, User user)
     {
       this.ntruKex = new NtruKex();
-      this.Messages = new ObservableCollection<MessageViewModel>();
+      
       this.user = user;
       this.contact = contact;
       this.messagesListView = messagesListView;
@@ -83,6 +83,7 @@
     {
       this.PageIsShown = true;
       this.contact.PublicNtruKey = await this.GetContactPublicKey();
+      this.Messages = new ObservableCollection<MessageViewModel>();
       if (this.contact.PublicNtruKey == null)
       {
         // todo: delete contact

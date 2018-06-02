@@ -18,7 +18,7 @@
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 
-    public async Task<string> UploadToBlob(string imageName, string path)
+    public async Task<string> UploadToBlob(string imageName, string path, byte[] imageAsBytes)
     {
       // Retrieve reference to a previously created container.
       var container = this.blobClient.GetContainerReference("userimages");
@@ -33,9 +33,9 @@
       blockBlob.Properties.ContentType = "image/" + imageType[imageType.Length - 1];
 
       // Create or overwrite the "myblob" blob with contents from a local file.
-      using (var fileStream = File.OpenRead(path))
+      using (var stream = new MemoryStream(imageAsBytes, writable: false))
       {
-        await blockBlob.UploadFromStreamAsync(fileStream);
+        await blockBlob.UploadFromStreamAsync(stream);
       }
 
       return ChiotaConstants.ImagePath + fileName;

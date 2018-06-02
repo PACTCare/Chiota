@@ -1,8 +1,10 @@
-﻿using Xamarin.Forms;
+﻿using Chiota.UWP.Services;
 
-[assembly: Dependency(typeof(Chiota.UWP.ClipboardService))]
+using Xamarin.Forms;
 
-namespace Chiota.UWP
+[assembly: Dependency(typeof(ClipboardService))]
+
+namespace Chiota.UWP.Services
 {
   using Chiota.Services;
 

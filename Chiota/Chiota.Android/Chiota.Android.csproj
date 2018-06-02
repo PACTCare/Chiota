@@ -118,13 +118,13 @@
   <ItemGroup>
     <Compile Include="Persistence\SqlLiteDb.cs" />
     <Compile Include="Services\ClipboardService.cs" />
-    <Compile Include="Renderer\FlatButtonRenderer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\Scrollbardisabledrenderer.cs" />
     <Compile Include="Services\NotificationsTask.cs" />
     <Compile Include="Services\PeriodicJob.cs" />
+    <Compile Include="Services\ResizeService.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿namespace Chiota.ViewModels
 {
   using System;
+  using System.IO;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -87,7 +88,17 @@
 
         if (this.mediaFile?.Path != null)
         {
-          user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path);
+          byte[] imageAsBytes;
+          using (var memoryStream = new MemoryStream())
+          {
+            this.mediaFile.GetStream().CopyTo(memoryStream);
+            imageAsBytes = memoryStream.ToArray();
+          }
+
+          imageAsBytes = await DependencyService.Get<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
+         
+          user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
+          this.mediaFile.Dispose();
         }
 
         user = await this.StoreDataOnTangle(user);
@@ -111,7 +122,7 @@
 
       var userData = new UserFactory().CreateUploadUser(user);
       var serializeObject = JsonConvert.SerializeObject(userData);
-     
+
       await this.SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
       return user;
     }

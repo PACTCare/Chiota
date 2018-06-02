@@ -10,13 +10,11 @@ namespace Chiota.Droid.Services
 
   using Chiota.Services;
 
-  using Xamarin.Forms;
-
   public class ClipboardService : IClipboardService
   {
     public string GetTextFromClipboard()
     {
-      var clipboardmanager = (ClipboardManager)Forms.Context.GetSystemService(Context.ClipboardService);
+      var clipboardmanager = (ClipboardManager)Android.App.Application.Context.GetSystemService(Context.ClipboardService);
       var item = clipboardmanager.PrimaryClip.GetItemAt(0);
       var text = item.Text;
       return text;
@@ -25,7 +23,7 @@ namespace Chiota.Droid.Services
     public void SendTextToClipboard(string text)
     {
       // Get the Clipboard Manager
-      var clipboardManager = (ClipboardManager)Forms.Context.GetSystemService(Context.ClipboardService);
+      var clipboardManager = (ClipboardManager)Android.App.Application.Context.GetSystemService(Context.ClipboardService);
 
       // Create a new Clip
       var clip = ClipData.NewPlainText("Address copied to clipboard", text);
