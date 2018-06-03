@@ -21,10 +21,10 @@ The disadvantage of the current system:
 -	Advances in cryptanalysis may at some point break NTRU
 
 # Motivation
-During the process of creating the health care chatbot Florence, we found out that we can't use the technology to its full potential due to various problems with the current state of the healthcare system. **You as a patient should be in control of your healthcare data and a chatbot should support the private, secure and continuous communication between you and your healthcare provider network.** However, with the current technology that isn't possible. That is why we started to experiment with Iota. So, we have a huge interest in improving the technology for sharing data with the help of the tangle.
+During the process of creating the health care chatbot Florence, we found out that we can't use the technology to its full potential due to various problems with the current state of the healthcare system. **You as a patient should be in control of your healthcare data and a chatbot should support the private, secure and continuous communication between you and your healthcare provider network.** However, with the current technology that isn't possible. That is why we started the project **“Untangle Care”**, you can find out more about it on the [official IOTA ecosystem page](https://ecosystem.iota.org/projects/untangle-care). 
 
 # About us/me
-My name is David Hawig and I am the developer of Florence.chat. In May I will stop working at my current (secure) job and cofound a company (to do something meaningful) whose goal is to leverage Florence to support the communication between patients and healthcare providers. You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]florence[dot]chat). 
+My name is David Hawig and I am the developer of Florence.chat.  You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]florence[dot]chat). 
 My current Chiota contact address is OZQQEPQ9AH9QUX9BQAWOBCTZNAFIFYYWMZUDKFUKGQAIEFAXBZKWCMMOXFU9PDCAMAHDIUTCZPZK9RKPZ
 
 We welcome any kind of help or contribution!
