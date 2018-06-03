@@ -82,6 +82,7 @@
     public async void OnAppearing()
     {
       this.PageIsShown = true;
+      this.messageNumber = 0;
       this.contact.PublicNtruKey = await this.GetContactPublicKey();
       this.Messages = new ObservableCollection<MessageViewModel>();
       if (this.contact.PublicNtruKey == null)
