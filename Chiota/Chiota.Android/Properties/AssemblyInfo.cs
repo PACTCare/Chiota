@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Android.App;
 using Xamarin.Forms.Xaml;
@@ -32,5 +31,5 @@ using Xamarin.Forms.Xaml;
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
 
-//Xaml Compilation, helps to catch errors at compile time
+// Xaml Compilation, helps to catch errors at compile time
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]

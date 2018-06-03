@@ -43,6 +43,7 @@
                 TextColor="#1d4999"
                 PlaceholderColor="#1d4999"
                 Keyboard="Chat"
+                IsSpellCheckEnabled="True"
                 Completed="HandleCompleted"   
                 Placeholder="Message" 
                 Text="{Binding OutGoingText}"></Entry>

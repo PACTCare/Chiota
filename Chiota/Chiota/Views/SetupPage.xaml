@@ -20,8 +20,10 @@
           <Label Text="Username " TextColor="White"></Label>
           <Entry x:Name="Username" 
                  BackgroundColor="#1d4999"
-                 Text="{Binding Username}" Placeholder="Enter your name"   
-                 PlaceholderColor="LightGray" HeightRequest="40"   
+                 Text="{Binding Username}" 
+                 Placeholder="Enter your name"   
+                 PlaceholderColor="LightGray" 
+                 HeightRequest="40"   
                  TextColor="White"/>
         </StackLayout>
       </Frame>

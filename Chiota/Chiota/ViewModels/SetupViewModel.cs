@@ -88,15 +88,10 @@
 
         if (this.mediaFile?.Path != null)
         {
-          byte[] imageAsBytes;
-          using (var memoryStream = new MemoryStream())
-          {
-            this.mediaFile.GetStream().CopyTo(memoryStream);
-            imageAsBytes = memoryStream.ToArray();
-          }
+          var imageAsBytes = await this.GenerateByteImage(this.mediaFile);
 
           imageAsBytes = await DependencyService.Get<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
-         
+
           user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
           this.mediaFile.Dispose();
         }
@@ -114,6 +109,18 @@
         Application.Current.MainPage = new NavigationPage(new ContactPage(user));
         await this.Navigation.PopToRootAsync(true);
       }
+    }
+
+    private async Task<byte[]> GenerateByteImage(MediaFile methodeMediaFile)
+    {
+      byte[] imageAsBytes;
+      using (var memoryStream = new MemoryStream())
+      {
+        await methodeMediaFile.GetStream().CopyToAsync(memoryStream);
+        imageAsBytes = memoryStream.ToArray();
+      }
+
+      return imageAsBytes;
     }
 
     private async Task<User> StoreDataOnTangle(User user)

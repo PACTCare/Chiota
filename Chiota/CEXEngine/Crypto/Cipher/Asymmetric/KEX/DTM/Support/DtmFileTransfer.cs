@@ -69,17 +69,6 @@ namespace VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.KEX.DTM.Support
 
         #region Delegates/Events
         /// <summary>
-        /// The Packet Received delegate
-        /// </summary>
-        /// <param name="owner">The owner object</param>
-        /// <param name="args">A <see cref="DtmDataReceivedArgs"/> class</param>
-        public delegate void DataReceivedDelegate(object owner, DtmDataReceivedArgs args);
-        /// <summary>
-        /// The Data Received event; fires each time data has been received through the post-exchange encrypted channel
-        /// </summary>
-        public event DataReceivedDelegate DataReceived;
-
-        /// <summary>
         /// The File Transferred delegate
         /// </summary>
         /// <param name="owner">The owner object</param>

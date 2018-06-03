@@ -13,7 +13,8 @@
           <Label Text="Seed " TextColor="White"></Label>
           <Entry x:Name="SeedInput" 
                  BackgroundColor="#1d4999"
-                 Text="{Binding SeedInput}"    
+                 Text="{Binding SeedInput}" 
+                 IsSpellCheckEnabled="False"
                  PlaceholderColor="White" 
                  HeightRequest="40"   
                  IsPassword="False"  

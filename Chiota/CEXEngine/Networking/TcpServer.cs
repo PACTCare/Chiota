@@ -44,15 +44,6 @@ namespace VTDev.Libraries.CEXEngine.Networking
         /// </summary>
         public event DisConnectedDelegate DisConnected;
 
-        /// <summary>
-        /// The Packet Received delegate
-        /// </summary>
-        /// <param name="args">A <see cref="DataReceivedEventArgs"/> class</param>
-        public delegate void DataReceivedDelegate(DataReceivedEventArgs args);
-        /// <summary>
-        /// The Data Received event; fires each time data has been received
-        /// </summary>
-        public event DataReceivedDelegate DataReceived;
         #endregion
 
         #region Listen

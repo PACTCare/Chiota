@@ -1,8 +1,4 @@
-﻿using Xamarin.Forms.Xaml;
-
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
-
-namespace Chiota
+﻿namespace Chiota
 {
   using Chiota.Services;
   using Chiota.Views;

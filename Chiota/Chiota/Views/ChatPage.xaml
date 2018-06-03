@@ -36,6 +36,7 @@
                 PlaceholderColor="#1d4999"
                 Completed="HandleCompleted" 
                 Keyboard="Chat"
+                IsSpellCheckEnabled="True"
                     Placeholder="Message" 
                     Text="{Binding OutGoingText}"></Entry>
         <Button Grid.Column="1" 

@@ -22,7 +22,7 @@
     public static TryteString ObjectToTryteString<T>(T data)
     {
       var serializeObject = JsonConvert.SerializeObject(data);
-      return TryteString.FromAsciiString(serializeObject);
+      return TryteString.FromUtf8String(serializeObject);
     }
 
     public static User GenerateKeys(User user)
