@@ -3,6 +3,8 @@ Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat A
 
 The goal is to create a quantum secure chat app, in which you are the owner of your own data and nobody else! 
 
+Google Play beta test: https://play.google.com/apps/testing/chiotaapp.chiotaapp
+
 Impressions of the current state:
 
 <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180406-180427.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-123945.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180406-180148.jpg" width="200"> <img src="https://chiota.blob.core.windows.net/screenshots/Screenshot_20180402-124908.jpg" width="200">
