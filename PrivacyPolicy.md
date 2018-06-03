@@ -5,7 +5,7 @@ Effective date: June 03, 2018
 Chiota is an [open source Chat App](https://github.com/Noc2/Chiota), which uses the IOTA tangle and your smartphone storage to store your encrypted information and messages. In addition to that your user image will be stored in my blob storage account (since it’s really slow to upload an image to the tangle). 
 The only information I have access to is your uploaded user image. You can use Chiota without a user image!
 
-**Warning**: Chiota is still in an early alpha status. In addition, you probably will lose all your contacts with the next IOTA snapshot. It’s not recommended to use any IOTA seed, which stores any valuable information or money. Furthermore, I cannot guarantee the security of the encryption or any other part of the app.
+**Warning**: Chiota is still in an early beta status. In addition, you probably will lose all your contacts with the next IOTA snapshot. It’s not recommended to use any IOTA seed, which stores any valuable information or money. Furthermore, I cannot guarantee the security of the encryption or any other part of the app.
 
 # Contact information:
 If you have any questions about this Privacy Policy, please contact me, David Hawig:
