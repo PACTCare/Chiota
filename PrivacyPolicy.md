@@ -1,5 +1,5 @@
 # Privacy Policy for Chiota
-Effective date: April 27, 2018
+Effective date: June 03, 2018
 
 # About Chiota
 Chiota is an [open source Chat App](https://github.com/Noc2/Chiota), which uses the IOTA tangle and your smartphone storage to store your encrypted information and messages. In addition to that your user image will be stored in my blob storage account (since it’s really slow to upload an image to the tangle). 
@@ -9,7 +9,7 @@ The only information I have access to is your uploaded user image. You can use C
 
 # Contact information:
 If you have any questions about this Privacy Policy, please contact me, David Hawig:
--	david [dot] hawig [at] florence [dot] chat
+-	david [dot] hawig [at] pact [dot] care
 -	https://github.com/Noc2/Chiota
 
 # Personal information Chiota needs accesses to: 
@@ -28,9 +28,12 @@ All information stored on your device will be deleted if you delete the app.
 The encrypted information you upload to the tangle is currently stored on the tangle until the next snapshot. Since I don’t have any access to this data and it’s stored and uploaded by you, I can not delete this information. 
 If you want me to delete your user image on my blob storage, just write me an email. 
 
-# Microsoft
-Microsoft uses techniques to analyze and track apps from the Windows Store, see: 
+# Third-party services
+- Microsoft uses techniques to analyze and track apps from the Windows Store, see: 
 https://msdn.microsoft.com/en-us/library/windows/apps/dn764944.aspx
+- Google Play Services uses techniques to analyze and track apps from Google Play, see:
+https://policies.google.com/privacy
+
 
 # Changes to this privacy policy
 I may revise this agreement from time to time. The most current version will always be on this page. You are advised to review this Privacy Policy periodically for any changes.
