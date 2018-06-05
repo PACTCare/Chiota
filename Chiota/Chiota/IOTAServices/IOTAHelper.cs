@@ -59,18 +59,6 @@
       return new TryteString(messageTrytes.Substring(0, index));
     }
 
-    /// <summary>
-    /// The filter approved contacts.
-    /// </summary>
-    /// <param name="trytes">
-    /// The trytes.
-    /// </param>
-    /// <param name="user">
-    /// The user.
-    /// </param>
-    /// <returns>
-    /// The <see cref="List"/>.
-    /// </returns>
     public static List<Contact> FilterApprovedContacts(IEnumerable<TryteStringMessage> trytes, User user)
     {
       var approvedContacts = new List<Contact>();
@@ -110,18 +98,6 @@
       return approvedContacts;
     }
 
-    /// <summary>
-    /// The filter chat messages.
-    /// </summary>
-    /// <param name="trytes">
-    /// The trytes.
-    /// </param>
-    /// <param name="keyPair">
-    /// The key pair.
-    /// </param>
-    /// <returns>
-    /// The <see cref="List"/>.
-    /// </returns>
     public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
     {
       var chatMessages = new List<ChatMessage>();
@@ -159,18 +135,6 @@
       return chatMessages;
     }
 
-    /// <summary>
-    /// The filter new hashes.
-    /// </summary>
-    /// <param name="transactions">
-    /// The transactions.
-    /// </param>
-    /// <param name="storedHashes">
-    /// The stored hashes.
-    /// </param>
-    /// <returns>
-    /// The <see cref="List"/>.
-    /// </returns>
     public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
     {
       var newHashes = new List<Hash>();
@@ -296,32 +260,11 @@
       return RemoveDuplicateContacts(contacts);
     }
 
-    /// <summary>
-    /// The object to tryte string.
-    /// </summary>
-    /// <param name="data">
-    /// The data.
-    /// </param>
-    /// <typeparam name="T">
-    /// The object type.
-    /// </typeparam>
-    /// <returns>
-    /// The <see cref="TryteString"/>.
-    /// </returns>
     public static TryteString ObjectToTryteString<T>(T data)
     {
       return TryteString.FromUtf8String(JsonConvert.SerializeObject(data));
     }
 
-    /// <summary>
-    /// The remove duplicate contacts.
-    /// </summary>
-    /// <param name="contactList">
-    /// The contact list.
-    /// </param>
-    /// <returns>
-    /// The <see cref="List"/>.
-    /// </returns>
     public static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
     {
       var index = 0;

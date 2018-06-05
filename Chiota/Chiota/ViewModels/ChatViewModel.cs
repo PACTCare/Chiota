@@ -133,11 +133,11 @@
     {
       this.IsBusy = true;
 
-      if (this.OutGoingText.Length > ChiotaConstants.CharacterLimit)
+      if (this.OutGoingText?.Length > ChiotaConstants.CharacterLimit)
       {
         this.DisplayMessageTooLong();
       }
-      else if (this.OutGoingText.Length > 0)
+      else if (this.OutGoingText?.Length > 0)
       {
         var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 
