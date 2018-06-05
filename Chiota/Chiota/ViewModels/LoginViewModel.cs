@@ -13,6 +13,7 @@
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -70,7 +71,7 @@
     private async Task Login()
     {
       this.RandomSeed = this.RandomSeed?.Trim();
-      if (!IotaHelper.CorrectSeedAdressChecker(this.RandomSeed))
+      if (!InputValidator.IsTrytes(this.RandomSeed))
       {
         this.DisplayInvalidLoginPrompt();
       }

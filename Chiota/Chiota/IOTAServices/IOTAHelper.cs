@@ -14,6 +14,7 @@
 
   using Tangle.Net.Entity;
   using Tangle.Net.Repository.DataTransfer;
+  using Tangle.Net.Utils;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -31,26 +32,6 @@
       user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress); 
       user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.ApprovedAddress);
       return user;
-    }
-
-    public static bool CorrectSeedAdressChecker(string seedOrAddress)
-    {
-      if (seedOrAddress == null)
-      {
-        return false;
-      }
-
-      const string AllowableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
-
-      foreach (var c in seedOrAddress)
-      {
-        if (!AllowableLetters.Contains(c.ToString()))
-        {
-          return false;
-        }
-      }
-
-      return true;
     }
 
     public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
