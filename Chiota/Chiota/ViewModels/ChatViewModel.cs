@@ -120,6 +120,7 @@
     {
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAddress, 3);
       var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
+      
       if (contactInfos == null || contactInfos.Count == 0 || contactInfos.Count > 1)
       {
         return null;
@@ -136,7 +137,7 @@
       {
         this.DisplayMessageTooLong();
       }
-      else
+      else if (this.OutGoingText.Length > 0)
       {
         var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 

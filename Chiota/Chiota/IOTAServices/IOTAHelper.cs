@@ -13,6 +13,7 @@
   using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
+  using Tangle.Net.Repository.DataTransfer;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -41,7 +42,7 @@
 
       const string AllowableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
 
-      foreach (char c in seedOrAddress)
+      foreach (var c in seedOrAddress)
       {
         if (!AllowableLetters.Contains(c.ToString()))
         {
@@ -127,7 +128,7 @@
 
     public static TryteString ExtractMessage(Bundle bundle)
     {
-      var messageTrytes = string.Empty;
+      var messageTrytes = String.Empty;
 
       // multiple message per bundle?
       foreach (var transaction in bundle.Transactions)
@@ -177,7 +178,7 @@
       return messages;
     }
 
-    public static List<Hash> FilterNewHashes(Tangle.Net.Repository.DataTransfer.TransactionHashList transactions, List<Hash> storedHashes)
+    public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
     {
       var newHashes = new List<Hash>();
       foreach (var transactionsHash in transactions.Hashes)
@@ -234,8 +235,26 @@
           // ignored
         }
       }
+      
+      return RemoveDuplicateContacts(contacts);
+    }
 
-      return contacts;
+    public static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
+    {
+      var index = 0;
+      while (index < contactList.Count - 1)
+      {
+        if (contactList[index].ContactAddress == contactList[index + 1].ContactAddress)
+        {
+          contactList.RemoveAt(index);
+        }
+        else
+        {
+          index++;
+        }
+      }
+
+      return contactList;
     }
   }
 }

@@ -91,7 +91,7 @@
         this.IsBusy = true;
         this.AlreadyClicke = true;
         if (IotaHelper.CorrectSeedAdressChecker(this.ReceiverAdress) &&
-            this.ReceiverAdress?.Length == 81 &&
+            (this.ReceiverAdress?.Length == 81 || this.ReceiverAdress?.Length == 90) &&
             this.ReceiverAdress != this.user.PublicKeyAddress)
         {
           // get information from receiver adress 
