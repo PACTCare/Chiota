@@ -9,6 +9,7 @@
   using Chiota.Services;
 
   using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -86,13 +87,12 @@
     {
       this.ReceiverAdress = this.ReceiverAdress?.Trim();
 
-      if (!this.AlreadyClicke)
+      if (!this.AlreadyClicked)
       {
         this.IsBusy = true;
-        this.AlreadyClicke = true;
-        if (IotaHelper.CorrectSeedAdressChecker(this.ReceiverAdress) &&
-            (this.ReceiverAdress?.Length == 81 || this.ReceiverAdress?.Length == 90) &&
-            this.ReceiverAdress != this.user.PublicKeyAddress)
+        this.AlreadyClicked = true;
+
+        if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != this.user.PublicKeyAddress)
         {
           // get information from receiver adress 
           var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
@@ -115,7 +115,7 @@
         }
 
         this.IsBusy = false;
-        this.AlreadyClicke = false;
+        this.AlreadyClicked = false;
       }
     }
 

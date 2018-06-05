@@ -18,76 +18,60 @@
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  public class IotaHelper
+  /// <summary>
+  /// The iota helper.
+  /// </summary>
+  public static class IotaHelper
   {
-    public static TryteString ObjectToTryteString<T>(T data)
+    /// <summary>
+    /// The extract message.
+    /// </summary>
+    /// <param name="bundle">
+    /// The bundle.
+    /// </param>
+    /// <returns>
+    /// The <see cref="TryteString"/>.
+    /// </returns>
+    public static TryteString ExtractMessage(Bundle bundle)
     {
-      var serializeObject = JsonConvert.SerializeObject(data);
-      return TryteString.FromUtf8String(serializeObject);
-    }
+      var messageTrytes = string.Empty;
 
-    public static User GenerateKeys(User user)
-    {
-      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress); 
-      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.ApprovedAddress);
-      return user;
-    }
-
-    public static bool CorrectSeedAdressChecker(string seedOrAddress)
-    {
-      if (seedOrAddress == null)
+      // multiple message per bundle?
+      foreach (var transaction in bundle.Transactions)
       {
-        return false;
-      }
-
-      const string AllowableLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
-
-      foreach (var c in seedOrAddress)
-      {
-        if (!AllowableLetters.Contains(c.ToString()))
+        if (transaction.Value < 0)
         {
-          return false;
+          continue;
+        }
+
+        if (!transaction.Fragment.IsEmpty)
+        {
+          messageTrytes += transaction.Fragment.Value;
         }
       }
 
-      return true;
-    }
-
-    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
-    {
-      var chatMessages = new List<ChatMessage>();
-      foreach (var tryte in trytes)
+      if (!messageTrytes.Contains(ChiotaConstants.End))
       {
-        try
-        {
-          var trytesString = tryte.Message.ToString();
-          var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
-          var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
-          var dateTrytes = new TryteString(trytesString.Substring(secondBreakIndex + ChiotaConstants.SecondBreak.Length, trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length));
-          var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
-
-          var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
-          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
-
-          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.DecodeBytesFromTryteString());
-          if (decryptedMessage != null)
-          {
-            var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
-            chatMessages.Add(chatMessage);
-          }
-        }
-        catch
-        {
-          // ignored
-        }
+        return null;
       }
 
-      return chatMessages;
+      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
+      return new TryteString(messageTrytes.Substring(0, index));
     }
 
-    public static List<Contact> FilterApprovedContacts(
-      IEnumerable<TryteStringMessage> trytes,
-      User user)
+    /// <summary>
+    /// The filter approved contacts.
+    /// </summary>
+    /// <param name="trytes">
+    /// The trytes.
+    /// </param>
+    /// <param name="user">
+    /// The user.
+    /// </param>
+    /// <returns>
+    /// The <see cref="List"/>.
+    /// </returns>
+    public static List<Contact> FilterApprovedContacts(IEnumerable<TryteStringMessage> trytes, User user)
     {
       var approvedContacts = new List<Contact>();
       foreach (var tryte in trytes)
@@ -126,58 +110,67 @@
       return approvedContacts;
     }
 
-    public static TryteString ExtractMessage(Bundle bundle)
+    /// <summary>
+    /// The filter chat messages.
+    /// </summary>
+    /// <param name="trytes">
+    /// The trytes.
+    /// </param>
+    /// <param name="keyPair">
+    /// The key pair.
+    /// </param>
+    /// <returns>
+    /// The <see cref="List"/>.
+    /// </returns>
+    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
     {
-      var messageTrytes = String.Empty;
-
-      // multiple message per bundle?
-      foreach (var transaction in bundle.Transactions)
+      var chatMessages = new List<ChatMessage>();
+      foreach (var tryte in trytes)
       {
-        if (transaction.Value < 0)
+        try
         {
-          continue;
-        }
+          var trytesString = tryte.Message.ToString();
+          var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
+          var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
+          var dateTrytes = new TryteString(
+            trytesString.Substring(
+              secondBreakIndex + ChiotaConstants.SecondBreak.Length,
+              trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length));
+          var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
 
-        if (!transaction.Fragment.IsEmpty)
-        {
-          messageTrytes += transaction.Fragment.Value;
-        }
-      }
+          var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
+          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
 
-      if (!messageTrytes.Contains(ChiotaConstants.End))
-      {
-        return null;
-      }
-
-      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
-      return new TryteString(messageTrytes.Substring(0, index));
-    }
-
-    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
-    {
-      var messages = new List<MessageViewModel>();
-      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
-
-      var messageList = FilterChatMessages(encryptedMessages, keyPair);
-
-      if (messageList != null && messageList.Count > 0)
-      {
-        var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
-        foreach (var message in sortedMessageList)
-        {
-          messages.Add(new MessageViewModel
+          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.DecodeBytesFromTryteString());
+          if (decryptedMessage == null)
           {
-            Text = message.Message,
-            IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
-            MessagDateTime = message.Date.ToLocalTime(),
-            ProfileImage = contact.ImageUrl
-          });
+            continue;
+          }
+
+          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
+          chatMessages.Add(chatMessage);
+        }
+        catch
+        {
+          // ignored
         }
       }
 
-      return messages;
+      return chatMessages;
     }
 
+    /// <summary>
+    /// The filter new hashes.
+    /// </summary>
+    /// <param name="transactions">
+    /// The transactions.
+    /// </param>
+    /// <param name="storedHashes">
+    /// The stored hashes.
+    /// </param>
+    /// <returns>
+    /// The <see cref="List"/>.
+    /// </returns>
     public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
     {
       var newHashes = new List<Hash>();
@@ -186,11 +179,13 @@
         var isStored = false;
         foreach (var storedHash in storedHashes)
         {
-          if (transactionsHash.Value == storedHash.Value)
+          if (transactionsHash.Value != storedHash.Value)
           {
-            isStored = true;
-            break;
+            continue;
           }
+
+          isStored = true;
+          break;
         }
 
         if (!isStored)
@@ -203,10 +198,71 @@
     }
 
     /// <summary>
+    /// The generate keys.
+    /// </summary>
+    /// <param name="user">
+    /// The user.
+    /// </param>
+    /// <returns>
+    /// The <see cref="User"/>.
+    /// </returns>
+    public static User GenerateKeys(User user)
+    {
+      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress);
+      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.ApprovedAddress);
+      return user;
+    }
+
+    /// <summary>
+    /// The get new messages.
+    /// </summary>
+    /// <param name="keyPair">
+    /// The key pair.
+    /// </param>
+    /// <param name="contact">
+    /// The contact.
+    /// </param>
+    /// <param name="tangle">
+    /// The tangle.
+    /// </param>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
+    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
+    {
+      var messages = new List<MessageViewModel>();
+      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
+
+      var messageList = FilterChatMessages(encryptedMessages, keyPair);
+
+      if (messageList != null && messageList.Count > 0)
+      {
+        var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
+        foreach (var message in sortedMessageList)
+        {
+          messages.Add(
+            new MessageViewModel
+              {
+                Text = message.Message,
+                IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
+                MessagDateTime = message.Date.ToLocalTime(),
+                ProfileImage = contact.ImageUrl
+              });
+        }
+      }
+
+      return messages;
+    }
+
+    /// <summary>
     /// Filters Transactions for public key and contact address
     /// </summary>
-    /// <param name="trytes">Transactions in List form</param>
-    /// <returns>null if more than one key</returns>
+    /// <param name="trytes">
+    /// Transactions in List form
+    /// </param>
+    /// <returns>
+    /// null if more than one key
+    /// </returns>
     public static List<Contact> GetPublicKeysAndContactAddresses(IEnumerable<TryteStringMessage> trytes)
     {
       var contacts = new List<Contact>();
@@ -223,22 +279,49 @@
           var index = trytesString.IndexOf(ChiotaConstants.LineBreak, StringComparison.Ordinal);
           var publicKeyString = trytesString.Substring(0, index);
           var bytesKey = new TryteString(publicKeyString).DecodeBytesFromTryteString();
-          var contact = new Contact
-          {
-            PublicNtruKey = new NTRUPublicKey(bytesKey),
-            ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
-          };
-          contacts.Add(contact);
+
+          contacts.Add(
+            new Contact
+              {
+                PublicNtruKey = new NTRUPublicKey(bytesKey),
+                ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
+              });
         }
         catch
         {
           // ignored
         }
       }
-      
+
       return RemoveDuplicateContacts(contacts);
     }
 
+    /// <summary>
+    /// The object to tryte string.
+    /// </summary>
+    /// <param name="data">
+    /// The data.
+    /// </param>
+    /// <typeparam name="T">
+    /// The object type.
+    /// </typeparam>
+    /// <returns>
+    /// The <see cref="TryteString"/>.
+    /// </returns>
+    public static TryteString ObjectToTryteString<T>(T data)
+    {
+      return TryteString.FromUtf8String(JsonConvert.SerializeObject(data));
+    }
+
+    /// <summary>
+    /// The remove duplicate contacts.
+    /// </summary>
+    /// <param name="contactList">
+    /// The contact list.
+    /// </param>
+    /// <returns>
+    /// The <see cref="List"/>.
+    /// </returns>
     public static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
     {
       var index = 0;

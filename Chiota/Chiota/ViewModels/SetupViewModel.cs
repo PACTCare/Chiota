@@ -80,10 +80,10 @@
       {
         this.DisplayInvalidLoginPrompt();
       }
-      else if (!this.AlreadyClicke)
+      else if (!this.AlreadyClicked)
       {
         this.IsBusy = true;
-        this.AlreadyClicke = true;
+        this.AlreadyClicked = true;
         user.Name = this.Username;
 
         if (this.mediaFile?.Path != null)
@@ -104,7 +104,7 @@
         }
 
         this.IsBusy = false;
-        this.AlreadyClicke = false;
+        this.AlreadyClicked = false;
 
         Application.Current.MainPage = new NavigationPage(new ContactPage(user));
         await this.Navigation.PopToRootAsync(true);

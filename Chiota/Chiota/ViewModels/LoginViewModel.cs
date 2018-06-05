@@ -13,6 +13,7 @@
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
@@ -70,14 +71,14 @@
     private async Task Login()
     {
       this.RandomSeed = this.RandomSeed?.Trim();
-      if (!IotaHelper.CorrectSeedAdressChecker(this.RandomSeed))
+      if (!InputValidator.IsTrytes(this.RandomSeed))
       {
         this.DisplayInvalidLoginPrompt();
       }
-      else if (!this.AlreadyClicke)
+      else if (!this.AlreadyClicked)
       {
         this.IsBusy = true;
-        this.AlreadyClicke = true;
+        this.AlreadyClicked = true;
         var seed = new Seed(this.RandomSeed);
 
         // 4 addresses needed
@@ -105,7 +106,7 @@
         if (user.Name == null)
         {
           this.IsBusy = false;
-          this.AlreadyClicke = false;
+          this.AlreadyClicked = false;
           await this.Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(user)));
         }
         else
