@@ -15,14 +15,19 @@
       <templateSelector:ContactTemplateSelector x:Key="ContactTemplateSelector"></templateSelector:ContactTemplateSelector>
     </ResourceDictionary>
   </ContentPage.Resources>
-  <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-    <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+   <AbsoluteLayout>
+    <StackLayout Orientation="Vertical" 
+                 HorizontalOptions="FillAndExpand" 
+                 VerticalOptions="FillAndExpand"
+                 AbsoluteLayout.LayoutFlags="All" 
+                 AbsoluteLayout.LayoutBounds="0,0,1,1">
       <SearchBar x:Name="SearchBar"
                  Placeholder="Search..." 
                  PlaceholderColor="Gray" 
                  TextChanged="Handler_TextChanged">
       </SearchBar>
       <ListView x:Name="ContactsList"
+                CachingStrategy="RecycleElement"
                 IsPullToRefreshEnabled="True"
                 Refreshing="ContactsList_OnRefreshing"
                 SeparatorVisibility="Default"

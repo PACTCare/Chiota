@@ -77,6 +77,8 @@
       try
       {
         tableList = await this.GetStoredTransactions(addresse);
+
+        // Todo Remove double stored entries
         var alreadyLoaded = this.AddressLoadedChack(addresse);
         foreach (var sqlLiteMessage in tableList)
         {

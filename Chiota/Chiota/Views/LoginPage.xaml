@@ -3,13 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.Views.LoginPage"
              BackgroundColor="#f5f5f5">
-  <AbsoluteLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+  <AbsoluteLayout>
     <StackLayout Orientation="Vertical" 
-                 Padding="30,20,30,20" Spacing="20">
+                 Padding="30,20,30,20" Spacing="15" 
+                 HorizontalOptions="CenterAndExpand" 
+                 VerticalOptions="CenterAndExpand"
+                 AbsoluteLayout.LayoutFlags="All" 
+                 AbsoluteLayout.LayoutBounds="0,0,1,1">
       <Image HorizontalOptions="Center" WidthRequest="160" HeightRequest="160" Source="iota.png"/>
       <Label Text="Remember your seed and feel free to change the randomly generated seed below for additional security!" TextColor="#ff0000"></Label>
-      <Frame BackgroundColor="#1d4999" HasShadow="False">
-        <StackLayout Orientation="Vertical" Spacing="10">
+        <StackLayout Orientation="Vertical" 
+                     BackgroundColor="#1d4999" 
+                     Padding="20" Spacing="10" >
           <Label Text="Seed " TextColor="White"></Label>
           <Entry x:Name="RandomSeed" 
                  AutomationId="RandomSeedId"
@@ -20,32 +25,39 @@
                  HeightRequest="40"   
                  IsPassword="False"  
                  TextColor="White"/>
-          <StackLayout Orientation="Horizontal">
+          <Button Command="{Binding CopySeedCommand}"
+                  Text="Copy seed to clipboard" 
+                  TextColor="White"  
+                  HorizontalOptions="FillAndExpand"  
+                  BackgroundColor="#5874ca" />
+          <StackLayout Orientation="Horizontal" CompressedLayout.IsHeadless="true">
             <Label Text="Store seed on your device:" Margin="0,0,5,0" TextColor="White"></Label>
             <Switch IsToggled="{Binding StoreSeed}"></Switch>
           </StackLayout>
         </StackLayout>
-      </Frame>
       <Button Command="{Binding SubmitCommand}"
-              AutomationId="SubmitButtonId"
               Text="Login" 
               TextColor="White"  
-              FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
+              FontAttributes="Bold" 
+              FontSize="16" 
+              HorizontalOptions="FillAndExpand"  
               BackgroundColor="#5874ca" />
     </StackLayout>
-    <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
-                 BackgroundColor="White"
-                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
-
-      <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
-
-      <Label Text="Addresses are generated..." 
+    <StackLayout IsVisible="{Binding IsBusy}" 
+                 AbsoluteLayout.LayoutFlags="All"
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 BackgroundColor="#99000000">
+      <StackLayout VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand"
+                   BackgroundColor="White"
+                   Padding="30,25,30,25">
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color ="#ff0000"/>
+        <Label Text="Addresses are generated..." 
              AutomationId="AddressLabelId"
              FontSize="16" 
-             HorizontalOptions="Center"
-             TextColor="#1d4999"/>
-
+             TextColor="Black"/>
+        </StackLayout>
     </StackLayout>
   </AbsoluteLayout>
 </ContentPage>  

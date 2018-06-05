@@ -36,6 +36,8 @@
       base.OnCreate(bundle);
       CrossCurrentActivity.Current.Activity = this;
 
+      // https://docs.microsoft.com/de-de/xamarin/xamarin-forms/internals/fast-renderers
+      Forms.SetFlags("FastRenderers_Experimental");
       Forms.Init(this, bundle);
 
       this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);

@@ -86,52 +86,53 @@
     {
       this.ReceiverAdress = this.ReceiverAdress?.Trim();
 
-      if (!this.AlreadyClicke &&
-          IotaHelper.CorrectSeedAdressChecker(this.ReceiverAdress) &&
-          this.ReceiverAdress?.Length == 81 &&
-          this.ReceiverAdress != this.user.PublicKeyAddress)
+      if (!this.AlreadyClicke)
       {
         this.IsBusy = true;
         this.AlreadyClicke = true;
+        if (IotaHelper.CorrectSeedAdressChecker(this.ReceiverAdress) &&
+            this.ReceiverAdress?.Length == 81 &&
+            this.ReceiverAdress != this.user.PublicKeyAddress)
+        {
+          // get information from receiver adress 
+          var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
+          var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
 
-        // get information from receiver adress 
-        var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
-        var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
+          if (contacts == null || contacts.Count == 0 || contacts.Count > 1)
+          {
+            this.DisplayInvalidAdressPrompt();
+          }
+          else if (contacts[0]?.PublicNtruKey != null && contacts[0].ContactAddress != null)
+          {
+            await this.SendParallel(contacts[0].ContactAddress);
 
-        if (contacts == null || contacts.Count == 0 || contacts.Count > 1)
+            this.SuccessfulRequestPrompt();
+          }
+        }
+        else
         {
           this.DisplayInvalidAdressPrompt();
         }
-        else if (contacts[0]?.PublicNtruKey != null && contacts[0].ContactAddress != null)
-        {
-          await this.SendParallel(contacts[0].ContactAddress);
 
-          this.SuccessfulRequestPrompt();
-        }
+        this.IsBusy = false;
+        this.AlreadyClicke = false;
       }
-      else
-      {
-        this.DisplayInvalidAdressPrompt();
-      }
-
-      this.IsBusy = false;
-      this.AlreadyClicke = false;
     }
 
     private Task SendParallel(string contactAddress)
     {
       var requestContact = new Contact()
-                             {
-                               // faster than generating adresses
-                               ChatAddress = Seed.Random().ToString(),
-                               Name = this.user.Name,
-                               ImageUrl = this.user.ImageUrl,
-                               ContactAddress = this.user.RequestAddress,
-                               Request = true,
-                               Rejected = false,
-                               PublicNtruKey = null,
-                               PublicKeyAddress = this.user.PublicKeyAddress
-                             };
+      {
+        // faster than generating adresses
+        ChatAddress = Seed.Random().ToString(),
+        Name = this.user.Name,
+        ImageUrl = this.user.ImageUrl,
+        ContactAddress = this.user.RequestAddress,
+        Request = true,
+        Rejected = false,
+        PublicNtruKey = null,
+        PublicKeyAddress = this.user.PublicKeyAddress
+      };
 
       var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
       var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);

@@ -1,6 +1,6 @@
 ﻿namespace Chiota.TemplateSelector
 {
-  using Chiota.Models;
+  using Chiota.CustomCells;
   using Chiota.ViewModels;
 
   using Xamarin.Forms;
@@ -17,7 +17,10 @@
     protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
     {
       if (!(item is MessageViewModel messageVm))
+      {
         return null;
+      }
+
       return messageVm.IsIncoming ? this.incomingDataTemplate : this.outgoingDataTemplate;
     }
 

@@ -3,45 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.Views.SetupPage"
              xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-             BackgroundColor="#eaeaea">
-  <AbsoluteLayout  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-    <StackLayout Orientation="Vertical" Padding="30,20,30,20" Spacing="20">
+             BackgroundColor="#f5f5f5">
+  <AbsoluteLayout >
+    <StackLayout Orientation="Vertical" 
+                 Padding="30,20,30,20" Spacing="15" 
+                 HorizontalOptions="CenterAndExpand" 
+                 VerticalOptions="CenterAndExpand"
+                 AbsoluteLayout.LayoutFlags="All" 
+                 AbsoluteLayout.LayoutBounds="0,0,1,1">
       <controls:CircleImage
         HeightRequest="160"
         WidthRequest="160"
         Aspect="AspectFill"
         HorizontalOptions="Center"
         VerticalOptions="Center" Source="{Binding ImageSource}" ></controls:CircleImage>
-      <!--<Image HorizontalOptions="Center" WidthRequest="140" HeightRequest="140" Source="{Binding ImageSource}"/>-->
       <Label Text="Once created your name seed combination cannot be changed!" TextColor="#ff0000"></Label>
-      <Frame BackgroundColor="#1d4999" HasShadow="False">
-        <StackLayout Orientation="Vertical" Spacing="10">
-          <Button Text="Select a profile image" BackgroundColor="#5874ca" TextColor="White" Clicked="Button_OnClicked"></Button>
+      <StackLayout Orientation="Vertical" 
+                   BackgroundColor="#1d4999" 
+                   Padding="20" Spacing="10" >
+          <Button Text="Select a profile image" 
+                  BackgroundColor="#5874ca" 
+                  TextColor="White" 
+                  Clicked="Button_OnClicked"></Button>
           <Label Text="Username " TextColor="White"></Label>
-          <Entry x:Name="Username" 
-                 BackgroundColor="#1d4999"
+          <Entry BackgroundColor="#1d4999"
                  Text="{Binding Username}" 
                  Placeholder="Enter your name"   
                  PlaceholderColor="LightGray" 
                  HeightRequest="40"   
                  TextColor="White"/>
         </StackLayout>
-      </Frame>
       <Button Command="{Binding SubmitCommand}"  Text="Create account" TextColor="White"  
               FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
               BackgroundColor="#5874ca" />
     </StackLayout>
-    <StackLayout IsVisible="{Binding IsBusy}" Padding="20"
-                 BackgroundColor="White"
-                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                 AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
-
-      <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="#ff0000"/>
-
-      <Label Text="Storing user data..." FontSize="16" 
-             HorizontalOptions="Center"
-             TextColor="#1d4999"/>
-
+    <StackLayout IsVisible="{Binding IsBusy}" 
+                 AbsoluteLayout.LayoutFlags="All"
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 BackgroundColor="#99000000">
+      <StackLayout VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand"
+                   BackgroundColor="White"
+                   Padding="30,25,30,25">
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color ="#ff0000"/>
+        <Label Text="Storing user data..." 
+               AutomationId="AddressLabelId"
+               FontSize="16" 
+               TextColor="Black"/>
+      </StackLayout>
     </StackLayout>
   </AbsoluteLayout>
 </ContentPage>  

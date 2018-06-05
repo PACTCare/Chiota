@@ -1,9 +1,7 @@
 ﻿namespace Chiota.ViewModels
 {
-  using System;
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
-  using System.Diagnostics;
   using System.Linq;
   using System.Threading.Tasks;
 
@@ -18,11 +16,11 @@
 
   public class ContactViewModel : BaseViewModel
   {
-    private ObservableCollection<ContactListViewModel> contactList;
-
     private readonly User user;
 
     private readonly List<BotObject> bots;
+
+    private ObservableCollection<ContactListViewModel> contactList;
 
     private ViewCellObject viewCellObject;
 
@@ -133,7 +131,7 @@
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
 
       // decline info is stored on contactsOnApproveAddress
-      for (int i = 0; i < approvedContacts.Count; i++)
+      for (var i = 0; i < approvedContacts.Count; i++)
       {
         foreach (var c in contactsOnApproveAddress)
         {
@@ -144,10 +142,18 @@
         }
       }
 
-      // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
-      if (this.Contacts != null && contactsOnApproveAddress.Count >= 1 && approvedContacts.Count == 0)
+      if (this.Contacts != null && contactsOnApproveAddress.Count == 1 && approvedContacts.Count == 0)
       {
-        approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+        // imidiate refresh, wehn decline is clicked
+        if (contactsOnApproveAddress[0].Rejected)
+        {
+          this.RemoveAddress(contactsOnApproveAddress[0].ChatAddress);
+        }
+        else
+        {
+          // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
+          approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+        }
       }
 
       var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
@@ -164,21 +170,7 @@
       foreach (var contact in approvedContacts.Where(c => !c.Rejected))
       {
         contact.Request = false;
-
-        // remove request from list
-        var itemToRemove = this.contacts.SingleOrDefault(r => r.ContactAddress.Contains(contact.ContactAddress));
-        if (itemToRemove != null)
-        {
-          try
-          {
-            this.contacts.Remove(itemToRemove);
-          }
-          catch (Exception e)
-          {
-            Trace.WriteLine(e);
-          }
-        }
-
+        this.RemoveAddress(contact.ChatAddress);
         this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject));
       }
 
@@ -196,6 +188,22 @@
       }
 
       return searchContacts;
+    }
+
+    private void RemoveAddress(string chatAddress)
+    {
+      var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAddress.Contains(chatAddress));
+      if (itemToRemove != null)
+      {
+        try
+        {
+          this.contacts.Remove(itemToRemove);
+        }
+        catch
+        {
+          // ignored
+        }
+      }
     }
 
     private void AddBotsToContacts()

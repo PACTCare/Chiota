@@ -22,6 +22,8 @@
   {
     public Action DisplayInvalidLoginPrompt;
 
+    public Action DisplaySeedCopiedPrompt;
+
     private string randomSeed = Seed.Random().Value;
 
     private bool storeSeed;
@@ -32,6 +34,7 @@
     {
       this.StoreSeed = true;
       this.SubmitCommand = new Command(async () => { await this.Login(); });
+      this.CopySeedCommand = new Command(this.CopySeed);
     }
 
     public bool StoreSeed
@@ -55,6 +58,14 @@
     }
 
     public ICommand SubmitCommand { get; protected set; }
+
+    public ICommand CopySeedCommand { get; protected set; }
+
+    private void CopySeed()
+    {
+      this.DisplaySeedCopiedPrompt();
+      DependencyService.Get<IClipboardService>().SendTextToClipboard(this.RandomSeed);
+    }
 
     private async Task Login()
     {

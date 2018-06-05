@@ -20,6 +20,7 @@
       var vm = new LoginViewModel { Navigation = this.Navigation };
 
       vm.DisplayInvalidLoginPrompt += () => this.DisplayAlert("Error", "Invalid seed, try again", "OK");
+      vm.DisplaySeedCopiedPrompt += () => this.DisplayAlert("Copied", "The seed has been copied to your clipboard.", "OK");
 
       this.RandomSeed.Completed += (object sender, EventArgs e) =>
         {
