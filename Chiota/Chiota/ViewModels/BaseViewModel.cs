@@ -23,7 +23,7 @@
 
     public INavigation Navigation { get; internal set; }
 
-    public bool AlreadyClicke { get; set; }
+    public bool AlreadyClicked { get; set; }
 
     protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
     {
