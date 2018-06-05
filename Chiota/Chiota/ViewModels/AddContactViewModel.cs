@@ -47,7 +47,7 @@
 
     public string ReceiverAdress
     {
-      get => this.receiverAdress;
+      get => this.receiverAdress ?? string.Empty;
       set
       {
         this.receiverAdress = value;
@@ -85,7 +85,7 @@
 
     private async Task AddContact()
     {
-      this.ReceiverAdress = this.ReceiverAdress?.Trim();
+      this.ReceiverAdress = this.ReceiverAdress.Trim();
 
       if (!this.AlreadyClicked)
       {
@@ -121,18 +121,18 @@
 
     private Task SendParallel(string contactAddress)
     {
-      var requestContact = new Contact()
-      {
-        // faster than generating adresses
-        ChatAddress = Seed.Random().ToString(),
-        Name = this.user.Name,
-        ImageUrl = this.user.ImageUrl,
-        ContactAddress = this.user.RequestAddress,
-        Request = true,
-        Rejected = false,
-        PublicNtruKey = null,
-        PublicKeyAddress = this.user.PublicKeyAddress
-      };
+      var requestContact = new Contact
+                             {
+                               // faster than generating adresses
+                               ChatAddress = Seed.Random().ToString(),
+                               Name = this.user.Name,
+                               ImageUrl = this.user.ImageUrl,
+                               ContactAddress = this.user.RequestAddress,
+                               Request = true,
+                               Rejected = false,
+                               PublicNtruKey = null,
+                               PublicKeyAddress = this.user.PublicKeyAddress
+                             };
 
       var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
       var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);
