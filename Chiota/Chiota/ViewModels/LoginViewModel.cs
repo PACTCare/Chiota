@@ -10,8 +10,6 @@
   using Chiota.Views;
 
   using Tangle.Net.Cryptography;
-  using Tangle.Net.Cryptography.Curl;
-  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
   using Tangle.Net.Utils;
 
@@ -50,7 +48,7 @@
 
     public string RandomSeed
     {
-      get => this.randomSeed;
+      get => this.randomSeed ?? string.Empty;
       set
       {
         this.randomSeed = value;
@@ -70,7 +68,7 @@
 
     private async Task Login()
     {
-      this.RandomSeed = this.RandomSeed?.Trim();
+      this.RandomSeed = this.RandomSeed.Trim();
       if (!InputValidator.IsTrytes(this.RandomSeed))
       {
         this.DisplayInvalidLoginPrompt();
@@ -87,8 +85,7 @@
         // 2. request address
         // 3. approved address
         // addresses can be generated based on each other to make it faster
-        var addressGenerator = await Task.Run(() => new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper())));
-        var addresses = await Task.Run(() => addressGenerator.GetAddresses(seed, SecurityLevel.Medium, 0, 2));
+        var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 2));
 
         // var addresses = await this.GenerateAddressParallel(seed, 2);
         addresses.Add(Helper.GenerateAddress(addresses[0]));
