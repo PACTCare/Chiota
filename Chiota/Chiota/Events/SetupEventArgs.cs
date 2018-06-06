@@ -4,9 +4,7 @@
 
   using Chiota.Models;
 
-  /// <summary>
-  /// The setup event args.
-  /// </summary>
+  /// <inheritdoc />
   public class SetupEventArgs : EventArgs
   {
     /// <summary>
