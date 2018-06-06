@@ -4,9 +4,12 @@
 
   public class BotList
   {
+    public static List<BotObject> Bots = new List<BotObject>();
+
     public List<BotObject> ReturnBotList()
     {
       var bots = new List<BotObject>();
+      bots.AddRange(Bots);
 
       // Add your own microsoft bot-framework bot here:
       //bots.Add(new BotObject()
