@@ -30,7 +30,7 @@
 
     public ContactViewModel(User user)
     {
-      this.bots = new BotList().ReturnBotList();
+      this.bots = BotList.ReturnBotList();
       this.user = user;
     }
 
@@ -51,7 +51,7 @@
 
     public ObservableCollection<ContactListViewModel> Contacts
     {
-      get => this.contactList;
+      get => this.contactList ?? new ObservableCollection<ContactListViewModel>();
       set
       {
         this.contactList = value;
@@ -63,7 +63,7 @@
     {
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.PageIsShown = true;
-      this.viewCellObject = new ViewCellObject() { RefreshContacts = true };
+      this.viewCellObject = new ViewCellObject { RefreshContacts = true };
       this.UpdateContacts();
     }
 
@@ -76,7 +76,7 @@
 
     public async void Search(string searchInput)
     {
-      this.Contacts = await this.GetConctacts(searchInput);
+      this.Contacts = await this.GetContacts(searchInput);
     }
 
     public async void OpenChatPage(Contact contact)
@@ -97,7 +97,7 @@
 
     public async void Refreshing()
     {
-      this.Contacts = await this.GetConctacts();
+      this.Contacts = await this.GetContacts();
     }
 
     private async Task UpdateContacts()
@@ -107,7 +107,7 @@
       {
         if (this.viewCellObject.RefreshContacts)
         {
-          this.Contacts = await this.GetConctacts();
+          this.Contacts = await this.GetContacts();
           this.viewCellObject.RefreshContacts = false;
         }
 
@@ -115,7 +115,7 @@
       }
     }
 
-    private async Task<ObservableCollection<ContactListViewModel>> GetConctacts(string searchText = null)
+    private async Task<ObservableCollection<ContactListViewModel>> GetContacts(string searchText = null)
     {
       this.AddBotsToContacts();
 
@@ -193,35 +193,40 @@
     private void RemoveAddress(string chatAddress)
     {
       var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAddress.Contains(chatAddress));
-      if (itemToRemove != null)
+      if (itemToRemove == null)
       {
-        try
-        {
-          this.contacts.Remove(itemToRemove);
-        }
-        catch
-        {
-          // ignored
-        }
+        return;
+      }
+
+      try
+      {
+        this.contacts.Remove(itemToRemove);
+      }
+      catch
+      {
+        // ignored
       }
     }
 
     private void AddBotsToContacts()
     {
-      if (this.contacts.Count == 0)
+      if (this.contacts.Count != 0)
       {
-        foreach (var b in this.bots)
-        {
-          var botContact = new Contact()
-          {
-            Name = b.BotName,
-            ChatAddress = b.BotSlogan,
-            ContactAddress = b.BotSlogan,
-            ImageUrl = b.ImageUrl,
-            Rejected = false
-          };
-          this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
-        }
+        return;
+      }
+
+      foreach (var bot in this.bots)
+      {
+        var botContact = new Contact
+                           {
+                             Name = bot.BotName,
+                             ChatAddress = bot.BotSlogan,
+                             ContactAddress = bot.BotSlogan,
+                             ImageUrl = bot.ImageUrl,
+                             Rejected = false
+                           };
+
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
       }
     }
   }
