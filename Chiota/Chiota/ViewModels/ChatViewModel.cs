@@ -45,9 +45,9 @@
     public ChatViewModel(ListView messagesListView, Contact contact)
     {
       this.ntruKex = new NtruKex();
-      
       this.contact = contact;
       this.messagesListView = messagesListView;
+      this.Messages = new ObservableCollection<MessageViewModel>();
       this.OutGoingText = null;
     }
 
@@ -78,9 +78,12 @@
     public async void OnAppearing()
     {
       this.PageIsShown = true;
-      this.messageNumber = 0;
-      this.contact.PublicNtruKey = await this.GetContactPublicKey();
-      this.Messages = new ObservableCollection<MessageViewModel>();
+
+      if (this.contact.PublicNtruKey == null)
+      {
+        this.contact.PublicNtruKey = await this.GetContactPublicKey();
+      }
+
       if (this.contact.PublicNtruKey == null)
       {
         // todo: delete contact
@@ -95,8 +98,6 @@
 
     public void OnDisappearing()
     {
-      // resets everything, reloads new messages contacts, public key check, etc.
-      UserService.CurrentUser.TangleMessenger.ShortStorageAddressList = new List<string>();
       this.PageIsShown = false;
     }
 
@@ -180,7 +181,6 @@
 
     private async Task AddNewMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      // makes sure that it only one run at a time
       if (!this.isRunning)
       {
         this.isRunning = true;
