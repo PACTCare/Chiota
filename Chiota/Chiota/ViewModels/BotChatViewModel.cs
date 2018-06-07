@@ -8,6 +8,7 @@
   using System.Windows.Input;
 
   using Chiota.Chatbot;
+  using Chiota.Events;
 
   using Microsoft.Bot.Connector.DirectLine;
 
@@ -48,6 +49,8 @@
       this.outgoingText = null;
       this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
+
+    public static event EventHandler ActivityReceived;
 
     public ObservableCollection<MessageViewModel> Messages
     {
@@ -106,12 +109,14 @@
                 {
                   case "application/vnd.microsoft.card.hero":
                     var heroCard = JsonConvert.DeserializeObject<HeroCard>(attachment.Content.ToString());
+                    var title = string.IsNullOrEmpty(heroCard.Title) ? string.Empty : heroCard.Title + ": ";
+
                     messages.Add(
                       new MessageViewModel
                       {
-                        Text = heroCard.Title + ": " + heroCard.Text,
+                        Text = $"{title}{heroCard.Text}",
                         IsIncoming = true,
-                        ImageSource = heroCard.Images[0].Url,
+                        ImageSource = heroCard.Images != null ? heroCard.Images[0].Url : string.Empty,
                         MessagDateTime = DateTime.Now,
                         ProfileImage = this.profileImageUrl
                       });
@@ -166,6 +171,7 @@
               }
             }
 
+            ActivityReceived?.Invoke(this, new ActivityEventArgs { Activity = activity });
             this.ScrollToNewMessage();
           }
         }

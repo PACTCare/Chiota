@@ -5,6 +5,7 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Events;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Views;
@@ -34,6 +35,12 @@
       user.ImageUrl = this.ImageSource;
       this.SubmitCommand = new Command(async () => { await this.FinishedSetup(user); });
     }
+
+    /// <summary>
+    /// Event raised as soon as the setup process has been completed. Subscribe if you want to react to that.
+    /// Outputs EventArgs of type <see cref="SetupEventArgs"/>
+    /// </summary>
+    public static event EventHandler SetupCompleted;
 
     public string Username
     {
@@ -102,6 +109,9 @@
         {
           new SecureStorage().StoreUser(user);
         }
+
+        // Fire setup completed event to allow consumers to add behaviour
+        SetupCompleted?.Invoke(this, new SetupEventArgs { User = user });
 
         this.IsBusy = false;
         this.AlreadyClicked = false;

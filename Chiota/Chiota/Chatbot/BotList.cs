@@ -4,12 +4,12 @@
 
   public class BotList
   {
-    public List<BotObject> ReturnBotList()
-    {
-      var bots = new List<BotObject>();
+    public static List<BotObject> Bots = new List<BotObject>();
 
+    public static List<BotObject> ReturnBotList()
+    {
       // Add your own microsoft bot-framework bot here:
-      //bots.Add(new BotObject()
+      //Bots.Add(new BotObject()
       //{
       //  BotName = "Florence",
       //  BotSlogan = "Your health assistant",
@@ -18,7 +18,7 @@
       //  ImageUrl = "https://florenceblob.blob.core.windows.net/thumbnails/final_verysmall2.png"
       //});
 
-      return bots;
+      return Bots;
     }
   }
 }
