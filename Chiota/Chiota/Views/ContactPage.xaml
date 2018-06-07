@@ -22,6 +22,7 @@
                  AbsoluteLayout.LayoutFlags="All" 
                  AbsoluteLayout.LayoutBounds="0,0,1,1">
       <SearchBar x:Name="SearchBar"
+                 Margin="0,4,0,0"
                  Placeholder="Search..." 
                  PlaceholderColor="Gray" 
                  TextChanged="Handler_TextChanged">

@@ -18,6 +18,7 @@
           <Label Text="Seed " TextColor="White"></Label>
           <Entry x:Name="RandomSeed" 
                  AutomationId="RandomSeedId"
+                 IsSpellCheckEnabled="False"
                  BackgroundColor="#1d4999"
                  Text="{Binding RandomSeed}"   
                  PlaceholderColor="White" 
@@ -53,9 +54,9 @@
         <ActivityIndicator IsRunning="{Binding IsBusy}"
                            Color ="#ff0000"/>
         <Label Text="Addresses are generated..." 
-             AutomationId="AddressLabelId"
-             FontSize="16" 
-             TextColor="Black"/>
+               AutomationId="AddressLabelId"
+               FontSize="16" 
+               TextColor="Black"/>
         </StackLayout>
     </StackLayout>
   </AbsoluteLayout>

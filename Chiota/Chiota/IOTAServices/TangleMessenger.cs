@@ -20,11 +20,13 @@
 
   public class TangleMessenger
   {
+    // private readonly TableStorage tableStorage;
+    private const int MinWeight = 14;
+
     private readonly Seed seed;
 
     private readonly SQLiteAsyncConnection connection;
 
-    // private readonly TableStorage tableStorage;
     private IIotaRepository repository;
 
     public TangleMessenger(Seed seed)
@@ -54,7 +56,7 @@
 
         try
         {
-          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, 14);
+          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, MinWeight);
           return true;
         }
         catch

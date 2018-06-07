@@ -7,7 +7,7 @@
   <StackLayout Padding="30,20,30,20"
                HorizontalOptions="FillAndExpand" 
                VerticalOptions="FillAndExpand">
-    <Label Text="See Privacy Policy" 
+    <Label Text="Open Privacy Policy" 
            Margin="0,10,0,10"
            TextColor="#5874ca" 
            FontSize="16"
