@@ -7,7 +7,7 @@
              BackgroundColor="#f5f5f5">
   <ContentPage.ToolbarItems>
     <ToolbarItem Text="Add Contact" Clicked="HandleNewContactClick" Order="Secondary"></ToolbarItem>
-    <ToolbarItem Text="Privacy Policy" Clicked="HandlePolicyClick" Order="Secondary"></ToolbarItem>
+    <ToolbarItem Text="Settings" Clicked="HandleSettingsClick" Order="Secondary"></ToolbarItem>
     <ToolbarItem Text="Logout" Clicked="HandleLogoutClick" Order="Secondary"></ToolbarItem>
   </ContentPage.ToolbarItems>
   <ContentPage.Resources>

@@ -22,5 +22,9 @@
     public const int MessagesOnAddress = 6;
 
     public const string ImagePath = "https://chiota.blob.core.windows.net/userimages/";
+
+    public const string SettingsPowKey = "RemotePow";
+
+    public const string SettingsNodeKey = "Node";
   }
 }

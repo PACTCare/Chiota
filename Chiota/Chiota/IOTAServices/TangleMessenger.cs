@@ -21,8 +21,6 @@
 
   public class TangleMessenger
   {
-    private const bool RemotePow = true;
-
     private readonly Seed seed;
 
     private readonly SQLiteAsyncConnection connection;
@@ -33,7 +31,8 @@
     public TangleMessenger(Seed seed)
     {
       this.seed = seed;
-      this.repository = new RepositoryFactory().Create(RemotePow);
+
+      this.repository = new RepositoryFactory().Create();
       this.ShortStorageAddressList = new List<string>();
       this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
       this.connection.CreateTableAsync<SqlLiteMessage>();
@@ -236,7 +235,7 @@
     {
       if (roundNumber > 0)
       {
-        this.repository = new RepositoryFactory().Create(RemotePow, roundNumber);
+        this.repository = new RepositoryFactory().Create(roundNumber);
       }
     }
 

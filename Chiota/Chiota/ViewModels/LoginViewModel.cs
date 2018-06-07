@@ -87,13 +87,12 @@
         {
           var seed = new Seed(this.RandomSeed);
 
-        // 4 addresses needed
-        // 0. own user data address (encrypted, MAM or private key)
-        // 1. public key address 
-        // 2. request address
-        // 3. approved address
-        // addresses can be generated based on each other to make it faster
-        var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 2));
+          // 0. own user data address (encrypted, MAM or private key)
+          // 1. public key address 
+          // 2. request address
+          // 3. approved address
+          // addresses can be generated based on each other to make it faster
+          var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 2));
 
           // var addresses = await this.GenerateAddressParallel(seed, 2);
           addresses.Add(Helper.GenerateAddress(addresses[0]));

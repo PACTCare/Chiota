@@ -1,18 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
-             xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
              x:Class="Chiota.Views.SettingsPage"
              BackgroundColor="#f5f5f5"
-             Title="Add Contact">
-  <AbsoluteLayout>
-    <StackLayout  Orientation="Vertical" Padding="30,0,30,0"
-                  HorizontalOptions="CenterAndExpand" 
-                  VerticalOptions="CenterAndExpand"
-                  AbsoluteLayout.LayoutFlags="All" 
-                  AbsoluteLayout.LayoutBounds="0,0,1,1">
-     
-    </StackLayout>
-  </AbsoluteLayout>
+             Title="Settings" >
+  <StackLayout Padding="30,20,30,20"
+               HorizontalOptions="FillAndExpand" 
+               VerticalOptions="FillAndExpand">
+    <Label Text="See Privacy Policy" 
+           Margin="0,10,0,10"
+           TextColor="#5874ca" 
+           FontSize="16"
+           HorizontalOptions="Start">
+      <Label.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
+      </Label.GestureRecognizers>
+    </Label>
+  <Frame BackgroundColor="#1d4999" 
+         HasShadow="False">
+  <Grid  RowSpacing="10" ColumnSpacing="20" 
+         HorizontalOptions="CenterAndExpand"
+         VerticalOptions="FillAndExpand">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto"></ColumnDefinition>
+      <ColumnDefinition Width="Auto"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Label Grid.Row="0" Grid.Column="0" 
+           FontSize="16"
+           TextColor="White" 
+           Text="Remote Proof-of-Work:"></Label>
+    <Switch Grid.Row="0" Grid.Column="1"  IsToggled="{Binding RemotePow}"></Switch>
+    <Label Grid.Row="1" Grid.Column="0" 
+           FontSize="16"
+           TextColor="White"
+           Text="Node:"></Label>
+    <Entry Grid.Row="2" Grid.Column="0" 
+           Grid.ColumnSpan="2"
+           FontSize="16"
+           TextColor="White"
+           BackgroundColor="#1d4999"
+           Text="{Binding DefaultNode}" 
+           Keyboard="Url"></Entry>
+  </Grid>
+  </Frame>
+    <Button Margin="0,20,0,0"
+            Command="{Binding SaveCommand}"
+            Text="Save" 
+            TextColor="White"  
+            FontAttributes="Bold" 
+            FontSize="16" 
+            HorizontalOptions="FillAndExpand" 
+            BackgroundColor="#5874ca" />
+  </StackLayout>
 </ContentPage>
