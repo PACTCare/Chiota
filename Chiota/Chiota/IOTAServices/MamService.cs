@@ -18,7 +18,7 @@
 
     public MamService()
     {
-      this.repository = new RepositoryFactory().Create(false);
+      this.repository = new RepositoryFactory().Create();
 
       this.SubscriptionFactory = new MamChannelSubscriptionFactory(this.repository, CurlMamParser.Default, CurlMask.Default);
       this.ChannelFactory = new MamChannelFactory(CurlMamFactory.Default, CurlMerkleTreeFactory.Default, this.repository);

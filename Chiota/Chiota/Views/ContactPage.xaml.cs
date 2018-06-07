@@ -68,6 +68,11 @@
       this.Navigation.PushAsync(new AddContactPage(this.user));
     }
 
+    private void HandleSettingsClick(object sender, EventArgs e)
+    {
+      this.Navigation.PushAsync(new SettingsPage(this.user));
+    }
+
     private void ContactsList_OnRefreshing(object sender, EventArgs e)
     {
       (this.BindingContext as ContactViewModel)?.Refreshing();
@@ -79,11 +84,6 @@
       new SecureStorage().DeleteUser();
       Application.Current.MainPage = new NavigationPage(new LoginPage());
       this.Navigation.PopToRootAsync(true);
-    }
-
-    private void HandlePolicyClick(object sender, EventArgs e)
-    {
-      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
     }
   }
 }

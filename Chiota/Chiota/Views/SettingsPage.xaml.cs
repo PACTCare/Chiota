@@ -1,7 +1,5 @@
 ﻿namespace Chiota.Views
 {
-  using System;
-
   using Chiota.Models;
   using Chiota.ViewModels;
 
@@ -18,6 +16,10 @@
     public SettingsPage(User user)
     {
       this.InitializeComponent();
+      var vm = new SettingsViewModel(user) { Navigation = this.Navigation };
+      vm.DisplayInvalidNodePrompt += () => this.DisplayAlert("Error", "Invalid Node, try again", "OK");
+      vm.DisplaySettingsChangedPrompt += () => this.DisplayAlert("Saved", "Settings successfully updated", "OK");
+      this.BindingContext = vm;
     }
   }
 }

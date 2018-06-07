@@ -20,7 +20,6 @@
                  AutomationId="RandomSeedId"
                  BackgroundColor="#1d4999"
                  Text="{Binding RandomSeed}"   
-                 IsSpellCheckEnabled="False"
                  PlaceholderColor="White" 
                  HeightRequest="40"   
                  IsPassword="False"  

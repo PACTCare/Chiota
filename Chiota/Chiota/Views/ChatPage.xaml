@@ -24,9 +24,7 @@
                 BackgroundColor="#f5f5f5"
                 SeparatorVisibility="None">
       </ListView>
-
       <Grid x:Name="MessageControls" RowSpacing="1" ColumnSpacing="2" Padding="5"
-          BackgroundColor="#f5f5f5"
           HorizontalOptions="FillAndExpand">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*"></ColumnDefinition>
