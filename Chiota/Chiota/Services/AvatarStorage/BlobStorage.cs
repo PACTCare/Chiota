@@ -1,4 +1,4 @@
-﻿namespace Chiota.Services
+﻿namespace Chiota.Services.AvatarStorage
 {
   using System.IO;
   using System.Threading.Tasks;
@@ -8,7 +8,7 @@
   using Microsoft.WindowsAzure.Storage;
   using Microsoft.WindowsAzure.Storage.Blob;
 
-  public class BlobStorage
+  public class BlobStorage : IAvatarStorage
   {
     private readonly CloudBlobClient blobClient;
 
@@ -18,7 +18,7 @@
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 
-    public async Task<string> UploadToBlob(string imageName, string path, byte[] imageAsBytes)
+    public async Task<string> UploadAsync(string imageName, string path, byte[] imageAsBytes)
     {
       // Retrieve reference to a previously created container.
       var container = this.blobClient.GetContainerReference("userimages");

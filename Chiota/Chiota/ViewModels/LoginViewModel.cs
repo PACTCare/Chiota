@@ -7,6 +7,7 @@
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Views;
 
   using Tangle.Net.Cryptography;
@@ -31,9 +32,12 @@
 
     private User user;
 
+    private IUserFactory UserFactory { get; }
+
     public LoginViewModel()
     {
       this.StoreSeed = true;
+      this.UserFactory = DependencyResolver.Resolve<IUserFactory>();
     }
 
     public bool StoreSeed
@@ -63,7 +67,7 @@
     private void CopySeed()
     {
       this.DisplaySeedCopiedPrompt();
-      DependencyService.Get<IClipboardService>().SendTextToClipboard(this.RandomSeed);
+      DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.RandomSeed);
     }
 
     private async Task Login()
@@ -95,7 +99,7 @@
           addresses.Add(Helper.GenerateAddress(addresses[0]));
           addresses.Add(Helper.GenerateAddress(addresses[1]));
 
-          this.user = new UserFactory().Create(seed, addresses);
+          this.user = this.UserFactory.Create(seed, addresses);
           this.user = IotaHelper.GenerateKeys(this.user);
         }
 
@@ -122,8 +126,7 @@
           this.IsBusy = false;
           if (this.user.NtruChatPair != null)
           {
-            await this.NavigationService.NavigateToAsync<ContactViewModel>(this.user);
-            //Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
+            Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
             await this.Navigation.PopToRootAsync(true);
           }
           else

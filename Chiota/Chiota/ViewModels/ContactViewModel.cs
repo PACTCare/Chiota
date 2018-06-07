@@ -87,11 +87,10 @@
       var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
       if (bot != null)
       {
-        await this.NavigationService.NavigateToAsync<BotChatViewModel>(bot);
+        await this.Navigation.PushAsync(new BotChatPage(bot));
       }
       else
       {
-        await this.NavigationService.NavigateToAsync<ChatViewModel>(contact, this.user);
         await this.Navigation.PushAsync(new ChatPage(contact, this.user));
       }
     }

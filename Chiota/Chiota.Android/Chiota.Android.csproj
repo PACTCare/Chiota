@@ -69,6 +69,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac">
+      <Version>4.8.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Rest.ClientRuntime">
       <Version>2.3.11</Version>
     </PackageReference>
@@ -116,6 +119,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InjectionModule.cs" />
     <Compile Include="Persistence\SqlLiteDb.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />

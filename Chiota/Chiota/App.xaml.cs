@@ -1,6 +1,7 @@
 ﻿namespace Chiota
 {
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Views;
 
   using Plugin.Connectivity;
@@ -25,6 +26,8 @@
 
     protected override async void OnStart()
     {
+      DependencyResolver.Init();
+
       if (CrossConnectivity.Current.IsConnected)
       {
         var secureStorage = new SecureStorage();

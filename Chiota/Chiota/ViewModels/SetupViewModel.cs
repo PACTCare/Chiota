@@ -8,6 +8,8 @@
   using Chiota.Events;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.AvatarStorage;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Views;
 
   using Newtonsoft.Json;
@@ -97,9 +99,9 @@
         {
           var imageAsBytes = await this.GenerateByteImage(this.mediaFile);
 
-          imageAsBytes = await DependencyService.Get<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
+          imageAsBytes = await DependencyResolver.Resolve<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
 
-          user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
+          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
           this.mediaFile.Dispose();
         }
 
