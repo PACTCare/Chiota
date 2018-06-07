@@ -1,38 +1,30 @@
-﻿namespace Chiota.Models
+﻿namespace Chiota.Services.UserServices
 {
   using System.Collections.Generic;
 
   using Chiota.IOTAServices;
+  using Chiota.Models;
 
   using Tangle.Net.Entity;
 
+  /// <inheritdoc />
   public class UserFactory : IUserFactory
   {
-    public User Create(Seed storeSeed, List<Address> addresses)
+    /// <inheritdoc />
+    public User Create(Seed seed, List<Address> addresses)
     {
       return new User
                {
                  Name = null,
-                 Seed = storeSeed,
+                 Seed = seed,
                  ImageUrl = null,
                  StoreSeed = false,
                  OwnDataAdress = addresses[0].Value,
                  PublicKeyAddress = addresses[1].Value, // + addresses[1].WithChecksum().Checksum.Value,
                  RequestAddress = addresses[2].Value,
                  ApprovedAddress = addresses[3].Value,
-                 TangleMessenger = new TangleMessenger(storeSeed)
+                 TangleMessenger = new TangleMessenger(seed)
                };
-    }
-
-    public OwnDataUser CreateUploadUser(User user)
-    {
-      return new OwnDataUser()
-      {
-        Name = user.Name,
-
-        // store only filename plus type on tangle
-        ImageUrl = user.ImageUrl.Replace(ChiotaConstants.ImagePath, string.Empty)
-      };
     }
   }
 }

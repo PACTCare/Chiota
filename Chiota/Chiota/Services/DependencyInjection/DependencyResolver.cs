@@ -5,10 +5,8 @@
   using Autofac;
   using Autofac.Core;
 
-  using Chiota.Models;
   using Chiota.Services.AvatarStorage;
-  using Chiota.ViewModels;
-  using Chiota.Views;
+  using Chiota.Services.UserServices;
 
   /// <summary>
   /// The dependency resolver.

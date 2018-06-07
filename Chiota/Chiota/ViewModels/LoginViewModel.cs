@@ -4,10 +4,12 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Events;
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using Tangle.Net.Cryptography;
@@ -31,6 +33,12 @@
     private UserDataOnTangle dataOnTangle;
 
     private User user;
+
+    /// <summary>
+    /// Event raised as soon as a user logged in successfully.
+    /// Outputs EventArgs of type <see cref="LoginEventArgs"/>
+    /// </summary>
+    public static event EventHandler LoginSuccessful;
 
     private IUserFactory UserFactory { get; }
 
@@ -125,7 +133,10 @@
           this.IsBusy = false;
           if (this.user.NtruChatPair != null)
           {
-            Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
+            LoginSuccessful?.Invoke(this, new LoginEventArgs { User = this.user });
+            UserService.SetCurrentUser(this.user);
+
+            Application.Current.MainPage = new NavigationPage(new ContactPage());
             await this.Navigation.PopToRootAsync(true);
           }
           else

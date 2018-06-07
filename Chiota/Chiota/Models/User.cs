@@ -41,5 +41,20 @@
     /// Gets or sets TangleMessenger, never upload or store!
     /// </summary>
     public TangleMessenger TangleMessenger { get; set; }
+
+    /// <summary>
+    /// The to user data.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="OwnDataUser"/>.
+    /// </returns>
+    public OwnDataUser ToUserData()
+    {
+      return new OwnDataUser
+               {
+                 Name = this.Name,
+                 ImageUrl = this.ImageUrl.Replace(ChiotaConstants.ImagePath, string.Empty) // store only filename plus type on tangle
+               };
+    }
   }
 }

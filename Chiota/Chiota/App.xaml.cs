@@ -3,6 +3,7 @@
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using Plugin.Connectivity;
@@ -44,7 +45,15 @@
           var user = await secureStorage.GetUser();
 
           // user = null => setup probably interrupted
-          this.MainPage = user != null ? new NavigationPage(new ContactPage(user)) : new NavigationPage(new LoginPage());
+          if (user != null)
+          {
+            UserService.SetCurrentUser(user);
+            this.MainPage = new NavigationPage(new ContactPage());
+          }
+          else
+          {
+            this.MainPage = new NavigationPage(new LoginPage());
+          }
         }
         else
         {
