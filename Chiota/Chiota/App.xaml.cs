@@ -3,6 +3,7 @@
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -48,7 +49,7 @@
           if (user != null)
           {
             UserService.SetCurrentUser(user);
-            this.MainPage = new NavigationPage(new ContactPage());
+            this.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
           }
           else
           {

@@ -10,6 +10,7 @@
   using Chiota.Services;
   using Chiota.Services.AvatarStorage;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -120,7 +121,7 @@
         this.IsBusy = false;
         this.AlreadyClicked = false;
 
-        Application.Current.MainPage = new NavigationPage(new ContactPage());
+        Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
         await this.Navigation.PopToRootAsync(true);
       }
     }

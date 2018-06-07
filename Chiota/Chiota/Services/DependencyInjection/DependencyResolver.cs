@@ -6,6 +6,7 @@
   using Autofac.Core;
 
   using Chiota.Services.AvatarStorage;
+  using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
 
   /// <summary>
@@ -40,6 +41,7 @@
 
       containerBuilder.RegisterType<UserFactory>().As<IUserFactory>();
       containerBuilder.RegisterType<BlobStorage>().As<IAvatarStorage>();
+      containerBuilder.RegisterType<DefaultNavigationService>().As<INavigationService>();
 
       foreach (var module in Modules)
       {
