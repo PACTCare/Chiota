@@ -34,8 +34,6 @@
     public LoginViewModel()
     {
       this.StoreSeed = true;
-      this.SubmitCommand = new Command(async () => { await this.Login(); });
-      this.CopySeedCommand = new Command(this.CopySeed);
     }
 
     public bool StoreSeed
@@ -58,9 +56,9 @@
       }
     }
 
-    public ICommand SubmitCommand { get; protected set; }
+    public ICommand SubmitCommand => new Command(async () => { await this.Login(); });
 
-    public ICommand CopySeedCommand { get; protected set; }
+    public ICommand CopySeedCommand => new Command(this.CopySeed);
 
     private void CopySeed()
     {
@@ -124,7 +122,8 @@
           this.IsBusy = false;
           if (this.user.NtruChatPair != null)
           {
-            Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
+            await this.NavigationService.NavigateToAsync<ContactViewModel>(this.user);
+            //Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
             await this.Navigation.PopToRootAsync(true);
           }
           else

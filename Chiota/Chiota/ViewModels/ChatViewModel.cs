@@ -51,8 +51,6 @@
       this.contact = contact;
       this.messagesListView = messagesListView;
       this.OutGoingText = null;
-
-      this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 
     public string OutGoingText
@@ -65,7 +63,7 @@
       }
     }
 
-    public ICommand SendCommand { get; set; }
+    public ICommand SendCommand => new Command(async () => { await this.SendMessage(); });
 
     public ObservableCollection<MessageViewModel> Messages
     {

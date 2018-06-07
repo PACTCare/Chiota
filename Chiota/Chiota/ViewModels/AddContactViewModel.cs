@@ -27,8 +27,6 @@
     {
       this.user = user;
       this.QrSource = this.user.PublicKeyAddress;
-      this.SubmitCommand = new Command(async () => { await this.AddContact(); });
-      this.ScanCommand = new Command(async () => { await this.ScanBarcode(); });
     }
 
     public Action DisplayInvalidAdressPrompt { get; set; }
@@ -57,9 +55,9 @@
 
     public string UserAddress => this.user.PublicKeyAddress;
 
-    public ICommand SubmitCommand { get; set; }
+    public ICommand SubmitCommand => new Command(async () => { await this.AddContact(); });
 
-    public ICommand ScanCommand { get; set; }
+    public ICommand ScanCommand => new Command(async () => { await this.ScanBarcode(); });
 
     public void AddAdressToClipboard()
     {

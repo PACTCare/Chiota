@@ -3,10 +3,16 @@
   using System.ComponentModel;
   using System.Runtime.CompilerServices;
 
+  using Chiota.Services.Navigation;
+
   using Xamarin.Forms;
 
   public class BaseViewModel : INotifyPropertyChanged
   {
+    private static INavigationService navigationService;
+
+    public INavigationService NavigationService => navigationService ?? (navigationService = new NavigationService());
+
     private bool isBusy;
 
     public event PropertyChangedEventHandler PropertyChanged;
