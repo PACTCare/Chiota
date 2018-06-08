@@ -20,13 +20,11 @@
     public CheckSeedStoredViewModel(User user)
     {
       this.user = user;
-      this.SubmitCommand = new Command(async () => { await this.SeedCheck(); });
-      this.BackCommand = new Command(async () => { await this.Back(); });
     }
 
-    public ICommand SubmitCommand { get; protected set; }
+    public ICommand SubmitCommand => new Command(async () => { await this.SeedCheck(); });
 
-    public ICommand BackCommand { get; protected set; }
+    public ICommand BackCommand => new Command(async () => { await this.Back(); });
 
     public string SeedInput
     {

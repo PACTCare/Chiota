@@ -4,9 +4,13 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Events;
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Navigation;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using Tangle.Net.Cryptography;
@@ -31,11 +35,18 @@
 
     private User user;
 
+    /// <summary>
+    /// Event raised as soon as a user logged in successfully.
+    /// Outputs EventArgs of type <see cref="LoginEventArgs"/>
+    /// </summary>
+    public static event EventHandler LoginSuccessful;
+
+    private IUserFactory UserFactory { get; }
+
     public LoginViewModel()
     {
       this.StoreSeed = true;
-      this.SubmitCommand = new Command(async () => { await this.Login(); });
-      this.CopySeedCommand = new Command(this.CopySeed);
+      this.UserFactory = DependencyResolver.Resolve<IUserFactory>();
     }
 
     public bool StoreSeed
@@ -58,14 +69,14 @@
       }
     }
 
-    public ICommand SubmitCommand { get; protected set; }
+    public ICommand SubmitCommand => new Command(async () => { await this.Login(); });
 
-    public ICommand CopySeedCommand { get; protected set; }
+    public ICommand CopySeedCommand => new Command(this.CopySeed);
 
     private void CopySeed()
     {
       this.DisplaySeedCopiedPrompt();
-      DependencyService.Get<IClipboardService>().SendTextToClipboard(this.RandomSeed);
+      DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.RandomSeed);
     }
 
     private async Task Login()
@@ -96,7 +107,7 @@
           addresses.Add(Helper.GenerateAddress(addresses[0]));
           addresses.Add(Helper.GenerateAddress(addresses[1]));
 
-          this.user = new UserFactory().Create(seed, addresses);
+          this.user = this.UserFactory.Create(seed, addresses);
           this.user = IotaHelper.GenerateKeys(this.user);
         }
 
@@ -123,7 +134,10 @@
           this.IsBusy = false;
           if (this.user.NtruChatPair != null)
           {
-            Application.Current.MainPage = new NavigationPage(new ContactPage(this.user));
+            LoginSuccessful?.Invoke(this, new LoginEventArgs { User = this.user });
+            UserService.SetCurrentUser(this.user);
+
+            Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
             await this.Navigation.PopToRootAsync(true);
           }
           else

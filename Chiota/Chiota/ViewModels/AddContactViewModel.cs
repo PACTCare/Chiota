@@ -7,6 +7,7 @@
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
   using Tangle.Net.Utils;
@@ -17,18 +18,13 @@
 
   public class AddContactViewModel : BaseViewModel
   {
-    private readonly User user;
-
     private string receiverAdress;
 
     private string qrSource;
 
-    public AddContactViewModel(User user)
+    public AddContactViewModel()
     {
-      this.user = user;
-      this.QrSource = this.user.PublicKeyAddress;
-      this.SubmitCommand = new Command(async () => { await this.AddContact(); });
-      this.ScanCommand = new Command(async () => { await this.ScanBarcode(); });
+      this.QrSource = UserService.CurrentUser.PublicKeyAddress;
     }
 
     public Action DisplayInvalidAdressPrompt { get; set; }
@@ -55,15 +51,15 @@
       }
     }
 
-    public string UserAddress => this.user.PublicKeyAddress;
+    public string UserAddress => UserService.CurrentUser.PublicKeyAddress;
 
-    public ICommand SubmitCommand { get; set; }
+    public ICommand SubmitCommand => new Command(async () => { await this.AddContact(); });
 
-    public ICommand ScanCommand { get; set; }
+    public ICommand ScanCommand => new Command(async () => { await this.ScanBarcode(); });
 
     public void AddAdressToClipboard()
     {
-      DependencyService.Get<IClipboardService>().SendTextToClipboard(this.user.PublicKeyAddress);
+      DependencyService.Get<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
     }
 
     private async Task ScanBarcode()
@@ -92,10 +88,10 @@
         this.IsBusy = true;
         this.AlreadyClicked = true;
 
-        if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != this.user.PublicKeyAddress)
+        if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != UserService.CurrentUser.PublicKeyAddress)
         {
           // get information from receiver adress 
-          var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
+          var trytes = await UserService.CurrentUser.TangleMessenger.GetMessagesAsync(this.ReceiverAdress, 3);
           var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
 
           if (contacts == null || contacts.Count == 0 || contacts.Count > 1)
@@ -125,23 +121,23 @@
                              {
                                // faster than generating adresses
                                ChatAddress = Seed.Random().ToString(),
-                               Name = this.user.Name,
-                               ImageUrl = this.user.ImageUrl,
-                               ContactAddress = this.user.RequestAddress,
+                               Name = UserService.CurrentUser.Name,
+                               ImageUrl = UserService.CurrentUser.ImageUrl,
+                               ContactAddress = UserService.CurrentUser.RequestAddress,
                                Request = true,
                                Rejected = false,
                                PublicNtruKey = null,
-                               PublicKeyAddress = this.user.PublicKeyAddress
+                               PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress
                              };
 
-      var encryptedAccept = new NtruKex().Encrypt(this.user.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
+      var encryptedAccept = new NtruKex().Encrypt(UserService.CurrentUser.NtruContactPair.PublicKey, requestContact.ChatAddress + ChiotaConstants.Accepted);
       var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);
 
       // automaticly add to own accept list, so contact is shown as soon as it as accepted by the other user
-      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
+      var firstTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(tryteString, UserService.CurrentUser.ApprovedAddress);
 
       // encrypt contact request? too much infos needed here for one message needs to get request address plus chatadress 
-      var secondTransaction = this.user.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(requestContact), contactAddress);
+      var secondTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(requestContact), contactAddress);
 
       return Task.WhenAll(firstTransaction, secondTransaction);
     }

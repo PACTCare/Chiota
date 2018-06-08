@@ -1,10 +1,4 @@
-﻿using Chiota.UWP.Persistence;
-
-using Xamarin.Forms;
-
-[assembly: Dependency(typeof(SqlLiteDb))]
-
-namespace Chiota.UWP.Persistence
+﻿namespace Chiota.UWP.Persistence
 {
   using System.IO;
 

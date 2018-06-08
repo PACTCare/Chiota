@@ -1,10 +1,4 @@
-﻿using Chiota.Droid.Services;
-
-using Xamarin.Forms;
-
-[assembly: Dependency(typeof(ClipboardService))]
-
-namespace Chiota.Droid.Services
+﻿namespace Chiota.Droid.Services
 {
   using Android.Content;
 

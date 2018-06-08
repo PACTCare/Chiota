@@ -8,6 +8,10 @@
   using Chiota.Events;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.AvatarStorage;
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Navigation;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using Newtonsoft.Json;
@@ -97,9 +101,9 @@
         {
           var imageAsBytes = await this.GenerateByteImage(this.mediaFile);
 
-          imageAsBytes = await DependencyService.Get<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
+          imageAsBytes = await DependencyResolver.Resolve<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
 
-          user.ImageUrl = await new BlobStorage().UploadToBlob(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
+          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
           this.mediaFile.Dispose();
         }
 
@@ -112,11 +116,12 @@
 
         // Fire setup completed event to allow consumers to add behaviour
         SetupCompleted?.Invoke(this, new SetupEventArgs { User = user });
+        UserService.SetCurrentUser(user);
 
         this.IsBusy = false;
         this.AlreadyClicked = false;
 
-        Application.Current.MainPage = new NavigationPage(new ContactPage(user));
+        Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
         await this.Navigation.PopToRootAsync(true);
       }
     }
@@ -137,8 +142,7 @@
     {
       var publicKeyTrytes = user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString();
 
-      var userData = new UserFactory().CreateUploadUser(user);
-      var serializeObject = JsonConvert.SerializeObject(userData);
+      var serializeObject = JsonConvert.SerializeObject(user.ToUserData());
 
       await this.SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
       return user;

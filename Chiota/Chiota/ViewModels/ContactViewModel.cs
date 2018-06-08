@@ -6,6 +6,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using IOTAServices;
@@ -16,8 +17,6 @@
 
   public class ContactViewModel : BaseViewModel
   {
-    private readonly User user;
-
     private readonly List<BotObject> bots;
 
     private ObservableCollection<ContactListViewModel> contactList;
@@ -28,10 +27,9 @@
 
     private ContactListViewModel selectedContact;
 
-    public ContactViewModel(User user)
+    public ContactViewModel()
     {
       this.bots = BotList.ReturnBotList();
-      this.user = user;
     }
 
     public bool PageIsShown { get; set; }
@@ -70,7 +68,7 @@
     public void OnDisappearing()
     {
       // resets everything, reloads new messages contacts, public key check, etc.
-      this.user.TangleMessenger.ShortStorageAddressList = new List<string>();
+      UserService.CurrentUser.TangleMessenger.ShortStorageAddressList = new List<string>();
       this.PageIsShown = false;
     }
 
@@ -91,7 +89,7 @@
       }
       else
       {
-        await this.Navigation.PushAsync(new ChatPage(contact, this.user));
+        await this.Navigation.PushAsync(new ChatPage(contact));
       }
     }
 
@@ -121,10 +119,10 @@
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactTaskList = this.user.TangleMessenger.GetJsonMessageAsync<Contact>(this.user.RequestAddress, 3);
-      var approvedContactsTrytes = this.user.TangleMessenger.GetMessagesAsync(this.user.ApprovedAddress, 3);
+      var contactTaskList = UserService.CurrentUser.TangleMessenger.GetJsonMessageAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
+      var approvedContactsTrytes = UserService.CurrentUser.TangleMessenger.GetMessagesAsync(UserService.CurrentUser.ApprovedAddress, 3);
 
-      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, this.user);
+      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, UserService.CurrentUser);
       var contactRequestList = await contactTaskList;
 
       // all infos are taken from contactRequestList
@@ -162,7 +160,7 @@
       {
         if (contact.Request)
         {
-          var contactCell = ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject);
+          var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
           this.contacts.Add(contactCell);
         }
       }
@@ -171,7 +169,7 @@
       {
         contact.Request = false;
         this.RemoveAddress(contact.ChatAddress);
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, this.user, this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))
@@ -226,7 +224,7 @@
                              Rejected = false
                            };
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.user, this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
       }
     }
   }

@@ -26,13 +26,11 @@
       this.user = user;
       this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
-      this.AcceptCommand = new Command(async () => { await this.OnAccept(); });
-      this.DeclineCommand = new Command(async () => { await this.OnDecline(); });
     }
 
-    public ICommand AcceptCommand { get; protected set; }
+    public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
 
-    public ICommand DeclineCommand { get; protected set; }
+    public ICommand DeclineCommand => new Command(async () => { await this.OnDecline(); });
 
     public string PoWText
     {
