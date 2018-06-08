@@ -230,7 +230,7 @@
 
       if (lastMessage != null)
       {
-        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, true);
+        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, false);
       }
     }
   }

@@ -20,8 +20,10 @@
     </NuGetPackageImportStamp>
     <AndroidKeyStore>false</AndroidKeyStore>
     <AndroidSigningKeyStore>C:\Users\david\AppData\Local\Xamarin\Mono for Android\Keystore\Noc2\Noc2.keystore</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>chIOTA#1807</AndroidSigningStorePass>
-    <AndroidSigningKeyAlias>Noc2</AndroidSigningKeyAlias>
+    <AndroidSigningStorePass>
+    </AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>
+    </AndroidSigningKeyAlias>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
