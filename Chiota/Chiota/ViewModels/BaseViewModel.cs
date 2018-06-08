@@ -21,7 +21,7 @@
       }
     }
 
-    public INavigation Navigation { get; internal set; }
+    public INavigation Navigation { get; set; }
 
     public bool AlreadyClicked { get; set; }
 
