@@ -1,8 +1,4 @@
-﻿using Xamarin.Forms;
-
-[assembly: Dependency(typeof(Chiota.UWP.Services.ResizeService))]
-
-namespace Chiota.UWP.Services
+﻿namespace Chiota.UWP.Services
 {
   using System;
   using System.IO;

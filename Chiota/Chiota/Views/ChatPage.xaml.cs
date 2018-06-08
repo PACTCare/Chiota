@@ -16,7 +16,7 @@
   {
     private readonly ChatViewModel vm;
 
-    public ChatPage(Contact contact, User user)
+    public ChatPage(Contact contact)
     {
       this.InitializeComponent();
       if (contact == null)
@@ -26,7 +26,7 @@
 
       this.Title = contact.Name;
       (this.MessageEntry as Entry).TextChanged += this.OnTextChanged;
-      this.vm = new ChatViewModel(this.MessagesListView, contact, user) { Navigation = this.Navigation }; 
+      this.vm = new ChatViewModel(this.MessagesListView, contact) { Navigation = this.Navigation }; 
       this.vm.DisplayMessageTooLong += () => this.DisplayAlert("Error", "Sorry, only 105 characters per message are allowed!", "OK");
       this.vm.DisplayInvalidPublicKeyPrompt += () => this.DisplayAlert("Error", "Invalid public key! You contact needs to give you a new contact address.", "OK");
       this.vm.DisplayMessageSendErrorPrompt += () => this.DisplayAlert("Error", "Your message couldn’t be sent.", "OK");

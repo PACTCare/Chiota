@@ -4,6 +4,7 @@
 
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels;
 
   using Xamarin.Forms;
@@ -15,12 +16,9 @@
   [XamlCompilation(XamlCompilationOptions.Compile)]
   public partial class ContactPage : ContentPage
   {
-    private readonly User user;
-
-    public ContactPage(User user)
+    public ContactPage()
     {
       this.InitializeComponent();
-      this.user = user;
 
       switch (Device.RuntimePlatform)
       {
@@ -30,9 +28,9 @@
           break;
       }
 
-      if (user != null)
+      if (UserService.CurrentUser != null)
       {
-        this.BindingContext = new ContactViewModel(user) { Navigation = this.Navigation };
+        this.BindingContext = new ContactViewModel { Navigation = this.Navigation };
       }
     }
 
@@ -65,12 +63,12 @@
 
     private void HandleNewContactClick(object sender, EventArgs e)
     {
-      this.Navigation.PushAsync(new AddContactPage(this.user));
+      this.Navigation.PushAsync(new AddContactPage());
     }
 
     private void HandleSettingsClick(object sender, EventArgs e)
     {
-      this.Navigation.PushAsync(new SettingsPage(this.user));
+      this.Navigation.PushAsync(new SettingsPage());
     }
 
     private void ContactsList_OnRefreshing(object sender, EventArgs e)

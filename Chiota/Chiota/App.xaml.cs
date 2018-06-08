@@ -2,6 +2,9 @@
 {
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Navigation;
+  using Chiota.Services.UserServices;
   using Chiota.Views;
 
   using Plugin.Connectivity;
@@ -26,6 +29,8 @@
 
     protected override async void OnStart()
     {
+      DependencyResolver.Init();
+
       if (CrossConnectivity.Current.IsConnected)
       {
         // First time set default values
@@ -41,7 +46,15 @@
           var user = await secureStorage.GetUser();
 
           // user = null => setup probably interrupted
-          this.MainPage = user != null ? new NavigationPage(new ContactPage(user)) : new NavigationPage(new LoginPage());
+          if (user != null)
+          {
+            UserService.SetCurrentUser(user);
+            this.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+          }
+          else
+          {
+            this.MainPage = new NavigationPage(new LoginPage());
+          }
         }
         else
         {

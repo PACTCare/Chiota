@@ -47,7 +47,6 @@
       this.Messages = new ObservableCollection<MessageViewModel>();
       this.GetMessagesAsync(this.Messages);
       this.outgoingText = null;
-      this.SendCommand = new Command(async () => { await this.SendMessage(); });
     }
 
     public static event EventHandler ActivityReceived;
@@ -72,7 +71,7 @@
       }
     }
 
-    public ICommand SendCommand { get; set; }
+    public ICommand SendCommand => new Command(async () => { await this.SendMessage(); });
 
     private async Task SendMessage()
     {

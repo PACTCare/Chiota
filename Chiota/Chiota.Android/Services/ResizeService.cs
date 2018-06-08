@@ -1,10 +1,4 @@
-﻿using Chiota.Droid.Services;
-
-using Xamarin.Forms;
-
-[assembly: Dependency(typeof(ResizeService))]
-
-namespace Chiota.Droid.Services
+﻿namespace Chiota.Droid.Services
 {
   using System.IO;
   using System.Threading.Tasks;

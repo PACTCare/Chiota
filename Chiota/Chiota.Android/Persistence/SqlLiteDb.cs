@@ -1,11 +1,4 @@
 ﻿using System;
-
-using Chiota.Droid.Persistence;
-
-using Xamarin.Forms;
-
-[assembly: Dependency(typeof(SqlLiteDb))]
-
 namespace Chiota.Droid.Persistence
 {
   using System.IO;

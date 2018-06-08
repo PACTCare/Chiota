@@ -8,6 +8,7 @@
 
   using Chiota;
   using Chiota.Droid.Services;
+  using Chiota.Services.DependencyInjection;
 
   using ImageCircle.Forms.Plugin.Droid;
 
@@ -29,6 +30,8 @@
 
     protected override void OnCreate(Bundle bundle)
     {
+      DependencyResolver.Modules.Add(new InjectionModule());
+
       TabLayoutResource = Resource.Layout.Tabbar;
       ToolbarResource = Resource.Layout.Toolbar;
 

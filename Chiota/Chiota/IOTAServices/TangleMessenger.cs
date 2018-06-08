@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Persistence;
+  using Chiota.Services.DependencyInjection;
 
   using Models;
 
@@ -35,7 +36,7 @@
 
       this.repository = new RepositoryFactory().Create();
       this.ShortStorageAddressList = new List<string>();
-      this.connection = DependencyService.Get<ISqlLiteDb>().GetConnection();
+      this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
       this.connection.CreateTableAsync<SqlLiteMessage>();
 
       // this.tableStorage = new TableStorage();

@@ -5,6 +5,7 @@
 
   using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services.UserServices;
 
   using RestSharp;
 
@@ -19,16 +20,13 @@
 
     public Action DisplaySettingsChangedPrompt;
 
-    private readonly User user;
-
     private bool remotePoW = true;
 
     private string defaultNode = "https://field.carriota.com:443";
 
-    public SettingsViewModel(User user)
+    public SettingsViewModel()
     {
       this.GetSettings();
-      this.user = user;
       this.SaveCommand = new Command(this.SaveSettings);
       this.PrivacyCommand = new Command(this.OpenPrivacyPolicy);
     }
@@ -93,7 +91,7 @@
       {
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
-        this.user.TangleMessenger = new TangleMessenger(this.user.Seed);
+        UserService.CurrentUser.TangleMessenger = new TangleMessenger(UserService.CurrentUser.Seed);
         this.DisplaySettingsChangedPrompt();
       }
     }
