@@ -7,6 +7,7 @@
   using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
@@ -59,7 +60,7 @@
 
     public void AddAdressToClipboard()
     {
-      DependencyService.Get<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
+      DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
     }
 
     private async Task ScanBarcode()
