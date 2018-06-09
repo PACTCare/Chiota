@@ -4,6 +4,7 @@
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 

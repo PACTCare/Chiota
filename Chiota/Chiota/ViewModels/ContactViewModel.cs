@@ -160,8 +160,7 @@
       {
         if (contact.Request)
         {
-          var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
-          this.contacts.Add(contactCell);
+          this.contacts.Add(contact.ToViewModel(this.viewCellObject));
         }
       }
 
@@ -169,7 +168,7 @@
       {
         contact.Request = false;
         this.RemoveAddress(contact.ChatAddress);
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
+        this.contacts.Add(contact.ToViewModel(this.viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))
@@ -224,7 +223,7 @@
                              Rejected = false
                            };
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
+        this.contacts.Add(botContact.ToViewModel(this.viewCellObject));
       }
     }
   }
