@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.Bot.Connector.DirectLine" Version="3.0.2" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
-    <PackageReference Include="RestSharp" Version="106.3.0" />
+    <PackageReference Include="RestSharp" Version="106.3.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.7.2" />
     <PackageReference Include="Tangle.Net.Standard.Mam" Version="0.9.0.3" />
@@ -34,7 +34,7 @@
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.0.9" />
     <PackageReference Include="Xam.Plugin.SecureStorage" Version="1.0.11" />
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="3.0.0.5" />
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.550146" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
     <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>

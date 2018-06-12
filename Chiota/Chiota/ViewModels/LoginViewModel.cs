@@ -19,8 +19,6 @@
 
   using Xamarin.Forms;
 
-  using ContactPage = Views.ContactPage;
-
   public class LoginViewModel : BaseViewModel
   {
     public Action DisplayInvalidLoginPrompt;
@@ -117,6 +115,7 @@
         this.dataOnTangle = new UserDataOnTangle(this.user);
         this.user = await this.dataOnTangle.UpdateUserWithOwnDataAddress();
 
+        // Todo: after snapshot no data on tangle if not stored
         if (this.user.Name == null)
         {
           this.IsBusy = false;

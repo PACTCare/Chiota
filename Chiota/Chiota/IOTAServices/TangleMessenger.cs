@@ -69,7 +69,7 @@
       return false;
     }
 
-    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false, bool dontLoadSql = false)
     {
       var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
@@ -78,17 +78,23 @@
 
       try
       {
-        tableList = await this.GetStoredTransactions(addresse);
-
-        // Todo Remove double stored entries
-        var alreadyLoaded = this.AddressLoadedChack(addresse);
-        foreach (var sqlLiteMessage in tableList)
+        if (!dontLoadSql)
         {
-          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
-          var message = new TryteStringMessage { Message = new TryteString(sqlLiteMessage.MessageTryteString), Stored = true };
-          if (!alreadyLoaded)
+          tableList = await this.GetStoredTransactions(addresse);
+
+          var alreadyLoaded = this.AddressLoadedChack(addresse);
+          foreach (var sqlLiteMessage in tableList)
           {
-            messagesList.Add(message);
+            shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+            var message = new TryteStringMessage
+                            {
+                              Message = new TryteString(sqlLiteMessage.MessageTryteString),
+                              Stored = true
+                            };
+            if (!alreadyLoaded)
+            {
+              messagesList.Add(message);
+            }
           }
         }
       }

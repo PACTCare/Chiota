@@ -11,7 +11,6 @@
 
   using Xamarin.Forms;
 
-  using ContactPage = Views.ContactPage;
   using LoginPage = Views.LoginPage;
 
   /// <summary>
@@ -38,6 +37,7 @@
         {
           Current.Properties[ChiotaConstants.SettingsPowKey] = true;
           Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.carriota.com:443";
+          await Current.SavePropertiesAsync();
         }
 
         var secureStorage = new SecureStorage();
@@ -48,6 +48,7 @@
           // user = null => setup probably interrupted
           if (user != null)
           {
+            // user needs to check address
             UserService.SetCurrentUser(user);
             this.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
           }
