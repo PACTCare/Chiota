@@ -1,6 +1,7 @@
 ﻿namespace Chiota.ViewModels
 {
   using System;
+  using System.Threading.Tasks;
   using System.Windows.Input;
 
   using Chiota.IOTAServices;
@@ -27,8 +28,6 @@
     public SettingsViewModel()
     {
       this.GetSettings();
-      this.SaveCommand = new Command(this.SaveSettings);
-      this.PrivacyCommand = new Command(this.OpenPrivacyPolicy);
     }
 
     public bool RemotePow
@@ -51,9 +50,9 @@
       }
     }
 
-    public ICommand SaveCommand { get; set; }
+    public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
 
-    public ICommand PrivacyCommand { get; set; }
+    public ICommand PrivacyCommand => new Command(this.OpenPrivacyPolicy);
 
     public void GetSettings()
     {
@@ -70,7 +69,7 @@
       Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
     }
 
-    private void SaveSettings()
+    private async Task SaveSettings()
     {
       RestIotaRepository node;
       try
@@ -91,6 +90,7 @@
       {
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
+        await Application.Current.SavePropertiesAsync();
         UserService.CurrentUser.TangleMessenger = new TangleMessenger(UserService.CurrentUser.Seed);
         this.DisplaySettingsChangedPrompt();
       }

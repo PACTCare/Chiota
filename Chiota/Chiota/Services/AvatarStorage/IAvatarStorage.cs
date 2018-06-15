@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiota.Services.AvatarStorage
+﻿namespace Chiota.Services.AvatarStorage
 {
   using System.Threading.Tasks;
 

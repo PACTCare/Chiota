@@ -81,14 +81,13 @@
 
       if (this.contact.PublicNtruKey == null)
       {
-        this.contact.PublicNtruKey = await this.GetContactPublicKey();
-      }
-
-      if (this.contact.PublicNtruKey == null)
-      {
         // todo: delete contact
-        this.DisplayInvalidPublicKeyPrompt();
-        await this.Navigation.PopAsync();
+        this.contact.PublicNtruKey = await this.GetContactPublicKey();
+        if (this.contact.PublicNtruKey == null)
+        {
+          this.DisplayInvalidPublicKeyPrompt();
+          await this.Navigation.PopAsync();
+        }
       }
       else
       {
@@ -117,7 +116,7 @@
     {
       var trytes = await UserService.CurrentUser.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAddress, 3);
       var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
-      
+
       if (contactInfos == null || contactInfos.Count == 0 || contactInfos.Count > 1)
       {
         return null;
@@ -209,7 +208,7 @@
         // it's also based on an incrementing Trytestring, so if you always send the same messages it won't result in the same next address
         var rgx = new Regex("[^A-Z]");
         var incrementPart = Helper.TryteStringIncrement(this.contact.ChatAddress.Substring(0, 15));
-        
+
         var str = incrementPart + rgx.Replace(this.Messages[this.Messages.Count - 1].Text.ToUpper(), string.Empty)
                                 + rgx.Replace(this.Messages[this.Messages.Count - 3].Text.ToUpper(), string.Empty)
                                 + rgx.Replace(this.Messages[this.Messages.Count - 2].Text.ToUpper(), string.Empty);
@@ -227,7 +226,7 @@
 
       if (lastMessage != null)
       {
-        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, true);
+        this.messagesListView.ScrollTo(lastMessage, ScrollToPosition.MakeVisible, false);
       }
     }
   }

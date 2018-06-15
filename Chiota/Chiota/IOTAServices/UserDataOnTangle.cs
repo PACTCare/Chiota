@@ -15,7 +15,7 @@
 
   public class UserDataOnTangle
   {
-    private User user;
+    private readonly User user;
 
     public UserDataOnTangle(User user)
     {
@@ -24,6 +24,7 @@
 
     public async Task<User> UpdateUserWithOwnDataAddress()
     {
+      // This will return information even after a snapshot, because it's stored local
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
       foreach (var tryte in trytes)
       {
@@ -42,12 +43,19 @@
 
     public async Task<User> UniquePublicKey()
     {
-      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.PublicKeyAddress, 3);
+      // load from tangle not from SQLlit
+      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.PublicKeyAddress, 3, false, true);
       var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
+      var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
 
-      // more than one key at this address or something is wrong with the key
-      if (contacts.Count > 1 || contacts.Count == 0)
+      // after a snapshot, upload public key again
+      if (contacts.Count == 0)
       {
+        await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, this.user.PublicKeyAddress);
+      }
+      else if (contacts.Count > 1) 
+      {
+        // more than one key at this address 
         // generate a new public key address based on a changed seed until you find an unused address 
         // this way the attacker doesn't know the next public key address
         List<Contact> newContacts;
@@ -65,7 +73,6 @@
 
           if (newContacts == null || newContacts.Count == 0)
           {
-            var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
             await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, addresses[0].ToString());
           }
 

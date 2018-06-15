@@ -34,7 +34,7 @@
                  TextColor="White"/>
         </StackLayout>
       <Button Command="{Binding SubmitCommand}"  Text="Create account" TextColor="White"  
-              FontAttributes="Bold" FontSize="Large" HorizontalOptions="FillAndExpand"  
+              FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand"  
               BackgroundColor="#5874ca" />
     </StackLayout>
     <StackLayout IsVisible="{Binding IsBusy}" 
