@@ -11,5 +11,10 @@
     /// Gets the logged in entry point.
     /// </summary>
     Page LoggedInEntryPoint { get; }
+
+    /// <summary>
+    /// Gets the logged out entry point.
+    /// </summary>
+    Page LoginEntryPoint { get; }
   }
 }

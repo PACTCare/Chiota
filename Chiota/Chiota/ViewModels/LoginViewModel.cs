@@ -96,20 +96,7 @@
         if (this.user == null || this.RandomSeed != this.user?.Seed.Value)
         {
           var seed = new Seed(this.RandomSeed);
-
-          // 0. own user data address (encrypted, MAM or private key)
-          // 1. public key address 
-          // 2. request address
-          // 3. approved address
-          // addresses can be generated based on each other to make it faster
-          var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 2));
-
-          // var addresses = await this.GenerateAddressParallel(seed, 2);
-          addresses.Add(Helper.GenerateAddress(addresses[0]));
-          addresses.Add(Helper.GenerateAddress(addresses[1]));
-
-          this.user = this.UserFactory.Create(seed, addresses);
-          this.user = IotaHelper.GenerateKeys(this.user);
+          this.user = await this.UserFactory.CreateAsync(seed);
         }
 
         // if first time only store seed after finished setup

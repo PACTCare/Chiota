@@ -31,6 +31,7 @@
     protected override async void OnStart()
     {
       DependencyResolver.Init();
+      var navigationService = DependencyResolver.Resolve<INavigationService>();
 
       if (CrossConnectivity.Current.IsConnected)
       {
@@ -50,16 +51,16 @@
           if (user != null)
           {
             UserService.SetCurrentUser(user);
-            this.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+            this.MainPage = new NavigationPage(navigationService.LoggedInEntryPoint);
           }
           else
           {
-            this.MainPage = new NavigationPage(new LoginPage());
+            this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
           }
         }
         else
         {
-          this.MainPage = new NavigationPage(new LoginPage());
+          this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
         }
       }
       else

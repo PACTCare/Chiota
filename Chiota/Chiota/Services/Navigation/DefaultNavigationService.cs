@@ -11,5 +11,8 @@
   {
     /// <inheritdoc />
     public Page LoggedInEntryPoint => new ContactPage();
+
+    /// <inheritdoc />
+    public Page LoginEntryPoint => new LoginPage();
   }
 }
