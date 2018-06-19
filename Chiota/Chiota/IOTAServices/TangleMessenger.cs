@@ -17,8 +17,6 @@
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;
 
-  using Xamarin.Forms;
-
   public class TangleMessenger
   {
     // private readonly TableStorage tableStorage;
@@ -82,7 +80,7 @@
         {
           tableList = await this.GetStoredTransactions(addresse);
 
-          var alreadyLoaded = this.AddressLoadedChack(addresse);
+          var alreadyLoaded = this.AddressLoadedCheck(addresse);
           foreach (var sqlLiteMessage in tableList)
           {
             shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
@@ -146,7 +144,7 @@
       try
       {
         var tableList = await this.GetStoredTransactions(addresse);
-        var alreadyLoaded = this.AddressLoadedChack(addresse);
+        var alreadyLoaded = this.AddressLoadedCheck(addresse);
 
         foreach (var sqlLiteMessage in tableList)
         {
@@ -194,7 +192,7 @@
       return messagesList;
     }
 
-    private bool AddressLoadedChack(string addresse)
+    private bool AddressLoadedCheck(string addresse)
     {
       var alreadyLoaded = this.ShortStorageAddressList.Contains(addresse);
       if (!alreadyLoaded)

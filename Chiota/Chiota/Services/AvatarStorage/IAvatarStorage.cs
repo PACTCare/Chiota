@@ -4,6 +4,6 @@
 
   public interface IAvatarStorage
   {
-    Task<string> UploadAsync(string imageName, string path, byte[] imageAsBytes);
+    Task<string> UploadEncryptedAsync(string name, byte[] imageAsBytes);
   }
 }

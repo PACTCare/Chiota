@@ -43,21 +43,21 @@
       {
         this.DisplayInvalidSeedPrompt();
       }
-      else if (!this.AlreadyClicked)
+      else if (!this.IsBusy)
       {
-        this.AlreadyClicked = true;
+        this.IsBusy = true;
         await this.Navigation.PushModalAsync(new NavigationPage(new SetupPage(this.user)));
-        this.AlreadyClicked = false;
+        this.IsBusy = false;
       }
     }
 
     private async Task Back()
     {
-      if (!this.AlreadyClicked)
+      if (!this.IsBusy)
       {
-        this.AlreadyClicked = true;
+        this.IsBusy = true;
         await this.Navigation.PopModalAsync();
-        this.AlreadyClicked = false;
+        this.IsBusy = false;
       }
     }
   }

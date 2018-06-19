@@ -23,14 +23,9 @@
     public bool StoreSeed { get; set; }
 
     /// <summary>
-    /// Gets or sets approved Contact Key Pair 
-    /// </summary>
-    public IAsymmetricKeyPair NtruContactPair { get; set; }
-
-    /// <summary>
     /// Gets or sets Chat Key Pair
     /// </summary>
-    public IAsymmetricKeyPair NtruChatPair { get; set; }
+    public IAsymmetricKeyPair NtruKeyPair { get; set; }
 
     /// <summary>
     /// Gets or sets Seed, never upload or store!

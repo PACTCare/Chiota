@@ -5,6 +5,7 @@
   using System.Collections.ObjectModel;
   using System.Globalization;
   using System.Linq;
+  using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using System.Windows.Input;
@@ -24,8 +25,6 @@
   {
     public Action DisplayMessageTooLong;
 
-    public Action DisplayInvalidPublicKeyPrompt;
-
     public Action DisplayMessageSendErrorPrompt;
 
     private readonly Contact contact;
@@ -33,6 +32,8 @@
     private readonly NtruKex ntruKex;
 
     private readonly ListView messagesListView;
+
+    private IAsymmetricKeyPair ntruChatKeyPair;
 
     private string outgoingText;
 
@@ -79,20 +80,13 @@
     {
       this.PageIsShown = true;
 
-      if (this.contact.PublicNtruKey == null)
+      if (this.ntruChatKeyPair == null)
       {
-        // todo: delete contact
-        this.contact.PublicNtruKey = await this.GetContactPublicKey();
-        if (this.contact.PublicNtruKey == null)
-        {
-          this.DisplayInvalidPublicKeyPrompt();
-          await this.Navigation.PopAsync();
-        }
+        var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, this.contact.ChatKeyAddress);
+        this.ntruChatKeyPair = this.ntruKex.CreateAsymmetricKeyPair(pasSalt.Substring(0, 50), pasSalt.Substring(50, 50));
       }
-      else
-      {
-        this.GetMessagesAsync(this.Messages);
-      }
+
+      this.GetMessagesAsync(this.Messages);
     }
 
     public void OnDisappearing()
@@ -112,61 +106,41 @@
       }
     }
 
-    private async Task<IAsymmetricKey> GetContactPublicKey()
-    {
-      var trytes = await UserService.CurrentUser.TangleMessenger.GetMessagesAsync(this.contact.PublicKeyAddress, 3);
-      var contactInfos = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
-
-      if (contactInfos == null || contactInfos.Count == 0 || contactInfos.Count > 1)
-      {
-        return null;
-      }
-
-      return contactInfos[0].PublicNtruKey;
-    }
-
     private async Task SendMessage()
     {
-      this.IsBusy = true;
-
       if (this.OutGoingText?.Length > ChiotaConstants.CharacterLimit)
       {
         this.DisplayMessageTooLong();
       }
-      else if (this.OutGoingText?.Length > 0)
+      else if (this.OutGoingText?.Length > 0 && !this.IsBusy)
       {
+        this.IsBusy = true;
         var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 
-        // helps to identify who send the message
-        var signature = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30);
+        var senderId = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30);
 
-        // encryption with public key of other user
-        var encryptedForContact = await Task.Run(() => this.ntruKex.Encrypt(this.contact.PublicNtruKey, this.OutGoingText));
-        var tryteContact = new TryteString(encryptedForContact.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
+        var encryptedText = await Task.Run(() => this.ntruKex.Encrypt(this.ntruChatKeyPair.PublicKey, Encoding.UTF8.GetBytes(this.OutGoingText)));
 
-        // encryption with public key of user
-        var encryptedForUser = await Task.Run(() => this.ntruKex.Encrypt(UserService.CurrentUser.NtruChatPair.PublicKey, this.OutGoingText));
-        var tryteUser = new TryteString(encryptedForUser.EncodeBytesAsString() + ChiotaConstants.FirstBreak + signature + ChiotaConstants.SecondBreak + trytesDate + ChiotaConstants.End);
-
-        var sendFeedback = await this.SendParallelAsync(tryteContact, tryteUser);
+        var sendFeedback = await this.SendParallel(encryptedText.EncodeBytesAsString(), ChiotaConstants.FirstBreak + senderId + ChiotaConstants.SecondBreak + trytesDate);
         if (sendFeedback.Any(c => c == false))
         {
           this.DisplayMessageSendErrorPrompt();
         }
 
         await this.AddNewMessagesAsync(this.Messages);
+        this.IsBusy = false;
+        this.OutGoingText = null;
       }
-
-      this.IsBusy = false;
-      this.OutGoingText = null;
     }
 
-    private Task<bool[]> SendParallelAsync(TryteString tryteContact, TryteString tryteUser)
+    private async Task<bool[]> SendParallel(string message, string chiotaInfo)
     {
-      var firstTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(tryteContact, this.contact.ChatAddress);
-      var secondTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(tryteUser, this.contact.ChatAddress);
+      var firstTryte = new TryteString(message.Substring(0, 2070) + chiotaInfo + "A" + ChiotaConstants.End);
+      var secoundTryte = new TryteString(message.Substring(2070) + chiotaInfo + "B" + ChiotaConstants.End);
+      var firstMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(firstTryte, this.contact.ChatAddress);
+      var secoundMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(secoundTryte, this.contact.ChatAddress);
 
-      return Task.WhenAll(firstTransaction, secondTransaction);
+      return await Task.WhenAll(firstMessage, secoundMessage);
     }
 
     private async void GetMessagesAsync(ICollection<MessageViewModel> messages)
@@ -183,7 +157,7 @@
       if (!this.isRunning)
       {
         this.isRunning = true;
-        var newMessages = await IotaHelper.GetNewMessages(UserService.CurrentUser.NtruChatPair, this.contact, UserService.CurrentUser.TangleMessenger);
+        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact, UserService.CurrentUser.TangleMessenger);
         if (newMessages.Count > 0)
         {
           foreach (var m in newMessages)

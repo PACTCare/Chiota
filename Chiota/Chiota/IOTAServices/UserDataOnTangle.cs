@@ -1,6 +1,7 @@
 ﻿namespace Chiota.IOTAServices
 {
   using System.Collections.Generic;
+  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Models;
@@ -28,11 +29,11 @@
       var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
       foreach (var tryte in trytes)
       {
-        var decrypted = new NtruKex().Decrypt(this.user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
+        var decryptedPrivateData = new NtruKex(true).Decrypt(this.user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString());
 
-        if (decrypted != null)
+        if (decryptedPrivateData != null)
         {
-          var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(decrypted);
+          var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(Encoding.UTF8.GetString(decryptedPrivateData));
           this.user.Name = decryptedUser.Name;
           this.user.ImageUrl = ChiotaConstants.ImagePath + decryptedUser.ImageUrl;
         }
@@ -44,9 +45,8 @@
     public async Task<User> UniquePublicKey()
     {
       // load from tangle not from SQLlit
-      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.PublicKeyAddress, 3, false, true);
-      var contacts = IotaHelper.GetPublicKeysAndContactAddresses(trytes);
-      var requestAdressTrytes = new TryteString(this.user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
+      var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress, true);
+      var requestAdressTrytes = new TryteString(this.user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
 
       // after a snapshot, upload public key again
       if (contacts.Count == 0)
@@ -66,10 +66,8 @@
           var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
           addresses = await Task.Factory.StartNew(() => addressGenerator.GetAddresses(new Seed(newSeed), SecurityLevel.Medium, 0, 1));
 
-          var testtrytes = await this.user.TangleMessenger.GetMessagesAsync(addresses[0].ToString(), 3);
-
           // returns also null if something wrong with ntru key pair
-          newContacts = IotaHelper.GetPublicKeysAndContactAddresses(testtrytes);
+          newContacts = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, addresses[0].ToString(), true);
 
           if (newContacts == null || newContacts.Count == 0)
           {

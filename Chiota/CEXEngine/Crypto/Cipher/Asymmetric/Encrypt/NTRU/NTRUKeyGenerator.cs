@@ -193,8 +193,8 @@ namespace VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU
         {
             using (var dgt = this.GetDigest(this.m_ntruParams.Digest))
             {
-              // Changes 10000 to 1000 and false to true
-                using (IRandom rnd = new PBPRng(dgt, Passphrase, Salt, 1000, true))
+              // Changes 10000 to 100 and false to true
+                using (IRandom rnd = new PBPRng(dgt, Passphrase, Salt, 100, true))
                 {
                     IRandom rng2 = ((PBPRng)rnd).CreateBranch(dgt);
                     return this.GenerateKeyPair(rnd, rng2);

@@ -10,5 +10,5 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<application android:label="Chiota" android:icon="@drawable/icon"></application>
-  <application android:largeHeap="true"></application>
+	<application android:largeHeap="true"></application>
 </manifest>

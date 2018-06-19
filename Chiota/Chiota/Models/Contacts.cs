@@ -17,9 +17,11 @@
 
     public string ChatAddress { get; set; }
 
+    public string ChatKeyAddress { get; set; }
+
     public string PublicKeyAddress { get; set; }
 
-    public IAsymmetricKey PublicNtruKey { get; set; }
+    public IAsymmetricKey NtruKey { get; set; }
 
     public bool Request { get; set; }
 

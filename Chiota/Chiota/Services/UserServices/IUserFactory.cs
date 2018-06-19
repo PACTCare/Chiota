@@ -1,13 +1,11 @@
 ﻿namespace Chiota.Services.UserServices
 {
-  using System.Collections.Generic;
+  using System.Threading.Tasks;
 
   using Chiota.Models;
 
-  using Tangle.Net.Entity;
-
   public interface IUserFactory
   {
-    User Create(Seed seed, List<Address> addresses);
+    Task<User> Create(string seedInput, bool storeSeed);
   }
 }

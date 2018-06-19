@@ -12,9 +12,10 @@
                  Name = contact.Name,
                  ImageUrl = contact.ImageUrl,
                  ChatAddress = contact.ChatAddress,
+                 ChatKeyAddress = contact.ChatKeyAddress,
                  ContactAddress = contact.ContactAddress,
                  PublicKeyAddress = contact.PublicKeyAddress,
-                 PublicNtruKey = contact.PublicNtruKey,
+                 NtruKey = contact.NtruKey,
                  Request = contact.Request,
                  Rejected = contact.Rejected
                };

@@ -6,6 +6,8 @@
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
+  using Chiota.Persistence;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -13,11 +15,15 @@
   using Models;
   using Services;
 
+  using SQLite;
+
   using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
   {
     private readonly List<BotObject> bots;
+
+    private readonly SQLiteAsyncConnection connection;
 
     private ObservableCollection<ContactListViewModel> contactList;
 
@@ -29,6 +35,8 @@
 
     public ContactViewModel()
     {
+      this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
+      this.connection.CreateTableAsync<SqlLiteImage>();
       this.bots = BotList.ReturnBotList();
     }
 
@@ -57,12 +65,12 @@
       }
     }
 
-    public void OnAppearing()
+    public async void OnAppearing()
     {
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.PageIsShown = true;
       this.viewCellObject = new ViewCellObject { RefreshContacts = true };
-      this.UpdateContacts();
+      await this.UpdateContacts();
     }
 
     public void OnDisappearing()
@@ -129,13 +137,13 @@
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
 
       // decline info is stored on contactsOnApproveAddress
-      for (var i = 0; i < approvedContacts.Count; i++)
+      foreach (var approved in approvedContacts)
       {
         foreach (var c in contactsOnApproveAddress)
         {
-          if (approvedContacts[i].ChatAddress == c.ChatAddress)
+          if (approved.ChatAddress == c.ChatAddress)
           {
-            approvedContacts[i].Rejected = c.Rejected;
+            approved.Rejected = c.Rejected;
           }
         }
       }
@@ -171,7 +179,7 @@
         this.RemoveAddress(contact.ChatAddress);
         this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
       }
-
+      
       if (string.IsNullOrWhiteSpace(searchText))
       {
         return this.contacts;

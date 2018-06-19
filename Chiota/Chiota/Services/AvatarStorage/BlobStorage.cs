@@ -18,22 +18,18 @@
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 
-    public async Task<string> UploadAsync(string imageName, string path, byte[] imageAsBytes)
+    public async Task<string> UploadEncryptedAsync(string name, byte[] imageAsBytes)
     {
       // Retrieve reference to a previously created container.
       var container = this.blobClient.GetContainerReference("userimages");
-
-      var imageType = path.Split('.');
-
-      var fileName = imageName + "." + imageType[imageType.Length - 1];
+      var fileName = name + "." + "jpg";
 
       // Retrieve reference to a blob named "myblob".
       var blockBlob = container.GetBlockBlobReference(fileName);
-
-      blockBlob.Properties.ContentType = "image/" + imageType[imageType.Length - 1];
+      blockBlob.Properties.ContentType = "image/jpg";
 
       // Create or overwrite the "myblob" blob with contents from a local file.
-      using (var stream = new MemoryStream(imageAsBytes, writable: false))
+      using (var stream = new MemoryStream(imageAsBytes, false))
       {
         await blockBlob.UploadFromStreamAsync(stream);
       }
