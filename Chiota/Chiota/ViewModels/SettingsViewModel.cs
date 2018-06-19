@@ -6,6 +6,7 @@
 
   using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
 
   using RestSharp;
@@ -74,15 +75,14 @@
       RestIotaRepository node;
       try
       {
-        var iotaClient = new RestIotaClient(new RestClient(this.DefaultNode));
-        node = RepositoryFactory.GenerateNode(this.RemotePow, iotaClient);
+        node = RepositoryFactory.GenerateNode(this.RemotePow, this.DefaultNode);
       }
       catch
       {
         node = null;
       }
 
-      if (node == null || !NodeTest.NodeIsHealthy(node))
+      if (node == null || !RepositoryFactory.NodeIsHealthy(node))
       {
         this.DisplayInvalidNodePrompt();
       }

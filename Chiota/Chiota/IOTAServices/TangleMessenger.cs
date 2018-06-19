@@ -5,6 +5,7 @@
 
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota.Repository;
 
   using Models;
 
@@ -20,7 +21,7 @@
   public class TangleMessenger
   {
     // private readonly TableStorage tableStorage;
-    private const int MinWeight = 14;
+    private int MinWeight { get; }
 
     private readonly Seed seed;
 
@@ -28,14 +29,15 @@
 
     private IIotaRepository repository;
 
-    public TangleMessenger(Seed seed)
+    public TangleMessenger(Seed seed, int minWeightMagnitude = 14)
     {
       this.seed = seed;
 
-      this.repository = new RepositoryFactory().Create();
+      this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
       this.ShortStorageAddressList = new List<string>();
       this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
       this.connection.CreateTableAsync<SqlLiteMessage>();
+      this.MinWeight = minWeightMagnitude;
 
       // this.tableStorage = new TableStorage();
       // this.tableStorage.CreateTable();
@@ -55,7 +57,7 @@
 
         try
         {
-          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, MinWeight);
+          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, this.MinWeight);
           return true;
         }
         catch
@@ -241,7 +243,7 @@
     {
       if (roundNumber > 0)
       {
-        this.repository = new RepositoryFactory().Create(roundNumber);
+        this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create(roundNumber);
       }
     }
 
