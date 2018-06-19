@@ -37,14 +37,14 @@ If you want to test this code, you have either to remove the blob storage (see [
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
 - [x] Qr codes for address sharing
-- [x] Performance improvements
 - [x] Check for unique Address public key combination
 - [x] Notifications
 - [x] Change address after a certain number of messages 
 - [x] Chatbot integration
 - [x] Local SQLite Database for storage of encrypted messages (snapshot)
+- [ ] File transfer/permanent storage solution
 - [ ] Improve performance/Fix errors
-- [ ] Android versions/iOS App
+- [ ] iOS App
 - [ ] Unit testing
 - [ ] Code refactoring
 
