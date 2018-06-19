@@ -23,8 +23,6 @@
 
     public INavigation Navigation { get; set; }
 
-    public bool AlreadyClicked { get; set; }
-
     protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
     {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

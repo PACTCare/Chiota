@@ -9,5 +9,7 @@
     public string Message { get; set; }
 
     public string Signature { get; set; }
+
+    public bool FirstPart { get; set; }
   }
 }

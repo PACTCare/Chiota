@@ -13,7 +13,6 @@
     /// <inheritdoc />
     protected override void Load(ContainerBuilder builder)
     {
-      builder.RegisterType<ResizeService>().As<IResizeService>();
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
       builder.RegisterType<SqlLiteDb>().As<ISqlLiteDb>();
     }

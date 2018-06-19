@@ -2,6 +2,7 @@
 {
   using System;
   using System.IO;
+  using System.Text;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -13,7 +14,8 @@
   using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
-  using Chiota.Views;
+
+  using FFImageLoading;
 
   using Newtonsoft.Json;
 
@@ -86,79 +88,75 @@
       }
     }
 
+    private static byte[] StreamToByte(Stream input)
+    {
+      var buffer = new byte[16 * 1024];
+      using (var ms = new MemoryStream())
+      {
+        int read;
+        while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+        {
+          ms.Write(buffer, 0, read);
+        }
+
+        return ms.ToArray();
+      }
+    }
+
+    private static Task SendParallelAsync(User user, TryteString publicKeyTrytes, string serializeObject)
+    {
+      var encryptedOwnData = new NtruKex(true).Encrypt(user.NtruKeyPair.PublicKey, Encoding.UTF8.GetBytes(serializeObject));
+      var ownDataToTangle = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedOwnData.EncodeBytesAsString() + ChiotaConstants.End), user.OwnDataAdress);
+
+      // only way to store it with one transaction, json too big
+      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
+
+      var publicKeyToTangle = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
+      return Task.WhenAll(ownDataToTangle, publicKeyToTangle);
+    }
+
+    private static async Task<User> StoreDataOnTangle(User user)
+    {
+      var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
+      var serializeObject = JsonConvert.SerializeObject(user.ToUserData());
+      await SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
+      return user;
+    }
+
     private async Task FinishedSetup(User user)
     {
       if (this.Username == string.Empty)
       {
         this.DisplayInvalidLoginPrompt();
       }
-      else if (!this.AlreadyClicked)
+      else if (!this.IsBusy)
       {
         this.IsBusy = true;
-        this.AlreadyClicked = true;
         user.Name = this.Username;
 
         if (this.mediaFile?.Path != null)
         {
-          var imageAsBytes = await this.GenerateByteImage(this.mediaFile);
+          var imageStream = await ImageService.Instance
+                         .LoadFile(this.mediaFile.Path)
+                         .DownSample(300)
+                         .AsJPGStreamAsync();
 
-          imageAsBytes = await DependencyResolver.Resolve<IResizeService>().ResizeImage(imageAsBytes, 350, 350);
-
-          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), this.mediaFile.Path, imageAsBytes);
+          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), StreamToByte(imageStream));
           this.mediaFile.Dispose();
         }
 
-        user = await this.StoreDataOnTangle(user);
-
-        if (user.StoreSeed)
-        {
-          new SecureStorage().StoreUser(user);
-        }
+        user = await StoreDataOnTangle(user);
+        new SecureStorage().StoreUser(user);
 
         // Fire setup completed event to allow consumers to add behaviour
         SetupCompleted?.Invoke(this, new SetupEventArgs { User = user });
         UserService.SetCurrentUser(user);
 
         this.IsBusy = false;
-        this.AlreadyClicked = false;
 
         Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
         await this.Navigation.PopToRootAsync(true);
       }
-    }
-
-    private async Task<byte[]> GenerateByteImage(MediaFile methodeMediaFile)
-    {
-      byte[] imageAsBytes;
-      using (var memoryStream = new MemoryStream())
-      {
-        await methodeMediaFile.GetStream().CopyToAsync(memoryStream);
-        imageAsBytes = memoryStream.ToArray();
-      }
-
-      return imageAsBytes;
-    }
-
-    private async Task<User> StoreDataOnTangle(User user)
-    {
-      var publicKeyTrytes = user.NtruChatPair.PublicKey.ToBytes().EncodeBytesAsString();
-
-      var serializeObject = JsonConvert.SerializeObject(user.ToUserData());
-
-      await this.SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
-      return user;
-    }
-
-    private Task SendParallelAsync(User user, TryteString publicKeyTrytes, string serializeObject)
-    {
-      var encryptedAccept = new NtruKex().Encrypt(user.NtruContactPair.PublicKey, serializeObject);
-      var firstTransaction = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End), user.OwnDataAdress);
-
-      // only way to store it with one transaction, json too big
-      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
-
-      var secondTransaction = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
-      return Task.WhenAll(firstTransaction, secondTransaction);
     }
   }
 }

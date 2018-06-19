@@ -4,6 +4,7 @@
   using System.Collections.Generic;
   using System.Globalization;
   using System.Linq;
+  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Models;
@@ -66,7 +67,7 @@
       {
         try
         {
-          var decryptedMessage = new NtruKex().Decrypt(user.NtruContactPair, tryte.Message.DecodeBytesFromTryteString());
+          var decryptedMessage = Encoding.UTF8.GetString(new NtruKex(true).Decrypt(user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString()));
 
           var chatAddress = decryptedMessage.Substring(0, 81);
 
@@ -98,9 +99,11 @@
       return approvedContacts;
     }
 
-    public static List<ChatMessage> FilterChatMessages(IEnumerable<TryteStringMessage> trytes, IAsymmetricKeyPair keyPair)
+    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
-      var chatMessages = new List<ChatMessage>();
+      //Todo got messages multiple times, when it load while sending still processing
+      var trytes = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
+      var messagesEncrypted = new List<ChatMessage>();
       foreach (var tryte in trytes)
       {
         try
@@ -111,20 +114,12 @@
           var dateTrytes = new TryteString(
             trytesString.Substring(
               secondBreakIndex + ChiotaConstants.SecondBreak.Length,
-              trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length));
+              trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length - 1));
+          var firstPart = trytesString[trytesString.Length - 1] == 'A';
           var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
-
           var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
-          var messageTrytes = new TryteString(trytesString.Substring(0, firstBreakIndex));
-
-          var decryptedMessage = new NtruKex().Decrypt(keyPair, messageTrytes.DecodeBytesFromTryteString());
-          if (decryptedMessage == null)
-          {
-            continue;
-          }
-
-          var chatMessage = new ChatMessage { Message = decryptedMessage, Date = date, Signature = signature };
-          chatMessages.Add(chatMessage);
+          var messageTrytes = trytesString.Substring(0, firstBreakIndex);
+          messagesEncrypted.Add(new ChatMessage { Message = messageTrytes, Date = date, Signature = signature, FirstPart = firstPart });
         }
         catch
         {
@@ -132,7 +127,44 @@
         }
       }
 
-      return chatMessages;
+      var sortedEncryptedMessages = messagesEncrypted.OrderBy(o => o.Date).ToList();
+      var messages = new List<MessageViewModel>();
+
+      for (var i = 0; i < sortedEncryptedMessages.Count - 1; i = i + 2)
+      {
+        if (TwoPartsOfMessage(sortedEncryptedMessages, i))
+        {
+          TryteString encryptedMessage;
+          if (sortedEncryptedMessages[i].FirstPart)
+          {
+            encryptedMessage = new TryteString(sortedEncryptedMessages[i].Message + sortedEncryptedMessages[i + 1].Message);
+          }
+          else
+          {
+            encryptedMessage = new TryteString(sortedEncryptedMessages[i + 1].Message + sortedEncryptedMessages[i].Message);
+          }
+
+          var decryptedMessage = Encoding.UTF8.GetString(new NtruKex().Decrypt(keyPair, encryptedMessage.DecodeBytesFromTryteString()));
+          messages.Add(new MessageViewModel
+          {
+            Text = decryptedMessage,
+            MessagDateTime = sortedEncryptedMessages[i].Date.ToLocalTime(),
+            IsIncoming = sortedEncryptedMessages[i].Signature == contact.PublicKeyAddress.Substring(0, 30),
+            ProfileImage = contact.ImageUrl
+          });
+        }
+        else
+        {
+          i--;
+        }
+      }
+
+      return messages;
+    }
+
+    private static bool TwoPartsOfMessage(List<ChatMessage> sortedEncryptedMessages, int i)
+    {
+      return sortedEncryptedMessages[i].FirstPart != sortedEncryptedMessages[i + 1].FirstPart;
     }
 
     public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
@@ -161,74 +193,9 @@
       return newHashes;
     }
 
-    /// <summary>
-    /// The generate keys.
-    /// </summary>
-    /// <param name="user">
-    /// The user.
-    /// </param>
-    /// <returns>
-    /// The <see cref="User"/>.
-    /// </returns>
-    public static User GenerateKeys(User user)
+    public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(TangleMessenger tangleMessenger, string receiverAddress, bool dontLoadSql = false)
     {
-      user.NtruChatPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress);
-      user.NtruContactPair = new NtruKex().CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.ApprovedAddress);
-      return user;
-    }
-
-    /// <summary>
-    /// The get new messages.
-    /// </summary>
-    /// <param name="keyPair">
-    /// The key pair.
-    /// </param>
-    /// <param name="contact">
-    /// The contact.
-    /// </param>
-    /// <param name="tangle">
-    /// The tangle.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
-    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
-    {
-      var messages = new List<MessageViewModel>();
-      var encryptedMessages = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
-
-      var messageList = FilterChatMessages(encryptedMessages, keyPair);
-
-      if (messageList != null && messageList.Count > 0)
-      {
-        var sortedMessageList = messageList.OrderBy(o => o.Date).ToList();
-        foreach (var message in sortedMessageList)
-        {
-          messages.Add(
-            new MessageViewModel
-              {
-                Text = message.Message,
-                IsIncoming = message.Signature == contact.PublicKeyAddress.Substring(0, 30),
-                MessagDateTime = message.Date.ToLocalTime(),
-                ProfileImage = contact.ImageUrl
-              });
-        }
-      }
-
-      return messages;
-    }
-
-    /// <summary>
-    /// Filters Transactions for public key and contact address
-    /// </summary>
-    /// <param name="trytes">
-    /// Transactions in List form
-    /// </param>
-    /// <returns>
-    /// null if more than one key
-    /// </returns>
-    public static List<Contact> GetPublicKeysAndContactAddresses(IEnumerable<TryteStringMessage> trytes)
-    {
+      var trytes = await tangleMessenger.GetMessagesAsync(receiverAddress, 3, false, dontLoadSql);
       var contacts = new List<Contact>();
       foreach (var tryte in trytes)
       {
@@ -246,10 +213,10 @@
 
           contacts.Add(
             new Contact
-              {
-                PublicNtruKey = new NTRUPublicKey(bytesKey),
-                ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
-              });
+            {
+              NtruKey = new NTRUPublicKey(bytesKey),
+              ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
+            });
         }
         catch
         {
@@ -281,6 +248,36 @@
       }
 
       return contactList;
+    }
+
+    public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
+    {
+      // Todo check for multiple entries
+      var trytes = await user.TangleMessenger.GetMessagesAsync(chatKeyAddress, 3);
+      var chatPasSalt = new List<string>();
+      foreach (var tryte in trytes)
+      {
+        try
+        {
+          var pasSalt = Encoding.UTF8.GetString(
+            new NtruKex(true).Decrypt(user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString()));
+          if (pasSalt != string.Empty)
+          {
+            chatPasSalt.Add(pasSalt);
+          }
+        }
+        catch
+        {
+          // ignored
+        }
+      }
+
+      if (chatPasSalt.Count > 0)
+      {
+        return chatPasSalt[0];
+      }
+
+      return null;
     }
   }
 }

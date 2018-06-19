@@ -6,6 +6,8 @@
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
+  using Chiota.Persistence;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -13,11 +15,15 @@
   using Models;
   using Services;
 
+  using SQLite;
+
   using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
   {
     private readonly List<BotObject> bots;
+
+    private readonly SQLiteAsyncConnection connection;
 
     private ObservableCollection<ContactListViewModel> contactList;
 
@@ -29,6 +35,8 @@
 
     public ContactViewModel()
     {
+      this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
+      this.connection.CreateTableAsync<SqlLiteImage>();
       this.bots = BotList.ReturnBotList();
     }
 
@@ -57,12 +65,12 @@
       }
     }
 
-    public void OnAppearing()
+    public async void OnAppearing()
     {
       this.contacts = new ObservableCollection<ContactListViewModel>();
       this.PageIsShown = true;
       this.viewCellObject = new ViewCellObject { RefreshContacts = true };
-      this.UpdateContacts();
+      await this.UpdateContacts();
     }
 
     public void OnDisappearing()
@@ -129,13 +137,13 @@
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
 
       // decline info is stored on contactsOnApproveAddress
-      for (var i = 0; i < approvedContacts.Count; i++)
+      foreach (var approved in approvedContacts)
       {
         foreach (var c in contactsOnApproveAddress)
         {
-          if (approvedContacts[i].ChatAddress == c.ChatAddress)
+          if (approved.ChatAddress == c.ChatAddress)
           {
-            approvedContacts[i].Rejected = c.Rejected;
+            approved.Rejected = c.Rejected;
           }
         }
       }
@@ -160,7 +168,8 @@
       {
         if (contact.Request)
         {
-          this.contacts.Add(contact.ToViewModel(this.viewCellObject));
+          var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
+          this.contacts.Add(contactCell);
         }
       }
 
@@ -168,7 +177,7 @@
       {
         contact.Request = false;
         this.RemoveAddress(contact.ChatAddress);
-        this.contacts.Add(contact.ToViewModel(this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
       }
 
       if (string.IsNullOrWhiteSpace(searchText))
@@ -215,15 +224,15 @@
       foreach (var bot in this.bots)
       {
         var botContact = new Contact
-                           {
-                             Name = bot.BotName,
-                             ChatAddress = bot.BotSlogan,
-                             ContactAddress = bot.BotSlogan,
-                             ImageUrl = bot.ImageUrl,
-                             Rejected = false
-                           };
+        {
+          Name = bot.BotName,
+          ChatAddress = bot.BotSlogan,
+          ContactAddress = bot.BotSlogan,
+          ImageUrl = bot.ImageUrl,
+          Rejected = false
+        };
 
-        this.contacts.Add(botContact.ToViewModel(this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
       }
     }
   }

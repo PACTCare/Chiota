@@ -26,6 +26,8 @@
 
       ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
 
+      FFImageLoading.Forms.Platform.CachedImageRenderer.Init();       
+      
       this.LoadApplication(new Chiota.App());
 
       if (this.IsRegistered())

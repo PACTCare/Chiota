@@ -47,6 +47,8 @@
 
       ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
+      FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);  
+
       ImageCircleRenderer.Init();
 
       this.LoadApplication(new App());

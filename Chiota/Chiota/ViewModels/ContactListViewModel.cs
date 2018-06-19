@@ -1,5 +1,6 @@
 ﻿namespace Chiota.ViewModels
 {
+  using System.Text;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -14,14 +15,17 @@
 
   public class ContactListViewModel : Contact
   {
+    private readonly User user;
+
     private readonly ViewCellObject viewCellObject;
 
     private string poWText;
 
     private bool isClicked;
 
-    public ContactListViewModel(ViewCellObject viewCellObject)
+    public ContactListViewModel(User user, ViewCellObject viewCellObject)
     {
+      this.user = user;
       this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
     }
@@ -47,10 +51,10 @@
         this.isClicked = true;
         this.PoWText = " Proof-of-work in progress!";
 
-        var encryptedDecline = new NtruKex().Encrypt(UserService.CurrentUser.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Rejected);
+        var encryptedDecline = new NtruKex(true).Encrypt(this.user.NtruKeyPair.PublicKey, Encoding.UTF8.GetBytes(this.ChatAddress + ChiotaConstants.Rejected));
         var tryteString = new TryteString(encryptedDecline.EncodeBytesAsString() + ChiotaConstants.End);
 
-        await UserService.CurrentUser.TangleMessenger.SendMessageAsync(tryteString, UserService.CurrentUser.ApprovedAddress);
+        await this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
@@ -70,29 +74,40 @@
       }
     }
 
-    // parallelize = only await for second PoW, when remote PoW 
-    private Task SendParallelAcceptAsync()
+    private async Task SendParallelAcceptAsync()
     {
-      var encryptedAccept = new NtruKex().Encrypt(UserService.CurrentUser.NtruContactPair.PublicKey, this.ChatAddress + ChiotaConstants.Accepted);
+      var encryptedAccept = new NtruKex(true).Encrypt(this.user.NtruKeyPair.PublicKey, Encoding.UTF8.GetBytes(this.ChatAddress + ChiotaConstants.Accepted));
       var tryteString = new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End);
 
+      var encryptedChatKeyToTangle = await this.GenerateChatKeyToTangle();
+
+      // Todo: doesn't need to be on the tangle!!!!!!!!
       // store as approved on own adress
-      var firstTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(tryteString, UserService.CurrentUser.ApprovedAddress);
+      var firstTransaction = this.user.TangleMessenger.SendMessageAsync(tryteString, this.user.ApprovedAddress);
 
       var contact = new Contact
-                      {
-                        Name = UserService.CurrentUser.Name,
-                        ImageUrl = UserService.CurrentUser.ImageUrl,
-                        ChatAddress = this.ChatAddress,
-                        ContactAddress = UserService.CurrentUser.ApprovedAddress,
-                        PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress,
-                        Rejected = false,
-                        Request = false
-                      };
+      {
+        Name = this.user.Name,
+        ImageUrl = this.user.ImageUrl,
+        ChatAddress = this.ChatAddress,
+        ChatKeyAddress = this.ChatKeyAddress,
+        ContactAddress = this.user.ApprovedAddress,
+        PublicKeyAddress = this.user.PublicKeyAddress,
+        Rejected = false,
+        Request = false,
+        NtruKey = null
+      };
 
-      // send data to request address, other user needs to automaticly add it to his own approved contact address
-      var secondTransaction = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
-      return Task.WhenAll(firstTransaction, secondTransaction);
+      var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
+      await Task.WhenAll(firstTransaction, chatInformationToTangle, encryptedChatKeyToTangle);
+    }
+
+    private async Task<Task<bool>> GenerateChatKeyToTangle()
+    {
+      var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(UserService.CurrentUser.TangleMessenger, this.PublicKeyAddress);
+      var pasSalt = await IotaHelper.GetChatPasSalt(this.user, this.ChatKeyAddress);
+      var encryptedChatPasSalt = new NtruKex(true).Encrypt(contacts[0].NtruKey, Encoding.UTF8.GetBytes(pasSalt));
+      return UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), this.ChatKeyAddress);
     }
   }
 }

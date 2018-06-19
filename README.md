@@ -17,9 +17,10 @@ There are several reasons for that:
 -	NTRU or some other form of key exchange is needed for the MAM-Layer anyway
 -	For the MAM Layer, you have a lot of different transactions and currently, the proof-of-work takes really long, so the goal is to reduce the number of necessary transactions
 -	You need to store the state of the MAM Layer (root hash, channel keys, etc.). If you want to store these things quantum secure on the tangle it results in more messages and therefore additional PoW
+- NTRU can be extremly fast, see [Speed records for NTRU](https://homes.esat.kuleuven.be/~fvercaut/papers/ntru_gpu.pdf) 
 
 The disadvantage of the current system:
--	You are limited to 105 characters per transaction because the NTRU encryption needs more space 
+-	You are limited to less characters per transaction because the NTRU encryption needs more space 
 -	Advances in cryptanalysis may at some point break NTRU
 
 # Motivation
@@ -37,14 +38,14 @@ If you want to test this code, you have either to remove the blob storage (see [
 Currently, there are the following points on my to-do list:
 - [x] Store contacts/profile on the tangle
 - [x] Qr codes for address sharing
-- [x] Performance improvements
 - [x] Check for unique Address public key combination
 - [x] Notifications
 - [x] Change address after a certain number of messages 
 - [x] Chatbot integration
 - [x] Local SQLite Database for storage of encrypted messages (snapshot)
+- [ ] File transfer/permanent storage solution
 - [ ] Improve performance/Fix errors
-- [ ] Android versions/iOS App
+- [ ] iOS App
 - [ ] Unit testing
 - [ ] Code refactoring
 

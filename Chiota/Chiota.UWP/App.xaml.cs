@@ -4,6 +4,10 @@
   using System.Collections.Generic;
   using System.Reflection;
 
+  using Chiota.Services.DependencyInjection;
+
+  using FFImageLoading.Forms;
+  using FFImageLoading.Forms.Platform;
   using ImageCircle.Forms.Plugin.UWP;
 
   using Windows.ApplicationModel;
@@ -11,8 +15,6 @@
   using Windows.UI.Xaml;
   using Windows.UI.Xaml.Controls;
   using Windows.UI.Xaml.Navigation;
-
-  using Chiota.Services.DependencyInjection;
 
   /// <summary>
   /// Provides application-specific behavior to supplement the default Application class.
@@ -27,7 +29,7 @@
     public App()
     {
       this.InitializeComponent();
-      this.Suspending += OnSuspending;
+      this.Suspending += this.OnSuspending;
     }
 
     /// <summary>
@@ -56,7 +58,9 @@
                                                    ZXingScannerViewRenderer).GetTypeInfo().Assembly,
                                                  typeof(ZXing.Net.Mobile.Forms.ZXingScannerPage)
                                                    .GetTypeInfo().Assembly,
-                                                 typeof(ImageCircleRenderer).GetTypeInfo().Assembly
+                                                 typeof(ImageCircleRenderer).GetTypeInfo().Assembly,
+                                                 typeof(CachedImage).GetTypeInfo().Assembly,
+                                                 typeof(CachedImageRenderer).GetTypeInfo().Assembly  
                                                };
 
         Xamarin.Forms.Forms.Init(e, assembliesToInclude);
@@ -90,7 +94,7 @@
     /// </summary>
     /// <param name="sender">The Frame which failed navigation</param>
     /// <param name="e">Details about the navigation failure</param>
-    void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+    private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
     {
       throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
     }

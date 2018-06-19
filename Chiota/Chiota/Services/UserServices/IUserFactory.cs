@@ -1,6 +1,5 @@
 ﻿namespace Chiota.Services.UserServices
 {
-  using System.Collections.Generic;
   using System.Threading.Tasks;
 
   using Chiota.Models;
@@ -18,9 +17,12 @@
     /// <param name="seed">
     /// The seed.
     /// </param>
+    /// <param name="storeSeed">
+    /// The store Seed.
+    /// </param>
     /// <returns>
     /// The <see cref="User"/>.
     /// </returns>
-    Task<User> CreateAsync(Seed seed);
+    Task<User> CreateAsync(Seed seed, bool storeSeed);
   }
 }
