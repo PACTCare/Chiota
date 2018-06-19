@@ -1,4 +1,4 @@
-﻿namespace Chiota.Services
+﻿namespace Chiota.Services.Storage
 {
   using System.Threading.Tasks;
 

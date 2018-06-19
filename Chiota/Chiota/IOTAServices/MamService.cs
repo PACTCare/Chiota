@@ -3,6 +3,9 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota.Repository;
+
   using Tangle.Net.Entity;
   using Tangle.Net.Mam.Merkle;
   using Tangle.Net.Mam.Services;
@@ -18,7 +21,7 @@
 
     public MamService()
     {
-      this.repository = new RepositoryFactory().Create();
+      this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
 
       this.SubscriptionFactory = new MamChannelSubscriptionFactory(this.repository, CurlMamParser.Default, CurlMask.Default);
       this.ChannelFactory = new MamChannelFactory(CurlMamFactory.Default, CurlMerkleTreeFactory.Default, this.repository);

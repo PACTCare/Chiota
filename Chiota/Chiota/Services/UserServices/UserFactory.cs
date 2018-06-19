@@ -13,25 +13,36 @@
   public class UserFactory : IUserFactory
   {
     /// <inheritdoc />
-    public async Task<User> Create(string seedInput, bool storeSeed)
+    public async Task<User> CreateAsync(Seed seed, bool storeSeed)
     {
-      var seed = new Seed(seedInput);
       var addresses = await GenerateChiotaAddresses(seed);
-      return new User
-               {
-                 Name = null,
-                 Seed = seed,
-                 ImageUrl = null,
-                 StoreSeed = storeSeed,
-                 OwnDataAdress = addresses[0].Value,
-                 PublicKeyAddress = addresses[1].Value, // + addresses[1].WithChecksum().Checksum.Value,
-                 RequestAddress = addresses[2].Value,
-                 ApprovedAddress = addresses[3].Value,
-                 TangleMessenger = new TangleMessenger(seed),
-                 NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(seed.ToString().ToLower(), addresses[0].Value) 
-               };
+
+      var user = new User
+                   {
+                     Name = null,
+                     Seed = seed,
+                     ImageUrl = null,
+                     StoreSeed = storeSeed,
+                     OwnDataAdress = addresses[0].Value,
+                     PublicKeyAddress = addresses[1].Value, // + addresses[1].WithChecksum().Checksum.Value,
+                     RequestAddress = addresses[2].Value,
+                     ApprovedAddress = addresses[3].Value,
+                     TangleMessenger = new TangleMessenger(seed),
+                     NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(seed.ToString().ToLower(), addresses[0].Value)
+      };
+
+      return user;
     }
 
+    /// <summary>
+    /// The generate chiota addresses.
+    /// </summary>
+    /// <param name="seed">
+    /// The seed.
+    /// </param>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
     private static async Task<List<Address>> GenerateChiotaAddresses(Seed seed)
     {
       // addresses can be generated based on each other to make it faster

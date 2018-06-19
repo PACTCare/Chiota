@@ -18,6 +18,7 @@
       this.BindingContext = new BotChatViewModel(bot, this.MessagesListView, this.QuickReplyStack) { Navigation = this.Navigation };
     }
 
+
     private void HandleCompleted(object sender, EventArgs e)
     {
       (this.BindingContext as BotChatViewModel)?.SendCommand.Execute(null);

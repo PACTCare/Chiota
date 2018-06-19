@@ -179,7 +179,7 @@
         this.RemoveAddress(contact.ChatAddress);
         this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
       }
-      
+
       if (string.IsNullOrWhiteSpace(searchText))
       {
         return this.contacts;
@@ -224,13 +224,13 @@
       foreach (var bot in this.bots)
       {
         var botContact = new Contact
-                           {
-                             Name = bot.BotName,
-                             ChatAddress = bot.BotSlogan,
-                             ContactAddress = bot.BotSlogan,
-                             ImageUrl = bot.ImageUrl,
-                             Rejected = false
-                           };
+        {
+          Name = bot.BotName,
+          ChatAddress = bot.BotSlogan,
+          ContactAddress = bot.BotSlogan,
+          ImageUrl = bot.ImageUrl,
+          Rejected = false
+        };
 
         this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
       }

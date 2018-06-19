@@ -10,6 +10,7 @@
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -89,7 +90,7 @@
 
         if (this.UserNotYetGenerated())
         {
-          this.user = await this.UserFactory.Create(this.RandomSeed, this.StoreSeed);
+          this.user = await this.UserFactory.CreateAsync(new Seed(this.RandomSeed), this.StoreSeed);
         }
 
         this.dataOnTangle = new UserDataOnTangle(this.user);
