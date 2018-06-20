@@ -1,6 +1,8 @@
 ﻿namespace Chiota.Services.Iota.Repository
 {
+  using System;
   using System.Collections.Generic;
+  using System.Threading.Tasks;
 
   using Chiota.Models;
 
@@ -17,26 +19,23 @@
   /// </summary>
   public class RepositoryFactory : IRepositoryFactory
   {
-    /// <summary>
-    /// The client timeout milliseconds.
-    /// </summary>
-    public static readonly int ClientTimeoutMilliseconds = 5000;
+    private const int WaitSeconds = 5;
 
     /// <summary>
     /// The node uri list.
     /// </summary>
     private readonly List<string> nodeUriList = new List<string>
                                                   {
+                                                    "https://field.carriota.com:443",
                                                     "https://nodes.iota.fm:443",
                                                     "https://trinity.iota.fm:443",
                                                     "https://iotanode.us:443",
-                                                    "https://iri2.iota.fm:443",
-                                                    "https://field.carriota.com:443"
+                                                    "https://iri2.iota.fm:443"
                                                   };
 
     public static RestIotaRepository GenerateNode(bool doRemotePoW, string nodeUri)
     {
-      var iotaClient = new RestIotaClient(new RestClient(nodeUri) { Timeout = ClientTimeoutMilliseconds });
+      var iotaClient = new RestIotaClient(new RestClient(nodeUri));
 
       return doRemotePoW
                ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient))
@@ -56,13 +55,20 @@
     {
       try
       {
-        var nodeInfo = node.GetNodeInfo();
-        return nodeInfo.LatestMilestoneIndex == nodeInfo.LatestSolidSubtangleMilestoneIndex;
+        // Timeout after 5 seconds
+        var task = Task.Run(() => node.GetNodeInfo());
+        if (task.Wait(TimeSpan.FromSeconds(WaitSeconds)))
+        {
+          var nodeInfo = task.Result;
+          return nodeInfo.LatestMilestoneIndex == nodeInfo.LatestSolidSubtangleMilestoneIndex;
+        }
       }
       catch
       {
-        return false;
+        // ignored
       }
+
+      return false;
     }
 
     /// <inheritdoc />

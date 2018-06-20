@@ -1,6 +1,8 @@
 ﻿namespace Chiota.Services.Iota
 {
+  using System;
   using System.Collections.Generic;
+  using System.Diagnostics;
   using System.Threading.Tasks;
 
   using Chiota.Models;
@@ -30,7 +32,7 @@
     {
       this.seed = seed;
       this.MinWeight = minWeightMagnitude;
-      this.repository = new RepositoryFactory().Create();
+      this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
       this.ShortStorageAddressList = new List<string>();
       this.sqLite = new SqLiteHelper();
     }
@@ -52,8 +54,9 @@
           await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, this.MinWeight);
           return true;
         }
-        catch
+        catch (Exception e)
         {
+          Trace.WriteLine(e);
           roundNumber++;
         }
       }
