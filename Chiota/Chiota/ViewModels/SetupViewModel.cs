@@ -11,6 +11,7 @@
   using Chiota.Services.AvatarStorage;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
 
   using FFImageLoading;

@@ -11,6 +11,7 @@
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.IOTAServices;
   using Chiota.Services.Navigation;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -88,7 +89,7 @@
 
         if (this.UserNotYetGenerated())
         {
-          this.user = await this.UserFactory.Create(this.RandomSeed, this.StoreSeed);
+          this.user = await this.UserFactory.CreateAsync(new Seed(this.RandomSeed), this.StoreSeed);
         }
 
         var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress);

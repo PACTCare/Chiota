@@ -4,6 +4,7 @@
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -29,6 +30,7 @@
     protected override async void OnStart()
     {
       DependencyResolver.Init();
+      var navigationService = DependencyResolver.Resolve<INavigationService>();
 
       if (CrossConnectivity.Current.IsConnected)
       {
@@ -42,16 +44,16 @@
           {
             // user needs to check address
             UserService.SetCurrentUser(user);
-            this.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+            this.MainPage = new NavigationPage(navigationService.LoggedInEntryPoint);
           }
           else
           {
-            this.MainPage = new NavigationPage(new LoginPage());
+            this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
           }
         }
         else
         {
-          this.MainPage = new NavigationPage(new LoginPage());
+          this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
         }
       }
       else
