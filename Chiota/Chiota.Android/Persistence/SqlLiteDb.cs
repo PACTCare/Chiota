@@ -1,6 +1,6 @@
-﻿using System;
-namespace Chiota.Droid.Persistence
+﻿namespace Chiota.Droid.Persistence
 {
+  using System;
   using System.IO;
 
   using Chiota.Persistence;

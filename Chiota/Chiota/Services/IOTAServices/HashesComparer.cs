@@ -1,4 +1,4 @@
-﻿namespace Chiota.IOTAServices
+﻿namespace Chiota.Services.IOTAServices
 {
   using System.Collections.Generic;
 

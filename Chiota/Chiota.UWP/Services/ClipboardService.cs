@@ -15,7 +15,7 @@
 
     public void SendTextToClipboard(string text)
     {
-      DataPackage dataPackage = new DataPackage();
+      var dataPackage = new DataPackage();
       dataPackage.SetText(text);
       Clipboard.SetContent(dataPackage);
     }

@@ -2,29 +2,26 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services.IOTAServices;
 
   using Plugin.SecureStorage;
 
   using Tangle.Net.Entity;
 
+  using Xamarin.Forms;
+
   public class SecureStorage
   {
     private const string SeedKey = "Seed";
 
-    private const string OwnDataAdressKey = "OwnDataAdress";
-
     private const string RequestAddressKey = "RequestAddress";
-
-    private const string ApprovedAddressKey = "ApprovedAddress";
 
     private const string PublicKeyAddressKey = "approvedAdressKey";
 
     public bool CheckUserStored()
     {
-      return CrossSecureStorage.Current.HasKey(SeedKey) && CrossSecureStorage.Current.HasKey(OwnDataAdressKey)
-                                                        && CrossSecureStorage.Current.HasKey(RequestAddressKey);
+      return CrossSecureStorage.Current.HasKey(SeedKey) && CrossSecureStorage.Current.HasKey(RequestAddressKey);
     }
 
     public async Task<User> GetUser()
@@ -33,20 +30,18 @@
       var user = new User()
       {
         Seed = storedSeed,
-        OwnDataAdress = CrossSecureStorage.Current.GetValue(OwnDataAdressKey),
         RequestAddress = CrossSecureStorage.Current.GetValue(RequestAddressKey),
-        ApprovedAddress = CrossSecureStorage.Current.GetValue(ApprovedAddressKey),
         PublicKeyAddress = CrossSecureStorage.Current.GetValue(PublicKeyAddressKey),
         TangleMessenger = new TangleMessenger(storedSeed),
       };
 
-      user.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.OwnDataAdress);
+      user.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.PublicKeyAddress);
+      user.ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
+      user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
 
       try
       {
-        var tangleData = new UserDataOnTangle(user);
-        await tangleData.UpdateUserWithOwnDataAddress();
-        return await tangleData.UniquePublicKey();
+        return await new UserDataOnTangle(user).UniquePublicKey();
       }
       catch
       {
@@ -62,9 +57,7 @@
         try
         {
           CrossSecureStorage.Current.SetValue(SeedKey, user.Seed.Value);
-          CrossSecureStorage.Current.SetValue(OwnDataAdressKey, user.OwnDataAdress);
           CrossSecureStorage.Current.SetValue(RequestAddressKey, user.RequestAddress);
-          CrossSecureStorage.Current.SetValue(ApprovedAddressKey, user.ApprovedAddress);
           CrossSecureStorage.Current.SetValue(PublicKeyAddressKey, user.PublicKeyAddress);
           return true;
         }
@@ -80,9 +73,7 @@
     public void DeleteUser()
     {
       CrossSecureStorage.Current.DeleteKey(SeedKey);
-      CrossSecureStorage.Current.DeleteKey(OwnDataAdressKey);
       CrossSecureStorage.Current.DeleteKey(RequestAddressKey);
-      CrossSecureStorage.Current.DeleteKey(PublicKeyAddressKey);
       CrossSecureStorage.Current.DeleteKey(PublicKeyAddressKey);
     }
   }

@@ -5,6 +5,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Models;
+  using Chiota.Models.SqLite;
 
   using Microsoft.WindowsAzure.Storage;
   using Microsoft.WindowsAzure.Storage.Table;
@@ -46,7 +47,7 @@
       }
     }
 
-    public async Task<bool> Insert(SqlLiteMessage sqlLiteMessage)
+    public async Task<bool> Insert(SqLiteMessage sqLiteMessage)
     {
       try
       {
@@ -59,9 +60,9 @@
         // Create the TableOperation object that inserts the customer entity.
         var insertOperation = TableOperation.Insert(new TrytesEntity
                                                       {
-                                                        RowKey = sqlLiteMessage.TransactionHash,
-                                                        PartitionKey = sqlLiteMessage.ChatAddress,
-                                                        MessageTryteString = sqlLiteMessage.MessageTryteString
+                                                        RowKey = sqLiteMessage.TransactionHash,
+                                                        PartitionKey = sqLiteMessage.ChatAddress,
+                                                        MessageTryteString = sqLiteMessage.MessageTryteString
                                                       });
 
         // Execute the insert operation.
@@ -74,9 +75,9 @@
       }
     }
 
-    public async Task<List<SqlLiteMessage>> GetTableContent(string address)
+    public async Task<List<SqLiteMessage>> GetTableContent(string address)
     {
-      var tableList = new List<SqlLiteMessage>();
+      var tableList = new List<SqLiteMessage>();
 
       // Create the table client.
       var tableClient = this.storageAccount.CreateCloudTableClient();
@@ -97,7 +98,7 @@
 
         foreach (var entity in resultSegment.Results)
         {
-          tableList.Add(new SqlLiteMessage
+          tableList.Add(new SqLiteMessage
                           {
                             TransactionHash = entity.RowKey,
                             MessageTryteString = entity.MessageTryteString,

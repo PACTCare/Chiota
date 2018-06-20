@@ -26,5 +26,9 @@
     public const string SettingsPowKey = "RemotePow";
 
     public const string SettingsNodeKey = "Node";
+
+    public const string SettingsImageKey = "I";
+
+    public const string SettingsNameKey = "U";
   }
 }

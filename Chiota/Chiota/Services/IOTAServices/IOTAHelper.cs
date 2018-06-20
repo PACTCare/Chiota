@@ -9,6 +9,7 @@
 
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.IOTAServices;
   using Chiota.ViewModels;
 
   using Newtonsoft.Json;
@@ -101,25 +102,13 @@
 
     public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
-      //Todo got messages multiple times, when it load while sending still processing
       var trytes = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
       var messagesEncrypted = new List<ChatMessage>();
       foreach (var tryte in trytes)
       {
         try
         {
-          var trytesString = tryte.Message.ToString();
-          var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
-          var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
-          var dateTrytes = new TryteString(
-            trytesString.Substring(
-              secondBreakIndex + ChiotaConstants.SecondBreak.Length,
-              trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length - 1));
-          var firstPart = trytesString[trytesString.Length - 1] == 'A';
-          var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
-          var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
-          var messageTrytes = trytesString.Substring(0, firstBreakIndex);
-          messagesEncrypted.Add(new ChatMessage { Message = messageTrytes, Date = date, Signature = signature, FirstPart = firstPart });
+          messagesEncrypted.Add(ReadChatMessage(tryte));
         }
         catch
         {
@@ -135,7 +124,7 @@
         if (TwoPartsOfMessage(sortedEncryptedMessages, i))
         {
           TryteString encryptedMessage;
-          if (sortedEncryptedMessages[i].FirstPart)
+          if (sortedEncryptedMessages[i].IsFirstPart)
           {
             encryptedMessage = new TryteString(sortedEncryptedMessages[i].Message + sortedEncryptedMessages[i + 1].Message);
           }
@@ -160,11 +149,6 @@
       }
 
       return messages;
-    }
-
-    private static bool TwoPartsOfMessage(List<ChatMessage> sortedEncryptedMessages, int i)
-    {
-      return sortedEncryptedMessages[i].FirstPart != sortedEncryptedMessages[i + 1].FirstPart;
     }
 
     public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
@@ -232,24 +216,6 @@
       return TryteString.FromUtf8String(JsonConvert.SerializeObject(data));
     }
 
-    public static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
-    {
-      var index = 0;
-      while (index < contactList.Count - 1)
-      {
-        if (contactList[index].ContactAddress == contactList[index + 1].ContactAddress)
-        {
-          contactList.RemoveAt(index);
-        }
-        else
-        {
-          index++;
-        }
-      }
-
-      return contactList;
-    }
-
     public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
     {
       // Todo check for multiple entries
@@ -278,6 +244,46 @@
       }
 
       return null;
+    }
+
+    private static ChatMessage ReadChatMessage(TryteStringMessage tryte)
+    {
+      var trytesString = tryte.Message.ToString();
+      var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
+      var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
+
+      var dateTrytes = new TryteString(
+        trytesString.Substring(
+          secondBreakIndex + ChiotaConstants.SecondBreak.Length,
+          trytesString.Length - secondBreakIndex - ChiotaConstants.SecondBreak.Length - 1));
+      var firstPart = trytesString[trytesString.Length - 1] == 'A';
+      var date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture);
+      var signature = trytesString.Substring(firstBreakIndex + ChiotaConstants.FirstBreak.Length, 30);
+      var messageTrytes = trytesString.Substring(0, firstBreakIndex);
+      return new ChatMessage { Message = messageTrytes, Date = date, Signature = signature, IsFirstPart = firstPart };
+    }
+
+    private static bool TwoPartsOfMessage(List<ChatMessage> sortedEncryptedMessages, int i)
+    {
+      return sortedEncryptedMessages[i].IsFirstPart != sortedEncryptedMessages[i + 1].IsFirstPart;
+    }
+
+    private static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
+    {
+      var index = 0;
+      while (index < contactList.Count - 1)
+      {
+        if (contactList[index].ContactAddress == contactList[index + 1].ContactAddress)
+        {
+          contactList.RemoveAt(index);
+        }
+        else
+        {
+          index++;
+        }
+      }
+
+      return contactList;
     }
   }
 }

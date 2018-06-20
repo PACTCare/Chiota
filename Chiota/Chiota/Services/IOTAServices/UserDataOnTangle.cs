@@ -1,13 +1,11 @@
-﻿namespace Chiota.IOTAServices
+﻿namespace Chiota.Services.IOTAServices
 {
   using System.Collections.Generic;
-  using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
-
-  using Newtonsoft.Json;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Curl;
@@ -23,37 +21,17 @@
       this.user = user;
     }
 
-    public async Task<User> UpdateUserWithOwnDataAddress()
-    {
-      // This will return information even after a snapshot, because it's stored local
-      var trytes = await this.user.TangleMessenger.GetMessagesAsync(this.user.OwnDataAdress, 3);
-      foreach (var tryte in trytes)
-      {
-        var decryptedPrivateData = new NtruKex(true).Decrypt(this.user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString());
-
-        if (decryptedPrivateData != null)
-        {
-          var decryptedUser = JsonConvert.DeserializeObject<OwnDataUser>(Encoding.UTF8.GetString(decryptedPrivateData));
-          this.user.Name = decryptedUser.Name;
-          this.user.ImageUrl = ChiotaConstants.ImagePath + decryptedUser.ImageUrl;
-        }
-      }
-
-      return this.user;
-    }
-
     public async Task<User> UniquePublicKey()
     {
-      // load from tangle not from SQLlit
-      var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress, true);
+      var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress, true);
       var requestAdressTrytes = new TryteString(this.user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
 
       // after a snapshot, upload public key again
-      if (contacts.Count == 0)
+      if (publicKeyList.Count == 0)
       {
         await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, this.user.PublicKeyAddress);
       }
-      else if (contacts.Count > 1) 
+      else if (publicKeyList.Count > 1) 
       {
         // more than one key at this address 
         // generate a new public key address based on a changed seed until you find an unused address 

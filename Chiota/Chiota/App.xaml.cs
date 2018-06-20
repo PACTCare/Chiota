@@ -1,7 +1,5 @@
 ﻿namespace Chiota
 {
-  using System.Net;
-
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
@@ -34,14 +32,6 @@
 
       if (CrossConnectivity.Current.IsConnected)
       {
-        // First time set default values
-        if (!Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey))
-        {
-          Current.Properties[ChiotaConstants.SettingsPowKey] = true;
-          Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.carriota.com:443";
-          await Current.SavePropertiesAsync();
-        }
-
         var secureStorage = new SecureStorage();
         if (secureStorage.CheckUserStored())
         {

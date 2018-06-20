@@ -2,7 +2,6 @@
 {
   using System;
   using System.IO;
-  using System.Text;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -15,8 +14,6 @@
   using Chiota.Services.UserServices;
 
   using FFImageLoading;
-
-  using Newtonsoft.Json;
 
   using Plugin.Media;
   using Plugin.Media.Abstractions;
@@ -37,7 +34,8 @@
 
     public SetupViewModel(User user)
     {
-      this.ImageSource = "https://chiota.blob.core.windows.net/userimages/default.png";
+      this.ImageSource = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
+      this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
       user.ImageUrl = this.ImageSource;
       this.SubmitCommand = new Command(async () => { await this.FinishedSetup(user); });
     }
@@ -102,24 +100,18 @@
       }
     }
 
-    private static Task SendParallelAsync(User user, TryteString publicKeyTrytes, string serializeObject)
-    {
-      var encryptedOwnData = new NtruKex(true).Encrypt(user.NtruKeyPair.PublicKey, Encoding.UTF8.GetBytes(serializeObject));
-      var ownDataToTangle = user.TangleMessenger.SendMessageAsync(new TryteString(encryptedOwnData.EncodeBytesAsString() + ChiotaConstants.End), user.OwnDataAdress);
-
-      // only way to store it with one transaction, json too big
-      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
-
-      var publicKeyToTangle = user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
-      return Task.WhenAll(ownDataToTangle, publicKeyToTangle);
-    }
-
-    private static async Task<User> StoreDataOnTangle(User user)
+    private static async Task StorePublicKeyOnTangle(User user)
     {
       var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
-      var serializeObject = JsonConvert.SerializeObject(user.ToUserData());
-      await SendParallelAsync(user, new TryteString(publicKeyTrytes), serializeObject);
-      return user;
+      var requestAdressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
+      await user.TangleMessenger.SendMessageAsync(requestAdressTrytes, user.PublicKeyAddress);
+    }
+
+    private static async Task StoreUserData(User user)
+    {
+      Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] = user.ImageUrl;
+      Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] = user.Name;
+      await Application.Current.SavePropertiesAsync();
     }
 
     private async Task FinishedSetup(User user)
@@ -144,7 +136,8 @@
           this.mediaFile.Dispose();
         }
 
-        user = await StoreDataOnTangle(user);
+        await StoreUserData(user);
+        await StorePublicKeyOnTangle(user);
         new SecureStorage().StoreUser(user);
 
         // Fire setup completed event to allow consumers to add behaviour

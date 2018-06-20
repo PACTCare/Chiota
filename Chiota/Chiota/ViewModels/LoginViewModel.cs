@@ -9,6 +9,7 @@
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.IOTAServices;
   using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
   using Chiota.Views;
@@ -27,8 +28,6 @@
     private string randomSeed = Seed.Random().Value;
 
     private bool storeSeed;
-
-    private UserDataOnTangle dataOnTangle;
 
     private User user;
 
@@ -92,16 +91,18 @@
           this.user = await this.UserFactory.Create(this.RandomSeed, this.StoreSeed);
         }
 
-        this.dataOnTangle = new UserDataOnTangle(this.user);
-        this.user = await this.dataOnTangle.UpdateUserWithOwnDataAddress();
+        var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress);
 
-        if (this.user.Name == null)
+        // PublicKeyList should never be zero if this seed was used before (checks sqlite)
+        if (publicKeyList.Count == 0)
         {
+          this.user.ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string;
+          this.user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + this.user.PublicKeyAddress] as string;
           await this.Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(this.user)));
         }
         else
         {
-          this.user = await this.dataOnTangle.UniquePublicKey();
+          this.user = await new UserDataOnTangle(this.user).UniquePublicKey();
           new SecureStorage().StoreUser(this.user);
 
           if (this.user.NtruKeyPair != null)

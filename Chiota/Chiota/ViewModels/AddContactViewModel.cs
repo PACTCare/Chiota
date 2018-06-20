@@ -64,7 +64,7 @@
       DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
     }
 
-    private static async Task SendParallel(Contact loadedContact)
+    private static async Task SaveParallel(Contact loadedContact)
     {
       var requestContact = new Contact
                              {
@@ -80,11 +80,7 @@
                                PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress
                              };
 
-      var encryptedAccept = new NtruKex(true).Encrypt(UserService.CurrentUser.NtruKeyPair.PublicKey, Encoding.UTF8.GetBytes(requestContact.ChatAddress + ChiotaConstants.Accepted));
-
-      // Todo: doesn't need to be on the tangle!!!!!!!!
-      // automaticly add to own accept list, so contact is shown as soon as it as accepted by the other user
-      var addToOwnAcceptList = UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedAccept.EncodeBytesAsString() + ChiotaConstants.End), UserService.CurrentUser.ApprovedAddress);
+      var saveSqlContact = new SqLiteHelper().SaveContact(requestContact.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
 
       // encrypt contact request? too much infos needed here for one message needs to get request address plus chatadress 
       var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(requestContact), loadedContact.ContactAddress);
@@ -92,7 +88,7 @@
       var encryptedChatPasSalt = new NtruKex(true).Encrypt(loadedContact.NtruKey, Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
       var encryptedChatKeyToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), requestContact.ChatKeyAddress);
 
-      await Task.WhenAll(addToOwnAcceptList, chatInformationToTangle, encryptedChatKeyToTangle);
+      await Task.WhenAll(saveSqlContact, chatInformationToTangle, encryptedChatKeyToTangle);
     }
 
     private async Task ScanBarcode()
@@ -131,7 +127,7 @@
           }
           else if (contacts[0]?.NtruKey != null && contacts[0].ContactAddress != null)
           {
-            await SendParallel(contacts[0]);
+            await SaveParallel(contacts[0]);
 
             this.SuccessfulRequestPrompt();
           }

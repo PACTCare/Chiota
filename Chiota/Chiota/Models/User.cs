@@ -1,6 +1,7 @@
 ﻿namespace Chiota.Models
 {
   using Chiota.IOTAServices;
+  using Chiota.Services.IOTAServices;
 
   using Tangle.Net.Entity;
 
@@ -12,11 +13,7 @@
 
     public string ImageUrl { get; set; }
 
-    public string OwnDataAdress { get; set; }
-
     public string RequestAddress { get; set; }
-
-    public string ApprovedAddress { get; set; }
 
     public string PublicKeyAddress { get; set; }
 

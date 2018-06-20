@@ -6,24 +6,17 @@
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
-  using Chiota.Persistence;
-  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
-  using IOTAServices;
   using Models;
   using Services;
-
-  using SQLite;
 
   using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
   {
     private readonly List<BotObject> bots;
-
-    private readonly SQLiteAsyncConnection connection;
 
     private ObservableCollection<ContactListViewModel> contactList;
 
@@ -35,8 +28,6 @@
 
     public ContactViewModel()
     {
-      this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
-      this.connection.CreateTableAsync<SqlLiteImage>();
       this.bots = BotList.ReturnBotList();
     }
 
@@ -127,11 +118,8 @@
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactTaskList = UserService.CurrentUser.TangleMessenger.GetJsonMessageAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
-      var approvedContactsTrytes = UserService.CurrentUser.TangleMessenger.GetMessagesAsync(UserService.CurrentUser.ApprovedAddress, 3);
-
-      var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(await approvedContactsTrytes, UserService.CurrentUser);
-      var contactRequestList = await contactTaskList;
+      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetJsonMessageAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
+      var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(UserService.CurrentUser.PublicKeyAddress);
 
       // all infos are taken from contactRequestList
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();

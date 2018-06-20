@@ -1,8 +1,8 @@
-﻿namespace Chiota.Models
+﻿namespace Chiota.Models.SqLite
 {
   using SQLite;
 
-  public class SqlLiteMessage
+  public class SqLiteMessage
   {
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }

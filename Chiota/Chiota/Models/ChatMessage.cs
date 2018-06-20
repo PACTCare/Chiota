@@ -10,6 +10,6 @@
 
     public string Signature { get; set; }
 
-    public bool FirstPart { get; set; }
+    public bool IsFirstPart { get; set; }
   }
 }

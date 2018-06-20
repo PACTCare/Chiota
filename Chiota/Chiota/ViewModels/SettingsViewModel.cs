@@ -6,6 +6,7 @@
 
   using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services.IOTAServices;
   using Chiota.Services.UserServices;
 
   using RestSharp;
@@ -56,12 +57,9 @@
 
     public void GetSettings()
     {
-      if (Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey))
-      {
-        var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
-        this.RemotePow = remote == true;
-        this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
-      }
+      var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
+      this.RemotePow = remote == true;
+      this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
     }
 
     private void OpenPrivacyPolicy()

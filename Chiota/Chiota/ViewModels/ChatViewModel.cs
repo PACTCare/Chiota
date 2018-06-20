@@ -39,7 +39,7 @@
 
     private ObservableCollection<MessageViewModel> messagesList;
 
-    private bool isRunning;
+    private bool loadNewMessages;
 
     private int messageNumber;
 
@@ -79,7 +79,7 @@
     public async void OnAppearing()
     {
       this.PageIsShown = true;
-
+      this.loadNewMessages = true;
       if (this.ntruChatKeyPair == null)
       {
         var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, this.contact.ChatKeyAddress);
@@ -115,6 +115,7 @@
       else if (this.OutGoingText?.Length > 0 && !this.IsBusy)
       {
         this.IsBusy = true;
+        this.loadNewMessages = false;
         var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 
         var senderId = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30);
@@ -128,6 +129,7 @@
         }
 
         await this.AddNewMessagesAsync(this.Messages);
+        this.loadNewMessages = true;
         this.IsBusy = false;
         this.OutGoingText = null;
       }
@@ -139,7 +141,6 @@
       var secoundTryte = new TryteString(message.Substring(2070) + chiotaInfo + "B" + ChiotaConstants.End);
       var firstMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(firstTryte, this.contact.ChatAddress);
       var secoundMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(secoundTryte, this.contact.ChatAddress);
-
       return await Task.WhenAll(firstMessage, secoundMessage);
     }
 
@@ -154,9 +155,9 @@
 
     private async Task AddNewMessagesAsync(ICollection<MessageViewModel> messages)
     {
-      if (!this.isRunning)
+      if (this.loadNewMessages)
       {
-        this.isRunning = true;
+        this.loadNewMessages = false;
         var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact, UserService.CurrentUser.TangleMessenger);
         if (newMessages.Count > 0)
         {
@@ -169,7 +170,7 @@
           this.ScrollToNewMessage();
         }
 
-        this.isRunning = false;
+        this.loadNewMessages = true;
       }
     }
 
@@ -180,6 +181,7 @@
       {
         // next chat address is generated based on decrypted messages to make sure nobody excapt the people chatting know the next address
         // it's also based on an incrementing Trytestring, so if you always send the same messages it won't result in the same next address
+        this.loadNewMessages = false;
         var rgx = new Regex("[^A-Z]");
         var incrementPart = Helper.TryteStringIncrement(this.contact.ChatAddress.Substring(0, 15));
 
@@ -189,7 +191,7 @@
         str = str.Truncate(70);
         this.contact.ChatAddress = str + this.contact.ChatAddress.Substring(str.Length);
         this.messageNumber = 0;
-        this.isRunning = false;
+        this.loadNewMessages = true;
         await this.AddNewMessagesAsync(this.Messages);
       }
     }

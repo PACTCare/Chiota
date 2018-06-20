@@ -4,7 +4,6 @@
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
 
@@ -69,12 +68,8 @@
         if (user != null)
         {
           // request list is needed for information
-          var contactTaskList = user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
-          var approvedContactsTrytes = user.TangleMessenger.GetMessagesAsync(user.ApprovedAddress, 3);
-
-          var contactsOnApproveAddress = IotaHelper.FilterApprovedContacts(
-            await approvedContactsTrytes, user);
-          var contactRequestList = await contactTaskList;
+          var contactRequestList = await user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
+          var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(user.PublicKeyAddress);
 
           var approvedContacts =
             contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
