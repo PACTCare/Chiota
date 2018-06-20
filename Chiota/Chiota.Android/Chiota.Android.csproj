@@ -136,7 +136,6 @@
     <Compile Include="Renderer\Scrollbardisabledrenderer.cs" />
     <Compile Include="Services\NotificationsTask.cs" />
     <Compile Include="Services\PeriodicJob.cs" />
-    <Compile Include="Services\Picture_Droid.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>

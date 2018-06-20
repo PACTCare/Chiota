@@ -4,7 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Models;
-  using Chiota.Services.IOTAServices;
+  using Chiota.Services.Iota;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
@@ -42,15 +42,6 @@
                };
     }
 
-    /// <summary>
-    /// The generate chiota addresses.
-    /// </summary>
-    /// <param name="seed">
-    /// The seed.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
     private static async Task<List<Address>> GenerateChiotaAddresses(Seed seed)
     {
       // addresses can be generated based on each other to make it faster

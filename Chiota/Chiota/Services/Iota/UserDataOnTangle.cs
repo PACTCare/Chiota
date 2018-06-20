@@ -1,9 +1,8 @@
-﻿namespace Chiota.Services.IOTAServices
+﻿namespace Chiota.Services.Iota
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
-  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
 

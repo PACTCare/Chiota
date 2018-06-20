@@ -10,9 +10,9 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;

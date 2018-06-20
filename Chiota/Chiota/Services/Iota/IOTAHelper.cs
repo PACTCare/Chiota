@@ -1,4 +1,4 @@
-﻿namespace Chiota.IOTAServices
+﻿namespace Chiota.Services.Iota
 {
   using System;
   using System.Collections.Generic;
@@ -9,7 +9,6 @@
 
   using Chiota.Models;
   using Chiota.Services;
-  using Chiota.Services.IOTAServices;
   using Chiota.ViewModels;
 
   using Newtonsoft.Json;

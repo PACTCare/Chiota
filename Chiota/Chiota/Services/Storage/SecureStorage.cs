@@ -3,7 +3,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Models;
-  using Chiota.Services.IOTAServices;
+  using Chiota.Services.Iota;
 
   using Plugin.SecureStorage;
 

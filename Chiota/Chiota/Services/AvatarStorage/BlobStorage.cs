@@ -14,7 +14,7 @@
 
     public BlobStorage()
     {
-      var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=chiota;AccountKey=rq16iEilYY0dRx37MPD06Em9J5QUGFZp12qYtRxnujitDAuhhHMSqRDD/77pCebyHo4F6hZpeQPtGJoAOWaGnQ==;EndpointSuffix=core.windows.net"); // <-Input Blog Storage Key
+      var storageAccount = CloudStorageAccount.Parse(""); // <-Input Blog Storage Key
       this.blobClient = storageAccount.CreateCloudBlobClient();
     }
 

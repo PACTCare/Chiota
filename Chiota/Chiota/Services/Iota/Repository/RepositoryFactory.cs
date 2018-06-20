@@ -34,18 +34,6 @@
                                                     "https://field.carriota.com:443"
                                                   };
 
-    /// <summary>
-    /// The generate node.
-    /// </summary>
-    /// <param name="doRemotePoW">
-    /// The doRemotePoW.
-    /// </param>
-    /// <param name="nodeUri">
-    /// The node Uri.
-    /// </param>
-    /// <returns>
-    /// The <see cref="RestIotaRepository"/>.
-    /// </returns>
     public static RestIotaRepository GenerateNode(bool doRemotePoW, string nodeUri)
     {
       var iotaClient = new RestIotaClient(new RestClient(nodeUri) { Timeout = ClientTimeoutMilliseconds });

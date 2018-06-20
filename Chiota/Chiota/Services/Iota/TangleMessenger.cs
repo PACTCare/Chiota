@@ -1,9 +1,10 @@
-﻿namespace Chiota.Services.IOTAServices
+﻿namespace Chiota.Services.Iota
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
-  using Chiota.Persistence;
+  using Chiota.Models;
+  using Chiota.Models.SqLite;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota.Repository;
 
@@ -28,8 +29,8 @@
     public TangleMessenger(Seed seed, int minWeightMagnitude = 14)
     {
       this.seed = seed;
-
-      this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
+      this.MinWeight = minWeightMagnitude;
+      this.repository = new RepositoryFactory().Create();
       this.ShortStorageAddressList = new List<string>();
       this.sqLite = new SqLiteHelper();
     }

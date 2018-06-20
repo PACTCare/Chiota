@@ -5,11 +5,10 @@
   using System.Windows.Input;
 
   using Chiota.Events;
-  using Chiota.IOTAServices;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.IOTAServices;
+  using Chiota.Services.Iota;
   using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;

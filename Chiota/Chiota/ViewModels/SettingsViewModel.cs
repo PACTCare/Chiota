@@ -4,15 +4,12 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.IOTAServices;
   using Chiota.Models;
+  using Chiota.Services.Iota;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
 
-  using RestSharp;
-
   using Tangle.Net.Repository;
-  using Tangle.Net.Repository.Client;
 
   using Xamarin.Forms;
 
