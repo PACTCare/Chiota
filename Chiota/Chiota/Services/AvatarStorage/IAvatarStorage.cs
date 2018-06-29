@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Services.AvatarStorage
 {
+  using System.IO;
   using System.Threading.Tasks;
 
   /// <summary>
@@ -13,12 +14,12 @@
     /// <param name="name">
     /// The name.
     /// </param>
-    /// <param name="imageAsBytes">
-    /// The image as bytes.
+    /// <param name="imageAsStream">
+    /// The image as stream.
     /// </param>
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    Task<string> UploadEncryptedAsync(string name, byte[] imageAsBytes);
+    Task<string> UploadEncryptedAsync(string name, Stream imageAsStream);
   }
 }

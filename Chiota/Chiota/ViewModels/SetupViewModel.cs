@@ -1,7 +1,6 @@
 ﻿namespace Chiota.ViewModels
 {
   using System;
-  using System.IO;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
@@ -86,21 +85,6 @@
       }
     }
 
-    private static byte[] StreamToByte(Stream input)
-    {
-      var buffer = new byte[16 * 1024];
-      using (var ms = new MemoryStream())
-      {
-        int read;
-        while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-        {
-          ms.Write(buffer, 0, read);
-        }
-
-        return ms.ToArray();
-      }
-    }
-
     private static async Task StorePublicKeyOnTangle(User user)
     {
       var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
@@ -133,7 +117,7 @@
                          .DownSample(300)
                          .AsJPGStreamAsync();
 
-          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), StreamToByte(imageStream));
+          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), imageStream);
           this.mediaFile.Dispose();
         }
 

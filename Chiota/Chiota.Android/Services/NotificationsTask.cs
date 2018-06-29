@@ -39,7 +39,7 @@
           if (user != null)
           {
             // request list is needed for information
-            var contactRequestList = await user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
+            var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync<Contact>(user.RequestAddress, 3);
             var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(user.PublicKeyAddress);
 
             var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer())

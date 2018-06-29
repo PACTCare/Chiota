@@ -3,7 +3,6 @@
   using System;
 
   using Chiota.Models;
-  using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
@@ -56,12 +55,10 @@
 
     private void HandleItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-      if (!(e.SelectedItem is Contact contact))
+      if (e?.SelectedItem is Contact contact)
       {
-        return;
+        (this.BindingContext as ContactViewModel)?.OpenChatPage(contact);
       }
-
-      (this.BindingContext as ContactViewModel)?.OpenChatPage(contact);
     }
 
     private void HandleNewContactClick(object sender, EventArgs e)

@@ -5,9 +5,17 @@
   using System.Windows.Input;
 
   using Chiota.Models;
+  using Chiota.Services;
+  using Chiota.Services.AvatarStorage;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
+
+  using FFImageLoading;
+
+  using Plugin.Media;
+  using Plugin.Media.Abstractions;
 
   using Tangle.Net.Repository;
 
@@ -21,11 +29,37 @@
 
     private bool remotePoW = true;
 
+    private string username;
+
+    private string imageSource;
+
+    private MediaFile mediaFile;
+
     private string defaultNode = "https://field.carriota.com:443";
 
     public SettingsViewModel()
     {
       this.GetSettings();
+    }
+
+    public string Username
+    {
+      get => this.username;
+      set
+      {
+        this.username = value;
+        this.RaisePropertyChanged();
+      }
+    }
+
+    public string ImageSource
+    {
+      get => this.imageSource;
+      set
+      {
+        this.imageSource = value;
+        this.RaisePropertyChanged();
+      }
     }
 
     public bool RemotePow
@@ -52,11 +86,29 @@
 
     public ICommand PrivacyCommand => new Command(this.OpenPrivacyPolicy);
 
-    public void GetSettings()
+    public async void AddImage()
+    {
+      await CrossMedia.Current.Initialize();
+
+      if (!CrossMedia.Current.IsPickPhotoSupported)
+      {
+        return;
+      }
+
+      this.mediaFile = await CrossMedia.Current.PickPhotoAsync();
+      if (this.mediaFile?.Path != null)
+      {
+        this.ImageSource = this.mediaFile.Path;
+      }
+    }
+
+    private void GetSettings()
     {
       var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
       this.RemotePow = remote == true;
       this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
+      this.ImageSource = Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string;
+      this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string;
     }
 
     private void OpenPrivacyPolicy()
@@ -82,6 +134,19 @@
       }
       else
       {
+        if (this.mediaFile?.Path != null)
+        {
+          var imageStream = await ImageService.Instance
+                              .LoadFile(this.mediaFile.Path)
+                              .DownSample(300)
+                              .AsJPGStreamAsync();
+
+          UserService.CurrentUser.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(UserService.CurrentUser.Name, UserService.CurrentUser.PublicKeyAddress), imageStream);
+          this.mediaFile.Dispose();
+        }
+
+        Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] = UserService.CurrentUser.ImageUrl;
+        Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] = this.Username;
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
         await Application.Current.SavePropertiesAsync();

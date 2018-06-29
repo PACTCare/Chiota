@@ -6,11 +6,10 @@
 
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.Storage;
 
   using Windows.ApplicationModel.Background;
   using Windows.UI.Notifications;
-
-  using Chiota.Services.Storage;
 
   /// <summary>
   /// The main page.
@@ -69,8 +68,7 @@
         var user = await secureStorage.GetUser();
         if (user != null)
         {
-          // request list is needed for information
-          var contactRequestList = await user.TangleMessenger.GetJsonMessageAsync<Contact>(user.RequestAddress, 3);
+          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync<Contact>(user.RequestAddress, 3);
           var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(user.PublicKeyAddress);
 
           var approvedContacts =

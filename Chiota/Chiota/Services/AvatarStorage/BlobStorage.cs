@@ -16,10 +16,12 @@
     {
       var storageAccount = CloudStorageAccount.Parse(""); // <-Input Blog Storage Key
       this.blobClient = storageAccount.CreateCloudBlobClient();
-    }
-
-    public async Task<string> UploadEncryptedAsync(string name, byte[] imageAsBytes)
+    } 
+    
+    public async Task<string> UploadEncryptedAsync(string name, Stream imageAsStream)
     {
+      var imageAsBytes = StreamToByte(imageAsStream);
+
       // Retrieve reference to a previously created container.
       var container = this.blobClient.GetContainerReference("userimages");
       var fileName = name + "." + "jpg";
@@ -35,6 +37,21 @@
       }
 
       return ChiotaConstants.ImagePath + fileName;
+    }
+
+    private static byte[] StreamToByte(Stream input)
+    {
+      var buffer = new byte[16 * 1024];
+      using (var ms = new MemoryStream())
+      {
+        int read;
+        while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+        {
+          ms.Write(buffer, 0, read);
+        }
+
+        return ms.ToArray();
+      }
     }
   }
 }

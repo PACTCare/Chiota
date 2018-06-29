@@ -35,10 +35,15 @@
         TangleMessenger = new TangleMessenger(storedSeed),
       };
 
+      // old version check
+      if (!Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsImageKey + user.PublicKeyAddress))
+      {
+        return null;
+      }
+
       user.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.PublicKeyAddress);
       user.ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
       user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
-
       try
       {
         return await new UserDataOnTangle(user).UniquePublicKey();

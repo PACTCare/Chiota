@@ -19,8 +19,7 @@
 
   public class TangleMessenger
   {
-    // private readonly TableStorage tableStorage;
-    private int MinWeight { get; }
+    private const int Depth = 8;
 
     private readonly Seed seed;
 
@@ -39,6 +38,8 @@
 
     public List<string> ShortStorageAddressList { get; set; }
 
+    private int MinWeight { get; }
+
     public async Task<bool> SendMessageAsync(TryteString message, string address, int retryNumber = 3)
     {
       var roundNumber = 0;
@@ -51,7 +52,7 @@
 
         try
         {
-          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, 27, this.MinWeight);
+          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, Depth, this.MinWeight);
           return true;
         }
         catch (Exception e)
@@ -64,45 +65,37 @@
       return false;
     }
 
-    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false, bool dontLoadSql = false)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false, bool dontLoadSql = false, bool alwaysLoadSql = false)
     {
       var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
-      var tableList = new List<SqLiteMessage>();
+      var sqlTable = new List<SqLiteMessage>();
       var shortStorageHashes = new List<Hash>();
 
-      try
+      if (!dontLoadSql)
       {
-        if (!dontLoadSql)
-        {
-          tableList = await this.sqLite.LoadTransactions(addresse);
+        sqlTable = await this.sqLite.LoadTransactions(addresse);
 
-          var alreadyLoaded = this.AddressLoadedCheck(addresse);
-          foreach (var sqlLiteMessage in tableList)
+        var alreadyLoaded = this.AddressLoadedCheck(addresse);
+        foreach (var sqlLiteMessage in sqlTable)
+        {
+          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+          if (!alreadyLoaded || alwaysLoadSql)
           {
-            shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
-            var message = new TryteStringMessage
-                            {
-                              Message = new TryteString(sqlLiteMessage.MessageTryteString),
-                              Stored = true
-                            };
-            if (!alreadyLoaded)
-            {
-              messagesList.Add(message);
-            }
+            messagesList.Add(new TryteStringMessage
+                               {
+                                 Message = new TryteString(sqlLiteMessage.MessageTryteString),
+                                 Stored = true
+                               });
           }
         }
-      }
-      catch
-      {
-        // ignored
       }
 
       // if more than 2*Chiotaconstants.MessagesOnAddress messages on address, don't try to load new messages
       var chatCheck = true;
       if (getChatMessages)
       {
-        chatCheck = tableList.Count < (2 * ChiotaConstants.MessagesOnAddress);
+        chatCheck = sqlTable.Count < (2 * ChiotaConstants.MessagesOnAddress);
       }
 
       while (roundNumber < retryNumber && chatCheck)
@@ -132,31 +125,19 @@
       return messagesList;
     }
 
-    public async Task<List<T>> GetJsonMessageAsync<T>(string addresse, int retryNumber = 1)
+    // Without ShortStorage, always reload contacts
+    public async Task<List<T>> GetContactsJsonAsync<T>(string addresse, int retryNumber = 1)
     {
       var roundNumber = 0;
       var messagesList = new List<T>();
       var shortStorageHashes = new List<Hash>();
 
-      try
+      var sqlTable = await this.sqLite.LoadTransactions(addresse);
+      foreach (var sqlLiteMessage in sqlTable)
       {
-        var tableList = await this.sqLite.LoadTransactions(addresse);
-        var alreadyLoaded = this.AddressLoadedCheck(addresse);
-
-        foreach (var sqlLiteMessage in tableList)
-        {
-          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
-
-          if (!alreadyLoaded)
-          {
-            var deserializedObject = JsonConvert.DeserializeObject<T>(sqlLiteMessage.MessageTryteString);
-            messagesList.Add(deserializedObject);
-          }
-        }
-      }
-      catch
-      {
-        // ignored
+        shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+        var deserializedObject = JsonConvert.DeserializeObject<T>(sqlLiteMessage.MessageTryteString);
+        messagesList.Add(deserializedObject);
       }
 
       while (roundNumber < retryNumber)
@@ -192,12 +173,12 @@
     private static Transfer CreateTransfer(TryteString message, string address)
     {
       return new Transfer
-               {
-                 Address = new Address(address),
-                 Message = message,
-                 Tag = new Tag(ChiotaConstants.Tag),
-                 Timestamp = Timestamp.UnixSecondsTimestamp
-               };
+      {
+        Address = new Address(address),
+        Message = message,
+        Tag = new Tag(ChiotaConstants.Tag),
+        Timestamp = Timestamp.UnixSecondsTimestamp
+      };
     }
 
     private bool AddressLoadedCheck(string addresse)

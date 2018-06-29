@@ -1,6 +1,7 @@
 ﻿namespace Chiota.Views
 {
-  using Chiota.Models;
+  using System;
+
   using Chiota.ViewModels;
 
   using Xamarin.Forms;
@@ -20,6 +21,11 @@
       vm.DisplayInvalidNodePrompt += () => this.DisplayAlert("Error", "Invalid Node, try again", "OK");
       vm.DisplaySettingsChangedPrompt += () => this.DisplayAlert("Saved", "Settings successfully updated", "OK");
       this.BindingContext = vm;
+    }
+
+    private void Button_OnClicked(object sender, EventArgs e)
+    {
+      (this.BindingContext as SettingsViewModel)?.AddImage();
     }
   }
 }

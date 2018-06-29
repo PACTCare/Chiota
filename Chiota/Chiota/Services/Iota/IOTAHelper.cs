@@ -217,8 +217,8 @@
 
     public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
     {
-      // Todo check for multiple entries
-      var trytes = await user.TangleMessenger.GetMessagesAsync(chatKeyAddress, 3);
+      // Todo sometimes only one tryte
+      var trytes = await user.TangleMessenger.GetMessagesAsync(chatKeyAddress, 3, false, false, true);
       var chatPasSalt = new List<string>();
       foreach (var tryte in trytes)
       {

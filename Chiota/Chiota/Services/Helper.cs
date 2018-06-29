@@ -1,13 +1,7 @@
 ﻿namespace Chiota.Services
 {
   using System;
-  using System.Net;
   using System.Text;
-  using System.Threading.Tasks;
-
-  using Chiota.Models;
-  using Chiota.Services.AvatarStorage;
-  using Chiota.Services.DependencyInjection;
 
   using Tangle.Net.Entity;
 
@@ -53,24 +47,6 @@
     public static string ImageNameGenerator(string name, string publicKeyAddress)
     {
       return publicKeyAddress.Substring(0, 10) + name;
-    }
-
-    public static async Task UploadImageForNewUser(string contactAddress, User user)
-    {
-      var ntru = new NtruKex();
-      var decrypt = ntru.Decrypt(user.NtruKeyPair, DownloadByteArray(user.ImageUrl));
-
-      // encrypt for new user with public pair, slower
-      var enryptedImage = ntru.Encrypt(user.NtruKeyPair.PublicKey, decrypt);
-      user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(ImageNameGenerator(user.Name, user.PublicKeyAddress) + contactAddress.Substring(0, 5), enryptedImage);
-    }
-
-    public static byte[] DownloadByteArray(string imageUrl)
-    {
-      using (var wc = new WebClient())
-      {
-        return wc.DownloadData(imageUrl);
-      }
     }
   }
 }

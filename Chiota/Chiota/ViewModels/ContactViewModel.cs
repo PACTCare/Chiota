@@ -118,7 +118,7 @@
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetJsonMessageAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
+      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
       var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(UserService.CurrentUser.PublicKeyAddress);
 
       // all infos are taken from contactRequestList
@@ -154,7 +154,7 @@
 
       foreach (var contact in contactsWithoutResponse)
       {
-        if (contact.Request)
+        if (contact?.Request == true)
         {
           var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
           this.contacts.Add(contactCell);

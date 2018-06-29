@@ -128,8 +128,8 @@
           this.DisplayMessageSendErrorPrompt();
         }
 
-        await this.AddNewMessagesAsync(this.Messages);
         this.loadNewMessages = true;
+        await this.AddNewMessagesAsync(this.Messages);
         this.IsBusy = false;
         this.OutGoingText = null;
       }

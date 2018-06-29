@@ -1,7 +1,5 @@
 ﻿namespace Chiota
 {
-  using Chiota.Models;
-  using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
@@ -11,8 +9,6 @@
   using Plugin.Connectivity;
 
   using Xamarin.Forms;
-
-  using LoginPage = Views.LoginPage;
 
   /// <summary>
   /// The app.
@@ -30,6 +26,7 @@
     protected override async void OnStart()
     {
       DependencyResolver.Init();
+
       var navigationService = DependencyResolver.Resolve<INavigationService>();
 
       if (CrossConnectivity.Current.IsConnected)
@@ -39,10 +36,8 @@
         {
           var user = await secureStorage.GetUser();
 
-          // user = null => setup probably interrupted
           if (user != null)
           {
-            // user needs to check address
             UserService.SetCurrentUser(user);
             this.MainPage = new NavigationPage(navigationService.LoggedInEntryPoint);
           }

@@ -21,7 +21,7 @@
     // used for changing the address after 6 or more decryptable! messages
     public const int MessagesOnAddress = 6;
 
-    public const string ImagePath = "https://chiota.blob.core.windows.net/encryptedimages/";
+    public const string ImagePath = "https://chiota.blob.core.windows.net/userimages/";
 
     public const string SettingsPowKey = "RemotePow";
 
