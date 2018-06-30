@@ -28,7 +28,7 @@ During the process of creating the health care chatbot Florence, we found out th
 
 # About me
 My name is David Hawig and I am the developer of Florence.chat. You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]pact[dot]care). 
-My current Chiota contact address is OZQQEPQ9AH9QUX9BQAWOBCTZNAFIFYYWMZUDKFUKGQAIEFAXBZKWCMMOXFU9PDCAMAHDIUTCZPZK9RKPZ
+My current Chiota contact address is JUBQJEUKMAB9ZOCONDSDCCHPIMOWNQSJCSIXYAXIFLFVSRJXETXJLKJAWWJHWCSW9UONEGJMQBWHWUWRZ
 
 We welcome any kind of help or contribution!
 
