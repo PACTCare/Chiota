@@ -17,7 +17,7 @@ There are several reasons for that:
 -	NTRU or some other form of key exchange is needed for the MAM-Layer anyway
 -	For the MAM Layer, you have a lot of different transactions and currently, the proof-of-work takes really long, so the goal is to reduce the number of necessary transactions
 -	You need to store the state of the MAM Layer (root hash, channel keys, etc.). If you want to store these things quantum secure on the tangle it results in more messages and therefore additional PoW
-- NTRU can be extremly fast, see [Speed records for NTRU](https://homes.esat.kuleuven.be/~fvercaut/papers/ntru_gpu.pdf) 
+- NTRU can be extremely fast, see [Speed records for NTRU](https://homes.esat.kuleuven.be/~fvercaut/papers/ntru_gpu.pdf) 
 
 The disadvantage of the current system:
 -	You are limited to less characters per transaction because the NTRU encryption needs more space 
