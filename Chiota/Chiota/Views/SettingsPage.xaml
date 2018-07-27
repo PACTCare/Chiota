@@ -9,14 +9,16 @@
                HorizontalOptions="FillAndExpand" 
                VerticalOptions="FillAndExpand">
     <controls:CircleImage
-      HeightRequest="150"
-      WidthRequest="150"
+      HeightRequest="100"
+      WidthRequest="100"
       Aspect="AspectFill"
       HorizontalOptions="Center"
-      VerticalOptions="Center" Source="{Binding ImageSource}" ></controls:CircleImage>
+      VerticalOptions="Center"
+      Margin="0,0,0,10"
+      Source="{Binding ImageSource}" ></controls:CircleImage>
   <Frame BackgroundColor="#1d4999" 
          HasShadow="False">
-  <Grid  RowSpacing="10" ColumnSpacing="20" 
+  <Grid  RowSpacing="10" ColumnSpacing="10" 
          HorizontalOptions="CenterAndExpand"
          VerticalOptions="FillAndExpand">
     <Grid.RowDefinitions>
@@ -28,7 +30,7 @@
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto"></ColumnDefinition>
-      <ColumnDefinition Width="Auto"></ColumnDefinition>
+      <ColumnDefinition Width="100"></ColumnDefinition>
     </Grid.ColumnDefinitions>
     <Button Grid.Row="0" Grid.Column="0" 
             Grid.ColumnSpan="2"
@@ -67,7 +69,7 @@
   </Grid>
   </Frame>
     <Label Text="Open Privacy Policy" 
-           Margin="0,10,0,10"
+           Margin="0,5,0,5"
            TextColor="#5874ca" 
            FontSize="16"
            HorizontalOptions="Start">
@@ -75,7 +77,7 @@
         <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
       </Label.GestureRecognizers>
     </Label>
-    <Button Margin="0,20,0,0"
+    <Button Margin="0,5,0,0"
             Command="{Binding SaveCommand}"
             Text="Save" 
             TextColor="White"  

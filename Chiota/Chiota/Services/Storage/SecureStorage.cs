@@ -42,7 +42,7 @@
       }
 
       user.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(user.Seed.ToString().ToLower(), user.PublicKeyAddress);
-      user.ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
+      user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
       user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
       try
       {

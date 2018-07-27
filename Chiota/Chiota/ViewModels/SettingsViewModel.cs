@@ -5,14 +5,10 @@
   using System.Windows.Input;
 
   using Chiota.Models;
-  using Chiota.Services;
-  using Chiota.Services.AvatarStorage;
-  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.Iota.Repository;
+  using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
-
-  using FFImageLoading;
 
   using Plugin.Media;
   using Plugin.Media.Abstractions;
@@ -107,7 +103,7 @@
       var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
       this.RemotePow = remote == true;
       this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
-      this.ImageSource = Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string;
+      this.ImageSource = ChiotaConstants.IpfsHashGateway + Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string;
       this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string;
     }
 
@@ -136,16 +132,16 @@
       {
         if (this.mediaFile?.Path != null)
         {
-          var imageStream = await ImageService.Instance
-                              .LoadFile(this.mediaFile.Path)
-                              .DownSample(300)
-                              .AsJPGStreamAsync();
+          //var imageStream = await ImageService.Instance
+          //                    .LoadFile(this.mediaFile.Path)
+          //                    .DownSample(300)
+          //                    .AsJPGStreamAsync();
 
-          UserService.CurrentUser.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(UserService.CurrentUser.Name, UserService.CurrentUser.PublicKeyAddress), imageStream);
+          UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
           this.mediaFile.Dispose();
         }
 
-        Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] = UserService.CurrentUser.ImageUrl;
+        Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] = UserService.CurrentUser.ImageHash;
         Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] = this.Username;
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;

@@ -77,7 +77,7 @@
       var contact = new Contact
       {
         Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + this.user.PublicKeyAddress] as string,
-        ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string,
+        ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string,
         ChatAddress = this.ChatAddress,
         ChatKeyAddress = this.ChatKeyAddress,
         ContactAddress = null,

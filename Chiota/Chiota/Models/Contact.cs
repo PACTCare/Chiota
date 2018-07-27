@@ -11,7 +11,7 @@
 
     public string Name { get; set; }
 
-    public string ImageUrl { get; set; }
+    public string ImageHash { get; set; }
 
     public string ContactAddress { get; set; }
 

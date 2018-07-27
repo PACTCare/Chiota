@@ -10,7 +10,7 @@
       return new ContactListViewModel(user, viewCellObject)
                {
                  Name = contact.Name,
-                 ImageUrl = contact.ImageUrl,
+                 ImageHash = ChiotaConstants.IpfsHashGateway + contact.ImageHash,
                  ChatAddress = contact.ChatAddress,
                  ChatKeyAddress = contact.ChatKeyAddress,
                  ContactAddress = contact.ContactAddress,

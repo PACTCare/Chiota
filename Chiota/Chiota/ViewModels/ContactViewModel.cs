@@ -151,12 +151,14 @@
       }
 
       var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-
-      foreach (var contact in contactsWithoutResponse)
+      var contactsWithOutResponseNotAddedYet =
+        contactsWithoutResponse.Except(this.contacts, new ChatAdressComparer()).ToList();
+      foreach (var contact in contactsWithOutResponseNotAddedYet)
       {
         if (contact?.Request == true)
         {
           var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
+
           this.contacts.Add(contactCell);
         }
       }
@@ -216,7 +218,7 @@
           Name = bot.BotName,
           ChatAddress = bot.BotSlogan,
           ContactAddress = bot.BotSlogan,
-          ImageUrl = bot.ImageUrl,
+          ImageHash = bot.ImageUrl,
           Rejected = false
         };
 

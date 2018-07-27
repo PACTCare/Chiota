@@ -72,7 +72,7 @@
                                ChatAddress = Seed.Random().ToString(),
                                ChatKeyAddress = Seed.Random().ToString(),
                                Name = UserService.CurrentUser.Name,
-                               ImageUrl = UserService.CurrentUser.ImageUrl,
+                               ImageHash = UserService.CurrentUser.ImageHash,
                                ContactAddress = UserService.CurrentUser.RequestAddress,
                                Request = true,
                                Rejected = false,

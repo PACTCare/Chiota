@@ -12,7 +12,7 @@
           Aspect="AspectFill"
           HorizontalOptions="Center"
           VerticalOptions="Center" 
-          Source="{Binding ImageUrl}" >
+          Source="{Binding ImageHash}" >
       </controls:CircleImage>
       <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand" Padding="0,0,10,0">
         <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>

@@ -2,6 +2,8 @@
 {
   public static class ChiotaConstants
   {
+    public const string IpfsHashGateway = "https://ipfs.io/ipfs/";
+
     public const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
 
     public const string End = "9ENDEGUTALLESGUT9";

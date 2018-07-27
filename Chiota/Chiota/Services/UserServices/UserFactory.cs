@@ -22,7 +22,7 @@
       // First time set default values
       if (!Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsImageKey + addresses[0].Value))
       {
-        Application.Current.Properties[ChiotaConstants.SettingsImageKey + addresses[0].Value] = "https://chiota.blob.core.windows.net/userimages/default.png";
+        Application.Current.Properties[ChiotaConstants.SettingsImageKey + addresses[0].Value] = "QmSZQmqVyaQmuHWnPK8hiDaifTY66KPJ7XcBNHBJvsfLEM"; // Default image
         Application.Current.Properties[ChiotaConstants.SettingsNameKey + addresses[0].Value] = string.Empty;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = true;
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.carriota.com:443";
@@ -33,7 +33,7 @@
                {
                  Name = null,
                  Seed = seed,
-                 ImageUrl = null,
+                 ImageHash = null,
                  StoreSeed = storeSeed,
                  PublicKeyAddress = addresses[0].Value, // + addresses[1].WithChecksum().Checksum.Value,
                  RequestAddress = addresses[1].Value,

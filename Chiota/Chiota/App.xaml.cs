@@ -32,6 +32,9 @@
       if (CrossConnectivity.Current.IsConnected)
       {
         var secureStorage = new SecureStorage();
+        
+        // Reset in case something isn't working
+        // secureStorage.DeleteUser();
         if (secureStorage.CheckUserStored())
         {
           var user = await secureStorage.GetUser();

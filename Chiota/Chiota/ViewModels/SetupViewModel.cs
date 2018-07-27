@@ -7,13 +7,11 @@
   using Chiota.Events;
   using Chiota.Models;
   using Chiota.Services;
-  using Chiota.Services.AvatarStorage;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Ipfs;
   using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
-
-  using FFImageLoading;
 
   using Plugin.Media;
   using Plugin.Media.Abstractions;
@@ -34,9 +32,9 @@
 
     public SetupViewModel(User user)
     {
-      this.ImageSource = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
+      this.ImageSource = ChiotaConstants.IpfsHashGateway + Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress];
       this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
-      user.ImageUrl = this.ImageSource;
+      user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
       this.SubmitCommand = new Command(async () => { await this.FinishedSetup(user); });
     }
 
@@ -94,7 +92,7 @@
 
     private static async Task StoreUserData(User user)
     {
-      Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] = user.ImageUrl;
+      Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] = user.ImageHash;
       Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] = user.Name;
       await Application.Current.SavePropertiesAsync();
     }
@@ -112,12 +110,11 @@
 
         if (this.mediaFile?.Path != null)
         {
-          var imageStream = await ImageService.Instance
-                         .LoadFile(this.mediaFile.Path)
-                         .DownSample(300)
-                         .AsJPGStreamAsync();
-
-          user.ImageUrl = await DependencyResolver.Resolve<IAvatarStorage>().UploadEncryptedAsync(Helper.ImageNameGenerator(user.Name, user.PublicKeyAddress), imageStream);
+          //var imageStream = await ImageService.Instance
+          //               .LoadFile(this.mediaFile.Path)
+          //               .DownSample(300)
+          //               .AsJPGStreamAsync();
+          user.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
           this.mediaFile.Dispose();
         }
 

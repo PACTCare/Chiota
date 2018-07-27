@@ -138,7 +138,7 @@
             Text = decryptedMessage,
             MessagDateTime = sortedEncryptedMessages[i].Date.ToLocalTime(),
             IsIncoming = sortedEncryptedMessages[i].Signature == contact.PublicKeyAddress.Substring(0, 30),
-            ProfileImage = contact.ImageUrl
+            ProfileImage = contact.ImageHash
           });
         }
         else

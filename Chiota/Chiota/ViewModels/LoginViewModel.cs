@@ -96,7 +96,7 @@
         // PublicKeyList should never be zero if this seed was used before (checks sqlite)
         if (publicKeyList.Count == 0)
         {
-          this.user.ImageUrl = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string;
+          this.user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string;
           this.user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + this.user.PublicKeyAddress] as string;
           await this.Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(this.user)));
         }
