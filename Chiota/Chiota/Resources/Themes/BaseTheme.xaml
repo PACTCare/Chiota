@@ -7,6 +7,13 @@
     
     <!--#region  Base layouts -->
 
+    <Style x:Key="BaseBackgroundStackLayout" TargetType="StackLayout">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+    </Style>
+
     <!--#endregion-->
 
     <!--#region Base element layouts -->

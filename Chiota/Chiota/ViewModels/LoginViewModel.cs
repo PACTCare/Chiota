@@ -1,130 +1,191 @@
-﻿namespace Chiota.ViewModels
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+using Chiota.Events;
+using Chiota.Extensions;
+using Chiota.Models;
+using Chiota.Popups.PopupModels;
+using Chiota.Popups.PopupPageModels;
+using Chiota.Popups.PopupPages;
+using Chiota.Services;
+using Chiota.Services.DependencyInjection;
+using Chiota.Services.Iota;
+using Chiota.Services.Navigation;
+using Chiota.Services.Storage;
+using Chiota.Services.UserServices;
+using Chiota.Views;
+
+using Tangle.Net.Entity;
+using Tangle.Net.Utils;
+
+using Xamarin.Forms;
+using Chiota.ViewModels.Classes;
+
+namespace Chiota.ViewModels
 {
-  using System;
-  using System.Threading.Tasks;
-  using System.Windows.Input;
-
-  using Chiota.Events;
-  using Chiota.Models;
-  using Chiota.Services;
-  using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
-  using Chiota.Services.Navigation;
-  using Chiota.Services.Storage;
-  using Chiota.Services.UserServices;
-  using Chiota.Views;
-
-  using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
-
-  using Xamarin.Forms;
-
-  public class LoginViewModel : BaseViewModel
-  {
-    public Action DisplayInvalidLoginPrompt;
-
-    public Action DisplaySeedCopiedPrompt;
-
-    private string randomSeed = Seed.Random().Value;
-
-    private bool storeSeed;
-
-    private User user;
-
-    public LoginViewModel()
+    public class LoginViewModel : BaseViewModel
     {
-      this.StoreSeed = true;
-      this.UserFactory = DependencyResolver.Resolve<IUserFactory>();
-    }
+        #region Attributes
 
-    /// <summary>
-    /// Event raised as soon as a user logged in successfully.
-    /// Outputs EventArgs of type <see cref="LoginEventArgs"/>
-    /// </summary>
-    public static event EventHandler LoginSuccessful;
+        private string randomSeed;
+        private bool storeSeed;
+        private User user;
 
-    public bool StoreSeed
-    {
-      get => this.storeSeed;
-      set
-      {
-        this.storeSeed = value;
-        this.RaisePropertyChanged();
-      }
-    }
+        private readonly IUserFactory userFactory;
 
-    public string RandomSeed
-    {
-      get => this.randomSeed ?? string.Empty;
-      set
-      {
-        this.randomSeed = value;
-        this.RaisePropertyChanged();
-      }
-    }
+        /// <summary>
+        /// Event raised as soon as a user logged in successfully.
+        /// Outputs EventArgs of type <see cref="LoginEventArgs"/>
+        /// </summary>
+        public static event EventHandler LoginSuccessful;
 
-    public ICommand SubmitCommand => new Command(async () => { await this.Login(); });
+        #endregion
 
-    public ICommand CopySeedCommand => new Command(this.CopySeed);
+        #region Properties
 
-    private IUserFactory UserFactory { get; }
-
-    private void CopySeed()
-    {
-      this.DisplaySeedCopiedPrompt();
-      DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.RandomSeed);
-    }
-
-    private async Task Login()
-    {
-      this.RandomSeed = this.RandomSeed.Trim();
-      if (!InputValidator.IsTrytes(this.RandomSeed))
-      {
-        this.DisplayInvalidLoginPrompt();
-      }
-      else if (!this.IsBusy)
-      {
-        this.IsBusy = true;
-
-        if (this.UserNotYetGenerated())
+        public bool StoreSeed
         {
-          this.user = await this.UserFactory.CreateAsync(new Seed(this.RandomSeed), this.StoreSeed);
+            get => storeSeed;
+            set
+            {
+                storeSeed = value;
+                RaisePropertyChanged(nameof(StoreSeed));
+            }
         }
 
-        var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress);
-
-        // PublicKeyList should never be zero if this seed was used before (checks sqlite)
-        if (publicKeyList.Count == 0)
+        public string RandomSeed
         {
-          this.user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string;
-          this.user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + this.user.PublicKeyAddress] as string;
-          await this.Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(this.user)));
-        }
-        else
-        {
-          this.user = await new UserDataOnTangle(this.user).UniquePublicKey();
-          new SecureStorage().StoreUser(this.user);
-
-          if (this.user.NtruKeyPair != null)
-          {
-            LoginSuccessful?.Invoke(this, new LoginEventArgs { User = this.user });
-            UserService.SetCurrentUser(this.user);
-            Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
-            await this.Navigation.PopToRootAsync(true);
-          }
-          else
-          {
-            this.DisplayInvalidLoginPrompt();
-          }
+            get => randomSeed ?? string.Empty;
+            set
+            {
+                randomSeed = value;
+                RaisePropertyChanged(nameof(RandomSeed));
+            }
         }
 
-        this.IsBusy = false;
-      }
-    }
+        #endregion
 
-    private bool UserNotYetGenerated()
-    {
-      return this.user == null || this.RandomSeed != this.user?.Seed.Value;
+        #region Constructors
+
+        public LoginViewModel()
+        {
+            StoreSeed = true;
+            randomSeed = Seed.Random().Value;
+            userFactory = DependencyResolver.Resolve<IUserFactory>();
+        }
+
+        #endregion
+
+        #region Methods
+
+        private async Task LoginAsync()
+        {
+            //Create alert object.
+            //We can optimize this, if we predifine our exception messages in classes
+            //and show the alerts by calling a show method of the exceptions. TODO
+            var alert = new AlertPopupModel()
+            {
+                Title = "Error",
+                Message = "Invalid seed, try again"
+            };
+
+            RandomSeed = RandomSeed.Trim();
+            if (!InputValidator.IsTrytes(RandomSeed))
+                //Show invalid seed exception.
+                await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+            else if (!IsBusy)
+            {
+                IsBusy = true;
+
+                //Create a new user, if no instance exist yet.
+                if (UserNotYetGenerated())
+                    user = await userFactory.CreateAsync(new Seed(RandomSeed), StoreSeed);
+
+                //Get the public key and contact addresses.
+                var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(user.TangleMessenger, user.PublicKeyAddress);
+
+                // PublicKeyList should never be zero if this seed was used before (checks sqlite)
+                if (publicKeyList.Count == 0)
+                {
+                    user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
+                    user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
+                    await Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(user)));
+                }
+                else
+                {
+                    user = await new UserDataOnTangle(user).UniquePublicKey();
+                    new SecureStorage().StoreUser(user);
+
+                    if (user.NtruKeyPair != null)
+                    {
+                        //Invake the login event.
+                        LoginSuccessful?.Invoke(this, new LoginEventArgs { User = user });
+                        UserService.SetCurrentUser(user);
+                        Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+
+                        //Pop to the root page.
+                        await Navigation.PopToRootAsync(true);
+                    }
+                    else
+                        //Show invalid seed exception.
+                        await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+                }
+
+                IsBusy = false;
+            }
+        }
+
+        /// <summary>
+        /// Returns if the user is generated yes.
+        /// </summary>
+        /// <returns>Boolean, if user generated.</returns>
+        private bool UserNotYetGenerated()
+        {
+            return user == null || RandomSeed != user?.Seed.Value;
+        }
+
+        #endregion
+
+        #region Commands
+
+        #region SubmitCommand
+
+        public ICommand SubmitCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await LoginAsync();
+                });
+            }
+        }
+
+        #endregion
+
+        #region CopySeedCommand
+
+        public ICommand CopySeedCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    var alert = new AlertPopupModel()
+                    {
+                        Title = "Copied",
+                        Message = "The seed has been copied to your clipboard."
+                    };
+                    await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+
+                    DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(RandomSeed);
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
-  }
 }

@@ -1,46 +1,36 @@
-﻿using Chiota.Extensions;
+﻿using System;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+using Chiota.ViewModels;
+using Chiota.Extensions;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.Views
 {
-  using System;
-
-  using Chiota.ViewModels;
-
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
-
-  /// <summary>
-  /// The login page.
-  /// </summary>
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class LoginPage : ContentPage
-  {
-    public LoginPage()
+    /// <summary>
+    /// The login page.
+    /// </summary>
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class LoginPage : ContentPage
     {
-      this.InitializeComponent();
-      NavigationPage.SetHasNavigationBar(this, false);
-      var vm = new LoginViewModel { Navigation = this.Navigation };
-
-            vm.DisplayInvalidLoginPrompt += async () =>
-            {
-                //this.DisplayAlert("Error", "Invalid seed, try again", "OK");
-                var alert = new AlertPopupModel()
-                {
-                    Title = "Error",
-                    Message = "Invalid seed, try again"
-                };
-                await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
-            };
-      vm.DisplaySeedCopiedPrompt += () => this.DisplayAlert("Copied", "The seed has been copied to your clipboard.", "OK");
-
-      this.RandomSeed.Completed += (object sender, EventArgs e) =>
+        public LoginPage()
         {
-          vm.SubmitCommand.Execute(null);
-        };
-      this.BindingContext = vm;
+            this.InitializeComponent();
+
+            //Setup the viewmodel
+            if (BindingContext is BaseViewModel viewmodel)
+            {
+                viewmodel.Setup(this);
+
+                if(viewmodel is LoginViewModel loginviewmodel)
+                this.RandomSeed.Completed += (object sender, EventArgs e) =>
+                {
+                    loginviewmodel.SubmitCommand.Execute(null);
+                };
+            }
+        }
     }
-  }
 }
