@@ -11,8 +11,11 @@
 
     <ContentPage.Resources>
 
-        <Style x:Key="BackgroundStackLayout" TargetType="StackLayout" BasedOn="{StaticResource BaseBackgroundStackLayout}">
+        <Style x:Key="LogInContainerStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
             <Setter Property="Padding" Value="30, 20"/>
+            <Setter Property="Spacing" Value="15"/>
         </Style>
 
         <Style x:Key="LogoImage" TargetType="Image">
@@ -31,37 +34,39 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
-        <StackLayout Style="{DynamicResource BackgroundStackLayout}">
-            <StackLayout Style="{DynamicResource BackgroundStackLayout}">
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout Style="{DynamicResource LogInContainerStackLayout}">
                 <!--AbsoluteLayout.LayoutFlags="All" 
             AbsoluteLayout.LayoutBounds="0,0,1,1">-->
 
                 <!-- Logo of the iota chat app-->
                 <Image Style="{DynamicResource LogoImage}" Source="iota.png"/>
 
-                <Label Text="Remember your seed and feel free to change the randomly generated seed below for additional security!" TextColor="{DynamicResource AttentionHighlightedTextColor}"/>
+                <Label Text="Remember your seed and feel free to change the randomly generated seed below for additional security!" TextColor="{DynamicResource AttentionHighlightedTextColor}" HorizontalTextAlignment="Center"/>
 
-                <StackLayout Style="{DynamicResource LogInStackLayout}">
+                <Frame Style="{DynamicResource RoundedFrame}">
+                    <StackLayout Style="{DynamicResource LogInStackLayout}">
 
-                    <Label Style="{DynamicResource BaseLabel}" Text="Seed "/>
-                    <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" IsSpellCheckEnabled="False" BackgroundColor="{DynamicResource AccentColor}" Text="{Binding RandomSeed}" PlaceholderColor="{DynamicResource TextColor}" HeightRequest="40" TextColor="{DynamicResource TextColor}"/>
-                    <Button Command="{Binding CopySeedCommand}" Text="Copy seed to clipboard" TextColor="{DynamicResource TextColor}" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource ButtonColor}"/>
+                        <Label Style="{DynamicResource BaseLabel}" Text="Seed "/>
+                        <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" IsSpellCheckEnabled="False" BackgroundColor="{DynamicResource AccentColor}" Text="{Binding RandomSeed}" PlaceholderColor="{DynamicResource TextColor}" HeightRequest="40" TextColor="{DynamicResource TextColor}"/>
+                        <Button Command="{Binding CopySeedCommand}" Text="Copy seed to clipboard" TextColor="{DynamicResource TextColor}" HorizontalOptions="FillAndExpand" BackgroundColor="{DynamicResource ButtonColor}"/>
 
-                    <StackLayout Orientation="Horizontal" CompressedLayout.IsHeadless="true">
-                        <Label Text="Store seed on your device:" Margin="0,0,5,0" TextColor="{DynamicResource TextColor}"/>
-                        <Switch IsToggled="{Binding StoreSeed}"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Store seed on your device:" Margin="0,0,5,0" TextColor="{DynamicResource TextColor}"/>
+                            <Switch IsToggled="{Binding StoreSeed}"/>
+                        </StackLayout>
                     </StackLayout>
-                </StackLayout>
+                </Frame>
 
-                <Button Command="{Binding SubmitCommand}" Text="Login" TextColor="White" FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand" BackgroundColor="#5874ca"/>
+                <Button Style="{DynamicResource RoundedButton}" Text="Login" FontAttributes="Bold" FontSize="16" HeightRequest="48" WidthRequest="256" Command="{Binding SubmitCommand}"/>
             </StackLayout>
 
-            <StackLayout IsVisible="{Binding IsBusy}" BackgroundColor="#99000000">
+            <!--Needed a loading popup with some text <StackLayout IsVisible="{Binding IsBusy}" BackgroundColor="#99000000">
                 <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White" Padding="30,25,30,25">
                     <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{DynamicResource AttentionHighlightedTextColor}"/>
                     <Label Text="Addresses are generated..." AutomationId="AddressLabelId" FontSize="16" TextColor="{DynamicResource DarkColor}"/>
                 </StackLayout>
-            </StackLayout>
+            </StackLayout>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>  

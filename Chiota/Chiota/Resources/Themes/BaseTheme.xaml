@@ -8,7 +8,6 @@
     <!--#region  Base layouts -->
 
     <Style x:Key="BaseBackgroundStackLayout" TargetType="StackLayout">
-        <Setter Property="Orientation" Value="Vertical"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
         <Setter Property="VerticalOptions" Value="FillAndExpand"/>
@@ -22,7 +21,11 @@
     <Style x:Key="BaseFrame" TargetType="Frame">
         <Setter Property="Padding" Value="0"/>
     </Style>
-    
+
+    <Style x:Key="RoundedFrame" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
     <!-- Label styles -->
     <Style x:Key="BaseLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
@@ -34,6 +37,16 @@
 
     <Style x:Key="Label16" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="16"/>
+    </Style>
+    
+    <!-- Button styles -->
+    <Style x:Key="BaseButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
+    </Style>
+
+    <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="CornerRadius" Value="16"/>
     </Style>
 
     <!--#endregion-->
@@ -47,11 +60,10 @@
         <Setter Property="Spacing" Value="16"/>
     </Style>
 
-    <Style x:Key="PopupFrame" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+    <Style x:Key="PopupFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame}">
         <Setter Property="Margin" Value="16"/>
         <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-        <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource AccentDarkColor}"/>
     </Style>
 
