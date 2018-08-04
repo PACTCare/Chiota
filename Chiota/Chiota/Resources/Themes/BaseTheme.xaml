@@ -22,7 +22,11 @@
         <Setter Property="Padding" Value="0"/>
     </Style>
 
-    <Style x:Key="RoundedFrame" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+    <Style x:Key="RoundedFrame8" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style x:Key="RoundedFrame16" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
         <Setter Property="CornerRadius" Value="16"/>
     </Style>
 
@@ -38,7 +42,24 @@
     <Style x:Key="Label16" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="16"/>
     </Style>
-    
+
+    <!-- Entry styles -->
+    <Style x:Key="BaseEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+    </Style>
+
+    <Style x:Key="Entry14" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="36"/>
+    </Style>
+
+    <Style x:Key="Entry16" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="42"/>
+    </Style>
+
     <!-- Button styles -->
     <Style x:Key="BaseButton" TargetType="Button">
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
@@ -47,6 +68,16 @@
 
     <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
         <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
+    <Style x:Key="RoundedButton14" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="42"/>
+    </Style>
+
+    <Style x:Key="RoundedButton16" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="48"/>
     </Style>
 
     <!--#endregion-->
@@ -60,7 +91,7 @@
         <Setter Property="Spacing" Value="16"/>
     </Style>
 
-    <Style x:Key="PopupFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame}">
+    <Style x:Key="PopupFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame16}">
         <Setter Property="Margin" Value="16"/>
         <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>

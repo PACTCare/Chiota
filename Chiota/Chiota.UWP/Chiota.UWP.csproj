@@ -105,7 +105,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
+    <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />
+    <Compile Include="Renderer\SwitchRenderer.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
