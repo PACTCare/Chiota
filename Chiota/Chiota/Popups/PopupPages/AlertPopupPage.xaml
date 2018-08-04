@@ -8,7 +8,7 @@
              CloseWhenBackgroundIsClicked="False">
 
     <pages:PopupPage.BindingContext>
-    <popupPageModels:AlertPopupPageModel/>
+        <popupPageModels:AlertPopupPageModel/>
     </pages:PopupPage.BindingContext>
 
     <pages:PopupPage.Animation >

@@ -64,7 +64,7 @@
                                     <Label Style="{DynamicResource Label14}" Text="Store seed on device:"/>
                                 </StackLayout>
                                 <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                                    <Switch IsToggled="{Binding StoreSeed}" OnColor="{DynamicResource AccentColor}"/>
+                                    <Switch IsToggled="{Binding StoreSeed}" OnColor="{DynamicResource AccentBrightColor}"/>
                                 </StackLayout>
                             </StackLayout>
                         </StackLayout>
@@ -73,13 +73,6 @@
                     <Button Style="{DynamicResource RoundedButton16}" Text="Login" FontAttributes="Bold" WidthRequest="256" Command="{Binding SubmitCommand}"/>
                 </StackLayout>
             </StackLayout>
-
-            <!--Needed a loading popup with some text <StackLayout IsVisible="{Binding IsBusy}" BackgroundColor="#99000000">
-                <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" BackgroundColor="White" Padding="30,25,30,25">
-                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{DynamicResource AttentionHighlightedTextColor}"/>
-                    <Label Text="Addresses are generated..." AutomationId="AddressLabelId" FontSize="16" TextColor="{DynamicResource DarkColor}"/>
-                </StackLayout>
-            </StackLayout>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>  

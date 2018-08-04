@@ -11,6 +11,7 @@
 
     <Color x:Key="AccentDarkColor">#00236a</Color>
     <Color x:Key="AccentColor">#1d4999</Color>
+    <Color x:Key="AccentBrightColor">#5874ca</Color>
     <Color x:Key="ButtonColor">#5874ca</Color>
     <Color x:Key="EntryColor">#32ffffff</Color>
 

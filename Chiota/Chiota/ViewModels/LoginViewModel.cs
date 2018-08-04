@@ -96,7 +96,11 @@ namespace Chiota.ViewModels
                 await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
             else if (!IsBusy)
             {
-                IsBusy = true;
+                var loading = new LoadingPopupModel()
+                {
+                    Message = "Addresses are generated..."
+                };
+                await PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), loading);
 
                 //Create a new user, if no instance exist yet.
                 if (UserNotYetGenerated())
@@ -110,6 +114,7 @@ namespace Chiota.ViewModels
                 {
                     user.ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + user.PublicKeyAddress] as string;
                     user.Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + user.PublicKeyAddress] as string;
+                    await PopPopupAsync();
                     await Navigation.PushModalAsync(new NavigationPage(new CheckSeedStoredPage(user)));
                 }
                 else
@@ -124,15 +129,17 @@ namespace Chiota.ViewModels
                         UserService.SetCurrentUser(user);
                         Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
 
+                        await PopPopupAsync();
                         //Pop to the root page.
                         await Navigation.PopToRootAsync(true);
                     }
                     else
+                    {
+                        await PopPopupAsync();
                         //Show invalid seed exception.
                         await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+                    }
                 }
-
-                IsBusy = false;
             }
         }
 
