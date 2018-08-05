@@ -1,4 +1,6 @@
-﻿namespace Chiota.ViewModels
+﻿using Chiota.ViewModels.Classes;
+
+namespace Chiota.ViewModels
 {
   using System;
   using System.Collections.Generic;

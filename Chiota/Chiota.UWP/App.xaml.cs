@@ -62,8 +62,8 @@
                                                  typeof(CachedImage).GetTypeInfo().Assembly,
                                                  typeof(CachedImageRenderer).GetTypeInfo().Assembly  
                                                };
-
-        Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+          Rg.Plugins.Popup.Popup.Init();
+                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
         if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
         {

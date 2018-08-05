@@ -1,4 +1,6 @@
-﻿namespace Chiota.ViewModels
+﻿using Chiota.ViewModels.Classes;
+
+namespace Chiota.ViewModels
 {
   using System;
   using System.Text;
@@ -25,7 +27,7 @@
     private string qrSource;
 
     public AddContactViewModel()
-    {
+        {
       this.QrSource = UserService.CurrentUser.PublicKeyAddress;
     }
 

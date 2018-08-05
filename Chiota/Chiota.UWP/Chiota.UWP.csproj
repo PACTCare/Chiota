@@ -105,6 +105,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
+    <Compile Include="Renderer\EntryRenderer.cs" />
+    <Compile Include="Renderer\FrameRenderer.cs" />
+    <Compile Include="Renderer\SwitchRenderer.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -168,6 +171,7 @@
     <Content Include="iota.png" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
+    <Content Include="loading.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -195,6 +199,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.5</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.4.168</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.4.118</Version>

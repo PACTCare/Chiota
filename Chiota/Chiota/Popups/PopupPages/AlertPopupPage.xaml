@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels;assembly=Chiota"
+             x:Class="Chiota.Popups.PopupPages.AlertPopupPage"
+             CloseWhenBackgroundIsClicked="False">
+
+    <pages:PopupPage.BindingContext>
+        <popupPageModels:AlertPopupPageModel/>
+    </pages:PopupPage.BindingContext>
+
+    <pages:PopupPage.Animation >
+        <animations:ScaleAnimation 
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8"
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+
+    <pages:PopupPage.Content>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Frame Style="{DynamicResource PopupFrame}">
+                <StackLayout Style="{DynamicResource PopupLayout}">
+                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource Label16}" HorizontalOptions="Center" LineBreakMode="WordWrap" IsVisible="{Binding PopupModel.IsTitleVisible}"/>
+                    <Label Text="{Binding PopupModel.Message}" Style="{DynamicResource Label14}" HorizontalOptions="Center" LineBreakMode="WordWrap"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <StackLayout HorizontalOptions="CenterAndExpand" IsVisible="{Binding PopupModel.IsNegButtonVisible}">
+                            <Label Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource Label14}" TextColor="{Binding NegButtonTextColor}" HorizontalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NegCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </StackLayout>
+                        <StackLayout HorizontalOptions="CenterAndExpand">
+                            <Label Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource Label14}" TextColor="{Binding PosButtonTextColor}" HorizontalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PosCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </pages:PopupPage.Content>
+</pages:PopupPage>

@@ -1,4 +1,7 @@
-﻿namespace Chiota.ViewModels
+﻿using Chiota.ViewModels.Classes;
+using Xamarin.Forms;
+
+namespace Chiota.ViewModels
 {
   using System.Collections.Generic;
   using System.Collections.ObjectModel;

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Resources.Themes.BaseTheme">
+
+    <x:String x:Key="AppName">Chiota</x:String>
+    
+    <!--#region  Base layouts -->
+
+    <Style x:Key="BaseBackgroundStackLayout" TargetType="StackLayout">
+        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region Base element layouts -->
+
+    <!-- Frame styles-->
+    <Style x:Key="BaseFrame" TargetType="Frame">
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <Style x:Key="RoundedFrame8" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style x:Key="RoundedFrame16" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
+    <!-- Label styles -->
+    <Style x:Key="BaseLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+    </Style>
+
+    <Style x:Key="Label14" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="Label16" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <!-- Entry styles -->
+    <Style x:Key="BaseEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+    </Style>
+
+    <Style x:Key="Entry14" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="36"/>
+    </Style>
+
+    <Style x:Key="Entry16" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="42"/>
+    </Style>
+
+    <!-- Button styles -->
+    <Style x:Key="BaseButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
+    </Style>
+
+    <Style x:Key="RoundedButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
+    <Style x:Key="RoundedButton14" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="42"/>
+    </Style>
+
+    <Style x:Key="RoundedButton16" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HeightRequest" Value="48"/>
+    </Style>
+
+    <!--#endregion-->
+
+    <!--#region  Base popup layouts -->
+
+    <Style x:Key="PopupLayout" TargetType="StackLayout">
+        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+        <Setter Property="Padding" Value="32, 16"/>
+        <Setter Property="Spacing" Value="16"/>
+    </Style>
+
+    <Style x:Key="PopupFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame16}">
+        <Setter Property="Margin" Value="16"/>
+        <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource AccentDarkColor}"/>
+    </Style>
+
+    <!--#endregion-->
+
+</ResourceDictionary>

@@ -1,4 +1,6 @@
-﻿namespace Chiota.ViewModels
+﻿using Chiota.ViewModels.Classes;
+
+namespace Chiota.ViewModels
 {
   using System;
   using System.Collections.Generic;
@@ -35,7 +37,7 @@
     private ObservableCollection<MessageViewModel> messagesList;
 
     public BotChatViewModel(BotObject bot, ListView messagesListView, StackLayout quickReplyStack)
-    {
+        {
       this.connection = new BotConnection(bot);
       this.botId = bot.BotId;
       this.messagesListView = messagesListView;
