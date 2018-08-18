@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -23,8 +24,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class ChatViewModel : BaseViewModel
-  {
+  public class ChatViewModel : BasePageModel
+    {
     public Action DisplayMessageTooLong;
 
     public Action DisplayMessageSendErrorPrompt;
@@ -60,7 +61,7 @@ namespace Chiota.ViewModels
       set
       {
         this.outgoingText = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -72,7 +73,7 @@ namespace Chiota.ViewModels
       set
       {
         this.messagesList = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

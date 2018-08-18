@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
+             x:Class="Chiota.Pages.Authentication.RegisterPage"
+             Title="Register">
+
+    <ContentPage.BindingContext>
+        <authentication:RegisterPageModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+
+        <Style x:Key="RegisterContainerStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Spacing" Value="8"/>
+            <Setter Property="WidthRequest" Value="256"/>
+        </Style>
+
+        <Style x:Key="LogoStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="128"/>
+            <Setter Property="HeightRequest" Value="128"/>
+        </Style>
+
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                <StackLayout Style="{DynamicResource LogoStackLayout}">
+                    <!-- Logo of the iota chat app-->
+                    <Image Style="{DynamicResource LogoImage}"/>
+                </StackLayout>
+
+                <StackLayout Style="{DynamicResource RegisterContainerStackLayout}">
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                        <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" Style="{DynamicResource Entry16}" IsSpellCheckEnabled="False" Text="{Binding RandomSeed}"/>
+                    </Frame>
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                        <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" Style="{DynamicResource Entry16}" IsSpellCheckEnabled="False" Text="{Binding RandomSeed}"/>
+                    </Frame>
+                </StackLayout>
+
+                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

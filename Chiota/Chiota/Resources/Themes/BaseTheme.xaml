@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Resources.Themes.BaseTheme">
 
     <x:String x:Key="AppName">Chiota</x:String>
     
-    <!--#region  Base layouts -->
+    <!--#region Base layouts -->
 
     <Style x:Key="BaseBackgroundStackLayout" TargetType="StackLayout">
         <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
@@ -81,6 +82,14 @@
     </Style>
 
     <!--#endregion-->
+
+    <!-- #region Image styles -->
+
+    <Style x:Key="ChiotaLogoImage" TargetType="Image">
+        <Setter Property="Source" Value="chiota.png"/>
+    </Style>
+
+    <!-- #endregion -->
 
     <!--#region  Base popup layouts -->
 

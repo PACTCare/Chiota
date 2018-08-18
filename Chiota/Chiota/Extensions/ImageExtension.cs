@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota
+namespace Chiota.Extensions
 {
     [ContentProperty("Source")]
-    public class ImageResourceExtension : IMarkupExtension
+    public class ImageExtension : IMarkupExtension
     {
         public string Source { get; set; }
 

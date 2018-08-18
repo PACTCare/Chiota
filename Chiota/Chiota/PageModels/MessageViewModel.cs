@@ -1,12 +1,13 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels
 {
   using System;
 
-  public class MessageViewModel : BaseViewModel
-  {
+  public class MessageViewModel : BasePageModel
+    {
     private string text;
 
     private string imageSource;
@@ -23,7 +24,7 @@ namespace Chiota.ViewModels
       set
       {
         this.text = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -33,7 +34,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -43,7 +44,7 @@ namespace Chiota.ViewModels
       set
       {
         this.profileImage = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -53,7 +54,7 @@ namespace Chiota.ViewModels
       set
       {
         this.messageDateTime = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     } 
 
@@ -63,7 +64,7 @@ namespace Chiota.ViewModels
       set
       {
         this.isIncoming = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
   }

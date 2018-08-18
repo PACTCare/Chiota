@@ -11,9 +11,9 @@ using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Classes
+namespace Chiota.PageModels.Classes
 {
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public abstract class BasePageModel : INotifyPropertyChanged
     {
         #region Attributes
 
@@ -74,7 +74,7 @@ namespace Chiota.ViewModels.Classes
             set
             {
                 this.isBusy = value;
-                this.RaisePropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -110,7 +110,7 @@ namespace Chiota.ViewModels.Classes
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected BaseViewModel()
+        protected BasePageModel()
         {
         }
 
@@ -195,7 +195,7 @@ namespace Chiota.ViewModels.Classes
                 RootPage = navigation.RootPage;
 
             //Call reverse and init method of the pagemodel.
-            if (CurrentPage.BindingContext is BaseViewModel viewmodel)
+            if (CurrentPage.BindingContext is BasePageModel viewmodel)
             {
                 if (_navigationAction == NavigationAction.Push)
                     if (InitObject != null)
@@ -538,7 +538,7 @@ namespace Chiota.ViewModels.Classes
         #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

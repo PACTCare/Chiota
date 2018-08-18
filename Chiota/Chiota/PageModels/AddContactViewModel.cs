@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -20,7 +21,7 @@ namespace Chiota.ViewModels
 
   using ZXing.Net.Mobile.Forms;
 
-  public class AddContactViewModel : BaseViewModel
+  public class AddContactViewModel : BasePageModel
   {
     private string receiverAdress;
 
@@ -41,7 +42,7 @@ namespace Chiota.ViewModels
       set
       {
         this.qrSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -51,7 +52,7 @@ namespace Chiota.ViewModels
       set
       {
         this.receiverAdress = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels
@@ -17,8 +18,8 @@ namespace Chiota.ViewModels
 
   using ChatPage = Views.ChatPage;
 
-  public class ContactViewModel : BaseViewModel
-  {
+  public class ContactViewModel : BasePageModel
+    {
     private readonly List<BotObject> bots;
 
     private ObservableCollection<ContactListViewModel> contactList;
@@ -44,7 +45,7 @@ namespace Chiota.ViewModels
         if (this.selectedContact != value)
         {
           this.selectedContact = value;
-          this.RaisePropertyChanged();
+          this.OnPropertyChanged();
         }
       }
     }
@@ -55,7 +56,7 @@ namespace Chiota.ViewModels
       set
       {
         this.contactList = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

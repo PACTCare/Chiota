@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -19,8 +20,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class SettingsViewModel : BaseViewModel
-  {
+  public class SettingsViewModel : BasePageModel
+    {
     public Action DisplayInvalidNodePrompt;
 
     public Action DisplaySettingsChangedPrompt;
@@ -46,7 +47,7 @@ namespace Chiota.ViewModels
       set
       {
         this.username = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -56,7 +57,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -66,7 +67,7 @@ namespace Chiota.ViewModels
       set
       {
         this.remotePoW = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -76,7 +77,7 @@ namespace Chiota.ViewModels
       set
       {
         this.defaultNode = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

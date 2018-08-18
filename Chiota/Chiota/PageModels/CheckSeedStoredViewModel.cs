@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -11,8 +12,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class CheckSeedStoredViewModel : BaseViewModel
-  {
+  public class CheckSeedStoredViewModel : BasePageModel
+    {
     public Action DisplayInvalidSeedPrompt;
 
     private readonly User user;
@@ -34,7 +35,7 @@ namespace Chiota.ViewModels
       set
       {
         this.seedInput = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

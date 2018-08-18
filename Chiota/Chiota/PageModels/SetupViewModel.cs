@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Classes;
+﻿using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -11,7 +12,6 @@ namespace Chiota.ViewModels
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Ipfs;
-  using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
 
@@ -22,8 +22,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class SetupViewModel : BaseViewModel
-  {
+  public class SetupViewModel : BasePageModel
+    {
     public Action DisplayInvalidLoginPrompt;
 
     private string username;
@@ -52,7 +52,7 @@ namespace Chiota.ViewModels
       set
       {
         this.username = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -62,7 +62,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -130,8 +130,8 @@ namespace Chiota.ViewModels
 
         this.IsBusy = false;
 
-        Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
-        await this.Navigation.PopToRootAsync(true);
+        //Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+        //await this.Navigation.PopToRootAsync(true);
       }
     }
   }
