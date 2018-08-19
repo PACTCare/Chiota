@@ -7,8 +7,6 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
-using Point = Windows.Foundation.Point;
-using TextAlignment = Windows.UI.Xaml.TextAlignment;
 
 [assembly: ExportRenderer(typeof(Entry), typeof(Chiota.UWP.Renderer.EntryRenderer))]
 namespace Chiota.UWP.Renderer

@@ -2,7 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Chiota.Exceptions;
+using Chiota.Extensions;
 using Chiota.PageModels.Classes;
+using Chiota.Pages.BackUp;
+using Chiota.Popups.PopupModels;
+using Chiota.Popups.PopupPageModels;
+using Chiota.Popups.PopupPages;
 using Xamarin.Forms;
 
 namespace Chiota.PageModels.Authentication
@@ -59,16 +65,35 @@ namespace Chiota.PageModels.Authentication
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
                     if (!string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Password))
                     {
-                        //Show popup to confirm password.
+                        //Here maybe insert password validation for a stronger password. TODO
 
+                        //Show popup to confirm password.
+                        var dialog = new DialogPopupModel()
+                        {
+                            Title = "Please confirm your password",
+                            IsPassword = true,
+                            Placeholder = "Password"
+                        };
+                        var result = await DisplayPopupAsync<DialogPopupPageModel, DialogPopupModel>(new DialogPopupPage(), dialog);
+
+                        if (result.ResultText != Password)
+                        {
+                            //Show popup alert.
+                            await new AuthFailedPasswordConfirmationException(new ExcInfo()).ShowAlertAsync();
+                            return;
+                        }
+
+                        //Show the back up page.
+                        await PushAsync(new BackUpPage());
                         return;
                     }
 
                     //Show popup alert.
+                    await new MissingUserInputException(new ExcInfo(), "name or password").ShowAlertAsync();
                 });
             }
         }

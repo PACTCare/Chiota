@@ -3,14 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
              x:Class="Chiota.Pages.Authentication.RegisterPage"
-             Title="Register">
+             NavigationPage.HasNavigationBar="False">
 
     <ContentPage.BindingContext>
         <authentication:RegisterPageModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
-
         <Style x:Key="RegisterContainerStackLayout" TargetType="StackLayout">
             <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
@@ -29,27 +28,45 @@
             <Setter Property="WidthRequest" Value="128"/>
             <Setter Property="HeightRequest" Value="128"/>
         </Style>
-
+        
+        <Style x:Key="RegisterLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+            <Setter Property="Margin" Value="0, 16, 0, 0"/>
+        </Style>
     </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                <StackLayout Style="{DynamicResource LogoStackLayout}">
-                    <!-- Logo of the iota chat app-->
-                    <Image Style="{DynamicResource LogoImage}"/>
-                </StackLayout>
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                  <StackLayout Style="{DynamicResource LogoStackLayout}">
+                      <!-- Logo of the iota chat app-->
+                      <Image Style="{DynamicResource LogoImage}"/>
+                      <Label Style="{DynamicResource RegisterLabelLayout}">
+                          <Label.FormattedText>
+                              <FormattedString>
+                                  <Span Text="Please insert your "/>
+                                  <Span Text="name" FontAttributes="Bold"/>
+                                  <Span Text=" and choose a new "/>
+                                  <Span Text="password" FontAttributes="Bold"/>
+                                  <Span Text="."/>
+                              </FormattedString>
+                          </Label.FormattedText>
+                      </Label>
+                  </StackLayout>
 
-                <StackLayout Style="{DynamicResource RegisterContainerStackLayout}">
+                  <StackLayout Style="{DynamicResource RegisterContainerStackLayout}">
                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                        <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" Style="{DynamicResource Entry16}" IsSpellCheckEnabled="False" Text="{Binding RandomSeed}"/>
+                      <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="Name"/>
                     </Frame>
                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                        <Entry x:Name="RandomSeed" AutomationId="RandomSeedId" Style="{DynamicResource Entry16}" IsSpellCheckEnabled="False" Text="{Binding RandomSeed}"/>
+                      <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="Password" IsPassword="True"/>
                     </Frame>
+                  </StackLayout>
                 </StackLayout>
-
-                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}"/>
+                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}" Margin="16"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

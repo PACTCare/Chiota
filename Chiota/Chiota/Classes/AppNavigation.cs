@@ -73,7 +73,7 @@ namespace Chiota.Classes
         private static NavigationPage SetNavigationStyles(NavigationPage page)
         {
             page.BarBackgroundColor = (Color)Application.Current.Resources["AccentColor"];
-            page.BarTextColor = (Color)Application.Current.Resources["TextColor"];
+            page.BarTextColor = (Color)Application.Current.Resources["NavigationBarTextColor"];
 
             return page;
         }

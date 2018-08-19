@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
-             xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels;assembly=Chiota"
-             x:Class="Chiota.Popups.PopupPages.AlertPopupPage"
+             xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels"
+             x:Class="Chiota.Popups.PopupPages.DialogPopupPage"
              CloseWhenBackgroundIsClicked="False">
 
     <pages:PopupPage.BindingContext>
-        <popupPageModels:AlertPopupPageModel/>
+        <popupPageModels:DialogPopupPageModel/>
     </pages:PopupPage.BindingContext>
 
     <pages:PopupPage.Animation >
@@ -24,14 +24,26 @@
             HasBackgroundAnimation="True"/>
     </pages:PopupPage.Animation>
 
+    <pages:PopupPage.Resources>
+    <ResourceDictionary>
+        <Style x:Key="PopupEntryFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame8}">
+            <Setter Property="BackgroundColor" Value="#96ffffff"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="WidthRequest" Value="256"/>
+        </Style>
+    </ResourceDictionary>
+    </pages:PopupPage.Resources>
+
     <pages:PopupPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Frame Style="{DynamicResource PopupFrame}">
                 <StackLayout Style="{DynamicResource PopupLayout}">
-                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource PopupLabel16}" HorizontalOptions="Center" LineBreakMode="WordWrap" IsVisible="{Binding PopupModel.IsTitleVisible}"/>
-                    <Label Text="{Binding PopupModel.Message}" Style="{DynamicResource PopupLabel14}" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource PopupLabel16}" HorizontalOptions="Center"/>
+                    <Frame Style="{DynamicResource PopupEntryFrame}">
+                        <Entry Style="{DynamicResource Entry16}" Placeholder="{Binding PopupModel.Placeholder}" IsPassword="{Binding PopupModel.IsPassword}" Text="{Binding PopupModel.ResultText}"/>
+                    </Frame>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <StackLayout HorizontalOptions="CenterAndExpand" IsVisible="{Binding PopupModel.IsNegButtonVisible}">
+                        <StackLayout HorizontalOptions="CenterAndExpand">
                             <Label Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupLabel14}" TextColor="{Binding NegButtonTextColor}" HorizontalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding NegCommand}"/>
@@ -49,5 +61,6 @@
                 </StackLayout>
             </Frame>
         </StackLayout>
+
     </pages:PopupPage.Content>
 </pages:PopupPage>

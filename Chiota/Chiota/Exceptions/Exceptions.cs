@@ -47,13 +47,13 @@ namespace Chiota.Exceptions
         public string Title { get; }
 
         [JsonProperty("detail")]
-        public string Detail { get; }
+        public string Detail { get; set; }
 
         #endregion
 
         #region Constructors
 
-        protected BaseException(ExcInfo excInfo, int errorCode, string title, string message, string detail) : base(message)
+        protected BaseException(ExcInfo excInfo, int errorCode, string title, string message, string detail = "") : base(message)
         {
             ExcInfo = excInfo;
             ErrorCode = errorCode;
@@ -68,38 +68,65 @@ namespace Chiota.Exceptions
 
     public class UnknownException : BaseException
     {
-        #region MyRegion
+        #region Constructors
 
         public UnknownException(ExcInfo excInfo) : base(excInfo, ErrorCodes.Unknown, Titles.Unknown, Messages.Unknown, Details.Unknown)
         {
         }
 
         #endregion
-
-        public class InvalidArgumentException : BaseException
-        {
-            #region Attributes
-
-            private string[] _detail = {"Invalid argument ", " expected."};
-
-            #endregion
-
-            #region MyRegion
-
-            public InvalidArgumentException(ExcInfo excInfo, int errorCode, string title, string message, string detail) : base(excInfo, errorCode, title, message, detail)
-            {
-            }
-
-            #endregion
-        }
     }
 
+    public class InvalidUserInputException : BaseException
+    {
+        #region Attributes
+
+        private readonly string[] _detail = { "Invalid user input of the argument", "expected." };
+
+        #endregion
+
+        #region Constructors
+
+        public InvalidUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.InvalidUserInput, Titles.InvalidUserInput, Messages.InvalidUserInput)
+        {
+            Detail = _detail[0] + " " + argument + " " + _detail[1];
+        }
+
+        #endregion
+    }
+
+    public class MissingUserInputException : BaseException
+    {
+        #region Attributes
+
+        private readonly string[] _detail = { "Missing user input of the argument", "expected." };
+
+        #endregion
+
+        #region Constructors
+
+        public MissingUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Messages.MissingUserInput)
+        {
+            Detail = _detail[0] + " " + argument + " " + _detail[1];
+        }
+
+        #endregion
+    }
 
     #endregion
 
     #region Authentication exceptions
 
+    public class AuthFailedPasswordConfirmationException : BaseException
+    {
+        #region Constructors
 
+        public AuthFailedPasswordConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.AuthFailedPasswordConfirmation, Titles.AuthFailedPasswordConfirmation, Messages.AuthFailedPasswordConfirmation, Details.AuthFailedPasswordConfirmation)
+        {
+        }
+
+        #endregion
+    }
 
     #endregion
 }

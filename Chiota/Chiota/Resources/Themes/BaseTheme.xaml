@@ -48,7 +48,7 @@
     <Style x:Key="BaseEntry" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
     </Style>
 
     <Style x:Key="Entry14" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
@@ -63,7 +63,7 @@
 
     <!-- Button styles -->
     <Style x:Key="BaseButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
     </Style>
 
@@ -105,6 +105,19 @@
         <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource AccentDarkColor}"/>
+    </Style>
+
+    <!-- Label styles -->
+    <Style x:Key="BasePopupLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource PopupTextColor}"/>
+    </Style>
+
+    <Style x:Key="PopupLabel14" TargetType="Label" BasedOn="{StaticResource BasePopupLabel}">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="PopupLabel16" TargetType="Label" BasedOn="{StaticResource BasePopupLabel}">
+        <Setter Property="FontSize" Value="16"/>
     </Style>
 
     <!--#endregion-->

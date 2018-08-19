@@ -9,7 +9,14 @@ namespace Chiota.Exceptions
         #region Base exceptions
 
         public static string Unknown = "Unknown";
-        public static string InvalidArgument = "Invalid argument";
+        public static string InvalidUserInput = "Invalid user input";
+        public static string MissingUserInput = "Missing user input";
+
+        #endregion
+
+        #region Base exceptions
+
+        public static string AuthFailedPasswordConfirmation = "Failed password confirmation";
 
         #endregion
     }
