@@ -65,7 +65,7 @@
 
         await this.Repository.AddContactAsync(contact);
 
-        return new AddContactResponse();
+        return new AddContactResponse { Code = ResponseCode.Success };
       }
       catch (MessengerException exception)
       {
