@@ -1,4 +1,4 @@
-﻿namespace Chiota.Messenger.Tests
+﻿namespace Chiota.Messenger.Tests.Repository
 {
   using System.Collections.Generic;
   using System.Linq;
@@ -12,7 +12,7 @@
   /// <summary>
   /// The in memory iota repository.
   /// </summary>
-  public class InMemoryIotaRepository : IIotaRepository
+  internal class InMemoryIotaRepository : IIotaRepository
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="InMemoryIotaRepository"/> class.

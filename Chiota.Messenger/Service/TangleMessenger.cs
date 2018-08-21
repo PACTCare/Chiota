@@ -1,15 +1,17 @@
 ﻿namespace Chiota.Messenger.Service
 {
+  using System;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
-  using Chiota.Models;
+  using Chiota.Messenger.Usecase;
 
-  using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;
+
+  using Constants = Chiota.Messenger.Constants;
 
   /// <inheritdoc />
   /// <summary>
@@ -29,23 +31,30 @@
     {
       if (!message.HasKnownType)
       {
-        throw new UnknownMessageException(message.Type);
+        throw new MessengerException(ResponseCode.MessengerException, new UnknownMessageException(message.Type));
       }
 
-      var bundle = new Bundle();
-      bundle.AddTransfer(
-        new Transfer
-          {
-            Address = message.Receiver,
-            Message = message.Payload,
-            Tag = new Tag(ChiotaConstants.Tag),
-            Timestamp = Timestamp.UnixSecondsTimestamp
-          });
+      try
+      {
+        var bundle = new Bundle();
+        bundle.AddTransfer(
+          new Transfer
+            {
+              Address = message.Receiver,
+              Message = message.Payload,
+              Tag = Constants.Tag,
+              Timestamp = Timestamp.UnixSecondsTimestamp
+            });
 
-      bundle.Finalize();
-      bundle.Sign();
+        bundle.Finalize();
+        bundle.Sign();
 
-      await this.Repository.SendTrytesAsync(bundle.Transactions);
+        await this.Repository.SendTrytesAsync(bundle.Transactions);
+      }
+      catch (Exception exception)
+      {
+        throw new MessengerException(ResponseCode.MessengerException, exception);
+      }
     }
   }
 }

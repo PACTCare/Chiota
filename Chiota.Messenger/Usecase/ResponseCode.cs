@@ -1,0 +1,23 @@
+﻿namespace Chiota.Messenger.Usecase
+{
+  /// <summary>
+  /// The response codes.
+  /// </summary>
+  public enum ResponseCode
+  {
+    /// <summary>
+    /// Returned if the use case is executed successfully
+    /// </summary>
+    Success = 1,
+
+    /// <summary>
+    /// Error code that is returned if an error occurs while adding the contact via IContactRepository
+    /// </summary>
+    CannotAddContact = -1,
+
+    /// <summary>
+    /// Error code that is returned if an error occurs while sending data via messenger
+    /// </summary>
+    MessengerException = -2,
+  }
+}

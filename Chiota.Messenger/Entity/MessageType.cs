@@ -8,6 +8,11 @@
   public static class MessageType
   {
     /// <summary>
+    /// The key exchange.
+    /// </summary>
+    public const string KeyExchange = "KeyExchange";
+
+    /// <summary>
     /// The request contact.
     /// </summary>
     public const string RequestContact = "RequestContact";
