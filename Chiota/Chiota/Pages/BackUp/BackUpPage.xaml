@@ -15,7 +15,7 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
-        <Style x:Key="BackUpContainerStackLayout" TargetType="StackLayout">
+        <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
             <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
             <Setter Property="Padding" Value="20"/>
@@ -67,7 +67,7 @@
                         </Label>
                     </StackLayout>
 
-                    <StackLayout Style="{DynamicResource BackUpContainerStackLayout}" Spacing="2">
+                    <StackLayout Style="{DynamicResource ContainerStackLayout}" Spacing="2">
                         <Label Style="{DynamicResource Label14}" Text="Most secure" HorizontalOptions="Center"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Write seed down" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
@@ -79,7 +79,7 @@
                         <Label Style="{DynamicResource Label14}" Text="Least secure" HorizontalOptions="Center"/>
                     </StackLayout>
                 </StackLayout>
-                <Button Style="{DynamicResource RoundedButton16}" IsEnabled="{Binding IsContinueEnabled}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}" Margin="16"/>
+                <Button Style="{DynamicResource RoundedButton16}" IsVisible="{Binding IsContinueVisible}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}" Margin="16"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -11,7 +11,7 @@
 
     <ContentPage.Resources>
 
-        <Style x:Key="LogInContainerStackLayout" TargetType="StackLayout">
+        <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
             <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
             <Setter Property="Padding" Value="20"/>
@@ -40,7 +40,7 @@
                     <Image Style="{DynamicResource LogoImage}"/>
                 </StackLayout>
 
-                <StackLayout Style="{DynamicResource LogInContainerStackLayout}">
+                <StackLayout Style="{DynamicResource ContainerStackLayout}">
                     <Button Style="{DynamicResource RoundedButton16}" Text="Register" FontAttributes="Bold" Command="{Binding RegisterCommand}"/>
                     <Button Style="{DynamicResource RoundedButton16}" Text="Set seed" FontAttributes="Bold" Command="{Binding SetSeedCommand}"/>
                 </StackLayout>

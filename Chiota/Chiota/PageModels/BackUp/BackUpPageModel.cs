@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Chiota.PageModels.Classes;
+using Chiota.Pages.BackUp;
 using Xamarin.Forms;
 
 namespace Chiota.PageModels.BackUp
@@ -11,21 +12,54 @@ namespace Chiota.PageModels.BackUp
     {
         #region Attributes
 
-        private bool _isContinueEnabled;
+        private string _seed;
+        private bool _isContinueVisible;
 
         #endregion
 
         #region Properties
 
-        public bool IsContinueEnabled
+        public bool IsContinueVisible
         {
-            get => _isContinueEnabled;
+            get => _isContinueVisible;
             set
             {
-                _isContinueEnabled = value;
-                OnPropertyChanged(nameof(IsContinueEnabled));
+                _isContinueVisible = value;
+                OnPropertyChanged(nameof(IsContinueVisible));
             }
         }
+
+        #endregion
+
+        #region Methods
+
+        #region Init
+
+        public override void Init(object data = null)
+        {
+            base.Init(data);
+
+            //Set the generated iota seed.
+            if(data != null)
+                _seed = data as string;
+
+            //Disable the continue button.
+            IsContinueVisible = false;
+        }
+
+        #endregion
+
+        #region Reverse
+
+        public override void Reverse(object data = null)
+        {
+            base.Reverse(data);
+
+            //Enable the continue button.
+            IsContinueVisible = true;
+        }
+
+        #endregion
 
         #endregion
 
@@ -52,9 +86,9 @@ namespace Chiota.PageModels.BackUp
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-
+                    await PushAsync(new WriteSeedPage(), _seed);
                 });
             }
         }
@@ -67,9 +101,9 @@ namespace Chiota.PageModels.BackUp
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-
+                    await PushAsync(new PaperCopyPage(), _seed);
                 });
             }
         }
@@ -82,9 +116,9 @@ namespace Chiota.PageModels.BackUp
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-
+                    await PushAsync(new QrCodePage(), _seed);
                 });
             }
         }

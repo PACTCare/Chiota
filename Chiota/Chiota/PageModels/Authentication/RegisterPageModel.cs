@@ -87,8 +87,11 @@ namespace Chiota.PageModels.Authentication
                             return;
                         }
 
+                        //Generate iota seed, TODO
+                        var seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
+
                         //Show the back up page.
-                        await PushAsync(new BackUpPage());
+                        await PushAsync(new BackUpPage(), seed);
                         return;
                     }
 
