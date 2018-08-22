@@ -1,5 +1,7 @@
 ﻿namespace Chiota.Messenger.Entity
 {
+  using Newtonsoft.Json;
+
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
@@ -24,6 +26,7 @@
 
     public IAsymmetricKey NtruKey { get; set; }
 
+    [JsonProperty("Request")]
     public bool Requested { get; set; }
 
     public bool Rejected { get; set; }

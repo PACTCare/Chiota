@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chiota.Messenger\Chiota.Messenger.csproj" />
+    <ProjectReference Include="..\Chiota\Chiota\Chiota.csproj" />
   </ItemGroup>
 
   <ItemGroup>
