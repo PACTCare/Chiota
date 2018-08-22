@@ -17,6 +17,26 @@
     /// <summary>
     /// Gets or sets the ntru key.
     /// </summary>
-    public IAsymmetricKey NtruKey { get; set; }
+    public IAsymmetricKey ContactNtruKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets the image hash.
+    /// </summary>
+    public string ImageHash { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the public key address.
+    /// </summary>
+    public Address PublicKeyAddress { get; set; }
+
+    /// <summary>
+    /// Gets or sets the request address.
+    /// </summary>
+    public Address RequestAddress { get; set; }
   }
 }

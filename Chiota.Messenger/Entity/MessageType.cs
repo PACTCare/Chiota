@@ -22,7 +22,7 @@
     /// </summary>
     static MessageType()
     {
-      Types = new List<string> { RequestContact };
+      Types = new List<string> { RequestContact, KeyExchange };
     }
 
     /// <summary>

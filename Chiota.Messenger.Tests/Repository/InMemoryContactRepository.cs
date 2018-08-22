@@ -27,9 +27,9 @@
     public List<Contact> PersistedContacts { get; }
 
     /// <inheritdoc />
-    public async Task AddContactAsync(Contact contact)
+    public async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
-      this.PersistedContacts.Add(contact);
+      this.PersistedContacts.Add(new Contact { ChatAddress = address, Requested = accepted, PublicKeyAddress = publicKeyAddress });
     }
   }
 }

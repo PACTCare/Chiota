@@ -16,7 +16,7 @@
   internal class ExceptionContactRepository : IContactRepository
   {
     /// <inheritdoc />
-    public Task AddContactAsync(Contact contact)
+    public Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
     }

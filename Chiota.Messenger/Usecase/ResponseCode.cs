@@ -19,5 +19,10 @@
     /// Error code that is returned if an error occurs while sending data via messenger
     /// </summary>
     MessengerException = -2,
+
+    /// <summary>
+    /// The unkown exception.
+    /// </summary>
+    UnkownException = -3
   }
 }

@@ -7,10 +7,13 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Messenger.Usecase.AddContact;
   using Chiota.Models;
+  using Chiota.Persistence;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
+  using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
@@ -20,6 +23,8 @@ namespace Chiota.ViewModels
 
   using ZXing.Net.Mobile.Forms;
 
+  using TangleMessenger = Chiota.Messenger.Service.TangleMessenger;
+
   public class AddContactViewModel : BaseViewModel
   {
     private string receiverAdress;
@@ -27,9 +32,16 @@ namespace Chiota.ViewModels
     private string qrSource;
 
     public AddContactViewModel()
-        {
+    {
       this.QrSource = UserService.CurrentUser.PublicKeyAddress;
+
+      // TODO: this has to be completely done via DI 
+      this.AddContactInteractor = new AddContactInteractor(
+        DependencyResolver.Resolve<AbstractSqlLiteDb>(),
+        new TangleMessenger(DependencyResolver.Resolve<IRepositoryFactory>().Create()));
     }
+
+    public AddContactInteractor AddContactInteractor { get; }
 
     public Action DisplayInvalidAdressPrompt { get; set; }
 
@@ -66,31 +78,19 @@ namespace Chiota.ViewModels
       DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
     }
 
-    private static async Task SaveParallel(Contact loadedContact)
+    private async Task SaveParallel(Contact loadedContact)
     {
-      var requestContact = new Contact
-                             {
-                               // faster than generating adresses
-                               ChatAddress = Seed.Random().ToString(),
-                               ChatKeyAddress = Seed.Random().ToString(),
-                               Name = UserService.CurrentUser.Name,
-                               ImageHash = UserService.CurrentUser.ImageHash,
-                               ContactAddress = UserService.CurrentUser.RequestAddress,
-                               Request = true,
-                               Rejected = false,
-                               NtruKey = null,
-                               PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress
-                             };
+      var request = new AddContactRequest
+                      {
+                        Name = UserService.CurrentUser.Name,
+                        ImageHash = UserService.CurrentUser.ImageHash,
+                        RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                        PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                        ContactAddress = new Address(loadedContact.ContactAddress),
+                        ContactNtruKey = loadedContact.NtruKey
+                      };
 
-      var saveSqlContact = new SqLiteHelper().SaveContact(requestContact.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
-
-      // encrypt contact request? too much infos needed here for one message needs to get request address plus chatadress 
-      var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(requestContact), loadedContact.ContactAddress);
-
-      var encryptedChatPasSalt = new NtruKex(true).Encrypt(loadedContact.NtruKey, Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
-      var encryptedChatKeyToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), requestContact.ChatKeyAddress);
-
-      await Task.WhenAll(saveSqlContact, chatInformationToTangle, encryptedChatKeyToTangle);
+      await this.AddContactInteractor.ExecuteAsync(request);
     }
 
     private async Task ScanBarcode()
@@ -129,7 +129,7 @@ namespace Chiota.ViewModels
           }
           else if (contacts[0]?.NtruKey != null && contacts[0].ContactAddress != null)
           {
-            await SaveParallel(contacts[0]);
+            await this.SaveParallel(contacts[0]);
 
             this.SuccessfulRequestPrompt();
           }

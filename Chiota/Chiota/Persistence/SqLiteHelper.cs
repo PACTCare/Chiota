@@ -1,4 +1,4 @@
-﻿namespace Chiota.Services
+﻿namespace Chiota.Persistence
 {
   using System;
   using System.Collections.Generic;
@@ -6,7 +6,6 @@
 
   using Chiota.Models;
   using Chiota.Models.SqLite;
-  using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
 
   using SQLite;
@@ -19,7 +18,7 @@
 
     public SqLiteHelper()
     {
-      this.connection = DependencyResolver.Resolve<ISqlLiteDb>().GetConnection();
+      this.connection = DependencyResolver.Resolve<AbstractSqlLiteDb>().GetConnection();
       this.connection.CreateTableAsync<SqLiteMessage>();
       this.connection.CreateTableAsync<SqLiteContacts>();
     }
@@ -68,18 +67,6 @@
                              };
 
       await this.connection.InsertAsync(sqlLiteMessage);
-    }
-
-    public async Task SaveContact(string addresse, bool accepted, string publicKeyAddress)
-    {
-      var sqLiteContacts = new SqLiteContacts
-                             {
-                               ChatAddress = addresse,
-                               Accepted = accepted,
-                               PublicKeyAddress = publicKeyAddress
-                             };
-
-      await this.connection.InsertAsync(sqLiteContacts);
     }
   }
 }

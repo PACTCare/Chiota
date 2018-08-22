@@ -27,6 +27,7 @@
                  PlaceholderColor="Gray" 
                  TextChanged="Handler_TextChanged">
       </SearchBar>
+      <Button Text="Add" Clicked="HandleNewContactClick" />
       <ListView x:Name="ContactsList"
                 CachingStrategy="RecycleElement"
                 IsPullToRefreshEnabled="True"

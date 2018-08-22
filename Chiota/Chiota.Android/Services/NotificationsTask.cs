@@ -10,6 +10,7 @@
   using Android.Support.V4.App;
 
   using Chiota.Models;
+  using Chiota.Persistence;
   using Chiota.Services;
   using Chiota.Services.Storage;
 

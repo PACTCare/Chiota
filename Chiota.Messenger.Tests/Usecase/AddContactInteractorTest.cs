@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Tests.Usecase
 {
+  using System;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
@@ -14,6 +15,7 @@
   using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -29,7 +31,15 @@
     {
       var respository = new ExceptionContactRepository();
       var interactor = new AddContactInteractor(respository, new InMemoryMessenger());
-      var request = new AddContactRequest { ContactAddress = new Address(), NtruKey = this.NtruKeyPair.PublicKey };
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = new Address(),
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(Seed.Random().Value),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(Seed.Random().Value)
+                      };
 
       var response = await interactor.ExecuteAsync(request);
 
@@ -42,12 +52,26 @@
       var respository = new InMemoryContactRepository();
       var interactor = new AddContactInteractor(respository, new InMemoryMessenger());
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-      var request = new AddContactRequest { ContactAddress = contactAddress, NtruKey = this.NtruKeyPair.PublicKey };
+      var publicKeyAddress = Seed.Random().Value;
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = contactAddress,
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(Seed.Random().Value),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(publicKeyAddress)
+                      };
 
       await interactor.ExecuteAsync(request);
 
       Assert.AreEqual(1, respository.PersistedContacts.Count);
-      Assert.AreEqual(contactAddress.Value, respository.PersistedContacts[0].ContactAddress);
+
+      var contact = respository.PersistedContacts[0];
+      Assert.AreEqual(publicKeyAddress, contact.PublicKeyAddress);
+      Assert.IsTrue(contact.Requested);
+      Assert.IsNotNull(contact.ChatAddress);
+
     }
 
     [TestMethod]
@@ -57,7 +81,15 @@
       var respository = new InMemoryContactRepository();
       var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-      var request = new AddContactRequest { ContactAddress = contactAddress };
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = contactAddress,
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(Seed.Random().Value),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(Seed.Random().Value)
+                      };
 
       var response = await interactor.ExecuteAsync(request);
 
@@ -72,7 +104,18 @@
       var respository = new InMemoryContactRepository();
       var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-      var request = new AddContactRequest { ContactAddress = contactAddress, NtruKey = this.NtruKeyPair.PublicKey };
+      var requestAddress = Seed.Random().Value;
+      var publicKeyAddress = Seed.Random().Value;
+
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = contactAddress,
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(requestAddress),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(publicKeyAddress)
+                      };
 
       await interactor.ExecuteAsync(request);
 
@@ -81,9 +124,17 @@
       var sentMessage = messenger.SentMessages[0];
       Assert.AreEqual(contactAddress.Value, sentMessage.Receiver.Value);
 
-      var sentPayload = JsonConvert.DeserializeObject<Contact>(sentMessage.Payload.ToUtf8String());
+      var utf8String = sentMessage.Payload.ToUtf8String();
+      var sentPayload = JsonConvert.DeserializeObject<Contact>(utf8String);
 
-      Assert.AreEqual(contactAddress.Value, sentPayload.ContactAddress);
+      Assert.AreEqual("kjasdjkahsda89dafhfafa", sentPayload.ImageHash);
+      Assert.AreEqual("Chiota User", sentPayload.Name);
+      Assert.AreEqual(publicKeyAddress, sentPayload.PublicKeyAddress);
+      Assert.AreEqual(requestAddress, sentPayload.ContactAddress);
+      Assert.IsTrue(InputValidator.IsAddress(sentPayload.ChatAddress));
+      Assert.IsTrue(InputValidator.IsAddress(sentPayload.ChatKeyAddress));
+      Assert.IsTrue(sentPayload.Requested);
+      Assert.IsFalse(sentPayload.Rejected);
     }
 
     [TestMethod]
@@ -93,12 +144,42 @@
       var respository = new InMemoryContactRepository();
       var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-      var request = new AddContactRequest { ContactAddress = contactAddress, NtruKey = this.NtruKeyPair.PublicKey };
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = contactAddress,
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(Seed.Random().Value),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(Seed.Random().Value)
+                      };
 
       var response = await interactor.ExecuteAsync(request);
 
       Assert.AreEqual(2, messenger.SentMessages.Count);
       Assert.AreEqual(ResponseCode.Success, response.Code);
+    }
+
+    [TestMethod]
+    public async Task TestUnkownExceptionIsThrownShouldReturnErrorCode()
+    {
+      var messenger = new ExceptionMessenger(new Exception("Hi"));
+      var respository = new InMemoryContactRepository();
+      var interactor = new AddContactInteractor(respository, messenger);
+      var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
+      var request = new AddContactRequest
+                      {
+                        ContactAddress = contactAddress,
+                        ContactNtruKey = this.NtruKeyPair.PublicKey,
+                        RequestAddress = new Address(Seed.Random().Value),
+                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        Name = "Chiota User",
+                        PublicKeyAddress = new Address(Seed.Random().Value)
+                      };
+
+      var response = await interactor.ExecuteAsync(request);
+
+      Assert.AreEqual(ResponseCode.UnkownException, response.Code);
     }
 
     private IAsymmetricKeyPair NtruKeyPair =>

@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.AddContact
 {
+  using System;
   using System.Text;
   using System.Threading.Tasks;
 
@@ -48,28 +49,43 @@
     {
       try
       {
-        var contact = new Contact { ContactAddress = request.ContactAddress.Value };
+        var requesterDetails = new Contact
+                                 {
+                                   ChatAddress = Seed.Random().ToString(),
+                                   ChatKeyAddress = Seed.Random().ToString(),
+                                   Name = request.Name,
+                                   ImageHash = request.ImageHash,
+                                   ContactAddress = request.RequestAddress.Value,
+                                   Requested = true,
+                                   Rejected = false,
+                                   NtruKey = null,
+                                   PublicKeyAddress = request.PublicKeyAddress.Value
+                                 };
 
         await this.Messenger.SendMessageAsync(
-          new Message(MessageType.RequestContact, TryteString.FromUtf8String(JsonConvert.SerializeObject(contact)), request.ContactAddress));
+          new Message(MessageType.RequestContact, TryteString.FromUtf8String(JsonConvert.SerializeObject(requesterDetails)), request.ContactAddress));
 
         var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(
-          request.NtruKey,
+          request.ContactNtruKey,
           Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
 
         await this.Messenger.SendMessageAsync(
           new Message(
             MessageType.KeyExchange,
             new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + Constants.End),
-            request.ContactAddress));
+            new Address(requesterDetails.ChatKeyAddress)));
 
-        await this.Repository.AddContactAsync(contact);
+        await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);
 
         return new AddContactResponse { Code = ResponseCode.Success };
       }
       catch (MessengerException exception)
       {
         return new AddContactResponse { Code = exception.Code };
+      }
+      catch (Exception)
+      {
+        return new AddContactResponse { Code = ResponseCode.UnkownException };
       }
     }
   }

@@ -2,8 +2,6 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Entity;
-
   /// <summary>
   /// The ContactRepository interface.
   /// </summary>
@@ -12,12 +10,18 @@
     /// <summary>
     /// The add contact async.
     /// </summary>
-    /// <param name="contact">
-    /// The contact.
+    /// <param name="address">
+    /// The address.
+    /// </param>
+    /// <param name="accepted">
+    /// The accepted.
+    /// </param>
+    /// <param name="publicKeyAddress">
+    /// The public Key Address.
     /// </param>
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    Task AddContactAsync(Contact contact);
+    Task AddContactAsync(string address, bool accepted, string publicKeyAddress);
   }
 }

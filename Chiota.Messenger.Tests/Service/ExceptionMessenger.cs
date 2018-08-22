@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Tests.Service
 {
+  using System;
   using System.Diagnostics.CodeAnalysis;
   using System.Threading.Tasks;
 
@@ -14,9 +15,21 @@
   [ExcludeFromCodeCoverage]
   internal class ExceptionMessenger : IMessenger
   {
+    public ExceptionMessenger(Exception exception = null)
+    {
+      this.Exception = exception;
+    }
+
+    private Exception Exception { get; }
+
     /// <inheritdoc />
     public Task SendMessageAsync(Message message)
     {
+      if (this.Exception != null)
+      {
+        throw this.Exception;
+      }
+
       throw new MessengerException(ResponseCode.MessengerException, null);
     }
   }
