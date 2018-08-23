@@ -5,7 +5,9 @@
   using System.Windows.Input;
 
   using Chiota.Models;
+  using Chiota.Persistence;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
@@ -28,7 +30,10 @@
       this.user = user;
       this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
+      this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteDb>();
     }
+
+    public AbstractSqlLiteDb ContactRepository { get; }
 
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
 
@@ -49,7 +54,7 @@
       if (!this.isClicked)
       {
         this.isClicked = true;
-        await new SqLiteHelper().SaveContact(this.ChatAddress, false, this.user.PublicKeyAddress);
+        await this.ContactRepository.AddContactAsync(this.ChatAddress, false, this.user.PublicKeyAddress);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
@@ -72,7 +77,7 @@
     private async Task SaveParallelAcceptAsync()
     {
       var encryptedChatKeyToTangle = this.GenerateChatKeyToTangle();
-      var saveSqlContact = new SqLiteHelper().SaveContact(this.ChatAddress, true, this.user.PublicKeyAddress);
+      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, this.user.PublicKeyAddress);
 
       var contact = new Contact
       {

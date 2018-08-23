@@ -8,9 +8,9 @@
 
   using Windows.Storage;
 
-  public class SqlLiteDb : ISqlLiteDb
+  public class SqlLiteDb : AbstractSqlLiteDb
   {
-    public SQLiteAsyncConnection GetConnection()
+    public override SQLiteAsyncConnection GetConnection()
     {
       var documentsPath = ApplicationData.Current.LocalFolder.Path;
       var path = Path.Combine(documentsPath, "ChiotaSQLite.db3");

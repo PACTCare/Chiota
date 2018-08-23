@@ -11,6 +11,8 @@
   using Windows.ApplicationModel.Background;
   using Windows.UI.Notifications;
 
+  using Chiota.Persistence;
+
   /// <summary>
   /// The main page.
   /// </summary>

@@ -33,7 +33,7 @@ namespace Chiota.ViewModels
 
     private MediaFile mediaFile;
 
-    private string defaultNode = "https://field.carriota.com:443";
+    private string defaultNode = "https://field.deviota.com:443";
 
     public SettingsViewModel()
     {

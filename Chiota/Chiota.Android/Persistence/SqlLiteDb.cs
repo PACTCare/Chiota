@@ -3,13 +3,14 @@
   using System;
   using System.IO;
 
+  using Chiota.Models.SqLite;
   using Chiota.Persistence;
 
   using SQLite;
 
-  public class SqlLiteDb : ISqlLiteDb
+  public class SqlLiteDb : AbstractSqlLiteDb
   {
-    public SQLiteAsyncConnection GetConnection()
+    public override SQLiteAsyncConnection GetConnection()
     {
       var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
       var path = Path.Combine(documentsPath, "ChiotaSQLite.db3");

@@ -171,7 +171,7 @@
     <Content Include="iota.png" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
-    <Content Include="loading.png" />
+    <Content Include="Assets\loading.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -241,6 +241,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj">
+      <Project>{851c12aa-eb37-4242-bc35-4c4430584e96}</Project>
+      <Name>Chiota.Messenger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UWPRuntimeComponent\UWPRuntimeComponent.csproj">
       <Project>{a7fca39f-0fee-4213-b0d8-ea6b7b228e50}</Project>
       <Name>UWPRuntimeComponent</Name>

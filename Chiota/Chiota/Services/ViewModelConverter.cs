@@ -3,7 +3,7 @@
   using Chiota.Models;
   using Chiota.ViewModels;
 
-  public class ViewModelConverter
+  public static class ViewModelConverter
   {
     public static ContactListViewModel ContactToViewModel(Contact contact, User user, ViewCellObject viewCellObject)
     {

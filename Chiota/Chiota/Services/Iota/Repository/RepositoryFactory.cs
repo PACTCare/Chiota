@@ -26,7 +26,7 @@
     /// </summary>
     private readonly List<string> nodeUriList = new List<string>
                                                   {
-                                                    "https://field.carriota.com:443",
+                                                    "https://field.deviota.com:443",
                                                     "https://nodes.iota.fm:443",
                                                     "https://trinity.iota.fm:443",
                                                     "https://iotanode.us:443",
