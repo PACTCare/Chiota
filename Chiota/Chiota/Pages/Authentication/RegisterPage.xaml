@@ -35,6 +35,13 @@
             <Setter Property="LineBreakMode" Value="WordWrap"/>
             <Setter Property="Margin" Value="0, 16, 0, 0"/>
         </Style>
+
+        <Style x:Key="ContinueButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="Margin" Value="16"/>
+        </Style>
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -66,8 +73,8 @@
                     </Frame>
                   </StackLayout>
                 </StackLayout>
-                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}" Margin="16"/>
             </StackLayout>
+            <Button Style="{DynamicResource ContinueButtonLayout}" Text="Continue" Command="{Binding ContinueCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -168,6 +168,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="arrow_down.png" />
+    <Content Include="arrow_up.png" />
     <Content Include="help.png" />
     <Content Include="chiota.png" />
     <None Include="Package.xml" />

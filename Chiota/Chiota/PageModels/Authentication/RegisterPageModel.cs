@@ -53,8 +53,8 @@ namespace Chiota.PageModels.Authentication
             base.ViewIsAppearing();
 
             //Clear the user inputs.
-            Name = "";
-            Password = "";
+            Name = "Test";
+            Password = "1234";
         }
 
         #endregion

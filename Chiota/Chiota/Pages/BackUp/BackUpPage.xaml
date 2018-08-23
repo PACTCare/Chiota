@@ -47,6 +47,13 @@
             <Setter Property="WidthRequest" Value="1"/>
             <Setter Property="HeightRequest" Value="16"/>
         </Style>
+
+        <Style x:Key="ContinueButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="Margin" Value="16"/>
+        </Style>
     </ContentPage.Resources>
 
     <ContentPage.Content>
@@ -79,8 +86,8 @@
                         <Label Style="{DynamicResource Label14}" Text="Least secure" HorizontalOptions="Center"/>
                     </StackLayout>
                 </StackLayout>
-                <Button Style="{DynamicResource RoundedButton16}" IsVisible="{Binding IsContinueVisible}" Text="Continue" FontAttributes="Bold" Command="{Binding ContinueCommand}" Margin="16"/>
             </StackLayout>
+            <Button Style="{DynamicResource ContinueButtonLayout}" IsVisible="{Binding IsContinueVisible}" Text="Continue" Command="{Binding ContinueCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
