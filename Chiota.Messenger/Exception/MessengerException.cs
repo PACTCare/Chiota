@@ -18,7 +18,7 @@
     /// <param name="innerException">
     /// The inner exception.
     /// </param>
-    public MessengerException(ResponseCode code, Exception innerException)
+    public MessengerException(ResponseCode code, Exception innerException = null)
       : base(code.ToString(), innerException)
     {
       this.Code = code;

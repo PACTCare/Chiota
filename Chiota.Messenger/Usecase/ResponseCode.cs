@@ -23,6 +23,11 @@
     /// <summary>
     /// The unkown exception.
     /// </summary>
-    UnkownException = -3
+    UnkownException = -3,
+
+    /// <summary>
+    /// Error code that is returned when no contact information is present while calling IContactInformationRepository::LoadContactInformationByAddressAsync
+    /// </summary>
+    NoContactInformationPresent = -4,
   }
 }

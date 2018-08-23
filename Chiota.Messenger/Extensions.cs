@@ -1,9 +1,14 @@
 ﻿namespace Chiota.Messenger
 {
+  using System;
+  using System.Collections.Generic;
+
+  using Tangle.Net.Entity;
+
   /// <summary>
   /// The extensions.
   /// </summary>
-  internal static class Extensions
+  public static class Extensions
   {
     /// <summary>
     /// The encode bytes as string.
@@ -14,7 +19,7 @@
     /// <returns>
     /// The <see cref="string"/>.
     /// </returns>
-    public static string EncodeBytesAsString(this byte[] byteArray)
+    public static string EncodeBytesAsString(this IEnumerable<byte> byteArray)
     {
       string[] trytesArray =
         {
@@ -40,6 +45,30 @@
       }
 
       return trytes;
+    }
+
+    public static byte[] DecodeBytesFromTryteString(this TryteString tryteString)
+    {
+      var trytesArray = new List<string> { "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+
+      // If input length is odd, return null
+      if (tryteString.Value.Length % 2 != 0)
+      {
+        return null;
+      }
+
+      var byteList = new List<byte>();
+
+      for (var i = 0; i < tryteString.Value.Length; i += 2)
+      {
+        var firstValue = trytesArray.IndexOf(tryteString.Value.Substring(i, 1));
+        var secondValue = trytesArray.IndexOf(tryteString.Value.Substring(i + 1, 1));
+
+        var value = firstValue + (secondValue * 27);
+        byteList.Add(Convert.ToByte(value));
+      }
+
+      return byteList.ToArray();
     }
   }
 }
