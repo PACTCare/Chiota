@@ -40,14 +40,14 @@
             <Setter Property="FontAttributes" Value="Bold"/>
             <Setter Property="HorizontalOptions" Value="Center"/>
             <Setter Property="WidthRequest" Value="256"/>
-            <Setter Property="Margin" Value="16"/>
+            <Setter Property="Margin" Value="32"/>
         </Style>
     </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
                   <StackLayout Style="{DynamicResource LogoStackLayout}">
                       <!-- Logo of the iota chat app-->
                       <Image Style="{DynamicResource LogoImage}"/>

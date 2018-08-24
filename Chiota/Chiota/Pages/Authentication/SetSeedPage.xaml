@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
-             x:Class="Chiota.Pages.Authentication.LogInPage"
-             NavigationPage.HasNavigationBar="False">
-    
+             x:Class="Chiota.Pages.Authentication.SetSeedPage"
+             Title="Set seed">
+
     <ContentPage.BindingContext>
-        <authentication:LogInPageModel/>
+        <authentication:SetSeedPageModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
@@ -36,15 +36,17 @@
             <Setter Property="Margin" Value="0, 16, 0, 0"/>
         </Style>
 
-        <Style x:Key="LogInButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+        <Style x:Key="ScanQrCodeButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
             <Setter Property="FontAttributes" Value="Bold"/>
             <Setter Property="HorizontalOptions" Value="Center"/>
             <Setter Property="WidthRequest" Value="256"/>
         </Style>
 
-        <Style x:Key="SeedButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+        <Style x:Key="ContinueButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
             <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="WidthRequest" Value="128"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="Margin" Value="32"/>
         </Style>
     </ContentPage.Resources>
 
@@ -68,17 +70,13 @@
 
                     <StackLayout Style="{DynamicResource ContainerStackLayout}">
                         <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="Password"/>
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="Seed"/>
                         </Frame>
-                        <Button Style="{DynamicResource LogInButtonLayout}" Text="Log in" Command="{Binding LogInCommand}"/>
+                        <Button Style="{DynamicResource ScanQrCodeButtonLayout}" Text="Scan QR code" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
-
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="32">
-                <Button Style="{DynamicResource SeedButtonLayout}" Text="Set seed" Command="{Binding SetSeedCommand}"/>
-                <Button Style="{DynamicResource SeedButtonLayout}" Text="Change seed" Command="{Binding ChangeSeedCommand}"/>
-            </StackLayout>
+            <Button Style="{DynamicResource ContinueButtonLayout}" Text="Continue" Command="{Binding ContinueCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

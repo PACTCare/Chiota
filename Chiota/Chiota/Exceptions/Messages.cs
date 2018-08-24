@@ -19,5 +19,11 @@ namespace Chiota.Exceptions
         public static string AuthFailedPasswordConfirmation = "Failed password confirmation exception was thrown.";
 
         #endregion
+
+        #region Back up exceptions
+
+        public const string BackUpFailedSeedConfirmation = "Failed seed confirmation exception was thrown.";
+
+        #endregion
     }
 }

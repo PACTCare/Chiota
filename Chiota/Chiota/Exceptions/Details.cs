@@ -17,5 +17,11 @@ namespace Chiota.Exceptions
         public static string AuthFailedPasswordConfirmation = "Please verify if you have insert the correct password and try it again.";
 
         #endregion
+
+        #region Back up exceptions
+
+        public const string BackUpFailedSeedConfirmation = "Please verify if you have insert the correct seed and try it again.";
+
+        #endregion
     }
 }

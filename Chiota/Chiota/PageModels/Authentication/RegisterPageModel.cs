@@ -9,6 +9,7 @@ using Chiota.Pages.BackUp;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
+using Chiota.Views;
 using Xamarin.Forms;
 
 namespace Chiota.PageModels.Authentication
@@ -17,6 +18,7 @@ namespace Chiota.PageModels.Authentication
     {
         #region Attributes
 
+        private bool _backUp;
         private string _name;
         private string _password;
 
@@ -42,6 +44,17 @@ namespace Chiota.PageModels.Authentication
                 _password = value;
                 OnPropertyChanged(nameof(Password));
             }
+        }
+
+        #endregion
+
+        #region Init
+
+        public override void Init(object data = null)
+        {
+            base.Init(data);
+
+            if (data != null) _backUp = (bool) data;
         }
 
         #endregion
@@ -87,11 +100,18 @@ namespace Chiota.PageModels.Authentication
                             return;
                         }
 
-                        //Generate iota seed, TODO
-                        var seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
+                        if (!_backUp)
+                        {
+                            //Generate iota seed, TODO
+                            var seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
 
-                        //Show the back up page.
-                        await PushAsync(new BackUpPage(), seed);
+                            //Show the back up page.
+                            await PushAsync(new BackUpPage(), seed);
+                            return;
+                        }
+
+                        //TODO Show the contact page.
+                        //await PushAsync(new ContactPage());
                         return;
                     }
 

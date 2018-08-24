@@ -19,5 +19,11 @@ namespace Chiota.Exceptions
         public const int AuthFailedPasswordConfirmation = -20000;
 
         #endregion
+
+        #region Back up exceptions
+
+        public const int BackUpFailedSeedConfirmation = -30000;
+
+        #endregion
     }
 }

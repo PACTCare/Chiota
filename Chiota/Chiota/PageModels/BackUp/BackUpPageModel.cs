@@ -71,9 +71,9 @@ namespace Chiota.PageModels.BackUp
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-
+                    await PushAsync(new BackUpHelpPage());
                 });
             }
         }
@@ -131,9 +131,9 @@ namespace Chiota.PageModels.BackUp
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-
+                    await PushAsync(new ConfirmSeedPage(), _seed);
                 });
             }
         }

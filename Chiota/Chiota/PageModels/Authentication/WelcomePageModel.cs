@@ -21,7 +21,7 @@ namespace Chiota.PageModels.Authentication
                 return new Command(async () =>
                 {
                     //Show register page.
-                    await PushAsync(new RegisterPage());
+                    await PushAsync(new RegisterPage(), false);
                 });
             }
         }
@@ -34,9 +34,9 @@ namespace Chiota.PageModels.Authentication
         {
             get
             {
-                return new Command(() =>
+                return new Command(async () =>
                 {
-                    //Not implemented
+                    await PushAsync(new SetSeedPage());
                 });
             }
         }

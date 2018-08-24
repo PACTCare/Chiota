@@ -129,4 +129,19 @@ namespace Chiota.Exceptions
     }
 
     #endregion
+
+    #region Back up exceptions
+
+    public class BackUpFailedSeedConfirmationException : BaseException
+    {
+        #region Constructors
+
+        public BackUpFailedSeedConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.BackUpFailedSeedConfirmation, Titles.BackUpFailedSeedConfirmation, Messages.BackUpFailedSeedConfirmation, Details.BackUpFailedSeedConfirmation)
+        {
+        }
+
+        #endregion
+    }
+
+    #endregion
 }
