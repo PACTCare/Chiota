@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:backUp="clr-namespace:Chiota.PageModels.BackUp;assembly=Chiota"
+             x:Class="Chiota.Pages.BackUp.PaperCopyPage"
+             Title="Print paper copy">
+    
+    <ContentPage.BindingContext>
+        <backUp:PaperCopyPageModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <Style x:Key="LogoStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="128"/>
+            <Setter Property="HeightRequest" Value="128"/>
+        </Style>
+
+        <Style x:Key="PaperCopyLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
+            <Setter Property="WidthRequest" Value="192"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+            <Setter Property="Margin" Value="0, 16, 0, 0"/>
+        </Style>
+
+        <Style x:Key="PrintButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="Margin" Value="32"/>
+        </Style>
+
+        <Style x:Key="SeedListView" TargetType="ListView">
+            <Setter Property="HeightRequest" Value="288"/>
+            <Setter Property="WidthRequest" Value="208"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="HasUnevenRows" Value="True"/>
+            <Setter Property="IsEnabled" Value="False"/>
+        </Style>
+
+        <Style x:Key="SeedLetterLayout" TargetType="Label">
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+            <Setter Property="HeightRequest" Value="32"/>
+            <Setter Property="WidthRequest" Value="16"/>
+        </Style>
+
+        <Style x:Key="SeedLineStackLayout" TargetType="StackLayout">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Spacing" Value="8"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Spacing="24">
+                    <StackLayout Style="{DynamicResource LogoStackLayout}">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource LogoImage}"/>
+                        <Label Style="{DynamicResource PaperCopyLabelLayout}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Please print your "/>
+                                    <Span Text="seed" FontAttributes="Bold"/>
+                                    <Span Text=" and "/>
+                                    <Span Text="keep it safe" FontAttributes="Bold"/>
+                                    <Span Text="."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#321d4999" HorizontalOptions="Center" VerticalOptions="Center">
+                        <StackLayout Padding="16" HorizontalOptions="Center" VerticalOptions="Center">
+                            <ListView ItemsSource="{Binding Seed.Lines}" Style="{DynamicResource SeedListView}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <StackLayout Style="{DynamicResource SeedLineStackLayout}">
+                                                <Label Text="{Binding List[0]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[1]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[2]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[3]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[4]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[5]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[6]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[7]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                                <Label Text="{Binding List[8]}" Style="{DynamicResource SeedLetterLayout}"/>
+                                            </StackLayout>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackLayout>
+                    </Frame>
+
+                </StackLayout>
+            </StackLayout>
+            <Button Style="{DynamicResource PrintButtonLayout}" Text="Print" Command="{Binding PrintCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

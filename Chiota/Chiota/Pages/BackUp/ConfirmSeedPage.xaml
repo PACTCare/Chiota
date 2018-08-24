@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:backUp="clr-namespace:Chiota.PageModels.BackUp;assembly=Chiota"
+             x:Class="Chiota.Pages.BackUp.ConfirmSeedPage"
+             Title="Confirm seed">
+
+    <ContentPage.BindingContext>
+        <backUp:ConfirmSeedPageModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Spacing" Value="8"/>
+            <Setter Property="WidthRequest" Value="256"/>
+        </Style>
+
+        <Style x:Key="LogoStackLayout" TargetType="StackLayout">
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="128"/>
+            <Setter Property="HeightRequest" Value="128"/>
+        </Style>
+
+        <Style x:Key="RegisterLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+            <Setter Property="Margin" Value="0, 16, 0, 0"/>
+        </Style>
+
+        <Style x:Key="ScanQrCodeButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+        </Style>
+
+        <Style x:Key="ContinueButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="Margin" Value="32"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
+                    <StackLayout Style="{DynamicResource LogoStackLayout}">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource LogoImage}"/>
+                        <Label Style="{DynamicResource RegisterLabelLayout}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Please confirm your "/>
+                                    <Span Text="seed" FontAttributes="Bold"/>
+                                    <Span Text="."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <StackLayout Style="{DynamicResource ContainerStackLayout}">
+                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="Seed"/>
+                        </Frame>
+                        <Button Style="{DynamicResource ScanQrCodeButtonLayout}" Text="Scan QR code" Command="{Binding ScanQrCodeCommand}"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+            <Button Style="{DynamicResource ContinueButtonLayout}" Text="Continue" Command="{Binding ContinueCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
