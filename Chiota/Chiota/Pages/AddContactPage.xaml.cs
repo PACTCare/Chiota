@@ -21,9 +21,6 @@
 
       var vm = new AddContactViewModel { Navigation = this.Navigation }; 
 
-      vm.DisplayInvalidAdressPrompt += () => this.DisplayAlert("Error", "Invalid address, try again", "OK");
-      vm.SuccessfulRequestPrompt += () => this.DisplayAlert("Successful Request", "Your new contact needs to accept the request before you can start chatting!", "OK");
-
       this.ReceiverAdress.Completed += (object sender, EventArgs e) =>
         {
           vm.SubmitCommand.Execute(null);

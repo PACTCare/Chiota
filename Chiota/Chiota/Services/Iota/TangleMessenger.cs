@@ -7,6 +7,7 @@
 
   using Chiota.Models;
   using Chiota.Models.SqLite;
+  using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota.Repository;
 

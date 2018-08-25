@@ -186,6 +186,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\image_splash_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj">
+      <Project>{851c12aa-eb37-4242-bc35-4c4430584e96}</Project>
+      <Name>Chiota.Messenger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CEXEngine\CEXEngine.csproj">
       <Project>{f63f1625-804a-431d-99a7-8d636b0766de}</Project>
       <Name>CEXEngine</Name>

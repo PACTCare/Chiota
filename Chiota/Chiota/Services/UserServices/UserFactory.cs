@@ -25,7 +25,7 @@
         Application.Current.Properties[ChiotaConstants.SettingsImageKey + addresses[0].Value] = "QmSZQmqVyaQmuHWnPK8hiDaifTY66KPJ7XcBNHBJvsfLEM"; // Default image
         Application.Current.Properties[ChiotaConstants.SettingsNameKey + addresses[0].Value] = string.Empty;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = true;
-        Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.carriota.com:443";
+        Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.deviota.com:443";
         await Application.Current.SavePropertiesAsync();
       }
 

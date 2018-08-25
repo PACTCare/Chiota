@@ -1,0 +1,20 @@
+﻿namespace Chiota.Messenger
+{
+  using Tangle.Net.Entity;
+
+  /// <summary>
+  /// The constants.
+  /// </summary>
+  public static class Constants
+  {
+    /// <summary>
+    /// The end.
+    /// </summary>
+    public const string End = "9ENDEGUTALLESGUT9";
+
+    /// <summary>
+    /// The tag.
+    /// </summary>
+    public static Tag Tag => new Tag("CHIOTAYOURIOTACHATAPP");
+  }
+}

@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj" />
     <ProjectReference Include="..\CEXEngine\CEXEngine.csproj" />
   </ItemGroup>
 
