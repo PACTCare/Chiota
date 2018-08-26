@@ -84,5 +84,5 @@ namespace Chiota.Tests
 
       /// <inheritdoc />
       public IReadOnlyList<Page> NavigationStack { get; }
-    }
+  }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiota.Tests.Presenters
+﻿namespace Chiota.Tests.Presenters
 {
+  using System;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Usecase;
@@ -19,10 +16,12 @@ namespace Chiota.Tests.Presenters
       [DataRow(ResponseCode.Success, "Successful Request", "Your new contact needs to accept the request before you can start chatting!.")]
       public async Task TestErrorCodesMapToDesiredTranslationsAndDisplayPopup(ResponseCode code, string title, string text)
       {
-        //var navigationStub = new NavigationStub();
+        // TODO: Navigation needs to be implemented without extensions to enable presenters to be tested
+        throw new NotImplementedException(); 
+        var navigationStub = new NavigationStub();
 
-        //var presenter = new AddContactPresenter(navigationStub);
-        //await presenter.Present(new AddContactResponse { Code = code });
-      }
+        var presenter = new AddContactPresenter(navigationStub);
+        await presenter.Present(new AddContactResponse { Code = code });
+    }
     }
 }
