@@ -17,7 +17,7 @@
     /// The accepted.
     /// </param>
     /// <param name="publicKeyAddress">
-    /// The public Key Address.
+    /// The public Key ContactAddress.
     /// </param>
     /// <returns>
     /// The <see cref="Task"/>.

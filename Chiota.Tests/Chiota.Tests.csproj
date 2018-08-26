@@ -6,28 +6,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
-    <PackageReference Include="Moq" Version="4.9.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Chiota.Messenger\Chiota.Messenger.csproj" />
     <ProjectReference Include="..\Chiota\Chiota\Chiota.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Tangle.Net.Standard">
-      <HintPath>C:\Users\Sebastian\.nuget\packages\tangle.net.standard\1.0.8\lib\netstandard2.0\Tangle.Net.Standard.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

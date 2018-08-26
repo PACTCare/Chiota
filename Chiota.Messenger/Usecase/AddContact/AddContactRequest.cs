@@ -15,11 +15,6 @@
     public Address ContactAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the ntru key.
-    /// </summary>
-    public IAsymmetricKey ContactNtruKey { get; set; }
-
-    /// <summary>
     /// Gets or sets the image hash.
     /// </summary>
     public string ImageHash { get; set; }
