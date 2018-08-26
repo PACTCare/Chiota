@@ -31,10 +31,14 @@
     /// <param name="messenger">
     /// The messenger.
     /// </param>
-    public AddContactInteractor(IContactRepository repository, IMessenger messenger)
+    /// <param name="contactInformationRepository">
+    /// The contact Information Repository.
+    /// </param>
+    public AddContactInteractor(IContactRepository repository, IMessenger messenger, IContactInformationRepository contactInformationRepository)
     {
       this.Repository = repository;
       this.Messenger = messenger;
+      this.ContactInformationRepository = contactInformationRepository;
     }
 
     /// <summary>
@@ -44,11 +48,15 @@
 
     private IMessenger Messenger { get; }
 
+    private IContactInformationRepository ContactInformationRepository { get; }
+
     /// <inheritdoc />
     public async Task<AddContactResponse> ExecuteAsync(AddContactRequest request)
     {
       try
       {
+        var contactInformation = await this.ContactInformationRepository.LoadContactInformationByAddressAsync(request.ContactAddress);
+
         var requesterDetails = new Contact
                                  {
                                    ChatAddress = Seed.Random().ToString(),
@@ -63,10 +71,10 @@
                                  };
 
         await this.Messenger.SendMessageAsync(
-          new Message(MessageType.RequestContact, TryteString.FromUtf8String(JsonConvert.SerializeObject(requesterDetails)), request.ContactAddress));
+          new Message(MessageType.RequestContact, TryteString.FromUtf8String(JsonConvert.SerializeObject(requesterDetails)), contactInformation.ContactAddress));
 
         var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(
-          request.ContactNtruKey,
+          contactInformation.NtruKey,
           Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
 
         await this.Messenger.SendMessageAsync(

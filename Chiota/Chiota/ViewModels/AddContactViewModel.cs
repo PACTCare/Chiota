@@ -9,26 +9,22 @@ namespace Chiota.ViewModels
   using Chiota.Extensions;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Models;
-  using Chiota.Persistence;
   using Chiota.Popups.PopupModels;
   using Chiota.Popups.PopupPageModels;
   using Chiota.Popups.PopupPages;
+  using Chiota.Presenters;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
-  using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
 
+  using Rg.Plugins.Popup.Extensions;
+
   using Tangle.Net.Entity;
-  using Tangle.Net.Repository.Factory;
   using Tangle.Net.Utils;
 
   using Xamarin.Forms;
 
   using ZXing.Net.Mobile.Forms;
-
-  using TangleMessenger = Chiota.Messenger.Service.TangleMessenger;
 
   public class AddContactViewModel : BaseViewModel
   {
@@ -36,17 +32,11 @@ namespace Chiota.ViewModels
 
     private string qrSource;
 
-    public AddContactViewModel()
+    public AddContactViewModel(IUsecaseInteractor<AddContactRequest, AddContactResponse> addContactInteractor)
     {
       this.QrSource = UserService.CurrentUser.PublicKeyAddress;
-
-      // TODO: this has to be completely done via DI 
-      this.AddContactInteractor = new AddContactInteractor(
-        DependencyResolver.Resolve<AbstractSqlLiteDb>(),
-        new TangleMessenger(DependencyResolver.Resolve<IRepositoryFactory>().Create()));
+      this.AddContactInteractor = addContactInteractor;
     }
-
-    public AddContactInteractor AddContactInteractor { get; }
 
     public string QrSource
     {
@@ -74,35 +64,11 @@ namespace Chiota.ViewModels
 
     public ICommand ScanCommand => new Command(async () => { await this.ScanBarcode(); });
 
+    private IUsecaseInteractor<AddContactRequest, AddContactResponse> AddContactInteractor { get; }
+
     public void AddAdressToClipboard()
     {
       DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserService.CurrentUser.PublicKeyAddress);
-    }
-
-    private async Task SaveParallel(Contact loadedContact)
-    {
-      var request = new AddContactRequest
-      {
-        Name = UserService.CurrentUser.Name,
-        ImageHash = UserService.CurrentUser.ImageHash,
-        RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-        PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-        ContactAddress = new Address(loadedContact.ContactAddress),
-        ContactNtruKey = loadedContact.NtruKey
-      };
-
-      var response = await this.AddContactInteractor.ExecuteAsync(request);
-
-      // TODO: This has to go in a presenter!
-      if (response.Code != ResponseCode.Success)
-      {
-        Debug.WriteLine(response.Code.ToString("G"));
-        await this.DisplayAlert("Error", "The contact could not be added. Please try again later.");
-      }
-      else
-      {
-        await this.DisplayAlert("Successful Request", "Your new contact needs to accept the request before you can start chatting!.");
-      }
     }
 
     private async Task ScanBarcode()
@@ -126,38 +92,30 @@ namespace Chiota.ViewModels
     {
       this.ReceiverAdress = this.ReceiverAdress.Trim();
 
-      if (!this.IsBusy)
+      if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != UserService.CurrentUser.PublicKeyAddress)
       {
-        this.IsBusy = true;
+        await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(
+          new LoadingPopupPage(),
+          new LoadingPopupModel { Message = "Adding Contact" });
 
-        if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != UserService.CurrentUser.PublicKeyAddress)
-        {
-          // get information from receiver adress 
-          var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(UserService.CurrentUser.TangleMessenger, this.ReceiverAdress);
+        var response = await this.AddContactInteractor.ExecuteAsync(
+                         new AddContactRequest
+                           {
+                             Name = UserService.CurrentUser.Name,
+                             ImageHash = UserService.CurrentUser.ImageHash,
+                             RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                             PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                             ContactAddress = new Address(this.ReceiverAdress)
+                           });
 
-          if (contacts == null || contacts.Count == 0 || contacts.Count > 1)
-          {
-            await this.DisplayAlert("Error", "The provided address is invalid.");
-          }
-          else if (contacts[0]?.NtruKey != null && contacts[0].ContactAddress != null)
-          {
-            await this.SaveParallel(contacts[0]);
-          }
-        }
-        else
-        {
-          await this.DisplayAlert("Error", "The provided address is invalid.");
-        }
+        await this.Navigation.PopPopupAsync();
 
-        this.IsBusy = false;
+        await new AddContactPresenter(this.Navigation).Present(response);
       }
-    }
-
-    private async Task DisplayAlert(string title, string message)
-    {
-      await this.Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(
-        new AlertPopupPage(),
-        new AlertPopupModel { Title = title, Message = message });
+      else
+      {
+        await this.Navigation.DisplayAlertAsync("Error", "The provided address is invalid.");
+      }
     }
   }
 }
