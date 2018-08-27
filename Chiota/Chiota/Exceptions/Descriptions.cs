@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Chiota.Exceptions
 {
-    public static class Messages
+    public static class Descriptions
     {
         #region Base exceptions
 

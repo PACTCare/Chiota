@@ -65,21 +65,6 @@ namespace Chiota.PageModels.BackUp
 
         #region Commands
 
-        #region Help
-
-        public ICommand HelpCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new BackUpHelpPage());
-                });
-            }
-        }
-
-        #endregion
-
         #region WriteSeed
 
         public ICommand WriteSeedCommand

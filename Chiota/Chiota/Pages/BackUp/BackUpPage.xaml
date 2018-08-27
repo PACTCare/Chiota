@@ -5,14 +5,10 @@
              x:Class="Chiota.Pages.BackUp.BackUpPage"
              NavigationPage.HasBackButton="False"
              Title="Back up">
-    
+
     <ContentPage.BindingContext>
         <backUp:BackUpPageModel/>
     </ContentPage.BindingContext>
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="help.png" Order="Primary" Priority="0" Command="{Binding HelpCommand}"/>
-    </ContentPage.ToolbarItems>
 
     <ContentPage.Resources>
         <Style x:Key="ContainerStackLayout" TargetType="StackLayout">

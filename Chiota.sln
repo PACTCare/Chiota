@@ -16,9 +16,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CEXEngine", "Chiota\CEXEngine\CEXEngine.csproj", "{F63F1625-804A-431D-99A7-8D636B0766DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Natives", "Natives", "{15BD7F54-5A05-42EF-BF74-4A39DEA219F2}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chiota.Messenger.Tests", "Chiota.Messenger.Tests\Chiota.Messenger.Tests.csproj", "{9CD304ED-789E-499A-9818-A3CB274536E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chiota.Messenger", "Chiota.Messenger\Chiota.Messenger.csproj", "{851C12AA-EB37-4242-BC35-4C4430584E96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chiota.Messenger", "Chiota.Messenger\Chiota.Messenger.csproj", "{851C12AA-EB37-4242-BC35-4C4430584E96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{EA5D4AF1-DDD4-4711-95EA-72149DD16648}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -595,6 +598,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F150B078-B1C7-4D88-A60C-800CFDE96175} = {15BD7F54-5A05-42EF-BF74-4A39DEA219F2}
 		{B2F8B1B9-82A9-463D-82C8-04FBA013AA00} = {15BD7F54-5A05-42EF-BF74-4A39DEA219F2}
+		{9CD304ED-789E-499A-9818-A3CB274536E3} = {EA5D4AF1-DDD4-4711-95EA-72149DD16648}
+		{851C12AA-EB37-4242-BC35-4C4430584E96} = {EA5D4AF1-DDD4-4711-95EA-72149DD16648}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {87D8D553-69AD-4493-810E-42AC1F6A539D}

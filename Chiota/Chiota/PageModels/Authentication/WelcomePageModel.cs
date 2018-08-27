@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.PageModels.Classes;
 using Chiota.Pages.Authentication;
+using Chiota.Pages.Help;
 using Xamarin.Forms;
 
 namespace Chiota.PageModels.Authentication
@@ -37,6 +38,21 @@ namespace Chiota.PageModels.Authentication
                 return new Command(async () =>
                 {
                     await PushAsync(new SetSeedPage());
+                });
+            }
+        }
+
+        #endregion
+
+        #region SeedHelp
+
+        public ICommand SeedHelpCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await PushAsync(new SeedHelpPage());
                 });
             }
         }

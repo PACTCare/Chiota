@@ -1,9 +1,8 @@
-﻿namespace Chiota.Views
+﻿using Chiota.PageModels;
+
+namespace Chiota.Views
 {
   using System;
-
-  using Chiota.Models;
-  using Chiota.ViewModels;
 
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;

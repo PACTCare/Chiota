@@ -14,7 +14,6 @@
         <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
             <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
-            <Setter Property="Padding" Value="20"/>
             <Setter Property="Spacing" Value="8"/>
             <Setter Property="WidthRequest" Value="256"/>
         </Style>
@@ -30,19 +29,45 @@
             <Setter Property="HeightRequest" Value="160"/>
         </Style>
 
+        <Style x:Key="WelcomeLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
+            <Setter Property="WidthRequest" Value="256"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="LineBreakMode" Value="WordWrap"/>
+            <Setter Property="Margin" Value="0, 16, 0, 0"/>
+        </Style>
+
     </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                <StackLayout Style="{DynamicResource LogoStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
+                <StackLayout Style="{DynamicResource LogoStackLayout}" Spacing="16">
                     <!-- Logo of the iota chat app-->
                     <Image Style="{DynamicResource LogoImage}"/>
+                    <Label Style="{DynamicResource WelcomeLabelLayout}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Take a "/>
+                                <Span Text="new seed" FontAttributes="Bold"/>
+                                <Span Text=" to create an account or "/>
+                                <Span Text=" set a seed" FontAttributes="Bold"/>
+                                <Span Text=" to get access to an existing."/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
                 </StackLayout>
 
-                <StackLayout Style="{DynamicResource ContainerStackLayout}">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="Register" FontAttributes="Bold" Command="{Binding RegisterCommand}"/>
-                    <Button Style="{DynamicResource RoundedButton16}" Text="Set seed" FontAttributes="Bold" Command="{Binding SetSeedCommand}"/>
+                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="32">
+                    <StackLayout Style="{DynamicResource ContainerStackLayout}">
+                        <Button Style="{DynamicResource RoundedButton16}" Text="I need a new seed" FontAttributes="Bold" Command="{Binding RegisterCommand}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="I have a seed" FontAttributes="Bold" Command="{Binding SetSeedCommand}"/>
+                    </StackLayout>
+
+                    <Label Style="{DynamicResource Label14}" Text="What is a seed?" HorizontalOptions="Center" Opacity="0.6">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
                 </StackLayout>
             </StackLayout>
         </StackLayout>
