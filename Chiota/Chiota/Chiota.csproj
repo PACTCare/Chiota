@@ -29,7 +29,7 @@
     <PackageReference Include="RestSharp" Version="106.3.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.168" />
     <PackageReference Include="sqlite-net-pcl" Version="1.4.118" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8" />
+    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8.1" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.0" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.1" />
