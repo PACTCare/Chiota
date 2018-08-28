@@ -1,5 +1,4 @@
 ﻿using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
 
 namespace Chiota.ViewModels
 {
@@ -9,7 +8,9 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
+  using Chiota.Messenger.Entity;
   using Chiota.Persistence;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.Views;
 
@@ -123,7 +124,7 @@ namespace Chiota.ViewModels
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
       var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
-      var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(UserService.CurrentUser.PublicKeyAddress);
+      var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteDb>().LoadContactsAsync(UserService.CurrentUser.PublicKeyAddress);
 
       // all infos are taken from contactRequestList
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();

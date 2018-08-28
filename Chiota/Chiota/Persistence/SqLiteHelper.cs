@@ -41,22 +41,6 @@
       return test;
     }
 
-    public async Task<List<Contact>> LoadContacts(string publicKeyAddress)
-    {
-      var contacts = new List<Contact>();
-      var sqLiteContacts = await this.connection.QueryAsync<SqLiteContacts>("SELECT * FROM SqLiteContacts Where PublicKeyAddress = ? ORDER BY Id", publicKeyAddress);
-      foreach (var sqLiteContact in sqLiteContacts)
-      {
-        contacts.Add(new Contact
-                       {
-                         ChatAddress = sqLiteContact.ChatAddress,
-                         Rejected = !sqLiteContact.Accepted
-                       });
-      }
-
-      return contacts;
-    }
-
     public async Task SaveTransaction(string addresse, Hash transactionsHash, string message)
     {
       var sqlLiteMessage = new SqLiteMessage

@@ -11,7 +11,9 @@
   using Windows.ApplicationModel.Background;
   using Windows.UI.Notifications;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Persistence;
+  using Chiota.Services.DependencyInjection;
 
   /// <summary>
   /// The main page.
@@ -71,7 +73,7 @@
         if (user != null)
         {
           var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync<Contact>(user.RequestAddress, 3);
-          var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(user.PublicKeyAddress);
+          var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteDb>().LoadContactsAsync(user.PublicKeyAddress);
 
           var approvedContacts =
             contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();

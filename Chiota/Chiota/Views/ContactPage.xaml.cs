@@ -2,6 +2,7 @@
 {
   using System;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Navigation;

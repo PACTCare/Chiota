@@ -9,9 +9,10 @@
   using Android.OS;
   using Android.Support.V4.App;
 
-  using Chiota.Models;
+  using Chiota.Messenger.Entity;
   using Chiota.Persistence;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Storage;
 
   using Java.Lang;
@@ -41,7 +42,7 @@
           {
             // request list is needed for information
             var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync<Contact>(user.RequestAddress, 3);
-            var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(user.PublicKeyAddress);
+            var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteDb>().LoadContactsAsync(user.PublicKeyAddress);
 
             var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer())
               .ToList();

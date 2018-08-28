@@ -7,6 +7,7 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.ViewModels;

@@ -71,7 +71,7 @@
 
       var contact = respository.PersistedContacts[0];
       Assert.AreEqual(publicKeyAddress, contact.PublicKeyAddress);
-      Assert.IsTrue(contact.Requested);
+      Assert.IsTrue(contact.Request);
       Assert.IsNotNull(contact.ChatAddress);
 
     }
@@ -133,7 +133,7 @@
       Assert.AreEqual(requestAddress, sentPayload.ContactAddress);
       Assert.IsTrue(InputValidator.IsAddress(sentPayload.ChatAddress));
       Assert.IsTrue(InputValidator.IsAddress(sentPayload.ChatKeyAddress));
-      Assert.IsTrue(sentPayload.Requested);
+      Assert.IsTrue(sentPayload.Request);
       Assert.IsFalse(sentPayload.Rejected);
     }
 

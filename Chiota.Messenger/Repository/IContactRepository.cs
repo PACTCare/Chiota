@@ -1,6 +1,9 @@
 ﻿namespace Chiota.Messenger.Repository
 {
+  using System.Collections.Generic;
   using System.Threading.Tasks;
+
+  using Chiota.Messenger.Entity;
 
   /// <summary>
   /// The ContactRepository interface.
@@ -23,5 +26,16 @@
     /// The <see cref="Task"/>.
     /// </returns>
     Task AddContactAsync(string address, bool accepted, string publicKeyAddress);
+
+    /// <summary>
+    /// The load contacts async.
+    /// </summary>
+    /// <param name="publicKeyAddress">
+    /// The public key address.
+    /// </param>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
+    Task<List<Contact>> LoadContactsAsync(string publicKeyAddress);
   }
 }

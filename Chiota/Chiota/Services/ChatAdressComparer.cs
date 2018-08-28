@@ -2,7 +2,7 @@
 {
   using System.Collections.Generic;
 
-  using Chiota.Models;
+  using Chiota.Messenger.Entity;
 
   public class ChatAdressComparer : IEqualityComparer<Contact>
   {

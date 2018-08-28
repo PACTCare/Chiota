@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Services
 {
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.ViewModels;
 

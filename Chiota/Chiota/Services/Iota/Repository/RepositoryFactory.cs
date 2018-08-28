@@ -9,6 +9,7 @@
   using RestSharp;
 
   using Tangle.Net.ProofOfWork;
+  using Tangle.Net.ProofOfWork.Service;
   using Tangle.Net.Repository;
   using Tangle.Net.Repository.Client;
 
@@ -74,6 +75,7 @@
     /// <inheritdoc />
     public RestIotaRepository Create(int roundNumber = 0)
     {
+      return new RestIotaRepository(new RestClient("https://field.deviota.com:443"), new PiDiverService());
       this.nodeUriList.Insert(0, Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string);
       var remoteSettings = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
       var remote = remoteSettings == true;

@@ -1,6 +1,7 @@
 ﻿namespace Chiota.Messenger.Tests.Repository
 {
   using System;
+  using System.Collections.Generic;
   using System.Diagnostics.CodeAnalysis;
   using System.Threading.Tasks;
 
@@ -19,6 +20,12 @@
     public Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
+    }
+
+    /// <inheritdoc />
+    public Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
+    {
+      return null;
     }
   }
 }

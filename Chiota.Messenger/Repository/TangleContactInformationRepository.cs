@@ -11,7 +11,6 @@
 
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
-  using Tangle.Net.Repository.DataTransfer;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 

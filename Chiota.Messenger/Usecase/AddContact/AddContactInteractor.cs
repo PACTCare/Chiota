@@ -64,7 +64,7 @@
                                    Name = request.Name,
                                    ImageHash = request.ImageHash,
                                    ContactAddress = request.RequestAddress.Value,
-                                   Requested = true,
+                                   Request = true,
                                    Rejected = false,
                                    NtruKey = null,
                                    PublicKeyAddress = request.PublicKeyAddress.Value

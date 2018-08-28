@@ -1,9 +1,12 @@
 ﻿namespace Chiota.ViewModels
 {
+  using System.ComponentModel;
+  using System.Runtime.CompilerServices;
   using System.Text;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Persistence;
   using Chiota.Services;
@@ -32,6 +35,8 @@
       this.viewCellObject = viewCellObject;
       this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteDb>();
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public AbstractSqlLiteDb ContactRepository { get; }
 
@@ -102,6 +107,11 @@
       var pasSalt = await IotaHelper.GetChatPasSalt(this.user, this.ChatKeyAddress);
       var encryptedChatPasSalt = new NtruKex(true).Encrypt(contacts[0].NtruKey, Encoding.UTF8.GetBytes(pasSalt));
       return UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), this.ChatKeyAddress);
+    }
+
+    public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    {
+      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }
