@@ -11,31 +11,6 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
-        <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="Spacing" Value="8"/>
-            <Setter Property="WidthRequest" Value="256"/>
-        </Style>
-
-        <Style x:Key="LogoStackLayout" TargetType="StackLayout">
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
-        </Style>
-
-        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
-            <Setter Property="HorizontalOptions" Value="Center"/>
-            <Setter Property="WidthRequest" Value="128"/>
-            <Setter Property="HeightRequest" Value="128"/>
-        </Style>
-
-        <Style x:Key="RegisterLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
-            <Setter Property="WidthRequest" Value="256"/>
-            <Setter Property="HorizontalTextAlignment" Value="Center"/>
-            <Setter Property="LineBreakMode" Value="WordWrap"/>
-            <Setter Property="Margin" Value="0, 16, 0, 0"/>
-        </Style>
 
         <Style x:Key="BoxViewSeperator" TargetType="BoxView">
             <Setter Property="BackgroundColor" Value="#000000"/>
@@ -44,22 +19,16 @@
             <Setter Property="HeightRequest" Value="16"/>
         </Style>
 
-        <Style x:Key="ContinueButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="HorizontalOptions" Value="Center"/>
-            <Setter Property="WidthRequest" Value="256"/>
-            <Setter Property="Margin" Value="32"/>
-        </Style>
     </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
-                    <StackLayout Style="{DynamicResource LogoStackLayout}">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
-                        <Image Style="{DynamicResource LogoImage}"/>
-                        <Label Style="{DynamicResource RegisterLabelLayout}">
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="96" WidthRequest="96"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
                                     <Span Text="You must back up your seed with "/>
@@ -70,7 +39,7 @@
                         </Label>
                     </StackLayout>
 
-                    <StackLayout Style="{DynamicResource ContainerStackLayout}" Spacing="2">
+                    <StackLayout VerticalOptions="CenterAndExpand" Spacing="2">
                         <Label Style="{DynamicResource Label14}" Text="Most secure" HorizontalOptions="Center"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Write seed down" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
@@ -83,7 +52,10 @@
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
-            <Button Style="{DynamicResource ContinueButtonLayout}" IsVisible="{Binding IsContinueVisible}" Text="Continue" Command="{Binding ContinueCommand}"/>
+
+            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" IsVisible="{Binding IsContinueVisible}" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

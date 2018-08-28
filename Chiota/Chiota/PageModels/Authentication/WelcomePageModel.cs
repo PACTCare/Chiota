@@ -13,16 +13,16 @@ namespace Chiota.PageModels.Authentication
     {
         #region Commands
 
-        #region Register
+        #region NewSeed
 
-        public ICommand RegisterCommand
+        public ICommand NewSeedCommand
         {
             get
             {
                 return new Command(async () =>
                 {
                     //Show register page.
-                    await PushAsync(new RegisterPage(), false);
+                    await PushAsync(new NewSeedPage());
                 });
             }
         }
@@ -37,7 +37,7 @@ namespace Chiota.PageModels.Authentication
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new SetSeedPage());
+                    //await PushAsync(new SetSeedPage());
                 });
             }
         }
@@ -52,7 +52,7 @@ namespace Chiota.PageModels.Authentication
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new SeedHelpPage());
+                    //await PushAsync(new SeedHelpPage());
                 });
             }
         }

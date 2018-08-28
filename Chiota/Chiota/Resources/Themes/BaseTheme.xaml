@@ -44,6 +44,12 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <Style x:Key="DescriptionLabel" TargetType="Label" BasedOn="{StaticResource Label14}">
+        <Setter Property="WidthRequest" Value="256"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+    </Style>
+
     <!-- Entry styles -->
     <Style x:Key="BaseEntry" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
@@ -64,6 +70,7 @@
     <!-- Button styles -->
     <Style x:Key="BaseButton" TargetType="Button">
         <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
     </Style>
 
@@ -85,7 +92,7 @@
 
     <!-- #region Image styles -->
 
-    <Style x:Key="ChiotaLogoImage" TargetType="Image">
+    <Style x:Key="ChiotaLogo" TargetType="Image">
         <Setter Property="Source" Value="chiota.png"/>
     </Style>
 

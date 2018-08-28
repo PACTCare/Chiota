@@ -15,7 +15,7 @@
             <Setter Property="VerticalOptions" Value="Center"/>
         </Style>
 
-        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
+        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogo}">
             <Setter Property="HorizontalOptions" Value="Center"/>
             <Setter Property="WidthRequest" Value="128"/>
             <Setter Property="HeightRequest" Value="128"/>
@@ -68,7 +68,7 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-           <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Spacing="24">
                     <StackLayout Style="{DynamicResource LogoStackLayout}">
                         <!-- Logo of the iota chat app-->
@@ -116,7 +116,7 @@
                             <Button Style="{DynamicResource ArrowButton}" Image="arrow_down.png" VerticalOptions="End" IsVisible="{Binding IsDownVisible}" Command="{Binding DownCommand}"/>
                         </StackLayout>
                     </StackLayout>
-                    
+
                 </StackLayout>
             </StackLayout>
             <Button Style="{DynamicResource ContinueButtonLayout}" IsVisible="{Binding IsContinueVisible}" Text="Continue" Command="{Binding ContinueCommand}"/>

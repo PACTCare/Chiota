@@ -17,7 +17,7 @@
             <Setter Property="VerticalOptions" Value="Center"/>
         </Style>
 
-        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogoImage}">
+        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogo}">
             <Setter Property="HorizontalOptions" Value="Center"/>
             <Setter Property="WidthRequest" Value="128"/>
             <Setter Property="HeightRequest" Value="128"/>
