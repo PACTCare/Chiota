@@ -11,6 +11,7 @@ namespace Chiota.Exceptions
         public static string Unknown = "Unknown";
         public static string InvalidUserInput = "Invalid user input";
         public static string MissingUserInput = "Missing user input";
+        public static string FailedLoadingFile = "Loading file failed";
 
         #endregion
 

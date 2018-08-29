@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using Chiota.Models.BackUp;
@@ -12,30 +13,19 @@ namespace Chiota.PageModels.BackUp
     {
         #region Attributes
 
-        private Seed _seed;
-        private bool _isContinueVisible;
+        private ObservableCollection<View> _seed;
 
         #endregion
 
         #region Properties
 
-        public Seed Seed
+        public ObservableCollection<View> Seed
         {
             get => _seed;
             set
             {
                 _seed = value;
                 OnPropertyChanged(nameof(Seed));
-            }
-        }
-
-        public bool IsContinueVisible
-        {
-            get => _isContinueVisible;
-            set
-            {
-                _isContinueVisible = value;
-                OnPropertyChanged(nameof(IsContinueVisible));
             }
         }
 
@@ -47,25 +37,79 @@ namespace Chiota.PageModels.BackUp
         {
             base.Init(data);
 
-            //Set the generated iota seed.
-            Seed = new Seed(data as string);
+            //Set a new generated seed.
+            var seed = new Seed(data as string);
+            UpdateSeedView(seed);
         }
+
+        #endregion
+
+        #region Methods
+
+        #region UpdateSeedView
+
+        private void UpdateSeedView(Seed seed)
+        {
+            var tmp = new ObservableCollection<View>();
+
+            foreach (var line in seed.Lines)
+            {
+                var lineView = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    Spacing = 2
+                };
+
+                foreach (var item in line.Items)
+                {
+                    //Set the layout for every item.
+                    var itemView = new Label
+                    {
+                        TextColor = Color.FromHex("#ffffff"),
+                        HorizontalOptions = LayoutOptions.Center,
+                        VerticalOptions = LayoutOptions.Center,
+                        FontSize = 10,
+                        Text = item
+                    };
+
+                    var itemLayout = new Frame
+                    {
+                        BackgroundColor = (Color)Application.Current.Resources["AccentColor"],
+                        HorizontalOptions = LayoutOptions.Center,
+                        VerticalOptions = LayoutOptions.Center,
+                        Padding = new Thickness(0),
+                        HeightRequest = 32,
+                        WidthRequest = 32,
+                        CornerRadius = 8,
+                        Content = itemView
+                    };
+
+                    lineView.Children.Add(itemLayout);
+                }
+                tmp.Add(lineView);
+            }
+
+            //Clear the current seed view.
+            Seed = null;
+
+            //Set the new one.
+            Seed = tmp;
+        }
+
+        #endregion
 
         #endregion
 
         #region Commands
 
-        #region PrintButton
+        #region Continue
 
-        public ICommand PrintCommand
+        public ICommand ContinueCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    //TODO Direkt printing or print pdf??
-
-                    //Go back to back up page.
                     await PopAsync();
                 });
             }

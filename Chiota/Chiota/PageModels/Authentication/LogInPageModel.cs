@@ -6,6 +6,7 @@ using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.PageModels.Classes;
 using Chiota.Pages.Authentication;
+using Chiota.Pages.Help;
 using Tangle.Net.Utils;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
@@ -56,14 +57,31 @@ namespace Chiota.PageModels.Authentication
             {
                 return new Command(async () =>
                 {
-                    if (!string.IsNullOrEmpty(Password))
+                    //Check password.
+                    if (true)
                     {
-                        //TODO Get the current user of the database and check, if the input is the password.
+                        //TODO Navigate to contact page.
+                        //await PushAsync(new SetUserPage());
                         return;
                     }
 
-                    //Missing password user input.
-                    await new MissingUserInputException(new ExcInfo(), "password").ShowAlertAsync();
+                    await new InvalidUserInputException(new ExcInfo(), "password").ShowAlertAsync();
+                });
+            }
+        }
+
+        #endregion
+
+        #region NewSeed
+
+        public ICommand NewSeedCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    //Show register page.
+                    await PushAsync(new NewSeedPage());
                 });
             }
         }
@@ -85,15 +103,15 @@ namespace Chiota.PageModels.Authentication
 
         #endregion
 
-        #region ChangeSeed
+        #region SeedHelp
 
-        public ICommand ChangeSeedCommand
+        public ICommand SeedHelpCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new RegisterPage(), false);
+                    await PushAsync(new SeedHelpPage());
                 });
             }
         }

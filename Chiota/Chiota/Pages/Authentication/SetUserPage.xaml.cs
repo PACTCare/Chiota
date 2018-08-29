@@ -7,12 +7,12 @@ using Chiota.PageModels.Classes;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota.Pages.Help
+namespace Chiota.Pages.Authentication
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SeedHelpPage : ContentPage
+	public partial class SetUserPage : ContentPage
 	{
-		public SeedHelpPage ()
+		public SetUserPage ()
 		{
 			InitializeComponent ();
 

@@ -4,80 +4,56 @@
              xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
              x:Class="Chiota.Pages.Authentication.LogInPage"
              NavigationPage.HasNavigationBar="False">
-    
+
     <ContentPage.BindingContext>
         <authentication:LogInPageModel/>
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <Style x:Key="ContainerStackLayout" TargetType="StackLayout">
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="Spacing" Value="8"/>
-            <Setter Property="WidthRequest" Value="256"/>
-        </Style>
-
-        <Style x:Key="LogoStackLayout" TargetType="StackLayout">
-            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
-        </Style>
-
-        <Style x:Key="LogoImage" TargetType="Image" BasedOn="{StaticResource ChiotaLogo}">
-            <Setter Property="HorizontalOptions" Value="Center"/>
-            <Setter Property="WidthRequest" Value="128"/>
-            <Setter Property="HeightRequest" Value="128"/>
-        </Style>
-
-        <Style x:Key="RegisterLabelLayout" TargetType="Label" BasedOn="{StaticResource Label14}">
-            <Setter Property="WidthRequest" Value="256"/>
-            <Setter Property="HorizontalTextAlignment" Value="Center"/>
-            <Setter Property="LineBreakMode" Value="WordWrap"/>
-            <Setter Property="Margin" Value="0, 16, 0, 0"/>
-        </Style>
-
-        <Style x:Key="LogInButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="HorizontalOptions" Value="Center"/>
-            <Setter Property="WidthRequest" Value="256"/>
-        </Style>
-
-        <Style x:Key="SeedButtonLayout" TargetType="Button" BasedOn="{StaticResource RoundedButton16}">
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="WidthRequest" Value="128"/>
-        </Style>
-    </ContentPage.Resources>
-
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
-                    <StackLayout Style="{DynamicResource LogoStackLayout}">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
-                        <Image Style="{DynamicResource LogoImage}"/>
-                        <Label Style="{DynamicResource RegisterLabelLayout}">
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="Please insert your "/>
-                                    <Span Text="seed" FontAttributes="Bold"/>
+                                    <Span Text="Log in" FontAttributes="Bold"/>
+                                    <Span Text=" with your "/>
+                                    <Span Text="password" FontAttributes="Bold"/>
+                                    <Span Text=" or "/>
+                                    <Span Text="switch the account" FontAttributes="Bold"/>
+                                    <Span Text=" by "/>
+                                    <Span Text="set a seed" FontAttributes="Bold"/>
+                                    <Span Text=" or generating a "/>
+                                    <Span Text="new one" FontAttributes="Bold"/>
                                     <Span Text="."/>
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                     </StackLayout>
 
-                    <StackLayout Style="{DynamicResource ContainerStackLayout}">
-                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="Password"/>
-                        </Frame>
-                        <Button Style="{DynamicResource LogInButtonLayout}" Text="Log in" Command="{Binding LogInCommand}"/>
+                    <StackLayout VerticalOptions="Center" Spacing="32">
+                        <StackLayout Spacing="8">
+                            <Frame Style="{DynamicResource RoundedFrame8}" WidthRequest="256" BackgroundColor="{DynamicResource EntryColor}">
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="Password"/>
+                            </Frame>
+                            <Button Style="{DynamicResource RoundedButton16}" Text="Log in" WidthRequest="256" Command="{Binding LogInCommand}"/>
+                        </StackLayout>
+
+                        <Label Style="{DynamicResource Label14}" Text="What is a seed?" HorizontalOptions="Center" Opacity="0.6">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
 
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="32">
-                <Button Style="{DynamicResource SeedButtonLayout}" Text="Set seed" Command="{Binding SetSeedCommand}"/>
-                <Button Style="{DynamicResource SeedButtonLayout}" Text="Change seed" Command="{Binding ChangeSeedCommand}"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="I have a seed" WidthRequest="128" Command="{Binding SetSeedCommand}"/>
+                <Button Style="{DynamicResource RoundedButton16}" Text="I need a seed" WidthRequest="128" Command="{Binding NewSeedCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -30,7 +30,7 @@
 
                 <StackLayout VerticalOptions="Center" Spacing="32">
                     <StackLayout Spacing="8">
-                        <Button Style="{DynamicResource RoundedButton16}" Text="I need a new seed" WidthRequest="256" Command="{Binding NewSeedCommand}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="I need a seed" WidthRequest="256" Command="{Binding NewSeedCommand}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="I have a seed" WidthRequest="256" Command="{Binding SetSeedCommand}"/>
                     </StackLayout>
 

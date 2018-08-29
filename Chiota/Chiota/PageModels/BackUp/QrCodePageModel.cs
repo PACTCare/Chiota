@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using Android.Widget;
 using Chiota.Models.BackUp;
 using Chiota.PageModels.Classes;
 using Xamarin.Forms;
-using ZXing;
-using ZXing.Net.Mobile.Forms;
-using ZXing.QrCode;
 
 namespace Chiota.PageModels.BackUp
 {
@@ -16,7 +14,6 @@ namespace Chiota.PageModels.BackUp
     {
         #region Attributes
 
-        private bool _isContinueVisible;
         private string _seed;
 
         #endregion
@@ -33,16 +30,6 @@ namespace Chiota.PageModels.BackUp
             }
         }
 
-        public bool IsContinueVisible
-        {
-            get => _isContinueVisible;
-            set
-            {
-                _isContinueVisible = value;
-                OnPropertyChanged(nameof(IsContinueVisible));
-            }
-        }
-
         #endregion
 
         #region Init
@@ -51,42 +38,22 @@ namespace Chiota.PageModels.BackUp
         {
             base.Init(data);
 
-            //Set the generated iota seed.
-            var seed = data as string;
-
-            //Generate qr code by the seed.
-            var qrCode = new ZXingBarcodeImageView
-            {
-                BarcodeFormat = BarcodeFormat.QR_CODE,
-                BarcodeOptions = new QrCodeEncodingOptions
-                {
-                    Height = 350,
-                    Width = 350
-                },
-                BarcodeValue = seed,
-                VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
-                WidthRequest = 350,
-                HeightRequest = 350
-            };
-            Seed = seed;
+            //Set a new generated seed.
+            Seed = data as string;
         }
 
         #endregion
 
         #region Commands
 
-        #region PrintButton
+        #region Continue
 
-        public ICommand PrintCommand
+        public ICommand ContinueCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    //TODO Direkt printing or print pdf??
-
-                    //Go back to back up page.
                     await PopAsync();
                 });
             }

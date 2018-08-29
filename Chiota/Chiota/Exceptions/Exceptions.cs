@@ -46,9 +46,6 @@ namespace Chiota.Exceptions
         [JsonProperty("title")]
         public string Title { get; }
 
-        [JsonProperty("description")]
-        public string Description { get; set; }
-
         [JsonProperty("detail")]
         public string Detail { get; set; }
 
@@ -56,12 +53,11 @@ namespace Chiota.Exceptions
 
         #region Constructors
 
-        protected BaseException(ExcInfo excInfo, int errorCode, string title, string description, string detail = "")
+        protected BaseException(ExcInfo excInfo, int errorCode, string title, string detail = "")
         {
             ExcInfo = excInfo;
             ErrorCode = errorCode;
             Title = title;
-            Description = description;
             Detail = detail;
         }
 
@@ -74,7 +70,7 @@ namespace Chiota.Exceptions
     {
         #region Constructors
 
-        public UnknownException(ExcInfo excInfo) : base(excInfo, ErrorCodes.Unknown, Titles.Unknown, Descriptions.Unknown, Details.Unknown)
+        public UnknownException(ExcInfo excInfo) : base(excInfo, ErrorCodes.Unknown, Titles.Unknown, Details.Unknown)
         {
         }
 
@@ -91,7 +87,7 @@ namespace Chiota.Exceptions
 
         #region Constructors
 
-        public InvalidUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.InvalidUserInput, Titles.InvalidUserInput, Descriptions.InvalidUserInput)
+        public InvalidUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.InvalidUserInput, Titles.InvalidUserInput, Details.InvalidUserInput)
         {
             Detail = _detail[0] + " " + argument + " " + _detail[1];
         }
@@ -109,9 +105,20 @@ namespace Chiota.Exceptions
 
         #region Constructors
 
-        public MissingUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Descriptions.MissingUserInput)
+        public MissingUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Details.MissingUserInput)
         {
             Detail = _detail[0] + " " + argument + " " + _detail[1];
+        }
+
+        #endregion
+    }
+
+    public class FailedLoadingFileException : BaseException
+    {
+        #region Constructors
+
+        public FailedLoadingFileException(ExcInfo excInfo) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Details.MissingUserInput)
+        {
         }
 
         #endregion
@@ -125,7 +132,7 @@ namespace Chiota.Exceptions
     {
         #region Constructors
 
-        public AuthFailedPasswordConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.AuthFailedPasswordConfirmation, Titles.AuthFailedPasswordConfirmation, Descriptions.AuthFailedPasswordConfirmation, Details.AuthFailedPasswordConfirmation)
+        public AuthFailedPasswordConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.AuthFailedPasswordConfirmation, Titles.AuthFailedPasswordConfirmation, Details.AuthFailedPasswordConfirmation)
         {
         }
 
@@ -140,7 +147,7 @@ namespace Chiota.Exceptions
     {
         #region Constructors
 
-        public BackUpFailedSeedConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.BackUpFailedSeedConfirmation, Titles.BackUpFailedSeedConfirmation, Descriptions.BackUpFailedSeedConfirmation, Details.BackUpFailedSeedConfirmation)
+        public BackUpFailedSeedConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.BackUpFailedSeedConfirmation, Titles.BackUpFailedSeedConfirmation, Details.BackUpFailedSeedConfirmation)
         {
         }
 

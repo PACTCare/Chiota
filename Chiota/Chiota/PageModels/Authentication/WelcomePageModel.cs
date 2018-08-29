@@ -37,7 +37,7 @@ namespace Chiota.PageModels.Authentication
             {
                 return new Command(async () =>
                 {
-                    //await PushAsync(new SetSeedPage());
+                    await PushAsync(new SetSeedPage());
                 });
             }
         }
@@ -52,7 +52,7 @@ namespace Chiota.PageModels.Authentication
             {
                 return new Command(async () =>
                 {
-                    //await PushAsync(new SeedHelpPage());
+                    await PushAsync(new SeedHelpPage());
                 });
             }
         }

@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.PageModels.Classes;
+using Chiota.Pages.Authentication;
 using Chiota.Pages.BackUp;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
@@ -57,7 +58,7 @@ namespace Chiota.PageModels.BackUp
             base.ViewIsAppearing();
 
             //Clear the user inputs.
-            Seed = "";
+            Seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
         }
 
         #endregion
@@ -114,8 +115,7 @@ namespace Chiota.PageModels.BackUp
                             return;
                         }
 
-                        //TODO Navigate to the contact page.
-                        //await PushAsync(new ContactPage());
+                        await PushAsync(new SetPasswordPage());
                         return;
                     }
 

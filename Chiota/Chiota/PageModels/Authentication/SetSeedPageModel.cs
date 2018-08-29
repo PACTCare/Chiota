@@ -45,7 +45,7 @@ namespace Chiota.PageModels.Authentication
             base.ViewIsAppearing();
 
             //Clear the user inputs.
-            Seed = "";
+            Seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Chiota.PageModels.Authentication
                             return;
                         }
 
-                        await PushAsync(new RegisterPage(), true);
+                        await PushAsync(new SetPasswordPage());
                         return;
                     }
 

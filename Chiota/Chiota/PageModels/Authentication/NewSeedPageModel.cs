@@ -14,19 +14,19 @@ namespace Chiota.PageModels.Authentication
     {
         #region Attributes
 
-        private ObservableCollection<View> _seedList;
+        private ObservableCollection<View> _seed;
 
         #endregion
 
         #region Properties
 
-        public ObservableCollection<View> SeedList
+        public ObservableCollection<View> Seed
         {
-            get => _seedList;
+            get => _seed;
             set
             {
-                _seedList = value;
-                OnPropertyChanged(nameof(SeedList));
+                _seed = value;
+                OnPropertyChanged(nameof(Seed));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Chiota.PageModels.Authentication
                 var lineView = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
-                    Spacing = 4
+                    Spacing = 2
                 };
 
                 foreach (var item in line.Items)
@@ -83,7 +83,7 @@ namespace Chiota.PageModels.Authentication
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
                         CornerRadius = 8,
-                        FontSize = 14,
+                        FontSize = 10,
                         Text = item,
                         Command = SeedLetterCommand
                     };
@@ -94,10 +94,10 @@ namespace Chiota.PageModels.Authentication
             }
 
             //Clear the current seed view.
-            SeedList = null;
+            Seed = null;
 
             //Set the new one.
-            SeedList = tmp;
+            Seed = tmp;
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace Chiota.PageModels.Authentication
         {
             var result = string.Empty;
 
-            foreach (var child in SeedList)
+            foreach (var child in Seed)
             {
                 if (!(child is StackLayout layout)) return null;
                 foreach (var item in layout.Children)

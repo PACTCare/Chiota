@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Chiota.Pages.Authentication
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class RegisterPage : ContentPage
+	public partial class SetPasswordPage : ContentPage
 	{
-		public RegisterPage ()
+		public SetPasswordPage ()
 		{
 			InitializeComponent ();
 

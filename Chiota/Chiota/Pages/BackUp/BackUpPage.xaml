@@ -27,7 +27,7 @@
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
-                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="96" WidthRequest="96"/>
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
@@ -43,8 +43,8 @@
                         <Label Style="{DynamicResource Label14}" Text="Most secure" HorizontalOptions="Center"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Write seed down" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
-                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="Print paper copy" FontAttributes="Bold" Command="{Binding PrintPaperCommand}"/>
+                        <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="Print paper copy" FontAttributes="Bold" Command="{Binding PrintPaperCommand}"/>-->
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Save as QR Code" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>

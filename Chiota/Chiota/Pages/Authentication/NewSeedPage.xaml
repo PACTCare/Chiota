@@ -16,7 +16,7 @@
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
-                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="96" WidthRequest="96"/>
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}">
                             <Label.FormattedText>
                                 <FormattedString>
@@ -35,13 +35,13 @@
                     <StackLayout VerticalOptions="CenterAndExpand">
                         <StackLayout VerticalOptions="Center" Spacing="24">
                             <Frame Style="{DynamicResource RoundedFrame8}" VerticalOptions="Center" BackgroundColor="#321d4999">
-                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="104" Padding="8">
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="100" Padding="8">
                                     <ScrollView>
-                                        <bindable:BindableStackLayout Items="{Binding SeedList}" Spacing="4"/>
+                                        <bindable:BindableStackLayout Items="{Binding Seed}" Spacing="2"/>
                                     </ScrollView>
                                 </StackLayout>
                             </Frame>
-                            <Label Style="{DynamicResource Label14}" HorizontalTextAlignment="Center" Text="Swipe down, to see the full seed." Opacity="0.6"/>
+                            <Label Style="{DynamicResource Label14}" HorizontalTextAlignment="Center" Text="Swipe to see the full seed." Opacity="0.6"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

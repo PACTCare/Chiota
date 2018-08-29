@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
-             x:Class="Chiota.Pages.Authentication.SetSeedPage"
-             Title="Set seed">
+             xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             x:Class="Chiota.Pages.Authentication.SetUserPage"
+             NavigationPage.HasBackButton="False"
+             Title="Set user">
 
     <ContentPage.BindingContext>
-        <authentication:SetSeedPageModel/>
+        <authentication:SetUserPageModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
@@ -15,16 +17,18 @@
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
-                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128" Opacity="{Binding ProfileImageOpacity}">
+                            <abstractions:CircleImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ProfileImageCommand}"/>
+                            </abstractions:CircleImage.GestureRecognizers>
+                        </abstractions:CircleImage>
                         <Label Style="{DynamicResource DescriptionLabel}">
                             <Label.FormattedText>
+                                <!--   -->
                                 <FormattedString>
-                                    <Span Text="Insert your seed" FontAttributes="Bold"/>
-                                    <Span Text=" to get " />
-                                    <Span Text="access" FontAttributes="Bold"/>
-                                    <Span Text=" to an "/>
-                                    <Span Text="existing account" FontAttributes="Bold"/>
-                                    <Span Text="."/>
+                                    <Span Text="Please "/>
+                                    <Span Text="insert your name" FontAttributes="Bold"/>
+                                    <Span Text="  and click on the profile image to upload a new one."/>
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
@@ -32,9 +36,8 @@
 
                     <StackLayout VerticalOptions="CenterAndExpand">
                         <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="Seed"/>
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="Name"/>
                         </Frame>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="Scan QR code" WidthRequest="256" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

@@ -36,6 +36,10 @@
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
     </Style>
 
+    <Style x:Key="Label12" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
     <Style x:Key="Label14" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="14"/>
     </Style>

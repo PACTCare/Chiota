@@ -9,6 +9,9 @@ namespace Chiota.Exceptions
         #region Base exceptions
 
         public static string Unknown = "Please restart the app and try it again, or contact our support.";
+        public static string InvalidUserInput = "Invalid user input was expected.";
+        public static string MissingUserInput = "Missing user input was expected.";
+        public static string FailedLoadingFile = "You can only load images to use them as profile image.";
 
         #endregion
 

@@ -48,7 +48,7 @@ namespace Chiota.Classes
             //If a user is stored in the database,
             //the user will forwarded directly to the contact page,
             //otherwise (the database is empty) the user need to create a new account.
-            if (false)
+            if (true)
             {
                 //User is logged in.
                 var navigation = new NavigationPage(new LogInPage());
