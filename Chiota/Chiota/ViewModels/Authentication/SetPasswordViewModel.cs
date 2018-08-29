@@ -4,15 +4,15 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Chiota.Pages.Authentication;
 using Tangle.Net.Utils;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
 
-namespace Chiota.PageModels.Authentication
+namespace Chiota.ViewModels.Authentication
 {
-    public class SetPasswordPageModel : BasePageModel
+    public class SetPasswordViewModel : BaseViewModel
     {
         #region Attributes
 

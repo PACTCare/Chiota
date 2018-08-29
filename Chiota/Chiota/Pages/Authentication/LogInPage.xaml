@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:authentication="clr-namespace:Chiota.PageModels.Authentication;assembly=Chiota"
+             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              x:Class="Chiota.Pages.Authentication.LogInPage"
              NavigationPage.HasNavigationBar="False">
 
     <ContentPage.BindingContext>
-        <authentication:LogInPageModel/>
+      <authentication:LogInViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>

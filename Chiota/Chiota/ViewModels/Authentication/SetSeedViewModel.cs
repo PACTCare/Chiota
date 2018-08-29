@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Chiota.Pages.Authentication;
 using Chiota.Pages.BackUp;
 using Chiota.Popups.PopupModels;
@@ -14,9 +14,9 @@ using Tangle.Net.Utils;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
 
-namespace Chiota.PageModels.Authentication
+namespace Chiota.ViewModels.Authentication
 {
-    public class SetSeedPageModel : BasePageModel
+    public class SetSeedViewModel : BaseViewModel
     {
         #region Attributes
 

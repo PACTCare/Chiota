@@ -26,7 +26,7 @@ namespace Chiota.ViewModels
 
   using ZXing.Net.Mobile.Forms;
 
-  public class AddContactViewModel : BasePageModel
+  public class AddContactViewModel : BaseViewModel
   {
     private string receiverAdress;
 
@@ -44,7 +44,7 @@ namespace Chiota.ViewModels
       set
       {
         this.qrSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -54,7 +54,7 @@ namespace Chiota.ViewModels
       set
       {
         this.receiverAdress = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

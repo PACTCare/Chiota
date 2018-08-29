@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:backUp="clr-namespace:Chiota.PageModels.BackUp;assembly=Chiota"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
              x:Class="Chiota.Pages.BackUp.QrCodePage"
              Title="Save as QR code">
 
     <ContentPage.BindingContext>
-        <backUp:QrCodePageModel/>
+      <backUp:QrCodeViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>

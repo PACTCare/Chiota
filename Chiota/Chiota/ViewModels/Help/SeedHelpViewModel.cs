@@ -4,12 +4,12 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
-namespace Chiota.PageModels.Help
+namespace Chiota.ViewModels.Help
 {
-    public class SeedHelpPageModel : BasePageModel
+    public class SeedHelpViewModel : BaseViewModel
     {
         #region Commands
 

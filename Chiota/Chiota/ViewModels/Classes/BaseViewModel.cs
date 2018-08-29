@@ -11,9 +11,9 @@ using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
-namespace Chiota.PageModels.Classes
+namespace Chiota.ViewModels.Classes
 {
-    public abstract class BasePageModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged
     {
         #region Attributes
 
@@ -110,7 +110,7 @@ namespace Chiota.PageModels.Classes
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected BasePageModel()
+        protected BaseViewModel()
         {
         }
 
@@ -195,7 +195,7 @@ namespace Chiota.PageModels.Classes
                 RootPage = navigation.RootPage;
 
             //Call reverse and init method of the pagemodel.
-            if (CurrentPage.BindingContext is BasePageModel viewmodel)
+            if (CurrentPage.BindingContext is BaseViewModel viewmodel)
             {
                 if (_navigationAction == NavigationAction.Push)
                     viewmodel.Init(InitObject);

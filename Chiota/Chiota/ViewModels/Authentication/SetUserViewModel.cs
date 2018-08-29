@@ -4,15 +4,15 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using ImageCircle.Forms.Plugin.Abstractions;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using Xamarin.Forms;
 
-namespace Chiota.PageModels.Authentication
+namespace Chiota.ViewModels.Authentication
 {
-    public class SetUserPageModel : BasePageModel
+    public class SetUserViewModel : BaseViewModel
     {
         #region Attributes
 

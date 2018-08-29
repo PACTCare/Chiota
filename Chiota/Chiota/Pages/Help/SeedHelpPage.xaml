@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:help="clr-namespace:Chiota.PageModels.Help"
+             xmlns:help="clr-namespace:Chiota.ViewModels.Help"
              x:Class="Chiota.Pages.Help.SeedHelpPage"
              Title="Help">
 
     <ContentPage.BindingContext>
-        <help:SeedHelpPageModel/>
+      <help:SeedHelpViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>

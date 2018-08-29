@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Chiota.Pages.Authentication;
 using Chiota.Pages.Help;
 using Xamarin.Forms;
 
-namespace Chiota.PageModels.Authentication
+namespace Chiota.ViewModels.Authentication
 {
-    public class WelcomePageModel : BasePageModel
+    public class WelcomeViewModel : BaseViewModel
     {
         #region Commands
 

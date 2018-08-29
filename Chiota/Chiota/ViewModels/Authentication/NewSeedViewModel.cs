@@ -4,13 +4,13 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using Chiota.Models.BackUp;
-using Chiota.PageModels.Classes;
+using Chiota.ViewModels.Classes;
 using Chiota.Pages.BackUp;
 using Xamarin.Forms;
 
-namespace Chiota.PageModels.Authentication
+namespace Chiota.ViewModels.Authentication
 {
-    public class NewSeedPageModel : BasePageModel
+    public class NewSeedViewModel : BaseViewModel
     {
         #region Attributes
 

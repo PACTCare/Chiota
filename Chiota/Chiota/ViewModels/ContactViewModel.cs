@@ -1,5 +1,4 @@
-﻿using Chiota.PageModels.Classes;
-using Chiota.ViewModels.Classes;
+﻿using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels
@@ -19,8 +18,8 @@ namespace Chiota.ViewModels
 
   using ChatPage = Views.ChatPage;
 
-  public class ContactViewModel : BasePageModel
-    {
+  public class ContactViewModel : BaseViewModel
+  {
     private readonly List<BotObject> bots;
 
     private ObservableCollection<ContactListViewModel> contactList;

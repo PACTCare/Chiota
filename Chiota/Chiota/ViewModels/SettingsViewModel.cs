@@ -1,5 +1,4 @@
-﻿using Chiota.PageModels.Classes;
-using Chiota.ViewModels.Classes;
+﻿using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -20,8 +19,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class SettingsViewModel : BasePageModel
-    {
+  public class SettingsViewModel : BaseViewModel
+  {
     public Action DisplayInvalidNodePrompt;
 
     public Action DisplaySettingsChangedPrompt;

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:backUp="clr-namespace:Chiota.PageModels.BackUp;assembly=Chiota"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              x:Class="Chiota.Pages.BackUp.BackUpPage"
              NavigationPage.HasBackButton="False"
              Title="Back up">
 
     <ContentPage.BindingContext>
-        <backUp:BackUpPageModel/>
+      <backUp:BackUpViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>

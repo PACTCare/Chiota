@@ -1,13 +1,12 @@
-﻿using Chiota.PageModels.Classes;
-using Chiota.ViewModels.Classes;
+﻿using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels
 {
   using System;
 
-  public class MessageViewModel : BasePageModel
-    {
+  public class MessageViewModel : BaseViewModel
+  {
     private string text;
 
     private string imageSource;

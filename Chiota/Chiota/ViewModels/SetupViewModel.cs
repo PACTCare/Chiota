@@ -1,5 +1,4 @@
-﻿using Chiota.PageModels.Classes;
-using Chiota.ViewModels.Classes;
+﻿using Chiota.ViewModels.Classes;
 
 namespace Chiota.ViewModels
 {
@@ -22,8 +21,8 @@ namespace Chiota.ViewModels
 
   using Xamarin.Forms;
 
-  public class SetupViewModel : BasePageModel
-    {
+  public class SetupViewModel : BaseViewModel
+  {
     public Action DisplayInvalidLoginPrompt;
 
     private string username;
@@ -131,7 +130,7 @@ namespace Chiota.ViewModels
         this.IsBusy = false;
 
         //Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
-        //await this.Navigation.PopToRootAsync(true);
+        await this.Navigation.PopToRootAsync(true);
       }
     }
   }

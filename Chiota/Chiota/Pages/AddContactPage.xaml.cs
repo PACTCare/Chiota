@@ -1,4 +1,4 @@
-﻿using Chiota.PageModels;
+﻿using Chiota.ViewModels;
 
 namespace Chiota.Views
 {
