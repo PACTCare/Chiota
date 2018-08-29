@@ -31,14 +31,10 @@
     /// <param name="messenger">
     /// The messenger.
     /// </param>
-    /// <param name="contactInformationRepository">
-    /// The contact Information Repository.
-    /// </param>
-    public AddContactInteractor(IContactRepository repository, IMessenger messenger, IContactInformationRepository contactInformationRepository)
+    public AddContactInteractor(IContactRepository repository, IMessenger messenger)
     {
       this.Repository = repository;
       this.Messenger = messenger;
-      this.ContactInformationRepository = contactInformationRepository;
     }
 
     /// <summary>
@@ -48,14 +44,12 @@
 
     private IMessenger Messenger { get; }
 
-    private IContactInformationRepository ContactInformationRepository { get; }
-
     /// <inheritdoc />
     public async Task<AddContactResponse> ExecuteAsync(AddContactRequest request)
     {
       try
       {
-        var contactInformation = await this.ContactInformationRepository.LoadContactInformationByAddressAsync(request.ContactAddress);
+        var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
 
         var requesterDetails = new Contact
                                  {

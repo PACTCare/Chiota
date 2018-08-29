@@ -4,7 +4,6 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
-  using Chiota.Models;
   using Chiota.Models.SqLite;
   using Chiota.Services.DependencyInjection;
 
@@ -18,12 +17,12 @@
 
     public SqLiteHelper()
     {
-      this.connection = DependencyResolver.Resolve<AbstractSqlLiteDb>().GetConnection();
+      this.connection = DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().GetConnection();
       this.connection.CreateTableAsync<SqLiteMessage>();
       this.connection.CreateTableAsync<SqLiteContacts>();
     }
 
-    public async Task<List<SqLiteMessage>> LoadTransactions(string addresse)
+    public async Task<List<SqLiteMessage>> LoadTransactionsByAddress(string addresse)
     {
       List<SqLiteMessage> test;
       try

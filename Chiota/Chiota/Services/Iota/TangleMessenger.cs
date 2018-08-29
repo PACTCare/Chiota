@@ -3,8 +3,11 @@
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Comparison;
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Models.SqLite;
   using Chiota.Persistence;
@@ -16,6 +19,7 @@
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
+  using Tangle.Net.Repository.DataTransfer;
   using Tangle.Net.Utils;
 
   public class TangleMessenger
@@ -75,7 +79,7 @@
 
       if (!dontLoadSql)
       {
-        sqlTable = await this.sqLite.LoadTransactions(addresse);
+        sqlTable = await this.sqLite.LoadTransactionsByAddress(addresse);
 
         var alreadyLoaded = this.AddressLoadedCheck(addresse);
         foreach (var sqlLiteMessage in sqlTable)
@@ -105,7 +109,9 @@
         {
           this.UpdateNode(roundNumber);
 
-          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
+          var addresses = new List<Address> { new Address(addresse) };
+          var transactions = await this.repository.FindTransactionsByAddressesAsync(addresses);
+          var hashes = shortStorageHashes.Union(transactions.Hashes, new TryteComparer<Hash>()).ToList();
 
           foreach (var transactionsHash in hashes)
           {
@@ -127,48 +133,35 @@
     }
 
     // Without ShortStorage, always reload contacts
-    public async Task<List<T>> GetContactsJsonAsync<T>(string addresse, int retryNumber = 1)
+    public async Task<List<Contact>> GetContactsJsonAsync(string address, int retryNumber = 1)
     {
-      var roundNumber = 0;
-      var messagesList = new List<T>();
-      var shortStorageHashes = new List<Hash>();
+      var contacts = new List<Contact>();
+      var cachedTransactionHashes = new List<Hash>();
 
-      var sqlTable = await this.sqLite.LoadTransactions(addresse);
+      var sqlTable = await this.sqLite.LoadTransactionsByAddress(address);
       foreach (var sqlLiteMessage in sqlTable)
       {
-        shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
-        var deserializedObject = JsonConvert.DeserializeObject<T>(sqlLiteMessage.MessageTryteString);
-        messagesList.Add(deserializedObject);
+        cachedTransactionHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+        contacts.Add(JsonConvert.DeserializeObject<Contact>(sqlLiteMessage.MessageTryteString));
       }
 
-      while (roundNumber < retryNumber)
+      var addresses = new List<Address> { new Address(address) };
+      var transactions = await this.repository.FindTransactionsByAddressesAsync(addresses);
+      var newHashes = cachedTransactionHashes.Union(transactions.Hashes, new TryteComparer<Hash>()).ToList();
+
+      foreach (var hash in newHashes)
       {
-        try
+        var bundle = await this.repository.GetBundleAsync(hash);
+        var messages = bundle.GetMessages();
+        foreach (var message in messages)
         {
-          this.UpdateNode(roundNumber);
-          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
-
-          foreach (var transactionsHash in hashes)
-          {
-            var bundle = await this.repository.GetBundleAsync(transactionsHash);
-            var messages = bundle.GetMessages();
-            foreach (var message in messages)
-            {
-              await this.sqLite.SaveTransaction(addresse, transactionsHash, message);
-              var deserializedObject = JsonConvert.DeserializeObject<T>(message);
-              messagesList.Add(deserializedObject);
-            }
-          }
-
-          retryNumber = 0;
-        }
-        catch
-        {
-          roundNumber++;
+          await this.sqLite.SaveTransaction(address, hash, message);
+          var deserializedObject = JsonConvert.DeserializeObject<Contact>(message);
+          contacts.Add(deserializedObject);
         }
       }
 
-      return messagesList;
+      return contacts;
     }
 
     private static Transfer CreateTransfer(TryteString message, string address)
@@ -191,13 +184,6 @@
       }
 
       return alreadyLoaded;
-    }
-
-    private async Task<List<Hash>> GetNewHashes(string addresse, List<Hash> shortStorageHashes)
-    {
-      var addresses = new List<Address> { new Address(addresse) };
-      var transactions = await this.repository.FindTransactionsByAddressesAsync(addresses);
-      return IotaHelper.FilterNewHashes(transactions, shortStorageHashes);
     }
 
     private void UpdateNode(int roundNumber)

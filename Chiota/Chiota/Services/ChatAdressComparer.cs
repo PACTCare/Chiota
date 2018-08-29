@@ -8,7 +8,7 @@
   {
     public int GetHashCode(Contact co)
     {
-      return co == null ? 0 : co.ChatAddress.GetHashCode();
+      return co.ChatAddress.GetHashCode();
     }
 
     public bool Equals(Contact x1, Contact x2)

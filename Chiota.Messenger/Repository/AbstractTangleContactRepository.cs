@@ -17,15 +17,15 @@
   /// <summary>
   /// The tangle contact information repository.
   /// </summary>
-  public class TangleContactInformationRepository : IContactInformationRepository
+  public abstract class AbstractTangleContactRepository : IContactRepository
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="TangleContactInformationRepository"/> class.
+    /// Initializes a new instance of the <see cref="AbstractTangleContactRepository"/> class.
     /// </summary>
     /// <param name="iotaRepository">
     /// The iota repository.
     /// </param>
-    public TangleContactInformationRepository(IIotaRepository iotaRepository)
+    public AbstractTangleContactRepository(IIotaRepository iotaRepository)
     {
       this.IotaRepository = iotaRepository;
     }
@@ -34,6 +34,9 @@
     /// Gets the iota repository.
     /// </summary>
     private IIotaRepository IotaRepository { get; }
+
+    /// <inheritdoc />
+    public abstract Task AddContactAsync(string address, bool accepted, string publicKeyAddress);
 
     /// <inheritdoc />
     public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
@@ -52,6 +55,9 @@
 
       return ExtractContactInformation(latestContactInformation);
     }
+
+    /// <inheritdoc />
+    public abstract Task<List<Contact>> LoadContactsAsync(string publicKeyAddress);
 
     /// <summary>
     /// The extract contact information.

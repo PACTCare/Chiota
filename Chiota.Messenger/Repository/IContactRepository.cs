@@ -5,6 +5,8 @@
 
   using Chiota.Messenger.Entity;
 
+  using Tangle.Net.Entity;
+
   /// <summary>
   /// The ContactRepository interface.
   /// </summary>
@@ -26,6 +28,17 @@
     /// The <see cref="Task"/>.
     /// </returns>
     Task AddContactAsync(string address, bool accepted, string publicKeyAddress);
+
+    /// <summary>
+    /// The load contact information by address async.
+    /// </summary>
+    /// <param name="address">
+    /// The address.
+    /// </param>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
+    Task<ContactInformation> LoadContactInformationByAddressAsync(Address address);
 
     /// <summary>
     /// The load contacts async.

@@ -3,13 +3,20 @@
   using System;
   using System.IO;
 
-  using Chiota.Models.SqLite;
   using Chiota.Persistence;
 
   using SQLite;
 
-  public class SqlLiteDb : AbstractSqlLiteDb
+  using Tangle.Net.Repository;
+
+  public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
   {
+    /// <inheritdoc />
+    public SqlLiteContactRepository(IIotaRepository iotaRepository)
+      : base(iotaRepository)
+    {
+    }
+
     public override SQLiteAsyncConnection GetConnection()
     {
       var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

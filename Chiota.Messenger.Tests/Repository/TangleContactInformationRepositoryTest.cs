@@ -33,7 +33,7 @@
         iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>()))
           .ReturnsAsync(new TransactionHashList { Hashes = new List<Hash>() });
 
-        var repository = new TangleContactInformationRepository(iotaRepository.Object);
+        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -61,7 +61,7 @@
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleOne.Hash.Value))).ReturnsAsync(invalidBundleOne);
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleTwo.Hash.Value))).ReturnsAsync(invalidBundleTwo);
 
-        var repository = new TangleContactInformationRepository(iotaRepository.Object);
+        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -94,7 +94,7 @@
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleOne.Hash.Value))).ReturnsAsync(validBundleOne);
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleTwo.Hash.Value))).ReturnsAsync(validBundleTwo);
 
-        var repository = new TangleContactInformationRepository(iotaRepository.Object);
+        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -124,7 +124,7 @@
 
       iotaRepository.SetupSequence(r => r.GetBundleAsync(It.IsAny<Hash>())).ReturnsAsync(invalidBundle).ReturnsAsync(validBundle);
 
-      var repository = new TangleContactInformationRepository(iotaRepository.Object);
+      var repository = new AbstractTangleContactRepository(iotaRepository.Object);
       var contact = await repository.LoadContactInformationByAddressAsync(new Address());
 
       Assert.AreEqual(contactAddress.Value, contact.ContactAddress.Value);

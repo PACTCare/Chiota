@@ -8,8 +8,17 @@
 
   using Windows.Storage;
 
-  public class SqlLiteDb : AbstractSqlLiteDb
+  using Tangle.Net.Repository;
+
+  public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
   {
+
+    /// <inheritdoc />
+    public SqlLiteContactRepository(IIotaRepository iotaRepository)
+      : base(iotaRepository)
+    {
+    }
+
     public override SQLiteAsyncConnection GetConnection()
     {
       var documentsPath = ApplicationData.Current.LocalFolder.Path;

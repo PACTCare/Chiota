@@ -10,6 +10,9 @@
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota.Repository;
   using Chiota.ViewModels;
+  using Chiota.ViewModels.Classes;
+
+  using Tangle.Net.Repository;
 
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;
@@ -24,12 +27,9 @@
     public AddContactPage()
     {
       this.InitializeComponent();
-      var iotaRepository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
-      var vm = new AddContactViewModel(
-                 new AddContactInteractor(
-                   DependencyResolver.Resolve<AbstractSqlLiteDb>(),
-                   new TangleMessenger(iotaRepository),
-                   new TangleContactInformationRepository(iotaRepository))) { Navigation = this.Navigation };
+
+      var vm = DependencyResolver.Resolve<AddContactViewModel>(); 
+      vm.Navigation = this.Navigation;
 
       this.ReceiverAdress.Completed += (object sender, EventArgs e) =>
         {

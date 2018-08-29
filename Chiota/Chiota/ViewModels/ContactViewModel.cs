@@ -123,8 +123,8 @@ namespace Chiota.ViewModels
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
-      var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteDb>().LoadContactsAsync(UserService.CurrentUser.PublicKeyAddress);
+      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync(UserService.CurrentUser.RequestAddress, 3);
+      var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(UserService.CurrentUser.PublicKeyAddress);
 
       // all infos are taken from contactRequestList
       var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();

@@ -151,32 +151,6 @@
       return messages;
     }
 
-    public static List<Hash> FilterNewHashes(TransactionHashList transactions, List<Hash> storedHashes)
-    {
-      var newHashes = new List<Hash>();
-      foreach (var transactionsHash in transactions.Hashes)
-      {
-        var isStored = false;
-        foreach (var storedHash in storedHashes)
-        {
-          if (transactionsHash.Value != storedHash.Value)
-          {
-            continue;
-          }
-
-          isStored = true;
-          break;
-        }
-
-        if (!isStored)
-        {
-          newHashes.Add(transactionsHash);
-        }
-      }
-
-      return newHashes;
-    }
-
     public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(TangleMessenger tangleMessenger, string receiverAddress, bool dontLoadSql = false)
     {
       var trytes = await tangleMessenger.GetMessagesAsync(receiverAddress, 3, false, dontLoadSql);

@@ -10,19 +10,27 @@
 
   using SQLite;
 
+  using Tangle.Net.Repository;
+
   /// <summary>
   /// The abstract sql lite db.
   /// </summary>
-  public abstract class AbstractSqlLiteDb : IContactRepository
+  public abstract class AbstractSqlLiteContactRepository : AbstractTangleContactRepository
   {
     /// <inheritdoc />
-    public async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
+    protected AbstractSqlLiteContactRepository(IIotaRepository iotaRepository)
+      : base(iotaRepository)
+    {
+    }
+
+    /// <inheritdoc />
+    public override async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
       await this.GetConnection().InsertAsync(new SqLiteContacts { ChatAddress = address, Accepted = accepted, PublicKeyAddress = publicKeyAddress });
     }
 
     /// <inheritdoc />
-    public async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
+    public override async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
     {
       var contactsResult = await this.GetConnection().QueryAsync<SqLiteContacts>(
                              "SELECT * FROM SqLiteContacts WHERE PublicKeyAddress = ? ORDER BY Id",

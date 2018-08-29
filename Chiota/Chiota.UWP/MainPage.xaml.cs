@@ -72,8 +72,8 @@
         var user = await secureStorage.GetUser();
         if (user != null)
         {
-          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync<Contact>(user.RequestAddress, 3);
-          var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteDb>().LoadContactsAsync(user.PublicKeyAddress);
+          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(user.RequestAddress, 3);
+          var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(user.PublicKeyAddress);
 
           var approvedContacts =
             contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();

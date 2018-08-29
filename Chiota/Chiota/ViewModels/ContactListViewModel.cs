@@ -33,12 +33,12 @@
       this.user = user;
       this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
-      this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteDb>();
+      this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteContactRepository>();
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public AbstractSqlLiteDb ContactRepository { get; }
+    public AbstractSqlLiteContactRepository ContactRepository { get; }
 
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
 
