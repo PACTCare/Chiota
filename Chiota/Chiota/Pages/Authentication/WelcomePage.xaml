@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
+             x:Class="Chiota.Pages.Authentication.WelcomePage"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.BindingContext>
+      <authentication:WelcomeViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
+                <StackLayout VerticalOptions="Center" Spacing="24">
+                    <!-- Logo of the iota chat app-->
+                    <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" WidthRequest="128" HeightRequest="128"/>
+                    <Label Style="{DynamicResource DescriptionLabel}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Take a "/>
+                                <Span Text="new seed" FontAttributes="Bold"/>
+                                <Span Text=" to create an account or "/>
+                                <Span Text=" set a seed" FontAttributes="Bold"/>
+                                <Span Text=" to get access to an existing."/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </StackLayout>
+
+                <StackLayout VerticalOptions="Center" Spacing="32">
+                    <StackLayout Spacing="8">
+                        <Button Style="{DynamicResource RoundedButton16}" Text="I need a seed" WidthRequest="256" Command="{Binding NewSeedCommand}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="I have a seed" WidthRequest="256" Command="{Binding SetSeedCommand}"/>
+                    </StackLayout>
+
+                    <Label Style="{DynamicResource Label14}" Text="What is a seed?" HorizontalOptions="Center" Opacity="0.6">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

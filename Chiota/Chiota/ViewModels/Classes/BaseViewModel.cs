@@ -74,7 +74,7 @@ namespace Chiota.ViewModels.Classes
             set
             {
                 this.isBusy = value;
-                this.RaisePropertyChanged();
+                this.OnPropertyChanged();
             }
         }
 
@@ -198,11 +198,9 @@ namespace Chiota.ViewModels.Classes
             if (CurrentPage.BindingContext is BaseViewModel viewmodel)
             {
                 if (_navigationAction == NavigationAction.Push)
-                    if (InitObject != null)
-                        viewmodel.Init(InitObject);
-                    else if (_navigationAction == NavigationAction.Pop)
-                        if (ReverseObject != null)
-                            viewmodel.Reverse(ReverseObject);
+                    viewmodel.Init(InitObject);
+                else if (_navigationAction == NavigationAction.Pop)
+                    viewmodel.Reverse(ReverseObject);
             }
 
             //Clear the param objects of the pagemodel.
@@ -538,7 +536,7 @@ namespace Chiota.ViewModels.Classes
         #region PropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

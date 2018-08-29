@@ -6,7 +6,6 @@
   using Autofac.Core;
 
   using Chiota.Services.Iota.Repository;
-  using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
 
   /// <summary>
@@ -40,7 +39,7 @@
       var containerBuilder = new ContainerBuilder();
 
       containerBuilder.RegisterType<UserFactory>().As<IUserFactory>();
-      containerBuilder.RegisterType<DefaultNavigationService>().As<INavigationService>();
+      //containerBuilder.RegisterType<DefaultNavigationService>().As<INavigationService>();
       containerBuilder.RegisterType<RepositoryFactory>().As<IRepositoryFactory>();
 
       foreach (var module in Modules)

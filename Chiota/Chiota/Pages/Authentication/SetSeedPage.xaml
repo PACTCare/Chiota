@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
+             x:Class="Chiota.Pages.Authentication.SetSeedPage"
+             Title="Set seed">
+
+    <ContentPage.BindingContext>
+      <authentication:SetSeedViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Insert your seed" FontAttributes="Bold"/>
+                                    <Span Text=" to get " />
+                                    <Span Text="access" FontAttributes="Bold"/>
+                                    <Span Text=" to an "/>
+                                    <Span Text="existing account" FontAttributes="Bold"/>
+                                    <Span Text="."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <StackLayout VerticalOptions="CenterAndExpand">
+                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="Seed"/>
+                        </Frame>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="Scan QR code" WidthRequest="256" Command="{Binding ScanQrCodeCommand}"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

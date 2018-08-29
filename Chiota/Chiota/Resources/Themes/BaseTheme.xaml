@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Resources.Themes.BaseTheme">
 
     <x:String x:Key="AppName">Chiota</x:String>
     
-    <!--#region  Base layouts -->
+    <!--#region Base layouts -->
 
     <Style x:Key="BaseBackgroundStackLayout" TargetType="StackLayout">
         <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
@@ -35,6 +36,10 @@
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
     </Style>
 
+    <Style x:Key="Label12" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
     <Style x:Key="Label14" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="14"/>
     </Style>
@@ -43,11 +48,17 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <Style x:Key="DescriptionLabel" TargetType="Label" BasedOn="{StaticResource Label14}">
+        <Setter Property="WidthRequest" Value="256"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+    </Style>
+
     <!-- Entry styles -->
     <Style x:Key="BaseEntry" TargetType="Entry">
         <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
     </Style>
 
     <Style x:Key="Entry14" TargetType="Entry" BasedOn="{StaticResource BaseEntry}">
@@ -62,7 +73,8 @@
 
     <!-- Button styles -->
     <Style x:Key="BaseButton" TargetType="Button">
-        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
     </Style>
 
@@ -82,6 +94,14 @@
 
     <!--#endregion-->
 
+    <!-- #region Image styles -->
+
+    <Style x:Key="ChiotaLogo" TargetType="Image">
+        <Setter Property="Source" Value="chiota.png"/>
+    </Style>
+
+    <!-- #endregion -->
+
     <!--#region  Base popup layouts -->
 
     <Style x:Key="PopupLayout" TargetType="StackLayout">
@@ -96,6 +116,19 @@
         <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
         <Setter Property="BackgroundColor" Value="{DynamicResource AccentDarkColor}"/>
+    </Style>
+
+    <!-- Label styles -->
+    <Style x:Key="BasePopupLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource PopupTextColor}"/>
+    </Style>
+
+    <Style x:Key="PopupLabel14" TargetType="Label" BasedOn="{StaticResource BasePopupLabel}">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="PopupLabel16" TargetType="Label" BasedOn="{StaticResource BasePopupLabel}">
+        <Setter Property="FontSize" Value="16"/>
     </Style>
 
     <!--#endregion-->

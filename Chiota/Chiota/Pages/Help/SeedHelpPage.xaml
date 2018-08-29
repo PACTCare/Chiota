@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:help="clr-namespace:Chiota.ViewModels.Help"
+             x:Class="Chiota.Pages.Help.SeedHelpPage"
+             Title="Help">
+
+    <ContentPage.BindingContext>
+      <help:SeedHelpViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="What is a "/>
+                                    <Span Text="seed" FontAttributes="Bold"/>
+                                    <Span Text="?"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <StackLayout VerticalOptions="CenterAndExpand" Spacing="8">
+                        <Label Style="{DynamicResource Label12}" WidthRequest="256" LineBreakMode="WordWrap">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Your seed is the "/>
+                                    <Span Text="master key" FontAttributes="Bold"/>
+                                    <Span Text=" to your account. It is 81 characters long, using only letters A-Z or the number 9."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Style="{DynamicResource Label12}" WidthRequest="256" LineBreakMode="WordWrap">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="You can use it to "/>
+                                    <Span Text="access your account from any device" FontAttributes="Bold"/>
+                                    <Span Text=", where chiota is installed."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <Label Style="{DynamicResource Label12}" WidthRequest="256" LineBreakMode="WordWrap">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="But if you "/>
+                                    <Span Text="lose your seed" FontAttributes="Bold"/>
+                                    <Span Text=", you also "/>
+                                    <Span Text="lose your account" FontAttributes="Bold"/>
+                                    <Span Text="."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="Got it" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

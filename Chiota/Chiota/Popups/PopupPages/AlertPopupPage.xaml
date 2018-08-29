@@ -28,18 +28,18 @@
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Frame Style="{DynamicResource PopupFrame}">
                 <StackLayout Style="{DynamicResource PopupLayout}">
-                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource Label16}" HorizontalOptions="Center" LineBreakMode="WordWrap" IsVisible="{Binding PopupModel.IsTitleVisible}"/>
-                    <Label Text="{Binding PopupModel.Message}" Style="{DynamicResource Label14}" HorizontalOptions="Center" LineBreakMode="WordWrap"/>
+                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource PopupLabel16}" HorizontalOptions="Center" LineBreakMode="WordWrap" IsVisible="{Binding PopupModel.IsTitleVisible}"/>
+                    <Label Text="{Binding PopupModel.Message}" Style="{DynamicResource PopupLabel14}" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <StackLayout HorizontalOptions="CenterAndExpand" IsVisible="{Binding PopupModel.IsNegButtonVisible}">
-                            <Label Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource Label14}" TextColor="{Binding NegButtonTextColor}" HorizontalOptions="Center">
+                            <Label Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupLabel14}" TextColor="{Binding NegButtonTextColor}" HorizontalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding NegCommand}"/>
                                 </Label.GestureRecognizers>
                             </Label>
                         </StackLayout>
                         <StackLayout HorizontalOptions="CenterAndExpand">
-                            <Label Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource Label14}" TextColor="{Binding PosButtonTextColor}" HorizontalOptions="Center">
+                            <Label Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupLabel14}" TextColor="{Binding PosButtonTextColor}" HorizontalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding PosCommand}"/>
                                 </Label.GestureRecognizers>

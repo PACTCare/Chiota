@@ -23,7 +23,7 @@ namespace Chiota.ViewModels
       set
       {
         this.text = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -33,7 +33,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -43,7 +43,7 @@ namespace Chiota.ViewModels
       set
       {
         this.profileImage = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -53,7 +53,7 @@ namespace Chiota.ViewModels
       set
       {
         this.messageDateTime = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     } 
 
@@ -63,7 +63,7 @@ namespace Chiota.ViewModels
       set
       {
         this.isIncoming = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
   }

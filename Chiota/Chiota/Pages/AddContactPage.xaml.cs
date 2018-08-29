@@ -1,4 +1,6 @@
-﻿namespace Chiota.Views
+﻿using Chiota.ViewModels;
+
+namespace Chiota.Views
 {
   using System;
 

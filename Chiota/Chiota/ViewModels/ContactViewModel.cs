@@ -45,7 +45,7 @@ namespace Chiota.ViewModels
         if (this.selectedContact != value)
         {
           this.selectedContact = value;
-          this.RaisePropertyChanged();
+          this.OnPropertyChanged();
         }
       }
     }
@@ -56,7 +56,7 @@ namespace Chiota.ViewModels
       set
       {
         this.contactList = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

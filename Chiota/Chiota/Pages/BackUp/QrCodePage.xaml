@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
+             xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
+             x:Class="Chiota.Pages.BackUp.QrCodePage"
+             Title="Save as QR code">
+
+    <ContentPage.BindingContext>
+      <backUp:QrCodeViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Please save your "/>
+                                    <Span Text="QR code" FontAttributes="Bold"/>
+                                    <Span Text=" and "/>
+                                    <Span Text="keep him safe" FontAttributes="Bold"/>
+                                    <Span Text="."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#321d4999" HorizontalOptions="Center" VerticalOptions="Center" Padding="16">
+                        <forms:ZXingBarcodeImageView
+                            BarcodeFormat="QR_CODE"
+                            BarcodeValue="{Binding Seed}"
+                            HeightRequest="150" 
+                            WidthRequest="150"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand">
+                            <forms:ZXingBarcodeImageView.BarcodeOptions>
+                                <common:EncodingOptions Width="140" Height="140"  />
+                            </forms:ZXingBarcodeImageView.BarcodeOptions>
+                        </forms:ZXingBarcodeImageView>
+                    </Frame>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                    <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication;assembly=Chiota"
+             xmlns:bindable="clr-namespace:Chiota.Controls.Bindable;assembly=Chiota"
+             x:Class="Chiota.Pages.Authentication.NewSeedPage"
+             Title="New seed">
+
+    <ContentPage.BindingContext>
+      <authentication:NewSeedViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Press the "/>
+                                    <Span Text="button" FontAttributes="Bold"/>
+                                    <Span Text=" to generate a "/>
+                                    <Span Text="new seed" FontAttributes="Bold"/>
+                                    <Span Text=" and the "/>
+                                    <Span Text="single characters of the seed" FontAttributes="Bold"/>
+                                    <Span Text=" to change them individual."/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+
+                    <StackLayout VerticalOptions="CenterAndExpand">
+                        <StackLayout VerticalOptions="Center" Spacing="24">
+                            <Frame Style="{DynamicResource RoundedFrame8}" VerticalOptions="Center" BackgroundColor="#321d4999">
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="100" Padding="8">
+                                    <ScrollView>
+                                        <bindable:BindableStackLayout Items="{Binding Seed}" Spacing="2"/>
+                                    </ScrollView>
+                                </StackLayout>
+                            </Frame>
+                            <Label Style="{DynamicResource Label14}" HorizontalTextAlignment="Center" Text="Swipe to see the full seed." Opacity="0.6"/>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                    <Button Style="{DynamicResource RoundedButton16}" Text="Generate new seed" WidthRequest="256"  Command="{Binding GenerateSeedCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

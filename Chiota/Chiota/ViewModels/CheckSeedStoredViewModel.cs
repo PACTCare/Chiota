@@ -34,7 +34,7 @@ namespace Chiota.ViewModels
       set
       {
         this.seedInput = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

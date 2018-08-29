@@ -4,7 +4,6 @@
 
   using Chiota.Models;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
@@ -80,8 +79,8 @@
     private void HandleLogoutClick(object sender, EventArgs e)
     {
       new SecureStorage().DeleteUser();
-      Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoginEntryPoint);
-      this.Navigation.PopToRootAsync(true);
+      //Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoginEntryPoint);
+      //this.Navigation.PopToRootAsync(true);
     }
   }
 }

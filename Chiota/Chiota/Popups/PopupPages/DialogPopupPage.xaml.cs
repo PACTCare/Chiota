@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota.Views
+namespace Chiota.Popups.PopupPages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class GreyPage : ContentPage
+	public partial class DialogPopupPage : PopupPage
 	{
-		public GreyPage ()
+		public DialogPopupPage ()
 		{
 			InitializeComponent ();
 		}

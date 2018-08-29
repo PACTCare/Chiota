@@ -46,7 +46,7 @@ namespace Chiota.ViewModels
       set
       {
         this.username = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -56,7 +56,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -66,7 +66,7 @@ namespace Chiota.ViewModels
       set
       {
         this.remotePoW = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -76,7 +76,7 @@ namespace Chiota.ViewModels
       set
       {
         this.defaultNode = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 

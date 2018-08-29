@@ -11,7 +11,6 @@ namespace Chiota.ViewModels
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Ipfs;
-  using Chiota.Services.Navigation;
   using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
 
@@ -52,7 +51,7 @@ namespace Chiota.ViewModels
       set
       {
         this.username = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -62,7 +61,7 @@ namespace Chiota.ViewModels
       set
       {
         this.imageSource = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -130,7 +129,7 @@ namespace Chiota.ViewModels
 
         this.IsBusy = false;
 
-        Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
+        //Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoggedInEntryPoint);
         await this.Navigation.PopToRootAsync(true);
       }
     }

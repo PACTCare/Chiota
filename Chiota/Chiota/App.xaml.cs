@@ -1,5 +1,5 @@
-﻿using Chiota.Services.DependencyInjection;
-using Chiota.Services.Navigation;
+﻿using Chiota.Classes;
+using Chiota.Services.DependencyInjection;
 using Chiota.Services.Storage;
 using Chiota.Services.UserServices;
 using Chiota.Views;
@@ -10,8 +10,6 @@ using Xamarin.Forms;
 
 namespace Chiota
 {
-
-
     /// <summary>
     /// The app.
     /// </summary>
@@ -20,46 +18,13 @@ namespace Chiota
         public App()
         {
             this.InitializeComponent();
-            this.MainPage = new GreyPage();
+
+            AppNavigation.ShowStartUp();
         }
 
-        public static string AppName => "Chiota";
-
-        protected override async void OnStart()
+        protected override void OnStart()
         {
-            DependencyResolver.Init();
-
-            var navigationService = DependencyResolver.Resolve<INavigationService>();
-
-            if (CrossConnectivity.Current.IsConnected)
-            {
-                var secureStorage = new SecureStorage();
-
-                // Reset in case something isn't working
-                // secureStorage.DeleteUser();
-                if (secureStorage.CheckUserStored())
-                {
-                    var user = await secureStorage.GetUser();
-
-                    if (user != null)
-                    {
-                        UserService.SetCurrentUser(user);
-                        this.MainPage = new NavigationPage(navigationService.LoggedInEntryPoint);
-                    }
-                    else
-                    {
-                        this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
-                    }
-                }
-                else
-                {
-                    this.MainPage = new NavigationPage(navigationService.LoginEntryPoint);
-                }
-            }
-            else
-            {
-                this.MainPage = new NavigationPage(new OfflinePage());
-            }
+            // Handle when your app starts
         }
 
         protected override void OnSleep()

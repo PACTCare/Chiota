@@ -59,7 +59,7 @@ namespace Chiota.ViewModels
       set
       {
         this.messagesList = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -69,7 +69,7 @@ namespace Chiota.ViewModels
       set
       {
         this.outgoingText = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
