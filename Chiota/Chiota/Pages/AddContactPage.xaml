@@ -19,27 +19,27 @@
              WidthRequest="152" 
              HeightRequest="152"  
              Padding="6,6,6,6">
-          <zx:ZXingBarcodeImageView
+        <zx:ZXingBarcodeImageView
               BarcodeFormat="QR_CODE"
               BarcodeValue="{Binding QrSource}"
               HeightRequest="150" 
               WidthRequest="150"
               HorizontalOptions="FillAndExpand"
               VerticalOptions="FillAndExpand">
-            <zx:ZXingBarcodeImageView.BarcodeOptions>
-              <zxcm:EncodingOptions Width="140" Height="140"  />
-            </zx:ZXingBarcodeImageView.BarcodeOptions>
-          </zx:ZXingBarcodeImageView>
-        </Frame>
-        <Label Text="Your address (tap to copy):" Margin="0,5,0,0" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
-        <Label Text="{Binding UserAddress}" Margin="0,0,0,0" FontSize="16" TextColor="#1d4999"></Label>
+          <zx:ZXingBarcodeImageView.BarcodeOptions>
+            <zxcm:EncodingOptions Width="140" Height="140"  />
+          </zx:ZXingBarcodeImageView.BarcodeOptions>
+        </zx:ZXingBarcodeImageView>
+      </Frame>
+      <Label Text="Your address (tap to copy):" Margin="0,5,0,0" FontSize="16" FontAttributes="Bold" TextColor="#1d4999"></Label>
+      <Label Text="{Binding UserAddress}" Margin="0,0,0,0" FontSize="16" TextColor="#1d4999"></Label>
       <Frame.GestureRecognizers>
         <TapGestureRecognizer
             Tapped="AddressTapHandle" 
             NumberOfTapsRequired="1" />
       </Frame.GestureRecognizers>
-      <Frame BackgroundColor="#1d4999" HasShadow="False">        
-          <Entry x:Name="ReceiverAdress" 
+      <Frame BackgroundColor="#1d4999" HasShadow="False">
+        <Entry x:Name="ReceiverAdress" 
                  BackgroundColor="#1d4999"
                  Text="{Binding ReceiverAdress, Mode=TwoWay}" 
                  Placeholder="Enter an address"   
@@ -52,22 +52,6 @@
       <Button Command="{Binding SubmitCommand}" Text="Add Contact" TextColor="White"  
               FontAttributes="Bold" FontSize="16" HorizontalOptions="FillAndExpand"  
               BackgroundColor="#5874ca" />
-    </StackLayout>
-    <StackLayout IsVisible="{Binding IsBusy}" 
-                 AbsoluteLayout.LayoutFlags="All"
-                 AbsoluteLayout.LayoutBounds="0,0,1,1"
-                 BackgroundColor="#99000000">
-      <StackLayout VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand"
-                   BackgroundColor="White"
-                   Padding="30,25,30,25">
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color ="#ff0000"/>
-        <Label Text="Proof-of-work in progress..." 
-               AutomationId="AddressLabelId"
-               FontSize="16" 
-               TextColor="Black"/>
-      </StackLayout>
     </StackLayout>
   </AbsoluteLayout>
 </ContentPage>

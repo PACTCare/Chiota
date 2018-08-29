@@ -9,7 +9,11 @@ using Xamarin.Forms;
 
 namespace Chiota.Extensions
 {
-    public static class PopupNavigationExtension
+  using Chiota.Popups.PopupModels;
+  using Chiota.Popups.PopupPageModels;
+  using Chiota.Popups.PopupPages;
+
+  public static class PopupNavigationExtension
     {
         #region Methods
 
@@ -52,6 +56,13 @@ namespace Chiota.Extensions
             //Return result of the popup
             return popupPageModel.PopupModel;
         }
+
+      public static async Task DisplayAlertAsync(this INavigation navigation, string title, string message)
+      {
+        await navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(
+          new AlertPopupPage(),
+          new AlertPopupModel { Title = title, Message = message });
+    }
 
         #endregion
 
