@@ -19,6 +19,8 @@
 
   using Plugin.Connectivity;
 
+  using Tangle.Net.Entity;
+
   using Resource = Resource;
 
   public class NotificationsTask : AsyncTask<Void, Void, Task<bool>>
@@ -41,7 +43,7 @@
           if (user != null)
           {
             // request list is needed for information
-            var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(user.RequestAddress, 3);
+            var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(new Address(user.RequestAddress));
             var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(user.PublicKeyAddress);
 
             var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer())

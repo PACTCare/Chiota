@@ -17,6 +17,8 @@ namespace Chiota.ViewModels
   using Models;
   using Services;
 
+  using Tangle.Net.Entity;
+
   using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
@@ -123,7 +125,7 @@ namespace Chiota.ViewModels
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync(UserService.CurrentUser.RequestAddress, 3);
+      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync(new Address(UserService.CurrentUser.RequestAddress));
       var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(UserService.CurrentUser.PublicKeyAddress);
 
       // all infos are taken from contactRequestList

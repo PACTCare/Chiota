@@ -7,16 +7,8 @@
 
   using SQLite;
 
-  using Tangle.Net.Repository;
-
-  public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
+  public class SqlLiteTransactionCache : AbstractSqlLiteTransactionCache
   {
-    /// <inheritdoc />
-    public SqlLiteContactRepository(IIotaRepository iotaRepository)
-      : base(iotaRepository)
-    {
-    }
-
     /// <inheritdoc />
     public override SQLiteAsyncConnection Connection
     {

@@ -6,24 +6,14 @@
 
   using SQLite;
 
-  using Tangle.Net.Repository;
-
   using Windows.Storage;
 
   /// <summary>
-  /// The sql lite contact repository.
+  /// The sql lite transaction cache.
   /// </summary>
-  public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
+  public class SqlLiteTransactionCache : AbstractSqlLiteTransactionCache
   {
     /// <inheritdoc />
-    public SqlLiteContactRepository(IIotaRepository iotaRepository)
-      : base(iotaRepository)
-    {
-    }
-
-    /// <summary>
-    /// Gets the connection.
-    /// </summary>
     public override SQLiteAsyncConnection Connection
     {
       get

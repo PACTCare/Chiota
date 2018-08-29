@@ -15,6 +15,8 @@
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
 
+  using Tangle.Net.Entity;
+
   /// <summary>
   /// The main page.
   /// </summary>
@@ -72,7 +74,7 @@
         var user = await secureStorage.GetUser();
         if (user != null)
         {
-          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(user.RequestAddress, 3);
+          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(new Address(user.RequestAddress));
           var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(user.PublicKeyAddress);
 
           var approvedContacts =

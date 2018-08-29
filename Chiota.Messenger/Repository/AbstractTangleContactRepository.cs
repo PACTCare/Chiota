@@ -91,7 +91,7 @@
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    private async Task<TryteString> LoadRawContactInformationFromTangle(List<Hash> transactionHashes)
+    private async Task<TryteString> LoadRawContactInformationFromTangle(IEnumerable<Hash> transactionHashes)
     {
       TryteString latestContactInformation = null;
       foreach (var transactionHash in transactionHashes)

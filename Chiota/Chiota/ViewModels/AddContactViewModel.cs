@@ -2,7 +2,6 @@
 
 namespace Chiota.ViewModels
 {
-  using System.Diagnostics;
   using System.Threading.Tasks;
   using System.Windows.Input;
 

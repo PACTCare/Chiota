@@ -2,17 +2,8 @@
 {
   using System;
 
-  using Chiota.Messenger.Repository;
-  using Chiota.Messenger.Service;
-  using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Models;
-  using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota.Repository;
   using Chiota.ViewModels;
-  using Chiota.ViewModels.Classes;
-
-  using Tangle.Net.Repository;
 
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;

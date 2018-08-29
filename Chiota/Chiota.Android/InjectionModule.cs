@@ -24,6 +24,8 @@
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
 
+      builder.RegisterType<SqlLiteTransactionCache>().As<AbstractSqlLiteTransactionCache>();
+
       // This lines will be merged soon
       builder.RegisterType<SqlLiteContactRepository>().As<IContactRepository>().PropertiesAutowired();
       builder.RegisterType<SqlLiteContactRepository>().As<AbstractSqlLiteContactRepository>().PropertiesAutowired();

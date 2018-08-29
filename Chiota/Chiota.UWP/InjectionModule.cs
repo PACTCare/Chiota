@@ -12,7 +12,6 @@
   using Chiota.UWP.Persistence;
   using Chiota.UWP.Services;
   using Chiota.ViewModels;
-  using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Repository;
 
@@ -24,6 +23,8 @@
     {
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
+
+      builder.RegisterType<SqlLiteTransactionCache>().As<AbstractSqlLiteTransactionCache>();
 
       // This lines will be merged soon
       builder.RegisterType<SqlLiteContactRepository>().As<IContactRepository>().PropertiesAutowired();
