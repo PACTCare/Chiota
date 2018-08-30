@@ -78,7 +78,7 @@
 
       if (!dontLoadSql)
       {
-        var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddress(new Address(address));
+        var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(new Address(address));
 
         var alreadyLoaded = this.AddressLoadedCheck(address);
         foreach (var cachedTransaction in cachedTransactions)
@@ -109,7 +109,7 @@
       {
         var bundle = await this.Repository.GetBundleAsync(transactionsHash);
         var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
-        await this.TransactionCache.SaveTransaction(
+        await this.TransactionCache.SaveTransactionAsync(
           new TransactionCacheItem { Address = new Address(address), TransactionHash = transactionsHash, TransactionTrytes = message.Message });
         messagesList.Add(message);
       }
@@ -124,7 +124,7 @@
       var contacts = new List<Contact>();
       var cachedTransactionHashes = new List<Hash>();
 
-      var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddress(address);
+      var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(address);
       foreach (var cachedTransaction in cachedTransactions)
       {
         cachedTransactionHashes.Add(cachedTransaction.TransactionHash);
@@ -140,7 +140,7 @@
 
         foreach (var message in bundle.GetMessages())
         {
-          await this.TransactionCache.SaveTransaction(
+          await this.TransactionCache.SaveTransactionAsync(
             new TransactionCacheItem { Address = address, TransactionHash = hash, TransactionTrytes = TryteString.FromUtf8String(message) });
 
           contacts.Add(JsonConvert.DeserializeObject<Contact>(message));

@@ -10,6 +10,8 @@
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Usecase;
 
+  using Tangle.Net.Entity;
+
   /// <summary>
   /// The exception contact repository.
   /// </summary>
@@ -20,6 +22,15 @@
     public Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
+    }
+
+    public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
+    {
+      return new ContactInformation
+               {
+                 ContactAddress = new Address(Hash.Empty.Value),
+                 NtruKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+               };
     }
 
     /// <inheritdoc />

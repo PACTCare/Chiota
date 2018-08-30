@@ -30,7 +30,7 @@
     public abstract SQLiteAsyncConnection Connection { get; }
 
     /// <inheritdoc />
-    public async Task<List<TransactionCacheItem>> LoadTransactionsByAddress(Address address)
+    public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
     {
       var cachedItems = await this.Connection.QueryAsync<SqLiteMessage>(
                           "SELECT * FROM SqLiteMessage WHERE ChatAddress = ? ORDER BY Id",
@@ -46,7 +46,7 @@
     }
 
     /// <inheritdoc />
-    public async Task SaveTransaction(TransactionCacheItem item)
+    public async Task SaveTransactionAsync(TransactionCacheItem item)
     {
       var sqlLiteMessage = new SqLiteMessage
                              {

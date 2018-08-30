@@ -21,7 +21,7 @@
   /// The tangle contact information repository test.
   /// </summary>
   [TestClass]
-  public class TangleContactInformationRepositoryTest
+  public class ContactRepositoryTest
   {
     [TestMethod]
     public async Task TestAddressHasNoTransactionsShouldThrowExceptionWithErrorCode()
@@ -33,7 +33,7 @@
         iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>()))
           .ReturnsAsync(new TransactionHashList { Hashes = new List<Hash>() });
 
-        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
+        var repository = new ContactRepositoryStub(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -61,7 +61,7 @@
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleOne.Hash.Value))).ReturnsAsync(invalidBundleOne);
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleTwo.Hash.Value))).ReturnsAsync(invalidBundleTwo);
 
-        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
+        var repository = new ContactRepositoryStub(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -80,7 +80,7 @@
       try
       {
         var contactAddress = new Address(Seed.Random().Value);
-        var ntruKey = InMemoryContactInformationRepository.NtruKeyPair.PublicKey;
+        var ntruKey = InMemoryContactRepository.NtruKeyPair.PublicKey;
         var publicKeyTrytes = ntruKey.ToBytes().EncodeBytesAsString();
         var requestAdressTrytes = new TryteString(publicKeyTrytes + Constants.LineBreak + contactAddress.Value + Constants.End);
 
@@ -94,7 +94,7 @@
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleOne.Hash.Value))).ReturnsAsync(validBundleOne);
         iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleTwo.Hash.Value))).ReturnsAsync(validBundleTwo);
 
-        var repository = new AbstractTangleContactRepository(iotaRepository.Object);
+        var repository = new ContactRepositoryStub(iotaRepository.Object);
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -110,7 +110,7 @@
     public async Task TestAddressHasInvalidTransactionsShouldBeSkippedAndReturnValidData()
     {
       var contactAddress = new Address(Seed.Random().Value);
-      var ntruKey = InMemoryContactInformationRepository.NtruKeyPair.PublicKey;
+      var ntruKey = InMemoryContactRepository.NtruKeyPair.PublicKey;
 
       var publicKeyTrytes = ntruKey.ToBytes().EncodeBytesAsString();
       var requestAdressTrytes = new TryteString(publicKeyTrytes + Constants.LineBreak + contactAddress.Value + Constants.End);
@@ -124,7 +124,7 @@
 
       iotaRepository.SetupSequence(r => r.GetBundleAsync(It.IsAny<Hash>())).ReturnsAsync(invalidBundle).ReturnsAsync(validBundle);
 
-      var repository = new AbstractTangleContactRepository(iotaRepository.Object);
+      var repository = new ContactRepositoryStub(iotaRepository.Object);
       var contact = await repository.LoadContactInformationByAddressAsync(new Address());
 
       Assert.AreEqual(contactAddress.Value, contact.ContactAddress.Value);

@@ -34,7 +34,7 @@
     public async Task TestContactCanNotBeAddedToContactRepositoryShouldReturnErrorCode()
     {
       var respository = new ExceptionContactRepository();
-      var interactor = new AddContactInteractor(respository, new InMemoryMessenger(), new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, new InMemoryMessenger());
       var request = new AddContactRequest
                       {
                         ContactAddress = new Address(),
@@ -53,7 +53,7 @@
     public async Task TestGivenContactIsStoredInGivenRepository()
     {
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, new InMemoryMessenger(), new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, new InMemoryMessenger());
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var publicKeyAddress = Seed.Random().Value;
       var request = new AddContactRequest
@@ -81,7 +81,7 @@
     {
       var messenger = new ExceptionMessenger();
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, messenger, new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var request = new AddContactRequest
                       {
@@ -103,7 +103,7 @@
     {
       var messenger = new InMemoryMessenger();
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, messenger, new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var requestAddress = Seed.Random().Value;
       var publicKeyAddress = Seed.Random().Value;
@@ -142,7 +142,7 @@
     {
       var messenger = new InMemoryMessenger();
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, messenger, new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var request = new AddContactRequest
                       {
@@ -162,13 +162,13 @@
     [TestMethod]
     public async Task TestNoContactInformationCanBeFoundShouldReturnErrorCode()
     {
-      var contactInformationRepositoryMock = new Mock<IContactInformationRepository>();
-      contactInformationRepositoryMock.Setup(c => c.LoadContactInformationByAddressAsync(It.IsAny<Address>()))
+      var contactRepositoryMock = new Mock<IContactRepository>();
+      contactRepositoryMock.Setup(c => c.LoadContactInformationByAddressAsync(It.IsAny<Address>()))
         .Throws(new MessengerException(ResponseCode.NoContactInformationPresent));
 
       var messenger = new InMemoryMessenger();
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, messenger, contactInformationRepositoryMock.Object);
+      var interactor = new AddContactInteractor(contactRepositoryMock.Object, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var request = new AddContactRequest
                       {
@@ -189,7 +189,7 @@
     {
       var messenger = new ExceptionMessenger(new Exception("Hi"));
       var respository = new InMemoryContactRepository();
-      var interactor = new AddContactInteractor(respository, messenger, new InMemoryContactInformationRepository());
+      var interactor = new AddContactInteractor(respository, messenger);
       var contactAddress = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var request = new AddContactRequest
                       {

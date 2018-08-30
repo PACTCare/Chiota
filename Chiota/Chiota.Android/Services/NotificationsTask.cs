@@ -9,6 +9,7 @@
   using Android.OS;
   using Android.Support.V4.App;
 
+  using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Persistence;
   using Chiota.Services;

@@ -8,6 +8,7 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
+  using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;

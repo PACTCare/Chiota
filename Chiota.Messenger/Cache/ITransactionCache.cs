@@ -19,7 +19,7 @@
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    Task<List<TransactionCacheItem>> LoadTransactionsByAddress(Address address);
+    Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address);
 
     /// <summary>
     /// The save transaction.
@@ -30,6 +30,6 @@
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    Task SaveTransaction(TransactionCacheItem item);
+    Task SaveTransactionAsync(TransactionCacheItem item);
   }
 }
