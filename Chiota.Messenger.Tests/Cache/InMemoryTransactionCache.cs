@@ -12,7 +12,7 @@
   /// <summary>
   /// The in memory transaction cache.
   /// </summary>
-  public class InMemoryTransactionCache : ITransactionCache
+  internal class InMemoryTransactionCache : ITransactionCache
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="InMemoryTransactionCache"/> class.
@@ -25,7 +25,7 @@
     /// <summary>
     /// Gets the items.
     /// </summary>
-    private List<TransactionCacheItem> Items { get; }
+    public List<TransactionCacheItem> Items { get; }
 
     /// <summary>
     /// The load transactions by address.

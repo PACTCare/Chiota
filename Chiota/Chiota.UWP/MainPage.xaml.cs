@@ -13,6 +13,8 @@
 
   using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.GetApprovedContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
 
@@ -70,27 +72,38 @@
     {
       // Should be moved to the runtime component, but it's not possible to set a reference to Chiota
       var secureStorage = new SecureStorage();
-      if (secureStorage.CheckUserStored())
+      if (!secureStorage.CheckUserStored())
       {
-        var user = await secureStorage.GetUser();
-        if (user != null)
+        return;
+      }
+
+      var user = await secureStorage.GetUser();
+      if (user == null)
+      {
+        return;
+      }
+
+      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>>();
+      var response = await interactor.ExecuteAsync(
+                       new GetApprovedContactsRequest
+                         {
+                           ContactRequestAddress = new Address(user.RequestAddress),
+                           PublicKeyAddress = new Address(user.PublicKeyAddress)
+                         });
+
+      if (response.Code != ResponseCode.Success)
+      {
+        return;
+      }
+
+      // currently no messages for contact request due to perfomance issues
+      foreach (var contact in response.Contacts.Where(c => !c.Rejected))
+      {
+        var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
+
+        if (encryptedMessages.Any(c => !c.Stored))
         {
-          var contactRequestList = await user.TangleMessenger.GetContactsJsonAsync(new Address(user.RequestAddress));
-          var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(user.PublicKeyAddress);
-
-          var approvedContacts =
-            contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-
-          // currently no messages for contact request due to perfomance issues
-          foreach (var contact in approvedContacts.Where(c => !c.Rejected))
-          {
-            var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
-
-            if (encryptedMessages.Any(c => !c.Stored))
-            {
-              this.CreateNotification(contact);
-            }
-          }
+          this.CreateNotification(contact);
         }
       }
     }

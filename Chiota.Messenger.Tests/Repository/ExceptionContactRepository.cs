@@ -26,11 +26,7 @@
 
     public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
     {
-      return new ContactInformation
-               {
-                 ContactAddress = new Address(Hash.Empty.Value),
-                 NtruKey = InMemoryContactRepository.NtruKeyPair.PublicKey
-               };
+      throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
     }
 
     /// <inheritdoc />

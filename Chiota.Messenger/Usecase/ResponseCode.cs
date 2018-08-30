@@ -33,6 +33,11 @@
     /// <summary>
     /// Error code that is returned when more than one valid contact information entry is found at an address
     /// </summary>
-    AmbiguousContactInformation = -5
+    AmbiguousContactInformation = -5,
+
+    /// <summary>
+    /// Error code that is returned when contacts cannot be loaded
+    /// </summary>
+    ContactsUnavailable = -6,
   }
 }

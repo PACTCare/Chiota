@@ -118,38 +118,6 @@
       return messagesList;
     }
 
-    // Without ShortStorage, always reload contacts
-    public async Task<List<Contact>> GetContactsJsonAsync(Address address)
-    {
-      var contacts = new List<Contact>();
-      var cachedTransactionHashes = new List<Hash>();
-
-      var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(address);
-      foreach (var cachedTransaction in cachedTransactions)
-      {
-        cachedTransactionHashes.Add(cachedTransaction.TransactionHash);
-        contacts.Add(JsonConvert.DeserializeObject<Contact>(cachedTransaction.TransactionTrytes.ToUtf8String()));
-      }
-
-      var transactions = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { address });
-      var newHashes = cachedTransactionHashes.Union(transactions.Hashes, new TryteComparer<Hash>()).ToList();
-
-      foreach (var hash in newHashes)
-      {
-        var bundle = await this.Repository.GetBundleAsync(hash);
-
-        foreach (var message in bundle.GetMessages())
-        {
-          await this.TransactionCache.SaveTransactionAsync(
-            new TransactionCacheItem { Address = address, TransactionHash = hash, TransactionTrytes = TryteString.FromUtf8String(message) });
-
-          contacts.Add(JsonConvert.DeserializeObject<Contact>(message));
-        }
-      }
-
-      return contacts;
-    }
-
     private static Transfer CreateTransfer(TryteString message, string address)
     {
       return new Transfer

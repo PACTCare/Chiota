@@ -10,6 +10,8 @@ namespace Chiota.ViewModels
   using Chiota.Chatbot;
   using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.GetApprovedContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
@@ -126,52 +128,54 @@ namespace Chiota.ViewModels
 
       var searchContacts = new ObservableCollection<ContactListViewModel>();
 
-      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync(new Address(UserService.CurrentUser.RequestAddress));
-      var contactsOnApproveAddress = await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().LoadContactsAsync(UserService.CurrentUser.PublicKeyAddress);
-
-      // all infos are taken from contactRequestList
-      var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>>();
+      var response = await interactor.ExecuteAsync(
+                       new GetApprovedContactsRequest
+                         {
+                           ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                         });
 
       // decline info is stored on contactsOnApproveAddress
-      foreach (var approved in approvedContacts)
-      {
-        foreach (var c in contactsOnApproveAddress)
-        {
-          if (approved.ChatAddress == c.ChatAddress)
-          {
-            approved.Rejected = c.Rejected;
-          }
-        }
-      }
+      //foreach (var approved in approvedContacts)
+      //{
+      //  foreach (var c in contactsOnApproveAddress)
+      //  {
+      //    if (approved.ChatAddress == c.ChatAddress)
+      //    {
+      //      approved.Rejected = c.Rejected;
+      //    }
+      //  }
+      //}
 
-      if (this.Contacts != null && contactsOnApproveAddress.Count == 1 && approvedContacts.Count == 0)
-      {
-        // imidiate refresh, wehn decline is clicked
-        if (contactsOnApproveAddress[0].Rejected)
-        {
-          this.RemoveAddress(contactsOnApproveAddress[0].ChatAddress);
-        }
-        else
-        {
-          // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
-          approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-        }
-      }
+      //if (this.Contacts != null && contactsOnApproveAddress.Count == 1 && approvedContacts.Count == 0)
+      //{
+      //  // imidiate refresh, wehn decline is clicked
+      //  if (contactsOnApproveAddress[0].Rejected)
+      //  {
+      //    this.RemoveAddress(contactsOnApproveAddress[0].ChatAddress);
+      //  }
+      //  else
+      //  {
+      //    // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
+      //    approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+      //  }
+      //}
 
-      var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-      var contactsWithOutResponseNotAddedYet =
-        contactsWithoutResponse.Except(this.contacts, new ChatAdressComparer()).ToList();
-      foreach (var contact in contactsWithOutResponseNotAddedYet)
-      {
-        if (contact?.Request == true)
-        {
-          var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
+      //var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
+      //var contactsWithOutResponseNotAddedYet =
+      //  contactsWithoutResponse.Except(this.contacts, new ChatAdressComparer()).ToList();
+      //foreach (var contact in contactsWithOutResponseNotAddedYet)
+      //{
+      //  if (contact?.Request == true)
+      //  {
+      //    var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
 
-          this.contacts.Add(contactCell);
-        }
-      }
+      //    this.contacts.Add(contactCell);
+      //  }
+      //}
 
-      foreach (var contact in approvedContacts.Where(c => !c.Rejected))
+      foreach (var contact in response.Contacts.Where(c => !c.Rejected))
       {
         contact.Request = false;
         this.RemoveAddress(contact.ChatAddress);

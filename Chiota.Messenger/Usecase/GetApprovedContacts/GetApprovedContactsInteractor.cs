@@ -1,5 +1,7 @@
 ﻿namespace Chiota.Messenger.Usecase.GetApprovedContacts
 {
+  using System;
+  using System.Collections;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -60,15 +62,21 @@
     /// <inheritdoc />
     public async Task<GetApprovedContactsResponse> ExecuteAsync(GetApprovedContactsRequest request)
     {
-      var contactRequests = await this.LoadContactRequests(request.ContactRequestAddress);
-      var approvedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
+      try
+      {
+        var contactRequests = await this.LoadContactRequests(request.ContactRequestAddress);
+        var approvedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
 
-      return new GetApprovedContactsResponse
-               {
-                 Contacts = approvedContacts.Union(
-                   contactRequests,
-                   new ChatAdressComparer()).ToList()
-               };
+        return new GetApprovedContactsResponse
+                 {
+                   Contacts = approvedContacts.Union(contactRequests, new ChatAdressComparer()).ToList(),
+                   Code = ResponseCode.Success
+                 };
+      }
+      catch (Exception)
+      {
+        return new GetApprovedContactsResponse { Code = ResponseCode.ContactsUnavailable };
+      }
     }
 
     /// <summary>
@@ -83,29 +91,30 @@
     private async Task<List<Contact>> LoadContactRequests(Address address)
     {
       var contacts = new List<Contact>();
-      var cachedTransactionHashes = new List<Hash>();
 
       var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(address);
       foreach (var cachedTransaction in cachedTransactions)
       {
-        cachedTransactionHashes.Add(cachedTransaction.TransactionHash);
         contacts.Add(JsonConvert.DeserializeObject<Contact>(cachedTransaction.TransactionTrytes.ToUtf8String()));
       }
 
-      var transactions = await this.IotaRepository.FindTransactionsByAddressesAsync(new List<Address> { address });
-      var newHashes = cachedTransactionHashes.Intersect(transactions.Hashes, new TryteComparer<Hash>()).ToList();
+      var transactionHashesFromTangle = await this.IotaRepository.FindTransactionsByAddressesAsync(new List<Address> { address });
 
-      foreach (var hash in newHashes)
+      foreach (var transactionHash in transactionHashesFromTangle.Hashes)
       {
-        var bundle = await this.IotaRepository.GetBundleAsync(hash);
+        if (cachedTransactions.Any(h => h.TransactionHash.Value == transactionHash.Value))
+        {
+          continue;
+        }
 
+        var bundle = await this.IotaRepository.GetBundleAsync(transactionHash);
         foreach (var message in bundle.GetMessages())
         {
           await this.TransactionCache.SaveTransactionAsync(
             new TransactionCacheItem
               {
                 Address = address,
-                TransactionHash = hash,
+                TransactionHash = transactionHash,
                 TransactionTrytes = TryteString.FromUtf8String(message)
               });
 

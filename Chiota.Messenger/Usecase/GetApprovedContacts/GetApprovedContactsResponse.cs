@@ -10,6 +10,11 @@
   public class GetApprovedContactsResponse
   {
     /// <summary>
+    /// Gets or sets the code.
+    /// </summary>
+    public ResponseCode Code { get; set; }
+
+    /// <summary>
     /// Gets or sets the contacts.
     /// </summary>
     public List<Contact> Contacts { get; set; }

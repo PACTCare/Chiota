@@ -6,7 +6,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Repository;
-  using Chiota.Messenger.Service;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
@@ -20,9 +19,6 @@
 
   using Tangle.Net.Entity;
   using Tangle.Net.Utils;
-
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
   /// The add contact interactor test.

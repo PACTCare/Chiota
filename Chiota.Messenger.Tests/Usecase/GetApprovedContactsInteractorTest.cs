@@ -9,6 +9,7 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Repository;
+  using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetApprovedContacts;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,6 +21,9 @@
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
   using Tangle.Net.Repository.DataTransfer;
+  using Tangle.Net.Utils;
+
+  using Constants = Chiota.Messenger.Constants;
 
   /// <summary>
   /// The get approved contacts interactor test.
@@ -55,10 +59,11 @@
       var response = await interactor.ExecuteAsync(new GetApprovedContactsRequest { PublicKeyAddress = new Address(pubKeyAddress) });
 
       Assert.AreEqual(2, response.Contacts.Count);
+      Assert.AreEqual(ResponseCode.Success, response.Code);
     }
 
     [TestMethod]
-    public async Task TestContactsAreContainedOnTangleAndLocallyShouldReturnBoth()
+    public async Task TestContactsAreContainedCachedAndLocallyShouldReturnBoth()
     {
       var pubKeyAddress = Seed.Random().Value;
       var contactRequestAddress = new Address(Seed.Random().Value);
@@ -72,7 +77,7 @@
                                      TransactionHash = new Hash(Seed.Random().Value),
                                      TransactionTrytes = TryteString.FromUtf8String(
                                        JsonConvert.SerializeObject(
-                                         new Contact { ContactAddress = Seed.Random().Value }))
+                                         new Contact { ChatAddress = Seed.Random().Value }))
                                    };
 
       await transactionCache.SaveTransactionAsync(cacheItem);
@@ -93,6 +98,54 @@
                          });
 
       Assert.AreEqual(3, response.Contacts.Count);
+    }
+
+    [TestMethod]
+    public async Task TestContactsAreNotCachedButOnTangleShouldReturnContactsAndSetCache()
+    {
+      var pubKeyAddress = Seed.Random().Value;
+      var contactRequestAddress = new Address(Seed.Random().Value);
+
+      var bundle = new Bundle();
+      bundle.AddTransfer(new Transfer
+                           {
+                             Address = contactRequestAddress,
+                             Message = TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = Seed.Random().Value })),
+                             Timestamp = Timestamp.UnixSecondsTimestamp,
+                             Tag = Constants.Tag
+                           });
+
+      bundle.Finalize();
+      bundle.Sign();
+
+      // calculate hashes
+      var transactions = bundle.Transactions;
+      bundle.Transactions = transactions.Select(t => Transaction.FromTrytes(t.ToTrytes())).ToList();
+
+      var iotaRepository = new InMemoryIotaRepository();
+      iotaRepository.SentBundles.Add(bundle);
+
+      var transactionCache = new InMemoryTransactionCache();
+
+      var interactor = new GetApprovedContactsInteractor(new InMemoryContactRepository(), transactionCache, iotaRepository);
+      var response = await interactor.ExecuteAsync(
+                       new GetApprovedContactsRequest
+                         {
+                           PublicKeyAddress = new Address(pubKeyAddress),
+                           ContactRequestAddress = contactRequestAddress
+                         });
+
+      Assert.AreEqual(1, response.Contacts.Count);
+      Assert.AreEqual(1, transactionCache.Items.Count);
+    }
+
+    [TestMethod]
+    public async Task TestExceptionGetsThrownShouldReturnErrorCode()
+    {
+      var interactor = new GetApprovedContactsInteractor(new ExceptionContactRepository(), new InMemoryTransactionCache(), new InMemoryIotaRepository());
+      var response = await interactor.ExecuteAsync(new GetApprovedContactsRequest { PublicKeyAddress = new Address(Hash.Empty.Value) });
+
+      Assert.AreEqual(ResponseCode.ContactsUnavailable, response.Code);
     }
   }
 }

@@ -5,9 +5,14 @@
   using Autofac;
   using Autofac.Core;
 
+  using Chiota.Messenger.Service;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.AddContact;
+  using Chiota.Messenger.Usecase.GetApprovedContacts;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels;
 
   /// <summary>
   /// The dependency resolver.
@@ -37,18 +42,26 @@
     /// </summary>
     public static void Init()
     {
-      var containerBuilder = new ContainerBuilder();
+      var builder = new ContainerBuilder();
 
-      containerBuilder.RegisterType<UserFactory>().As<IUserFactory>();
-      containerBuilder.RegisterType<DefaultNavigationService>().As<INavigationService>();
-      containerBuilder.RegisterType<RepositoryFactory>().As<IRepositoryFactory>();
+      builder.RegisterType<UserFactory>().As<IUserFactory>();
+      builder.RegisterType<DefaultNavigationService>().As<INavigationService>();
+      builder.RegisterType<RepositoryFactory>().As<IRepositoryFactory>();
+
+      builder.RegisterType<TangleMessenger>().As<IMessenger>().PropertiesAutowired();
+
+      builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
+      builder.RegisterType<AddContactViewModel>().As<AddContactViewModel>().PropertiesAutowired();
+
+      builder.RegisterType<GetApprovedContactsInteractor>().As<IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>>()
+        .PropertiesAutowired();
 
       foreach (var module in Modules)
       {
-        containerBuilder.RegisterModule(module);
+        builder.RegisterModule(module);
       }
 
-      Container = containerBuilder.Build();
+      Container = builder.Build();
     }
 
     /// <summary>

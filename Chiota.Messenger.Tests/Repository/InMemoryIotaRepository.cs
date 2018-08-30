@@ -279,9 +279,9 @@
     }
 
     /// <inheritdoc />
-    public Task<Bundle> GetBundleAsync(Hash transactionHash)
+    public async Task<Bundle> GetBundleAsync(Hash transactionHash)
     {
-      return null;
+      return this.SentBundles.FirstOrDefault(b => b.Transactions.Any(t => t.Hash.Value == transactionHash.Value)); 
     }
 
     /// <inheritdoc />
