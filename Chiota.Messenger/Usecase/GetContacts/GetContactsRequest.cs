@@ -1,11 +1,11 @@
-﻿namespace Chiota.Messenger.Usecase.GetApprovedContacts
+﻿namespace Chiota.Messenger.Usecase.GetContacts
 {
   using Tangle.Net.Entity;
 
   /// <summary>
   /// The get approved contacts request.
   /// </summary>
-  public class GetApprovedContactsRequest
+  public class GetContactsRequest
   {
     /// <summary>
     /// Gets or sets the contact request address.

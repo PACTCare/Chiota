@@ -14,7 +14,7 @@
   using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetApprovedContacts;
+  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
 
@@ -83,9 +83,9 @@
         return;
       }
 
-      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>>();
+      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
-                       new GetApprovedContactsRequest
+                       new GetContactsRequest
                          {
                            ContactRequestAddress = new Address(user.RequestAddress),
                            PublicKeyAddress = new Address(user.PublicKeyAddress)
@@ -97,7 +97,7 @@
       }
 
       // currently no messages for contact request due to perfomance issues
-      foreach (var contact in response.Contacts.Where(c => !c.Rejected))
+      foreach (var contact in response.ApprovedContacts.Where(c => !c.Rejected))
       {
         var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
 

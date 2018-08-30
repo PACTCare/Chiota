@@ -8,7 +8,7 @@
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Messenger.Usecase.GetApprovedContacts;
+  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
@@ -53,7 +53,7 @@
       builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
       builder.RegisterType<AddContactViewModel>().As<AddContactViewModel>().PropertiesAutowired();
 
-      builder.RegisterType<GetApprovedContactsInteractor>().As<IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>>()
+      builder.RegisterType<GetContactsInteractor>().As<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>()
         .PropertiesAutowired();
 
       foreach (var module in Modules)

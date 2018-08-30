@@ -1,7 +1,6 @@
-﻿namespace Chiota.Messenger.Usecase.GetApprovedContacts
+﻿namespace Chiota.Messenger.Usecase.GetContacts
 {
   using System;
-  using System.Collections;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -20,10 +19,10 @@
   ///   The get approved contacts interactor.
   /// </summary>
   public class
-    GetApprovedContactsInteractor : IUsecaseInteractor<GetApprovedContactsRequest, GetApprovedContactsResponse>
+    GetContactsInteractor : IUsecaseInteractor<GetContactsRequest, GetContactsResponse>
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="GetApprovedContactsInteractor"/> class.
+    /// Initializes a new instance of the <see cref="GetContactsInteractor"/> class.
     /// </summary>
     /// <param name="contactRepository">
     /// The contact repository.
@@ -34,7 +33,7 @@
     /// <param name="iotaRepository">
     /// The iota repository.
     /// </param>
-    public GetApprovedContactsInteractor(
+    public GetContactsInteractor(
       IContactRepository contactRepository,
       ITransactionCache transactionCache,
       IIotaRepository iotaRepository)
@@ -60,22 +59,31 @@
     private ITransactionCache TransactionCache { get; }
 
     /// <inheritdoc />
-    public async Task<GetApprovedContactsResponse> ExecuteAsync(GetApprovedContactsRequest request)
+    public async Task<GetContactsResponse> ExecuteAsync(GetContactsRequest request)
     {
       try
       {
-        var contactRequests = await this.LoadContactRequests(request.ContactRequestAddress);
-        var approvedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
+        var requestedContacts = await this.LoadContactRequests(request.ContactRequestAddress);
+        var localApprovedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
 
-        return new GetApprovedContactsResponse
+        var addressComparer = new ChatAddressComparer();
+        var pendingContactRequests = requestedContacts.Union(localApprovedContacts, addressComparer).ToList()
+          .Except(localApprovedContacts, addressComparer).ToList();
+
+        // Request does not get updated so we need to set it here. TODO: Find a way to do this another way
+        var approvedContacts = requestedContacts.Intersect(localApprovedContacts, addressComparer).ToList();
+        approvedContacts.ForEach(c => c.Request = false);
+
+        return new GetContactsResponse
                  {
-                   Contacts = approvedContacts.Union(contactRequests, new ChatAdressComparer()).ToList(),
+                   ApprovedContacts = approvedContacts,
+                   PendingContactRequests = pendingContactRequests,
                    Code = ResponseCode.Success
                  };
       }
       catch (Exception)
       {
-        return new GetApprovedContactsResponse { Code = ResponseCode.ContactsUnavailable };
+        return new GetContactsResponse { Code = ResponseCode.ContactsUnavailable };
       }
     }
 
