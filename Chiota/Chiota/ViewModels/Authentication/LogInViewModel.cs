@@ -58,14 +58,14 @@ namespace Chiota.ViewModels.Authentication
                 return new Command(async () =>
                 {
                     //Check password.
-                    if (true)
+                    if (false)
                     {
                         //TODO Navigate to contact page.
                         //await PushAsync(new SetUserPage());
                         return;
                     }
 
-                    await new InvalidUserInputException(new ExcInfo(), "password").ShowAlertAsync();
+                    await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
                 });
             }
         }

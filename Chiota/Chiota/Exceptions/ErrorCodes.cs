@@ -18,6 +18,7 @@ namespace Chiota.Exceptions
         #region Authentication exceptions
 
         public const int AuthFailedPasswordConfirmation = -20000;
+        public const int AuthMissingSeed = -20001;
 
         #endregion
 

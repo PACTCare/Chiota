@@ -79,17 +79,11 @@ namespace Chiota.Exceptions
 
     public class InvalidUserInputException : BaseException
     {
-        #region Attributes
-
-        private readonly string[] _detail = { "Invalid user input of the argument", "expected." };
-
-        #endregion
-
         #region Constructors
 
-        public InvalidUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.InvalidUserInput, Titles.InvalidUserInput, Details.InvalidUserInput)
+        public InvalidUserInputException(ExcInfo excInfo, string detail) : base(excInfo, ErrorCodes.InvalidUserInput, Titles.InvalidUserInput, Details.InvalidUserInput)
         {
-            Detail = _detail[0] + " " + argument + " " + _detail[1];
+            Detail = detail;
         }
 
         #endregion
@@ -97,17 +91,17 @@ namespace Chiota.Exceptions
 
     public class MissingUserInputException : BaseException
     {
-        #region Attributes
+        /*#region Attributes
 
         private readonly string[] _detail = { "Missing user input of the argument", "expected." };
 
-        #endregion
+        #endregion*/
 
         #region Constructors
 
-        public MissingUserInputException(ExcInfo excInfo, string argument) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Details.MissingUserInput)
+        public MissingUserInputException(ExcInfo excInfo, string detail) : base(excInfo, ErrorCodes.MissingUserInput, Titles.MissingUserInput, Details.MissingUserInput)
         {
-            Detail = _detail[0] + " " + argument + " " + _detail[1];
+            Detail = detail;
         }
 
         #endregion
@@ -133,6 +127,17 @@ namespace Chiota.Exceptions
         #region Constructors
 
         public AuthFailedPasswordConfirmationException(ExcInfo excInfo) : base(excInfo, ErrorCodes.AuthFailedPasswordConfirmation, Titles.AuthFailedPasswordConfirmation, Details.AuthFailedPasswordConfirmation)
+        {
+        }
+
+        #endregion
+    }
+
+    public class AuthMissingSeedException : BaseException
+    {
+        #region Constructors
+
+        public AuthMissingSeedException(ExcInfo excInfo) : base(excInfo, ErrorCodes.AuthMissingSeed, Titles.AuthMissingSeed, Details.AuthMissingSeed)
         {
         }
 

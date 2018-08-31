@@ -18,12 +18,17 @@ namespace Chiota.Exceptions
         #region Authentication exceptions
 
         public static string AuthFailedPasswordConfirmation = "Please verify if you have insert the correct password and try it again.";
+        public static string AuthMissingSeed = "Please generate a new seed until the next step.";
+        public static string AuthInvalidUserInputPassword = "Invalid user input of the argument 'password' expected.";
+        public static string AuthMissingUserInputName = "Missing user input of the argument 'name' expected.";
+        public static string AuthMissingUserInputPasswordRepeat = "Missing user input of the argument 'password' or 'repeat password' expected.";
 
         #endregion
 
         #region Back up exceptions
 
-        public const string BackUpFailedSeedConfirmation = "Please verify if you have insert the correct seed and try it again.";
+        public static string BackUpFailedSeedConfirmation = "Please verify if you have insert the correct seed and try it again.";
+        public static string BackUpInvalidUserInputSeed = "Invalid user input of the argument 'seed' expected.";
 
         #endregion
     }

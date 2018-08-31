@@ -92,7 +92,7 @@ namespace Chiota.ViewModels.Authentication
                     {
                         if (!InputValidator.IsTrytes(Seed))
                         {
-                            await new InvalidUserInputException(new ExcInfo(), "seed").ShowAlertAsync();
+                            await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                             return;
                         }
 

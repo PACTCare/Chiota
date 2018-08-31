@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Chiota.Popups.Classes;
+using Chiota.Resources.Localizations;
 
 namespace Chiota.Popups.PopupModels
 {
@@ -25,10 +26,8 @@ namespace Chiota.Popups.PopupModels
         public AlertPopupModel()
         {
             //Set default attributes
-            //Normaly we should use resx files to handle dialogs and text,
-            //this is also important for switching language, TODO
-            PosButtonText = "Ok";   //AppResources.DlgOk;
-            NegButtonText = "Cancel";   //AppResources.DlgCancel;
+            PosButtonText = AppResources.DlgOk;
+            NegButtonText = AppResources.DlgCancel;
         }
 
         #endregion

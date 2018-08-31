@@ -18,6 +18,7 @@ namespace Chiota.Exceptions
         #region Base exceptions
 
         public static string AuthFailedPasswordConfirmation = "Failed password confirmation";
+        public static string AuthMissingSeed = "Missing seed";
 
         #endregion
 

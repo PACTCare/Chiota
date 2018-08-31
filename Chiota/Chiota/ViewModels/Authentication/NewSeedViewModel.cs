@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using Chiota.Exceptions;
+using Chiota.Extensions;
 using Chiota.Models.BackUp;
 using Chiota.ViewModels.Classes;
 using Chiota.Pages.BackUp;
+using Chiota.Services.Iota;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -14,19 +18,67 @@ namespace Chiota.ViewModels.Authentication
     {
         #region Attributes
 
-        private ObservableCollection<View> _seed;
+        private Seed _seed;
+        private ObservableCollection<View> _visibleSeedLines;
+
+        private Thickness _seedViewPadding;
+        private int _seedLinePointer;
+
+        private bool _isSeedViewVisible;
+        private bool _isUpVisible;
+        private bool _isDownVisible;
 
         #endregion
 
         #region Properties
 
-        public ObservableCollection<View> Seed
+        public ObservableCollection<View> VisibleSeedLines
         {
-            get => _seed;
+            get => _visibleSeedLines;
             set
             {
-                _seed = value;
-                OnPropertyChanged(nameof(Seed));
+                _visibleSeedLines = value;
+                OnPropertyChanged(nameof(VisibleSeedLines));
+            }
+        }
+
+        public Thickness SeedViewPadding
+        {
+            get => _seedViewPadding;
+            set
+            {
+                _seedViewPadding = value;
+                OnPropertyChanged(nameof(SeedViewPadding));
+            }
+        }
+
+        public bool IsSeedViewVisible
+        {
+            get => _isSeedViewVisible;
+            set
+            {
+                _isSeedViewVisible = value;
+                OnPropertyChanged(nameof(IsSeedViewVisible));
+            }
+        }
+
+        public bool IsUpVisible
+        {
+            get => _isUpVisible;
+            set
+            {
+                _isUpVisible = value;
+                OnPropertyChanged(nameof(IsUpVisible));
+            }
+        }
+
+        public bool IsDownVisible
+        {
+            get => _isDownVisible;
+            set
+            {
+                _isDownVisible = value;
+                OnPropertyChanged(nameof(IsDownVisible));
             }
         }
 
@@ -36,11 +88,9 @@ namespace Chiota.ViewModels.Authentication
 
         public override void Init(object data = null)
         {
-            base.Init(data);
+            SeedViewPadding = new Thickness(0, 36, 0, 0);
 
-            //Set a new generated seed.
-            var seed = new Seed(GetNewSeed());
-            UpdateSeedView(seed);
+            base.Init(data);
         }
 
         #endregion
@@ -49,21 +99,38 @@ namespace Chiota.ViewModels.Authentication
 
         #region GetNewSeed
 
+        /// <summary>
+        /// Returns a new generated iota seed.
+        /// </summary>
+        /// <returns></returns>
         private string GetNewSeed()
         {
-            //TODO Implementation to generate a new seed.
-            return "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
+            var seed = Tangle.Net.Entity.Seed.Random();
+            return seed.Value;
         }
 
         #endregion
 
         #region UpdateSeedView
 
-        private void UpdateSeedView(Seed seed)
+        private void UpdateSeedView()
         {
+            var enabledPointer = 1;
+            if (_seedLinePointer == 0)
+                enabledPointer = 0;
+            else if(_seedLinePointer == 8)
+                enabledPointer = 2;
+
+            var visibleIndex = 0;
+            if (_seedLinePointer > 1 && _seedLinePointer < 6)
+                visibleIndex = _seedLinePointer - 1;
+            else if (_seedLinePointer >= 6)
+                visibleIndex = 6;
+
+            var seedLines = _seed.Lines.GetRange(visibleIndex, 3);
             var tmp = new ObservableCollection<View>();
 
-            foreach (var line in seed.Lines)
+            for(var i = 0; i < seedLines.Count; i++)
             {
                 var lineView = new StackLayout
                 {
@@ -71,33 +138,42 @@ namespace Chiota.ViewModels.Authentication
                     Spacing = 2
                 };
 
-                foreach (var item in line.Items)
+                if (i != enabledPointer)
+                    lineView.IsEnabled = false;
+
+                for (var j = 0; j < seedLines[i].Items.Count; j++)
                 {
+                    var backgroundColor = (Color) Application.Current.Resources["AccentColor"];
+
                     //Set the layout for every item.
                     var itemView = new Button
                     {
                         TextColor = Color.FromHex("#ffffff"),
-                        BackgroundColor = (Color) Application.Current.Resources["AccentColor"],
+                        BackgroundColor = backgroundColor,
                         HeightRequest = 32,
                         WidthRequest = 32,
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
                         CornerRadius = 8,
                         FontSize = 10,
-                        Text = item,
-                        Command = SeedLetterCommand
+                        Text = seedLines[i].Items[j],
+                        Command = SeedLetterCommand,
                     };
-                    itemView.CommandParameter = itemView;
+                    itemView.CommandParameter = new object[]{ j, itemView};
+
+                    if (i != enabledPointer)
+                        itemView.BackgroundColor = Color.FromRgba(backgroundColor.R, backgroundColor.G, backgroundColor.B, 0.6);
+
                     lineView.Children.Add(itemView);
                 }
                 tmp.Add(lineView);
             }
 
             //Clear the current seed view.
-            Seed = null;
+            //VisibleSeedLines = null;
 
             //Set the new one.
-            Seed = tmp;
+            VisibleSeedLines = tmp;
         }
 
         #endregion
@@ -114,14 +190,10 @@ namespace Chiota.ViewModels.Authentication
         {
             var result = string.Empty;
 
-            foreach (var child in Seed)
+            foreach (var line in _seed.Lines)
             {
-                if (!(child is StackLayout layout)) return null;
-                foreach (var item in layout.Children)
-                {
-                    if (!(item is Button button)) return null;
-                    result += button.Text.Replace("\0", "");
-                }
+                foreach (var item in line.Items)
+                    result += item;
             }
             return result.Length != 81 ? null : result;
         }
@@ -140,8 +212,17 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(() =>
                 {
-                    var seed = new Seed(GetNewSeed());
-                    UpdateSeedView(seed);
+                    _seed = new Seed(GetNewSeed());
+
+                    //Reset view.
+                    _seedLinePointer = 0;
+                    IsUpVisible = false;
+                    IsDownVisible = true;
+
+                    UpdateSeedView();
+
+                    //Show seed view.
+                    IsSeedViewVisible = true;
                 });
             }
         }
@@ -154,8 +235,12 @@ namespace Chiota.ViewModels.Authentication
         {
             get
             {
-                return new Command((item) =>
+                return new Command((array) =>
                 {
+                    var items = array as object[];
+                    var pointer = (int) items[0];
+                    var item = items[1] as Button;
+
                     if(!(item is Button button)) return;
 
                     //Get the seed items random by utf8.
@@ -164,7 +249,66 @@ namespace Chiota.ViewModels.Authentication
                     if (result == 91)
                         result = 57;
 
-                    button.Text = Encoding.UTF8.GetString(BitConverter.GetBytes(result));
+                    //Update the seed attribute.
+                    var resultChar = Encoding.UTF8.GetString(BitConverter.GetBytes(result)).Replace("\0", "");
+                    _seed.Lines[_seedLinePointer].Items[pointer] = resultChar;
+                    button.Text = resultChar;
+                });
+            }
+        }
+
+        #endregion
+
+        #region Up
+
+        public ICommand UpCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    if (_seedLinePointer >= 0)
+                    {
+                        _seedLinePointer--;
+                        IsDownVisible = true;
+                        if (_seedLinePointer == 0)
+                        {
+                            IsUpVisible = false;
+                            SeedViewPadding = new Thickness(0, 36, 0, 0);
+                        }
+                        else
+                            SeedViewPadding = new Thickness(0);
+
+                        UpdateSeedView();
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region Down
+
+        public ICommand DownCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    if (_seedLinePointer <= 8)
+                    {
+                        _seedLinePointer++;
+                        IsUpVisible = true;
+                        if (_seedLinePointer == 8)
+                        {
+                            IsDownVisible = false;
+                            SeedViewPadding = new Thickness(0, 0, 0, 36);
+                        }
+                        else
+                            SeedViewPadding = new Thickness(0);
+
+                        UpdateSeedView();
+                    }
                 });
             }
         }
@@ -179,6 +323,13 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                 {
+                    //If there exist no seed, show missing seed exception.
+                    if (_seed == null)
+                    {
+                        await new AuthMissingSeedException(new ExcInfo()).ShowAlertAsync();
+                        return;
+                    }
+
                     var seed = ExtractSeed();
                     await PushAsync(new BackUpPage(), seed);
                 });

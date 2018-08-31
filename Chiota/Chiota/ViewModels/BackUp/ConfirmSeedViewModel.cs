@@ -58,7 +58,7 @@ namespace Chiota.ViewModels.BackUp
             base.ViewIsAppearing();
 
             //Clear the user inputs.
-            Seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
+            Seed = "";
         }
 
         #endregion
@@ -105,7 +105,7 @@ namespace Chiota.ViewModels.BackUp
                     {
                         if (!InputValidator.IsTrytes(Seed))
                         {
-                            await new InvalidUserInputException(new ExcInfo(), "seed").ShowAlertAsync();
+                            await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                             return;
                         }
 
@@ -119,7 +119,7 @@ namespace Chiota.ViewModels.BackUp
                         return;
                     }
 
-                    await new MissingUserInputException(new ExcInfo(), "seed").ShowAlertAsync();
+                    await new MissingUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                 });
             }
         }

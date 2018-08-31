@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Chiota.Popups.Classes;
+using Chiota.Resources.Localizations;
 
 namespace Chiota.Popups.PopupModels
 {
@@ -25,8 +26,8 @@ namespace Chiota.Popups.PopupModels
         public DialogPopupModel()
         {
             //Set default attributes
-            PosButtonText = "Ok";
-            NegButtonText = "Cancel";
+            PosButtonText = AppResources.DlgOk;
+            NegButtonText = AppResources.DlgCancel;
             IsPassword = false;
         }
 
