@@ -1,6 +1,5 @@
 # Build Status
-
-## Messenger Package
+### Messenger Package
 
 [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Messenger%20Package)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=9)
 
