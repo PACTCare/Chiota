@@ -125,7 +125,7 @@
                            PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                          });
 
-      var loadedContacts = new GetContactsPresenter().Present(response, this.viewCellObject, searchText);
+      var loadedContacts = GetContactsPresenter.Present(response, this.viewCellObject, searchText);
 
       foreach (var contact in loadedContacts)
       {

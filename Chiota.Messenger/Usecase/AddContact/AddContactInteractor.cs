@@ -1,7 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.AddContact
 {
   using System;
-  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
@@ -9,48 +8,24 @@
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
 
-  using Newtonsoft.Json;
-
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
+  using Contact = Entity.Contact;
 
-  using Contact = Chiota.Messenger.Entity.Contact;
-
-  /// <summary>
-  /// The add contact interactor.
-  /// </summary>
-  public class AddContactInteractor : IUsecaseInteractor<AddContactRequest, AddContactResponse>
+  /// <inheritdoc />
+  public class AddContactInteractor : AbstractContactInteractor<AddContactRequest, AddContactResponse>
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AddContactInteractor"/> class.
-    /// </summary>
-    /// <param name="repository">
-    /// The repository.
-    /// </param>
-    /// <param name="messenger">
-    /// The messenger.
-    /// </param>
+    /// <inheritdoc />
     public AddContactInteractor(IContactRepository repository, IMessenger messenger)
+      : base(repository, messenger)
     {
-      this.Repository = repository;
-      this.Messenger = messenger;
     }
 
-    /// <summary>
-    /// Gets the repository.
-    /// </summary>
-    private IContactRepository Repository { get; }
-
-    private IMessenger Messenger { get; }
-
     /// <inheritdoc />
-    public async Task<AddContactResponse> ExecuteAsync(AddContactRequest request)
+    public override async Task<AddContactResponse> ExecuteAsync(AddContactRequest request)
     {
       try
       {
-        var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
-
         var requesterDetails = new Contact
                                  {
                                    ChatAddress = Seed.Random().ToString(),
@@ -64,18 +39,10 @@
                                    PublicKeyAddress = request.PublicKeyAddress.Value
                                  };
 
-        await this.Messenger.SendMessageAsync(
-          new Message(MessageType.RequestContact, TryteString.FromUtf8String(JsonConvert.SerializeObject(requesterDetails)), contactInformation.ContactAddress));
+        var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
 
-        var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(
-          contactInformation.NtruKey,
-          Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
-
-        await this.Messenger.SendMessageAsync(
-          new Message(
-            MessageType.KeyExchange,
-            new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + Constants.End),
-            new Address(requesterDetails.ChatKeyAddress)));
+        await this.SendContactDetails(MessageType.RequestContact, requesterDetails, contactInformation.ContactAddress);
+        await this.ExchangeKey(requesterDetails, contactInformation);
 
         await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);
 

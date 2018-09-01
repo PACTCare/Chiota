@@ -11,7 +11,7 @@
   /// <summary>
   /// The get contacts presenter.
   /// </summary>
-  public class GetContactsPresenter
+  public static class GetContactsPresenter
   {
     /// <summary>
     /// The present.
@@ -28,7 +28,7 @@
     /// <returns>
     /// The <see cref="List"/>.
     /// </returns>
-    public List<ContactListViewModel> Present(GetContactsResponse response, ViewCellObject viewCell, string searchContactsBy = null)
+    public static List<ContactListViewModel> Present(GetContactsResponse response, ViewCellObject viewCell, string searchContactsBy = null)
     {
       var result = new List<ContactListViewModel>();
 

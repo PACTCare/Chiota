@@ -78,9 +78,6 @@
 
     private async Task SaveParallelAcceptAsync()
     {
-      var encryptedChatKeyToTangle = this.GenerateChatKeyToTangle();
-      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
-
       var contact = new Contact
                       {
                         Name =
@@ -97,6 +94,9 @@
                         Request = false,
                         NtruKey = null
                       };
+
+      var encryptedChatKeyToTangle = this.GenerateChatKeyToTangle();
+      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
 
       var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
       await Task.WhenAll(saveSqlContact, chatInformationToTangle, encryptedChatKeyToTangle);

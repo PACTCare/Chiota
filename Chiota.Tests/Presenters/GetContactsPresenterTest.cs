@@ -48,7 +48,7 @@
                              }
                        };
 
-      var viewModels = new GetContactsPresenter().Present(response, new ViewCellObject());
+      var viewModels = GetContactsPresenter.Present(response, new ViewCellObject());
 
       Assert.AreEqual(2, viewModels.Count);
     }
@@ -83,7 +83,7 @@
                              }
                        };
 
-      var viewModels = new GetContactsPresenter().Present(response, new ViewCellObject(), "Hans");
+      var viewModels = GetContactsPresenter.Present(response, new ViewCellObject(), "Hans");
 
       Assert.AreEqual(1, viewModels.Count);
     }
