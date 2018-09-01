@@ -5,9 +5,6 @@
   using Chiota.Extensions;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Popups.PopupModels;
-  using Chiota.Popups.PopupPageModels;
-  using Chiota.Popups.PopupPages;
 
   using Xamarin.Forms;
 

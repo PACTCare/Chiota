@@ -1,7 +1,4 @@
-﻿using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
-
-namespace Chiota.ViewModels
+﻿namespace Chiota.ViewModels
 {
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
@@ -9,19 +6,24 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
-  using Chiota.Persistence;
+  using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.GetContacts;
+  using Chiota.Presenters;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
   using Chiota.Views;
 
   using Models;
   using Services;
 
+  using Tangle.Net.Entity;
+
   using ChatPage = Views.ChatPage;
 
   public class ContactViewModel : BaseViewModel
   {
-    private readonly List<BotObject> bots;
-
     private ObservableCollection<ContactListViewModel> contactList;
 
     private ViewCellObject viewCellObject;
@@ -29,11 +31,6 @@ namespace Chiota.ViewModels
     private ObservableCollection<ContactListViewModel> contacts;
 
     private ContactListViewModel selectedContact;
-
-    public ContactViewModel()
-    {
-      this.bots = BotList.ReturnBotList();
-    }
 
     public bool PageIsShown { get; set; }
 
@@ -85,7 +82,7 @@ namespace Chiota.ViewModels
       this.SelectedContact = null;
 
       // alternativ BotPage
-      var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
+      var bot = BotList.Bots.Find(b => b.BotSlogan == contact.ChatAddress);
       if (bot != null)
       {
         await this.Navigation.PushAsync(new BotChatPage(bot));
@@ -120,92 +117,27 @@ namespace Chiota.ViewModels
     {
       this.AddBotsToContacts();
 
-      var searchContacts = new ObservableCollection<ContactListViewModel>();
+      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
+      var response = await interactor.ExecuteAsync(
+                       new GetContactsRequest
+                         {
+                           ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                         });
 
-      var contactRequestList = await UserService.CurrentUser.TangleMessenger.GetContactsJsonAsync<Contact>(UserService.CurrentUser.RequestAddress, 3);
-      var contactsOnApproveAddress = await new SqLiteHelper().LoadContacts(UserService.CurrentUser.PublicKeyAddress);
+      var loadedContacts = new GetContactsPresenter().Present(response, this.viewCellObject, searchText);
 
-      // all infos are taken from contactRequestList
-      var approvedContacts = contactRequestList.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-
-      // decline info is stored on contactsOnApproveAddress
-      foreach (var approved in approvedContacts)
+      foreach (var contact in loadedContacts)
       {
-        foreach (var c in contactsOnApproveAddress)
+        if (this.contacts.Any(c => c.ChatAddress == contact.ChatAddress))
         {
-          if (approved.ChatAddress == c.ChatAddress)
-          {
-            approved.Rejected = c.Rejected;
-          }
+          continue;
         }
+
+        this.contacts.Add(contact);
       }
 
-      if (this.Contacts != null && contactsOnApproveAddress.Count == 1 && approvedContacts.Count == 0)
-      {
-        // imidiate refresh, wehn decline is clicked
-        if (contactsOnApproveAddress[0].Rejected)
-        {
-          this.RemoveAddress(contactsOnApproveAddress[0].ChatAddress);
-        }
-        else
-        {
-          // for immidiate refresh, when contactRequestList are already loaded and accepted clicked
-          approvedContacts = this.Contacts.Intersect(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-        }
-      }
-
-      var contactsWithoutResponse = contactRequestList.Except(contactsOnApproveAddress, new ChatAdressComparer()).ToList();
-      var contactsWithOutResponseNotAddedYet =
-        contactsWithoutResponse.Except(this.contacts, new ChatAdressComparer()).ToList();
-      foreach (var contact in contactsWithOutResponseNotAddedYet)
-      {
-        if (contact?.Request == true)
-        {
-          var contactCell = ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject);
-
-          this.contacts.Add(contactCell);
-        }
-      }
-
-      foreach (var contact in approvedContacts.Where(c => !c.Rejected))
-      {
-        contact.Request = false;
-        this.RemoveAddress(contact.ChatAddress);
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
-      }
-
-      if (string.IsNullOrWhiteSpace(searchText))
-      {
-        return this.contacts;
-      }
-
-      foreach (var contact in this.contacts)
-      {
-        if (contact.Name.ToLower().StartsWith(searchText.ToLower()))
-        {
-          searchContacts.Add(contact);
-        }
-      }
-
-      return searchContacts;
-    }
-
-    private void RemoveAddress(string chatAddress)
-    {
-      var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAddress.Contains(chatAddress));
-      if (itemToRemove == null)
-      {
-        return;
-      }
-
-      try
-      {
-        this.contacts.Remove(itemToRemove);
-      }
-      catch
-      {
-        // ignored
-      }
+      return new ObservableCollection<ContactListViewModel>(loadedContacts);
     }
 
     private void AddBotsToContacts()
@@ -215,7 +147,7 @@ namespace Chiota.ViewModels
         return;
       }
 
-      foreach (var bot in this.bots)
+      foreach (var bot in BotList.Bots)
       {
         var botContact = new Contact
         {
@@ -226,7 +158,7 @@ namespace Chiota.ViewModels
           Rejected = false
         };
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.viewCellObject));
       }
     }
   }

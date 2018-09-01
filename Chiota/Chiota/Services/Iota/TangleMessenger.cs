@@ -3,8 +3,12 @@
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Cache;
+  using Chiota.Messenger.Comparison;
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Models.SqLite;
   using Chiota.Persistence;
@@ -16,6 +20,7 @@
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
+  using Tangle.Net.Repository.DataTransfer;
   using Tangle.Net.Utils;
 
   public class TangleMessenger
@@ -24,17 +29,17 @@
 
     private readonly Seed seed;
 
-    private readonly SqLiteHelper sqLite;
+    private AbstractSqlLiteTransactionCache TransactionCache { get; }
 
-    private IIotaRepository repository;
+    private IIotaRepository Repository { get; }
 
     public TangleMessenger(Seed seed, int minWeightMagnitude = 14)
     {
       this.seed = seed;
       this.MinWeight = minWeightMagnitude;
-      this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create();
+      this.Repository = DependencyResolver.Resolve<IIotaRepository>();
       this.ShortStorageAddressList = new List<string>();
-      this.sqLite = new SqLiteHelper();
+      this.TransactionCache = DependencyResolver.Resolve<AbstractSqlLiteTransactionCache>();
     }
 
     public List<string> ShortStorageAddressList { get; set; }
@@ -46,14 +51,14 @@
       var roundNumber = 0;
       while (roundNumber < retryNumber)
       {
-        this.UpdateNode(roundNumber);
+        //this.UpdateNode(roundNumber);
 
         var bundle = new Bundle();
         bundle.AddTransfer(CreateTransfer(message, address));
 
         try
         {
-          await this.repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, Depth, this.MinWeight);
+          await this.Repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, Depth, this.MinWeight);
           return true;
         }
         catch (Exception e)
@@ -66,107 +71,49 @@
       return false;
     }
 
-    public async Task<List<TryteStringMessage>> GetMessagesAsync(string addresse, int retryNumber = 1, bool getChatMessages = false, bool dontLoadSql = false, bool alwaysLoadSql = false)
+    public async Task<List<TryteStringMessage>> GetMessagesAsync(string address, int retryNumber = 1, bool getChatMessages = false, bool dontLoadSql = false, bool alwaysLoadSql = false)
     {
-      var roundNumber = 0;
       var messagesList = new List<TryteStringMessage>();
-      var sqlTable = new List<SqLiteMessage>();
-      var shortStorageHashes = new List<Hash>();
+      var cachedHashes = new List<Hash>();
 
       if (!dontLoadSql)
       {
-        sqlTable = await this.sqLite.LoadTransactions(addresse);
+        var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(new Address(address));
 
-        var alreadyLoaded = this.AddressLoadedCheck(addresse);
-        foreach (var sqlLiteMessage in sqlTable)
+        var alreadyLoaded = this.AddressLoadedCheck(address);
+        foreach (var cachedTransaction in cachedTransactions)
         {
-          shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
+          cachedHashes.Add(cachedTransaction.TransactionHash);
+
           if (!alreadyLoaded || alwaysLoadSql)
           {
             messagesList.Add(new TryteStringMessage
                                {
-                                 Message = new TryteString(sqlLiteMessage.MessageTryteString),
+                                 Message = cachedTransaction.TransactionTrytes,
                                  Stored = true
                                });
           }
         }
-      }
 
-      // if more than 2*Chiotaconstants.MessagesOnAddress messages on address, don't try to load new messages
-      var chatCheck = true;
-      if (getChatMessages)
-      {
-        chatCheck = sqlTable.Count < (2 * ChiotaConstants.MessagesOnAddress);
-      }
-
-      while (roundNumber < retryNumber && chatCheck)
-      {
-        try
+        // if more or equal to 2 * ChiotaConstants.MessagesOnAddress messages on address, don't try to load new messages
+        if (cachedTransactions.Count >= (2 * ChiotaConstants.MessagesOnAddress))
         {
-          this.UpdateNode(roundNumber);
-
-          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
-
-          foreach (var transactionsHash in hashes)
-          {
-            var bundle = await this.repository.GetBundleAsync(transactionsHash);
-            var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
-            await this.sqLite.SaveTransaction(addresse, transactionsHash, message.Message.ToString());
-            messagesList.Add(message);
-          }
-
-          retryNumber = 0;
-        }
-        catch
-        {
-          roundNumber++;
+          return messagesList;
         }
       }
 
-      return messagesList;
-    }
+      var transactions = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address) });
+      var hashes = transactions.Hashes.Union(cachedHashes, new TryteComparer<Hash>()).ToList();
 
-    // Without ShortStorage, always reload contacts
-    public async Task<List<T>> GetContactsJsonAsync<T>(string addresse, int retryNumber = 1)
-    {
-      var roundNumber = 0;
-      var messagesList = new List<T>();
-      var shortStorageHashes = new List<Hash>();
-
-      var sqlTable = await this.sqLite.LoadTransactions(addresse);
-      foreach (var sqlLiteMessage in sqlTable)
+      foreach (var transactionsHash in hashes)
       {
-        shortStorageHashes.Add(new Hash(sqlLiteMessage.TransactionHash));
-        var deserializedObject = JsonConvert.DeserializeObject<T>(sqlLiteMessage.MessageTryteString);
-        messagesList.Add(deserializedObject);
+        var bundle = await this.Repository.GetBundleAsync(transactionsHash);
+        var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
+        await this.TransactionCache.SaveTransactionAsync(
+          new TransactionCacheItem { Address = new Address(address), TransactionHash = transactionsHash, TransactionTrytes = message.Message });
+        messagesList.Add(message);
       }
 
-      while (roundNumber < retryNumber)
-      {
-        try
-        {
-          this.UpdateNode(roundNumber);
-          var hashes = await this.GetNewHashes(addresse, shortStorageHashes);
-
-          foreach (var transactionsHash in hashes)
-          {
-            var bundle = await this.repository.GetBundleAsync(transactionsHash);
-            var messages = bundle.GetMessages();
-            foreach (var message in messages)
-            {
-              await this.sqLite.SaveTransaction(addresse, transactionsHash, message);
-              var deserializedObject = JsonConvert.DeserializeObject<T>(message);
-              messagesList.Add(deserializedObject);
-            }
-          }
-
-          retryNumber = 0;
-        }
-        catch
-        {
-          roundNumber++;
-        }
-      }
 
       return messagesList;
     }
@@ -193,19 +140,5 @@
       return alreadyLoaded;
     }
 
-    private async Task<List<Hash>> GetNewHashes(string addresse, List<Hash> shortStorageHashes)
-    {
-      var addresses = new List<Address> { new Address(addresse) };
-      var transactions = await this.repository.FindTransactionsByAddressesAsync(addresses);
-      return IotaHelper.FilterNewHashes(transactions, shortStorageHashes);
-    }
-
-    private void UpdateNode(int roundNumber)
-    {
-      if (roundNumber > 0)
-      {
-        this.repository = DependencyResolver.Resolve<IRepositoryFactory>().Create(roundNumber);
-      }
-    }
   }
 }
