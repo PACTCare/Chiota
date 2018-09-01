@@ -4,8 +4,9 @@
              xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Pages.BackUp.QrCodePage"
-             Title="Save as QR code">
+             Title="{extensions:Translate CmnQrCode}">
 
     <ContentPage.BindingContext>
       <backUp:QrCodeViewModel/>
@@ -18,17 +19,7 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Please save your "/>
-                                    <Span Text="QR code" FontAttributes="Bold"/>
-                                    <Span Text=" and "/>
-                                    <Span Text="keep him safe" FontAttributes="Bold"/>
-                                    <Span Text="."/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescQrCode}"/>
                     </StackLayout>
 
                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#321d4999" HorizontalOptions="Center" VerticalOptions="Center" Padding="16">
@@ -47,7 +38,7 @@
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

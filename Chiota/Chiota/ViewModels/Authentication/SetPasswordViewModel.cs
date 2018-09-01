@@ -80,7 +80,7 @@ namespace Chiota.ViewModels.Authentication
                         return;
                     }
 
-                    await new MissingUserInputException(new ExcInfo(), "password or repeat password").ShowAlertAsync();
+                    await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputPasswordRepeat).ShowAlertAsync();
                 });
             }
         }

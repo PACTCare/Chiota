@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:bindable="clr-namespace:Chiota.Controls.Bindable;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Pages.BackUp.PaperCopyPage"
-             Title="Print paper copy">
+             Title="{extensions:Translate CmnPrintPaperCopy}">
 
     <ContentPage.BindingContext>
       <backUp:PaperCopyViewModel/>
@@ -17,17 +18,7 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Please print your "/>
-                                    <Span Text="seed" FontAttributes="Bold"/>
-                                    <Span Text=" and "/>
-                                    <Span Text="keep him safe" FontAttributes="Bold"/>
-                                    <Span Text="."/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescPrintPaperCopy}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand" Padding="0, 0, 0, 32">
@@ -39,13 +30,13 @@
                                     </ScrollView>
                                 </StackLayout>
                             </Frame>
-                            <Label Style="{DynamicResource Label14}" HorizontalTextAlignment="Center" Text="Swipe to see the full seed." Opacity="0.6"/>
+                            <Label Style="{DynamicResource Label14}" HorizontalTextAlignment="Center" Text="{extensions:Translate DlgDescSeedView}" Opacity="0.6"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

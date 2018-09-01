@@ -45,7 +45,7 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             //Clear the user inputs.
-            Seed = "OXPVBCX9VBLE99HXVHDXOXULQDSQJXDXY9XYQSWWBTVVZWPEIFYIJNCSKQTSLVW9EDPDHSFGHCH9YYVXP";
+            Seed = "";
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace Chiota.ViewModels.Authentication
                         return;
                     }
 
-                    await new MissingUserInputException(new ExcInfo(), "seed").ShowAlertAsync();
+                    await new MissingUserInputException(new ExcInfo(), Details.AuthMissingSeed).ShowAlertAsync();
                 });
             }
         }

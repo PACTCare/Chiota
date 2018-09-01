@@ -129,7 +129,7 @@ namespace Chiota.ViewModels.Authentication
                         return;
                     }
 
-                    await new MissingUserInputException(new ExcInfo(), "name").ShowAlertAsync();
+                    await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
                 });
             }
         }

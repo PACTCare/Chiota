@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Pages.Authentication.LogInPage"
              NavigationPage.HasNavigationBar="False">
 
@@ -16,33 +17,18 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Log in" FontAttributes="Bold"/>
-                                    <Span Text=" with your "/>
-                                    <Span Text="password" FontAttributes="Bold"/>
-                                    <Span Text=" or "/>
-                                    <Span Text="switch the account" FontAttributes="Bold"/>
-                                    <Span Text=" by "/>
-                                    <Span Text="set a seed" FontAttributes="Bold"/>
-                                    <Span Text=" or generating a "/>
-                                    <Span Text="new one" FontAttributes="Bold"/>
-                                    <Span Text="."/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescLogIn}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="Center" Spacing="32">
                         <StackLayout Spacing="8">
                             <Frame Style="{DynamicResource RoundedFrame8}" WidthRequest="256" BackgroundColor="{DynamicResource EntryColor}">
-                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="Password"/>
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}"/>
                             </Frame>
-                            <Button Style="{DynamicResource RoundedButton16}" Text="Log in" WidthRequest="256" Command="{Binding LogInCommand}"/>
+                            <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgLogIn}" WidthRequest="256" Command="{Binding LogInCommand}"/>
                         </StackLayout>
 
-                        <Label Style="{DynamicResource Label14}" Text="What is a seed?" HorizontalOptions="Center" Opacity="0.6">
+                        <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgSeedHelp}" HorizontalOptions="Center" Opacity="0.6">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
                             </Label.GestureRecognizers>
@@ -52,8 +38,8 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                <Button Style="{DynamicResource RoundedButton16}" Text="I have a seed" WidthRequest="128" Command="{Binding SetSeedCommand}"/>
-                <Button Style="{DynamicResource RoundedButton16}" Text="I need a seed" WidthRequest="128" Command="{Binding NewSeedCommand}"/>
+                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSetSeed}" WidthRequest="128" Command="{Binding SetSeedCommand}"/>
+                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgNewSeed}" WidthRequest="128" Command="{Binding NewSeedCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

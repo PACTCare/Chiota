@@ -84,7 +84,7 @@ namespace Chiota.ViewModels.BackUp
 
         public override void Init(object data = null)
         {
-            base.Init(data);
+            SeedViewPadding = new Thickness(0, 36, 0, 0);
 
             //Reset view.
             _seedLinePointer = 0;
@@ -95,6 +95,8 @@ namespace Chiota.ViewModels.BackUp
             _seed = new Seed(data as string);
             UpdateSeedView();
             IsSeedViewVisible = true;
+
+            base.Init(data);
         }
 
         #endregion
@@ -142,6 +144,7 @@ namespace Chiota.ViewModels.BackUp
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
                         FontSize = 10,
+                        Margin = new Thickness(0),
                         Text = seedLines[i].Items[j]
                     };
 

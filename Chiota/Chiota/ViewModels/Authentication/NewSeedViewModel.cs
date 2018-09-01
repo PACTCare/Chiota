@@ -115,6 +115,7 @@ namespace Chiota.ViewModels.Authentication
 
         private void UpdateSeedView()
         {
+            //Set the pointer for different layouts for the view.
             var enabledPointer = 1;
             if (_seedLinePointer == 0)
                 enabledPointer = 0;
@@ -168,9 +169,6 @@ namespace Chiota.ViewModels.Authentication
                 }
                 tmp.Add(lineView);
             }
-
-            //Clear the current seed view.
-            //VisibleSeedLines = null;
 
             //Set the new one.
             VisibleSeedLines = tmp;

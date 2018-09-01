@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Pages.Authentication.SetUserPage"
              NavigationPage.HasBackButton="False"
-             Title="Set user">
+             Title="{extensions:Translate CmnSetUser}">
 
     <ContentPage.BindingContext>
       <authentication:SetUserViewModel/>
@@ -22,28 +23,19 @@
                                 <TapGestureRecognizer Command="{Binding ProfileImageCommand}"/>
                             </abstractions:CircleImage.GestureRecognizers>
                         </abstractions:CircleImage>
-                        <Label Style="{DynamicResource DescriptionLabel}">
-                            <Label.FormattedText>
-                                <!--   -->
-                                <FormattedString>
-                                    <Span Text="Please "/>
-                                    <Span Text="insert your name" FontAttributes="Bold"/>
-                                    <Span Text="  and click on the profile image to upload a new one."/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescSetUser}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand">
                         <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="Name"/>
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="{extensions:Translate DlgName}"/>
                         </Frame>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
 
             <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

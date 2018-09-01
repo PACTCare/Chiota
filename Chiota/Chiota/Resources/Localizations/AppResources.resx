@@ -117,10 +117,133 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CmnBackUp" xml:space="preserve">
+    <value>Back up</value>
+  </data>
+  <data name="CmnConfirmSeed" xml:space="preserve">
+    <value>Confirm seed</value>
+  </data>
+  <data name="CmnHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="CmnNewSeed" xml:space="preserve">
+    <value>New seed</value>
+  </data>
+  <data name="CmnPrintPaperCopy" xml:space="preserve">
+    <value>Print paper copy</value>
+  </data>
+  <data name="CmnQrCode" xml:space="preserve">
+    <value>QR code</value>
+  </data>
+  <data name="CmnSetPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="CmnSetSeed" xml:space="preserve">
+    <value>Set seed</value>
+  </data>
+  <data name="CmnSetUser" xml:space="preserve">
+    <value>Set user</value>
+  </data>
+  <data name="CmnWriteSeedDown" xml:space="preserve">
+    <value>Write seed down</value>
+  </data>
   <data name="DlgCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="DlgContinue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="DlgDescBackUp" xml:space="preserve">
+    <value>You must back up your seed with at least one of the options listed below.</value>
+  </data>
+  <data name="DlgDescConfirmSeed" xml:space="preserve">
+    <value>Please confirm your seed.</value>
+  </data>
+  <data name="DlgDescLogIn" xml:space="preserve">
+    <value>Log in with your password or switch the account by set a seed or generating a new one.</value>
+  </data>
+  <data name="DlgDescNewSeed" xml:space="preserve">
+    <value>Press the button to generate a new seed single characters of the seed to change them individual.</value>
+  </data>
+  <data name="DlgDescPrintPaperCopy" xml:space="preserve">
+    <value>Please print your seed and keep him safe.</value>
+  </data>
+  <data name="DlgDescQrCode" xml:space="preserve">
+    <value>Please save your QR code and keep him safe.</value>
+  </data>
+  <data name="DlgDescSeedView" xml:space="preserve">
+    <value>Navigate up and down, to see the full seed.</value>
+  </data>
+  <data name="DlgDescSetPassword" xml:space="preserve">
+    <value>Choose a new password to save your personal data on this device.</value>
+  </data>
+  <data name="DlgDescSetSeed" xml:space="preserve">
+    <value>Insert your seed to get access to an existing account.</value>
+  </data>
+  <data name="DlgDescSetUser" xml:space="preserve">
+    <value>Please insert your name and click on the profile image to upload a new one.</value>
+  </data>
+  <data name="DlgDescWelcome" xml:space="preserve">
+    <value>Take a new seed to create an account or set a seed to get access to an existing.</value>
+  </data>
+  <data name="DlgDescWriteSeedDown" xml:space="preserve">
+    <value>Please write your seed down and keep him safe.</value>
+  </data>
+  <data name="DlgGenerateSeed" xml:space="preserve">
+    <value>Generate new seed</value>
+  </data>
+  <data name="DlgGotIt" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="DlgHelpSeed" xml:space="preserve">
+    <value>What is a seed?</value>
+  </data>
+  <data name="DlgHelpSeedDesc0" xml:space="preserve">
+    <value>Your seed is the master key to your account. It is 81 characters long, using only letters A-Z or the number 9.</value>
+  </data>
+  <data name="DlgHelpSeedDesc1" xml:space="preserve">
+    <value>You can use it to access your account from any device, where chiota is installed.</value>
+  </data>
+  <data name="DlgHelpSeedDesc2" xml:space="preserve">
+    <value>But if you lose your seed, you also lose your account.</value>
+  </data>
+  <data name="DlgLeastSecure" xml:space="preserve">
+    <value>Least secure</value>
+  </data>
+  <data name="DlgLogIn" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="DlgMostSecure" xml:space="preserve">
+    <value>Most secure</value>
+  </data>
+  <data name="DlgName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DlgNewSeed" xml:space="preserve">
+    <value>I need a seed</value>
+  </data>
   <data name="DlgOk" xml:space="preserve">
     <value>Ok</value>
+  </data>
+  <data name="DlgPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="DlgRepeatPassword" xml:space="preserve">
+    <value>Repeat password</value>
+  </data>
+  <data name="DlgSaveQrCode" xml:space="preserve">
+    <value>Save as QR Code</value>
+  </data>
+  <data name="DlgScanQrCode" xml:space="preserve">
+    <value>Scan QR code</value>
+  </data>
+  <data name="DlgSeed" xml:space="preserve">
+    <value>Seed</value>
+  </data>
+  <data name="DlgSetSeed" xml:space="preserve">
+    <value>I have a seed</value>
+  </data>
+  <data name="DlgWriteSeedDown" xml:space="preserve">
+    <value>Write seed down</value>
   </data>
 </root>

@@ -52,6 +52,7 @@
         <Setter Property="WidthRequest" Value="256"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="LineBreakMode" Value="WordWrap"/>
+        <Setter Property="FontAttributes" Value="Italic"/>
     </Style>
 
     <!-- Entry styles -->
