@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
              x:Class="Chiota.Pages.BackUp.ConfirmSeedPage"
              Title="{extensions:Translate CmnConfirmSeed}">
 
@@ -21,14 +22,18 @@
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand">
-                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                        <!--<Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
                             <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
-                        </Frame>
+                        </Frame>-->
+                        <validations:SeedValidationEntry Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
                         <Button Style="{DynamicResource RoundedButton16}" WidthRequest="256" FontAttributes="Bold" Text="{extensions:Translate DlgScanQrCode}" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
-            <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+
+            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="Continue" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

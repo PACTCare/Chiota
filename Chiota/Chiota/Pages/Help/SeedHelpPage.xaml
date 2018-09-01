@@ -17,13 +17,13 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgSeedHelp}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" FontAttributes="None" Text="{extensions:Translate DlgHelpSeed}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand" Spacing="8">
-                        <Label Style="{DynamicResource DescriptionLabel}" FontAttributes="12" Text="{extensions:Translate DlgHelpSeedDesc0}"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" FontAttributes="12" Text="{extensions:Translate DlgHelpSeedDesc1}"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" FontAttributes="12" Text="{extensions:Translate DlgHelpSeedDesc2}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" FontSize="12" Text="{extensions:Translate DlgHelpSeedDesc0}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" FontSize="12" Text="{extensions:Translate DlgHelpSeedDesc1}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" FontSize="12" Text="{extensions:Translate DlgHelpSeedDesc2}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
