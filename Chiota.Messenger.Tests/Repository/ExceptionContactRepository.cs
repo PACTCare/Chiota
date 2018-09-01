@@ -1,6 +1,7 @@
 ﻿namespace Chiota.Messenger.Tests.Repository
 {
   using System;
+  using System.Collections.Generic;
   using System.Diagnostics.CodeAnalysis;
   using System.Threading.Tasks;
 
@@ -8,6 +9,8 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Usecase;
+
+  using Tangle.Net.Entity;
 
   /// <summary>
   /// The exception contact repository.
@@ -19,6 +22,17 @@
     public Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
+    }
+
+    public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
+    {
+      throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
+    }
+
+    /// <inheritdoc />
+    public Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
+    {
+      return null;
     }
   }
 }

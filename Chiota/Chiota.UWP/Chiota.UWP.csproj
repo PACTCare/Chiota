@@ -105,6 +105,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
+    <Compile Include="Persistence\SqlLiteTransactionCache.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
@@ -112,7 +113,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Persistence\SqlLiteDb.cs" />
+    <Compile Include="Persistence\SqlLiteContactRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -212,7 +213,7 @@
       <Version>1.4.118</Version>
     </PackageReference>
     <PackageReference Include="Tangle.Net.Standard">
-      <Version>1.0.8</Version>
+      <Version>1.0.8.1</Version>
     </PackageReference>
     <PackageReference Include="WindowsAzure.Storage">
       <Version>9.3.0</Version>

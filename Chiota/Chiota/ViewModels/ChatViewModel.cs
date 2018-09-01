@@ -12,6 +12,7 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Models;
   using Chiota.Services;
   using Chiota.Services.Iota;

@@ -2,7 +2,7 @@
 {
   using System;
 
-  using Chiota.Models;
+  using Chiota.Messenger.Entity;
   using Chiota.ViewModels;
 
   using Xamarin.Forms;

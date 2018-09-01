@@ -26,8 +26,7 @@
 
     public IAsymmetricKey NtruKey { get; set; }
 
-    [JsonProperty("Request")]
-    public bool Requested { get; set; }
+    public bool Request { get; set; }
 
     public bool Rejected { get; set; }
   }

@@ -1,4 +1,4 @@
-﻿namespace Chiota.Messenger.Tests.Repository
+﻿namespace Chiota.Tests.Repository
 {
   using System.Collections.Generic;
   using System.Linq;

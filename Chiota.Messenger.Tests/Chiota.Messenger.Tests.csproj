@@ -16,12 +16,11 @@
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8" />
+    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Chiota.Messenger\Chiota.Messenger.csproj" />
-    <ProjectReference Include="..\Chiota\Chiota\Chiota.csproj" />
   </ItemGroup>
 
   <ItemGroup>
