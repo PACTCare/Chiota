@@ -50,7 +50,13 @@ namespace Chiota.Controls.Validations
         /// IsValid property of the elment.
         /// </summary>
         public static readonly BindableProperty TextProperty = BindableProperty.Create(
-            nameof(Text), typeof(string), typeof(string), "");
+            nameof(Text), typeof(string), typeof(string), "", propertyChanged: OnTextChanged);
+
+        private static void OnTextChanged(BindableObject bindable, object oldvalue, object newvalue)
+        {
+            var entry = bindable as ValidationEntry;
+            entry?.OnTextChanged(newvalue as string);
+        }
 
         #endregion
 
@@ -69,7 +75,13 @@ namespace Chiota.Controls.Validations
         /// IsValid property of the elment.
         /// </summary>
         public static readonly BindableProperty PlaceholderProperty = BindableProperty.Create(
-            nameof(Placeholder), typeof(string), typeof(string), "");
+            nameof(Placeholder), typeof(string), typeof(string), "", propertyChanged: OnPlaceholderChanged);
+
+        private static void OnPlaceholderChanged(BindableObject bindable, object oldvalue, object newvalue)
+        {
+            var entry = bindable as ValidationEntry;
+            entry?.OnPlaceholderChanged(newvalue as string);
+        }
 
         #endregion
 
@@ -88,7 +100,13 @@ namespace Chiota.Controls.Validations
         /// IsValid property of the elment.
         /// </summary>
         public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create(
-            nameof(IsPassword), typeof(bool), typeof(bool), false);
+            nameof(IsPassword), typeof(bool), typeof(bool), false, propertyChanged: OnIsPasswordChanged);
+
+        private static void OnIsPasswordChanged(BindableObject bindable, object oldvalue, object newvalue)
+        {
+            var entry = bindable as ValidationEntry;
+            entry?.OnIsPasswordChanged((bool) newvalue);
+        }
 
         #endregion
 
@@ -161,6 +179,33 @@ namespace Chiota.Controls.Validations
                 _image.Source = "clear.png";
 
             _image.IsVisible = visible;
+        }
+
+        #endregion
+
+        #region OnTextChanged
+
+        private void OnTextChanged(string text)
+        {
+            _entry.Text = text;
+        }
+
+        #endregion
+
+        #region OnPlaceholderChanged
+
+        private void OnPlaceholderChanged(string placeholder)
+        {
+            _entry.Placeholder = placeholder;
+        }
+
+        #endregion
+
+        #region OnIsPasswordChanged
+
+        private void OnIsPasswordChanged(bool isPassword)
+        {
+            _entry.IsPassword = isPassword;
         }
 
         #endregion
