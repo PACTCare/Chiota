@@ -20,17 +20,14 @@
 
   public class ContactListViewModel : Contact
   {
-    private readonly User user;
-
     private readonly ViewCellObject viewCellObject;
 
     private string poWText;
 
     private bool isClicked;
 
-    public ContactListViewModel(User user, ViewCellObject viewCellObject)
+    public ContactListViewModel(ViewCellObject viewCellObject)
     {
-      this.user = user;
       this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
       this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteContactRepository>();
@@ -59,7 +56,7 @@
       if (!this.isClicked)
       {
         this.isClicked = true;
-        await this.ContactRepository.AddContactAsync(this.ChatAddress, false, this.user.PublicKeyAddress);
+        await this.ContactRepository.AddContactAsync(this.ChatAddress, false, UserService.CurrentUser.PublicKeyAddress);
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
@@ -82,20 +79,24 @@
     private async Task SaveParallelAcceptAsync()
     {
       var encryptedChatKeyToTangle = this.GenerateChatKeyToTangle();
-      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, this.user.PublicKeyAddress);
+      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
 
       var contact = new Contact
-      {
-        Name = Application.Current.Properties[ChiotaConstants.SettingsNameKey + this.user.PublicKeyAddress] as string,
-        ImageHash = Application.Current.Properties[ChiotaConstants.SettingsImageKey + this.user.PublicKeyAddress] as string,
-        ChatAddress = this.ChatAddress,
-        ChatKeyAddress = this.ChatKeyAddress,
-        ContactAddress = null,
-        PublicKeyAddress = this.user.PublicKeyAddress,
-        Rejected = false,
-        Request = false,
-        NtruKey = null
-      };
+                      {
+                        Name =
+                          Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as
+                            string,
+                        ImageHash =
+                          Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as
+                            string,
+                        ChatAddress = this.ChatAddress,
+                        ChatKeyAddress = this.ChatKeyAddress,
+                        ContactAddress = null,
+                        PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress,
+                        Rejected = false,
+                        Request = false,
+                        NtruKey = null
+                      };
 
       var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
       await Task.WhenAll(saveSqlContact, chatInformationToTangle, encryptedChatKeyToTangle);
@@ -104,7 +105,7 @@
     private async Task<Task<bool>> GenerateChatKeyToTangle()
     {
       var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(UserService.CurrentUser.TangleMessenger, this.PublicKeyAddress);
-      var pasSalt = await IotaHelper.GetChatPasSalt(this.user, this.ChatKeyAddress);
+      var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, this.ChatKeyAddress);
       var encryptedChatPasSalt = new NtruKex(true).Encrypt(contacts[0].NtruKey, Encoding.UTF8.GetBytes(pasSalt));
       return UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), this.ChatKeyAddress);
     }

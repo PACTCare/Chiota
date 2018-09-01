@@ -1,6 +1,4 @@
-﻿using Chiota.ViewModels.Classes;
-
-namespace Chiota.ViewModels
+﻿namespace Chiota.ViewModels
 {
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
@@ -8,13 +6,13 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
-  using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Persistence;
+  using Chiota.Presenters;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
   using Chiota.Views;
 
   using Models;
@@ -26,8 +24,6 @@ namespace Chiota.ViewModels
 
   public class ContactViewModel : BaseViewModel
   {
-    private readonly List<BotObject> bots;
-
     private ObservableCollection<ContactListViewModel> contactList;
 
     private ViewCellObject viewCellObject;
@@ -35,11 +31,6 @@ namespace Chiota.ViewModels
     private ObservableCollection<ContactListViewModel> contacts;
 
     private ContactListViewModel selectedContact;
-
-    public ContactViewModel()
-    {
-      this.bots = BotList.ReturnBotList();
-    }
 
     public bool PageIsShown { get; set; }
 
@@ -91,7 +82,7 @@ namespace Chiota.ViewModels
       this.SelectedContact = null;
 
       // alternativ BotPage
-      var bot = this.bots.Find(b => b.BotSlogan == contact.ChatAddress);
+      var bot = BotList.Bots.Find(b => b.BotSlogan == contact.ChatAddress);
       if (bot != null)
       {
         await this.Navigation.PushAsync(new BotChatPage(bot));
@@ -126,8 +117,6 @@ namespace Chiota.ViewModels
     {
       this.AddBotsToContacts();
 
-      var searchContacts = new ObservableCollection<ContactListViewModel>();
-
       var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
@@ -136,59 +125,19 @@ namespace Chiota.ViewModels
                            PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                          });
 
-      // TODO: Below in a presenter and duplicate code removing
-      foreach (var contact in response.PendingContactRequests)
+      var loadedContacts = new GetContactsPresenter().Present(response, this.viewCellObject, searchText);
+
+      foreach (var contact in loadedContacts)
       {
         if (this.contacts.Any(c => c.ChatAddress == contact.ChatAddress))
         {
           continue;
         }
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
+        this.contacts.Add(contact);
       }
 
-      foreach (var contact in response.ApprovedContacts)
-      {
-        if (this.contacts.Any(c => c.ChatAddress == contact.ChatAddress))
-        {
-          continue;
-        }
-
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(contact, UserService.CurrentUser, this.viewCellObject));
-      }
-
-      if (string.IsNullOrWhiteSpace(searchText))
-      {
-        return this.contacts;
-      }
-
-      foreach (var contact in this.contacts)
-      {
-        if (contact.Name.ToLower().StartsWith(searchText.ToLower()))
-        {
-          searchContacts.Add(contact);
-        }
-      }
-
-      return searchContacts;
-    }
-
-    private void RemoveAddress(string chatAddress)
-    {
-      var itemToRemove = this.contacts.SingleOrDefault(r => r.ChatAddress.Contains(chatAddress));
-      if (itemToRemove == null)
-      {
-        return;
-      }
-
-      try
-      {
-        this.contacts.Remove(itemToRemove);
-      }
-      catch
-      {
-        // ignored
-      }
+      return new ObservableCollection<ContactListViewModel>(loadedContacts);
     }
 
     private void AddBotsToContacts()
@@ -198,7 +147,7 @@ namespace Chiota.ViewModels
         return;
       }
 
-      foreach (var bot in this.bots)
+      foreach (var bot in BotList.Bots)
       {
         var botContact = new Contact
         {
@@ -209,7 +158,7 @@ namespace Chiota.ViewModels
           Rejected = false
         };
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, UserService.CurrentUser, this.viewCellObject));
+        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.viewCellObject));
       }
     }
   }

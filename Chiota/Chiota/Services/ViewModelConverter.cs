@@ -6,9 +6,9 @@
 
   public static class ViewModelConverter
   {
-    public static ContactListViewModel ContactToViewModel(Contact contact, User user, ViewCellObject viewCellObject)
+    public static ContactListViewModel ContactToViewModel(Contact contact, ViewCellObject viewCellObject)
     {
-      return new ContactListViewModel(user, viewCellObject)
+      return new ContactListViewModel(viewCellObject)
                {
                  Name = contact.Name,
                  ImageHash = ChiotaConstants.IpfsHashGateway + contact.ImageHash,

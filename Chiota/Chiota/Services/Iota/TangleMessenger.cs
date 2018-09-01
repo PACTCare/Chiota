@@ -103,7 +103,7 @@
       }
 
       var transactions = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address) });
-      var hashes = cachedHashes.Union(transactions.Hashes, new TryteComparer<Hash>()).ToList();
+      var hashes = transactions.Hashes.Union(cachedHashes, new TryteComparer<Hash>()).ToList();
 
       foreach (var transactionsHash in hashes)
       {
