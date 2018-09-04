@@ -43,7 +43,7 @@
                              "SELECT * FROM SqLiteContacts WHERE PublicKeyAddress = ? ORDER BY Id",
                              publicKeyAddress);
 
-      return contactsResult.Select(c => new Contact { ChatAddress = c.ChatAddress, Rejected = !c.Accepted }).ToList();
+      return contactsResult.Where(c => c.Accepted).Select(c => new Contact { ChatAddress = c.ChatAddress, Rejected = !c.Accepted }).ToList();
     }
   }
 }

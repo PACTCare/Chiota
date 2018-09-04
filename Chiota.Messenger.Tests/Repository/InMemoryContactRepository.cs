@@ -36,7 +36,7 @@
     /// <inheritdoc />
     public async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
-      this.PersistedContacts.Add(new Contact { ChatAddress = address, Request = accepted, PublicKeyAddress = publicKeyAddress });
+      this.PersistedContacts.Add(new Contact { ChatAddress = address, Rejected = !accepted, PublicKeyAddress = publicKeyAddress });
     }
 
     /// <inheritdoc />
@@ -48,7 +48,7 @@
     /// <inheritdoc />
     public async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
     {
-      return this.PersistedContacts.Where(c => c.PublicKeyAddress == publicKeyAddress).ToList();
+      return this.PersistedContacts.Where(c => c.PublicKeyAddress == publicKeyAddress && !c.Rejected).ToList();
     }
 
     /// <summary>

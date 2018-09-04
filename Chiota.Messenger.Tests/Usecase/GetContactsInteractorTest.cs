@@ -83,7 +83,7 @@
     }
 
     [TestMethod]
-    public async Task TestContactsAreNotCachedButOnTangleShouldExcludeRejectedContactsAndSetCache()
+    public async Task TestContactsAreCachedAndOnTangleShouldExcludeRejectedContactsAndSetCache()
     {
       var pubKeyAddress = Seed.Random().Value;
       var contactRequestAddress = new Address(Seed.Random().Value);
@@ -92,6 +92,7 @@
 
       var contactRepository = new InMemoryContactRepository();
       await contactRepository.AddContactAsync(storedContactAddress, true, pubKeyAddress);
+      await contactRepository.AddContactAsync(rejectedContactAddress, false, pubKeyAddress);
 
       var approvedContactMessage = TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress }));
 

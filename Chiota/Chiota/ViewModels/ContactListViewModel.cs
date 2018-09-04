@@ -3,6 +3,7 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Extensions;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
@@ -47,7 +48,6 @@
     {
       this.viewCellObject = viewCellObject;
       this.Contact = contact;
-      this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteContactRepository>();
     }
 
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
@@ -55,11 +55,6 @@
     public ICommand DeclineCommand => new Command(async () => { await this.OnDecline(); });
 
     public Contact Contact { get; }
-
-    /// <summary>
-    /// Gets the contact repository.
-    /// </summary>
-    private AbstractSqlLiteContactRepository ContactRepository { get; }
 
     /// <summary>
     /// The on accept.
@@ -88,10 +83,18 @@
                       };
 
       var interactor = DependencyResolver.Resolve<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>();
-      await interactor.ExecuteAsync(request);
+      var response = await interactor.ExecuteAsync(request);
 
-      this.viewCellObject.RefreshContacts = true;
       await this.PopPopupAsync();
+
+      if (response.Code == ResponseCode.Success)
+      {
+        this.viewCellObject.RefreshContacts = true;
+      }
+      else
+      {
+        await this.Navigation.DisplayAlertAsync("Error", "An error occured while adding the contact.");
+      }
     }
 
     /// <summary>
@@ -105,7 +108,11 @@
       if (!this.isClicked)
       {
         this.isClicked = true;
-        await this.ContactRepository.AddContactAsync(this.Contact.ChatAddress, false, UserService.CurrentUser.PublicKeyAddress);
+        await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().AddContactAsync(
+          this.Contact.ChatAddress,
+          false,
+          UserService.CurrentUser.PublicKeyAddress);
+
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
