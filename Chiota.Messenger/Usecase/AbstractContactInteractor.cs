@@ -12,6 +12,7 @@
   using Tangle.Net.Entity;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <inheritdoc />
   public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T>
@@ -50,17 +51,18 @@
     /// <param name="requesterDetails">
     /// The requester details.
     /// </param>
-    /// <param name="contactInformation">
+    /// <param name="ntruKey">
     /// The contact information.
+    /// </param>
+    /// <param name="chatPasSalt">
+    /// The chat Pas Salt.
     /// </param>
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    protected async Task ExchangeKey(Contact requesterDetails, ContactInformation contactInformation)
+    protected async Task ExchangeKey(Contact requesterDetails, IAsymmetricKey ntruKey, string chatPasSalt)
     {
-      var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(
-        contactInformation.NtruKey,
-        Encoding.UTF8.GetBytes(Seed.Random() + Seed.Random().ToString().Substring(0, 20)));
+      var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(ntruKey, Encoding.UTF8.GetBytes(chatPasSalt));
 
       await this.Messenger.SendMessageAsync(
         new Message(

@@ -12,12 +12,11 @@
         Aspect="AspectFill"
         HorizontalOptions="Center"
         VerticalOptions="Center" 
-        Source="{Binding ImageHash}" >
+        Source="{Binding Contact.ImageHash}" >
       </controls:CircleImage>
       <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand" Margin="0,10,0,10">
         <StackLayout Orientation="Horizontal">
-          <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
-          <Label Text="{Binding PoWText}" FontSize="16" TextColor="#ff0000"></Label>
+          <Label Text="{Binding Contact.Name}" FontSize="16" FontAttributes="Bold"></Label>
         </StackLayout>
         <StackLayout Orientation="Horizontal">
           <Button Text="Accept" TextColor="White"  BackgroundColor="#5874ca" Command="{Binding AcceptCommand}"></Button>

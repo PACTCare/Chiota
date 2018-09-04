@@ -3,11 +3,7 @@
   /// <summary>
   /// The add contact response.
   /// </summary>
-  public class AddContactResponse
+  public class AddContactResponse : BaseResponse
   {
-    /// <summary>
-    /// Gets or sets the code.
-    /// </summary>
-    public ResponseCode Code { get; set; }
   }
 }

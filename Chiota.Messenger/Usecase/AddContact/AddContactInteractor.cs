@@ -10,8 +10,6 @@
 
   using Tangle.Net.Entity;
 
-  using Contact = Entity.Contact;
-
   /// <inheritdoc />
   public class AddContactInteractor : AbstractContactInteractor<AddContactRequest, AddContactResponse>
   {
@@ -42,7 +40,7 @@
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
 
         await this.SendContactDetails(MessageType.RequestContact, requesterDetails, contactInformation.ContactAddress);
-        await this.ExchangeKey(requesterDetails, contactInformation);
+        await this.ExchangeKey(requesterDetails, contactInformation.NtruKey, GetChatPasSalt());
 
         await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);
 
@@ -56,6 +54,17 @@
       {
         return new AddContactResponse { Code = ResponseCode.UnkownException };
       }
+    }
+
+    /// <summary>
+    /// The get chat pas salt.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="string"/>.
+    /// </returns>
+    private static string GetChatPasSalt()
+    {
+      return Seed.Random() + Seed.Random().ToString().Substring(0, 20);
     }
   }
 }

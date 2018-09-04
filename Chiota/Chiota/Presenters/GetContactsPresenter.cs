@@ -32,12 +32,12 @@
     {
       var result = new List<ContactListViewModel>();
 
-      result.AddRange(response.ApprovedContacts.Select(c => ViewModelConverter.ContactToViewModel(c, viewCell)));
-      result.AddRange(response.PendingContactRequests.Select(c => ViewModelConverter.ContactToViewModel(c, viewCell)));
+      result.AddRange(response.ApprovedContacts.Select(c => new ContactListViewModel(viewCell, c)));
+      result.AddRange(response.PendingContactRequests.Select(c => new ContactListViewModel(viewCell, c)));
 
       if (!string.IsNullOrEmpty(searchContactsBy))
       {
-        return result.Where(c => c.Name.ToLower().StartsWith(searchContactsBy.ToLower())).ToList();
+        return result.Where(c => c.Contact.Name.ToLower().StartsWith(searchContactsBy.ToLower())).ToList();
       }
 
       return result;

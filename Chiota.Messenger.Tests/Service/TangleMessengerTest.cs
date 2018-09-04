@@ -62,5 +62,22 @@
         Assert.AreEqual(receiver.Value, sentBundle.Transactions[0].Address.Value);
         Assert.AreEqual(payload.Value, sentBundle.Transactions[0].Fragment.GetChunk(0, payload.TrytesLength).Value);
       }
+
+      [TestMethod]
+      public async Task TestMessagesGetLoadedFromTangle()
+      {
+        var repository = new InMemoryIotaRepository();
+
+        var messenger = new TangleMessenger(repository);
+
+        var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
+        var payload = TryteString.FromUtf8String("Hi. I'm a test").Concat(new TryteString(Constants.End));
+
+        await messenger.SendMessageAsync(new Message(MessageType.RequestContact, payload, receiver));
+
+        var sentMessages = await messenger.GetMessagesByAddressAsync(receiver);
+
+        Assert.AreEqual("Hi. I'm a test", sentMessages[0].Payload.ToUtf8String());
+      }
     }
 }

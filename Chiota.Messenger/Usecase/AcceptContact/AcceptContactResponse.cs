@@ -3,7 +3,7 @@
   /// <summary>
   /// The accept contact response.
   /// </summary>
-  public class AcceptContactResponse
+  public class AcceptContactResponse : BaseResponse
   {
   }
 }

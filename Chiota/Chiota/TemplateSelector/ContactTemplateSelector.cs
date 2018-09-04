@@ -24,7 +24,7 @@
         return null;
       }
 
-      return contact.Request ? this.requestTemplate : this.approvedTemplate;
+      return contact.Contact.Request ? this.requestTemplate : this.approvedTemplate;
     }
   }
 }

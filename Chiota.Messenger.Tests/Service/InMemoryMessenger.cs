@@ -2,10 +2,13 @@
 {
   using System.Collections.Generic;
   using System.Diagnostics.CodeAnalysis;
+  using System.Linq;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
+
+  using Tangle.Net.Entity;
 
   /// <summary>
   /// The in memory messenger.
@@ -25,6 +28,12 @@
     /// Gets or sets the sent messages.
     /// </summary>
     public List<Message> SentMessages { get; set; }
+
+    /// <inheritdoc />
+    public async Task<List<Message>> GetMessagesByAddressAsync(Address address)
+    {
+      return this.SentMessages.Where(m => m.Receiver.Value == address.Value).ToList();
+    }
 
     /// <inheritdoc />
     public async Task SendMessageAsync(Message message)
