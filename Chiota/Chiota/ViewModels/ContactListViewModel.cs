@@ -3,16 +3,11 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.Extensions;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
+  using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Models;
-  using Chiota.Persistence;
-  using Chiota.Popups.PopupModels;
-  using Chiota.Popups.PopupPageModels;
-  using Chiota.Popups.PopupPages;
-  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
@@ -26,28 +21,30 @@
   public class ContactListViewModel : BaseViewModel
   {
     /// <summary>
-    /// The view cell object.
-    /// </summary>
-    private readonly ViewCellObject viewCellObject;
-
-    /// <summary>
-    /// The is clicked.
-    /// </summary>
-    private bool isClicked;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="ContactListViewModel"/> class.
     /// </summary>
+    /// <param name="acceptContactInteractor">
+    /// The accept Contact Interactor.
+    /// </param>
+    /// <param name="declineContactInteractor">
+    /// The decline Contact Interactor.
+    /// </param>
     /// <param name="viewCellObject">
     /// The view cell object.
     /// </param>
     /// <param name="contact">
     /// The contact.
     /// </param>
-    public ContactListViewModel(ViewCellObject viewCellObject, Contact contact)
+    public ContactListViewModel(
+      IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse> acceptContactInteractor,
+      IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse> declineContactInteractor,
+      ViewCellObject viewCellObject,
+      Contact contact)
     {
-      this.viewCellObject = viewCellObject;
+      this.ViewCellObject = viewCellObject;
       this.Contact = contact;
+      this.AcceptContactInteractor = acceptContactInteractor;
+      this.DeclineContactInteractor = declineContactInteractor;
     }
 
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
@@ -55,6 +52,12 @@
     public ICommand DeclineCommand => new Command(async () => { await this.OnDecline(); });
 
     public Contact Contact { get; }
+
+    private ViewCellObject ViewCellObject { get; }
+
+    private IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse> AcceptContactInteractor { get; }
+
+    private IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse> DeclineContactInteractor { get; }
 
     /// <summary>
     /// The on accept.
@@ -64,36 +67,32 @@
     /// </returns>
     private async Task OnAccept()
     {
-      await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(
-        new LoadingPopupPage(),
-        new LoadingPopupModel { Message = "Accepting Contact" });
+      await this.DisplayLoadingSpinnerAsync("Accepting Contact");
 
-      var request = new AcceptContactRequest
-                      {
-                        UserName =
-                          Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string,
-                        UserImageHash =
-                          Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string,
-                        ChatAddress = new Address(this.Contact.ChatAddress),
-                        ChatKeyAddress = new Address(this.Contact.ChatKeyAddress),
-                        ContactAddress = new Address(this.Contact.ContactAddress),
-                        ContactPublicKeyAddress = new Address(this.Contact.PublicKeyAddress),
-                        UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                        UserKeyPair = UserService.CurrentUser.NtruKeyPair
-                      };
-
-      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>();
-      var response = await interactor.ExecuteAsync(request);
+      var response = await this.AcceptContactInteractor.ExecuteAsync(
+                       new AcceptContactRequest
+                         {
+                           UserName =
+                             Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string,
+                           UserImageHash =
+                             Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string,
+                           ChatAddress = new Address(this.Contact.ChatAddress),
+                           ChatKeyAddress = new Address(this.Contact.ChatKeyAddress),
+                           ContactAddress = new Address(this.Contact.ContactAddress),
+                           ContactPublicKeyAddress = new Address(this.Contact.PublicKeyAddress),
+                           UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                           UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                         });
 
       await this.PopPopupAsync();
 
       if (response.Code == ResponseCode.Success)
       {
-        this.viewCellObject.RefreshContacts = true;
+        this.ViewCellObject.RefreshContacts = true;
       }
       else
       {
-        await this.Navigation.DisplayAlertAsync("Error", "An error occured while adding the contact.");
+        await this.DisplayAlertAsync("Error", "An error occured while adding the contact.");
       }
     }
 
@@ -105,17 +104,15 @@
     /// </returns>
     private async Task OnDecline()
     {
-      if (!this.isClicked)
-      {
-        this.isClicked = true;
-        await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().AddContactAsync(
-          this.Contact.ChatAddress,
-          false,
-          UserService.CurrentUser.PublicKeyAddress);
+      await this.DisplayLoadingSpinnerAsync("Declining Contact");
 
-        this.viewCellObject.RefreshContacts = true;
-        this.isClicked = false;
-      }
+      await this.DeclineContactInteractor.ExecuteAsync(
+        new DeclineContactRequest
+          {
+            ContactChatAddress = new Address(this.Contact.ChatAddress), UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+          });
+
+      await this.PopPopupAsync();
     }
   }
 }

@@ -3,9 +3,13 @@
   using System.Collections.Generic;
   using System.Linq;
 
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.AcceptContact;
+  using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.ViewModels;
 
   /// <summary>
@@ -32,8 +36,13 @@
     {
       var result = new List<ContactListViewModel>();
 
-      result.AddRange(response.ApprovedContacts.Select(c => new ContactListViewModel(viewCell, c)));
-      result.AddRange(response.PendingContactRequests.Select(c => new ContactListViewModel(viewCell, c)));
+      var acceptContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>();
+      var declineContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>();
+
+      result.AddRange(
+        response.ApprovedContacts.Select(c => new ContactListViewModel(acceptContactInteractor, declineContactInteractor, viewCell, c)));
+      result.AddRange(
+        response.PendingContactRequests.Select(c => new ContactListViewModel(acceptContactInteractor, declineContactInteractor, viewCell, c)));
 
       if (!string.IsNullOrEmpty(searchContactsBy))
       {

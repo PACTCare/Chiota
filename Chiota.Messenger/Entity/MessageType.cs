@@ -13,6 +13,11 @@
     public const string AcceptContact = "AcceptContact";
 
     /// <summary>
+    /// The chat message.
+    /// </summary>
+    public const string ChatMessage = "ChatMessage";
+
+    /// <summary>
     /// The key exchange.
     /// </summary>
     public const string KeyExchange = "KeyExchange";
@@ -27,7 +32,7 @@
     /// </summary>
     static MessageType()
     {
-      Types = new List<string> { RequestContact, KeyExchange, AcceptContact };
+      Types = new List<string> { RequestContact, KeyExchange, AcceptContact, ChatMessage };
     }
 
     /// <summary>

@@ -57,14 +57,7 @@ namespace Chiota.Extensions
             return popupPageModel.PopupModel;
         }
 
-      public static async Task DisplayAlertAsync(this INavigation navigation, string title, string message)
-      {
-        await navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(
-          new AlertPopupPage(),
-          new AlertPopupModel { Title = title, Message = message });
-    }
-
-        #endregion
+      #endregion
 
         #endregion
     }

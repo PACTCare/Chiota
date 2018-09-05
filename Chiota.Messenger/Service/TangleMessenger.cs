@@ -2,7 +2,6 @@
 {
   using System;
   using System.Collections.Generic;
-  using System.Linq;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
@@ -13,7 +12,7 @@
   using Tangle.Net.Repository;
   using Tangle.Net.Utils;
 
-  using Constants = Chiota.Messenger.Constants;
+  using Constants = Constants;
 
   /// <inheritdoc />
   /// <summary>
@@ -92,12 +91,12 @@
         }
       }
 
-      if (!messageTrytes.Contains(Constants.End))
+      if (!messageTrytes.Contains(Constants.End.Value))
       {
         return null;
       }
 
-      var index = messageTrytes.IndexOf(Constants.End, StringComparison.Ordinal);
+      var index = messageTrytes.IndexOf(Constants.End.Value, StringComparison.Ordinal);
       return new TryteString(messageTrytes.Substring(0, index));
     }
   }

@@ -43,6 +43,11 @@
     /// <summary>
     /// Error code that is returned when the password salt for the chat can not be generated
     /// </summary>
-    ChatPasswordAndSaltCannotBeGenerated = -7
+    ChatPasswordAndSaltCannotBeGenerated = -7,
+
+    /// <summary>
+    /// Error code that is returned when the given message is too long (see Constants.MessageCharacterLimit)
+    /// </summary>
+    MessageTooLong = -8
   }
 }

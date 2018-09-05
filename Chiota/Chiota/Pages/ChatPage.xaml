@@ -55,22 +55,6 @@
       </Grid>
 
     </StackLayout>
-    <StackLayout IsVisible="{Binding IsBusy}" 
-                 AbsoluteLayout.LayoutFlags="All"
-                 AbsoluteLayout.LayoutBounds="0,0,1,1"
-                 BackgroundColor="#99000000">
-      <StackLayout VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="CenterAndExpand"
-                   BackgroundColor="White"
-                   Padding="30,25,30,25">
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color ="#ff0000"/>
-        <Label Text="Proof-of-work in progress..." 
-               AutomationId="AddressLabelId"
-               FontSize="16" 
-               TextColor="Black"/>
-      </StackLayout>
-    </StackLayout>
   </AbsoluteLayout>
 </ContentPage>
 

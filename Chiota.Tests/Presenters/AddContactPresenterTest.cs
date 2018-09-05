@@ -18,10 +18,9 @@
       {
         // TODO: Navigation needs to be implemented without extensions to enable presenters to be tested
         throw new NotImplementedException(); 
-        var navigationStub = new NavigationStub();
+        //var navigationStub = new NavigationStub();
 
-        var presenter = new AddContactPresenter(navigationStub);
-        await presenter.Present(new AddContactResponse { Code = code });
+        //await AddContactPresenter.Present(navigationStub, new AddContactResponse { Code = code });
     }
     }
 }

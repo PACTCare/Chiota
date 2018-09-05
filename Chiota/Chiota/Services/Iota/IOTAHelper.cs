@@ -15,7 +15,6 @@
   using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Repository.DataTransfer;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -59,45 +58,6 @@
 
       var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
       return new TryteString(messageTrytes.Substring(0, index));
-    }
-
-    public static List<Contact> FilterApprovedContacts(IEnumerable<TryteStringMessage> trytes, User user)
-    {
-      var approvedContacts = new List<Contact>();
-      foreach (var tryte in trytes)
-      {
-        try
-        {
-          var decryptedMessage = Encoding.UTF8.GetString(new NtruKex(true).Decrypt(user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString()));
-
-          var chatAddress = decryptedMessage.Substring(0, 81);
-
-          // length accepted = rejected 
-          var substring = decryptedMessage.Substring(81, ChiotaConstants.Rejected.Length);
-
-          var contact = new Contact { ChatAddress = chatAddress };
-          if (substring.Contains(ChiotaConstants.Accepted))
-          {
-            contact.Rejected = false;
-          }
-          else if (substring.Contains(ChiotaConstants.Rejected))
-          {
-            contact.Rejected = true;
-          }
-          else
-          {
-            continue;
-          }
-
-          approvedContacts.Add(contact);
-        }
-        catch
-        {
-          // ignored
-        }
-      }
-
-      return approvedContacts;
     }
 
     public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)

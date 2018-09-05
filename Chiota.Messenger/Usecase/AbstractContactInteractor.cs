@@ -15,7 +15,7 @@
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <inheritdoc />
-  public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T>
+  public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T> where T : BaseResponse
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="AbstractContactInteractor{TIn,T}"/> class. 
