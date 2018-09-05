@@ -30,10 +30,7 @@ The disadvantage of the current system:
 
 # Motivation
 During the process of creating the health care chatbot Florence, we found out that we can't use the technology to its full potential due to various problems with the current state of the healthcare system. **You as a patient should be in control of your healthcare data and a chatbot should support the private, secure and continuous communication between you and your healthcare provider network.** However, with the current technology that isn't possible. That is why we started the project **“Untangle Care”**, you can find out more about it on the [official IOTA ecosystem page](https://ecosystem.iota.org/projects/untangle-care). 
-
-# About me
-My name is David Hawig and I am the developer of Florence.chat. You can contact me on [linkedin](https://www.linkedin.com/in/david-hawig-206a44b1/) or via Mail (david.hawig[at]pact[dot]care). 
-My current Chiota contact address is JUBQJEUKMAB9ZOCONDSDCCHPIMOWNQSJCSIXYAXIFLFVSRJXETXJLKJAWWJHWCSW9UONEGJMQBWHWUWRZ
+Feel free to get in contact with us, for example via Mail (info[at]pact[dot]care). 
 
 We welcome any kind of help or contribution!
 
