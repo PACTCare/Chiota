@@ -2,60 +2,45 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.Extensions;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AddContact;
-
-  using Xamarin.Forms;
+  using Chiota.ViewModels.Classes;
 
   /// <summary>
   /// The add contact presenter.
   /// </summary>
-  public class AddContactPresenter
+  public static class AddContactPresenter
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AddContactPresenter"/> class.
-    /// </summary>
-    /// <param name="navigation">
-    /// The navigation.
-    /// </param>
-    public AddContactPresenter(INavigation navigation)
-    {
-      this.Navigation = navigation;
-    }
-
-    /// <summary>
-    /// Gets the navigation.
-    /// </summary>
-    private INavigation Navigation { get; }
-
     /// <summary>
     /// The present.
     /// </summary>
+    /// <param name="view">
+    /// The view.
+    /// </param>
     /// <param name="response">
     /// The response.
     /// </param>
     /// <returns>
     /// The <see cref="Task"/>.
     /// </returns>
-    public async Task Present(AddContactResponse response)
+    public static async Task Present(BaseViewModel view, AddContactResponse response)
     {
       switch (response.Code)
       {
         case ResponseCode.Success:
-          await this.Navigation.DisplayAlertAsync(
+          await view.DisplayAlertAsync(
             "Successful Request",
             "Your new contact needs to accept the request before you can start chatting!.");
           break;
         case ResponseCode.NoContactInformationPresent:
         case ResponseCode.AmbiguousContactInformation:
-          await this.Navigation.DisplayAlertAsync("Error", "It seems like the provided address is not a valid contact address.");
+          await view.DisplayAlertAsync("Error", "It seems like the provided address is not a valid contact address.");
           break;
         case ResponseCode.MessengerException:
-          await this.Navigation.DisplayAlertAsync("Error", "It seems like the connection to the tangle failed. Try again later or change your node.");
+          await view.DisplayAlertAsync("Error", "It seems like the connection to the tangle failed. Try again later or change your node.");
           break;
         default:
-          await this.Navigation.DisplayAlertAsync("Error", "Something seems to be broken. Please try again later.");
+          await view.DisplayAlertAsync("Error", "Something seems to be broken. Please try again later.");
           break;
       }
     }

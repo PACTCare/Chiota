@@ -53,28 +53,6 @@
     }
 
     /// <summary>
-    /// Encrypts messages with NTRU
-    /// </summary>
-    /// <param name="publicKey">public key</param>
-    /// <param name="input">input text</param>
-    /// <returns>byte array</returns>
-    public byte[] Encrypt(IAsymmetricKey publicKey, byte[] input)
-    {
-      var bytes = new List<byte[]>();
-      using (var cipher = new NTRUEncrypt(this.ntruParameters))
-      {
-        var arraySplit = ArraySplit(input, this.maxSize);
-        foreach (var byt in arraySplit)
-        {
-          cipher.Initialize(publicKey);
-          bytes.Add(cipher.Encrypt(byt));
-        }
-      }
-
-      return bytes.SelectMany(a => a).ToArray();
-    }
-
-    /// <summary>
     /// Decrypts a byte array
     /// </summary>
     /// <param name="keyPair">The correct key pair</param>
@@ -104,28 +82,6 @@
       }
 
       return bytesList.SelectMany(a => a).ToArray();
-    }
-
-    private static IEnumerable<byte[]> ArraySplit(byte[] bArray, int intBufforLengt)
-    {
-      var bArrayLenght = bArray.Length;
-      byte[] bReturn;
-
-      var i = 0;
-      for (; bArrayLenght > (i + 1) * intBufforLengt; i++)
-      {
-        bReturn = new byte[intBufforLengt];
-        Array.Copy(bArray, i * intBufforLengt, bReturn, 0, intBufforLengt);
-        yield return bReturn;
-      }
-
-      var intBufforLeft = bArrayLenght - (i * intBufforLengt);
-      if (intBufforLeft > 0)
-      {
-        bReturn = new byte[intBufforLeft];
-        Array.Copy(bArray, i * intBufforLengt, bReturn, 0, intBufforLeft);
-        yield return bReturn;
-      }
     }
   }
 }

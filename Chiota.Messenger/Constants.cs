@@ -7,19 +7,16 @@
   /// </summary>
   public static class Constants
   {
-    /// <summary>
-    /// The end.
-    /// </summary>
-    public const string End = "9ENDEGUTALLESGUT9";
+    public static TryteString End => new TryteString("9ENDEGUTALLESGUT9");
 
-    /// <summary>
-    /// The line break.
-    /// </summary>
-    public const string LineBreak = "9CHIOTAYOURIOTACHATAPP9";
+    public static TryteString LineBreak => new TryteString("9CHIOTAYOURIOTACHATAPP9");
 
-    /// <summary>
-    /// The tag.
-    /// </summary>
     public static Tag Tag => new Tag("CHIOTAYOURIOTACHATAPP");
+
+    public static TryteString FirstBreak => new TryteString("9CHIOTAYOUR9");
+
+    public static TryteString SecondBreak => new TryteString("9IOTACHATAPP9");
+
+    public static int MessageCharacterLimit => 247;
   }
 }

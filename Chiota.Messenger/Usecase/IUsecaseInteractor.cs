@@ -11,7 +11,7 @@
   /// <typeparam name="TResponse">
   /// The usecases response
   /// </typeparam>
-  public interface IUsecaseInteractor<in TRequest, TResponse>
+  public interface IUsecaseInteractor<in TRequest, TResponse> where TResponse : BaseResponse
   {
     /// <summary>
     /// The execute.

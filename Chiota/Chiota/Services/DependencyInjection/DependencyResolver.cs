@@ -9,7 +9,9 @@
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
   using Chiota.Messenger.Usecase.AddContact;
+  using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Messenger.Usecase.GetContacts;
+  using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Navigation;
   using Chiota.Services.UserServices;
@@ -58,6 +60,9 @@
         .PropertiesAutowired();
 
       builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>().PropertiesAutowired();
+      builder.RegisterType<DeclineContactInteractor>().As<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>().PropertiesAutowired();
+
+      builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
 
       foreach (var module in Modules)
       {

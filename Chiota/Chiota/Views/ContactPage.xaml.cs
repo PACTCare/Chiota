@@ -54,22 +54,29 @@
       (this.BindingContext as ContactViewModel)?.Search(e.NewTextValue);
     }
 
-    private void HandleItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private async void HandleItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
-      if (e?.SelectedItem is Contact contact)
+      if (!(e?.SelectedItem is ContactListViewModel contactViewModel))
       {
-        (this.BindingContext as ContactViewModel)?.OpenChatPage(contact);
+        return;
       }
+
+      if (!(this.BindingContext is ContactViewModel context))
+      {
+        return;
+      }
+
+      await context.OpenChatPageAsync(contactViewModel.Contact);
     }
 
-    private void HandleNewContactClick(object sender, EventArgs e)
+    private async void HandleNewContactClick(object sender, EventArgs e)
     {
-      this.Navigation.PushAsync(new AddContactPage());
+      await this.Navigation.PushAsync(new AddContactPage());
     }
 
-    private void HandleSettingsClick(object sender, EventArgs e)
+    private async void HandleSettingsClick(object sender, EventArgs e)
     {
-      this.Navigation.PushAsync(new SettingsPage());
+      await this.Navigation.PushAsync(new SettingsPage());
     }
 
     private void ContactsList_OnRefreshing(object sender, EventArgs e)
@@ -78,11 +85,11 @@
       this.ContactsList.EndRefresh();
     }
 
-    private void HandleLogoutClick(object sender, EventArgs e)
+    private async void HandleLogoutClick(object sender, EventArgs e)
     {
       new SecureStorage().DeleteUser();
       Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoginEntryPoint);
-      this.Navigation.PopToRootAsync(true);
+      await this.Navigation.PopToRootAsync(true);
     }
   }
 }

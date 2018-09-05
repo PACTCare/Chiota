@@ -18,8 +18,6 @@
 
     public const string Accepted = "accepted";
 
-    public const int CharacterLimit = 247;
-
     // used for changing the address after 6 or more decryptable! messages
     public const int MessagesOnAddress = 6;
 

@@ -93,9 +93,7 @@ namespace Chiota.ViewModels
 
       if (InputValidator.IsAddress(this.ReceiverAdress) && this.ReceiverAdress != UserService.CurrentUser.PublicKeyAddress)
       {
-        await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(
-          new LoadingPopupPage(),
-          new LoadingPopupModel { Message = "Adding Contact" });
+        await this.DisplayLoadingSpinnerAsync("Adding Contact");
 
         var response = await this.AddContactInteractor.ExecuteAsync(
                          new AddContactRequest
@@ -108,12 +106,11 @@ namespace Chiota.ViewModels
                            });
 
         await this.Navigation.PopPopupAsync();
-
-        await new AddContactPresenter(this.Navigation).Present(response);
+        await AddContactPresenter.Present(this, response);
       }
       else
       {
-        await this.Navigation.DisplayAlertAsync("Error", "The provided address is invalid.");
+        await this.DisplayAlertAsync("Error", "The provided address is invalid.");
       }
     }
   }

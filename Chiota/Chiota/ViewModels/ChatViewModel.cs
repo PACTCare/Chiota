@@ -2,19 +2,21 @@
 
 namespace Chiota.ViewModels
 {
-  using System;
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
-  using System.Globalization;
   using System.Linq;
-  using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Messenger;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Models;
+  using Chiota.Presenters;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
@@ -26,10 +28,6 @@ namespace Chiota.ViewModels
 
   public class ChatViewModel : BaseViewModel
   {
-    public Action DisplayMessageTooLong;
-
-    public Action DisplayMessageSendErrorPrompt;
-
     private readonly Contact contact;
 
     private readonly NtruKex ntruKex;
@@ -97,54 +95,44 @@ namespace Chiota.ViewModels
       this.PageIsShown = false;
     }
 
-    public void MessageRestriction(Entry entry)
+    public async void MessageRestriction(Entry entry)
     {
       var val = entry.Text;
 
-      if (val?.Length > ChiotaConstants.CharacterLimit)
+      if (val?.Length > Constants.MessageCharacterLimit)
       {
         val = val.Remove(val.Length - 1);
         entry.Text = val;
-        this.DisplayMessageTooLong();
+        await this.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
       }
     }
 
     private async Task SendMessage()
     {
-      if (this.OutGoingText?.Length > ChiotaConstants.CharacterLimit)
+      if (this.OutGoingText?.Length > 0)
       {
-        this.DisplayMessageTooLong();
-      }
-      else if (this.OutGoingText?.Length > 0 && !this.IsBusy)
-      {
-        this.IsBusy = true;
+        await this.DisplayLoadingSpinnerAsync("Sending Message");
+
         this.loadNewMessages = false;
-        var trytesDate = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
 
-        var senderId = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30);
-
-        var encryptedText = await Task.Run(() => this.ntruKex.Encrypt(this.ntruChatKeyPair.PublicKey, Encoding.UTF8.GetBytes(this.OutGoingText)));
-
-        var sendFeedback = await this.SendParallel(encryptedText.EncodeBytesAsString(), ChiotaConstants.FirstBreak + senderId + ChiotaConstants.SecondBreak + trytesDate);
-        if (sendFeedback.Any(c => c == false))
-        {
-          this.DisplayMessageSendErrorPrompt();
-        }
+        var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
+        var response = await interactor.ExecuteAsync(
+          new SendMessageRequest
+            {
+              ChatAddress = new Address(this.contact.ChatAddress),
+              KeyPair = this.ntruChatKeyPair,
+              Message = this.OutGoingText,
+              UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+            });
 
         this.loadNewMessages = true;
         await this.AddNewMessagesAsync(this.Messages);
-        this.IsBusy = false;
         this.OutGoingText = null;
-      }
-    }
 
-    private async Task<bool[]> SendParallel(string message, string chiotaInfo)
-    {
-      var firstTryte = new TryteString(message.Substring(0, 2070) + chiotaInfo + "A" + ChiotaConstants.End);
-      var secoundTryte = new TryteString(message.Substring(2070) + chiotaInfo + "B" + ChiotaConstants.End);
-      var firstMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(firstTryte, this.contact.ChatAddress);
-      var secoundMessage = UserService.CurrentUser.TangleMessenger.SendMessageAsync(secoundTryte, this.contact.ChatAddress);
-      return await Task.WhenAll(firstMessage, secoundMessage);
+        await this.PopPopupAsync();
+
+        await SendMessagePresenter.Present(this, response);
+      }
     }
 
     private async void GetMessagesAsync(ICollection<MessageViewModel> messages)

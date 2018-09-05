@@ -70,7 +70,7 @@
     /// </returns>
     private static ContactInformation ExtractContactInformation(TryteString latestContactInformation)
     {
-      var lineBreakIndex = latestContactInformation.Value.IndexOf(Constants.LineBreak, StringComparison.Ordinal);
+      var lineBreakIndex = latestContactInformation.Value.IndexOf(Constants.LineBreak.Value, StringComparison.Ordinal);
       var publicKeyString = latestContactInformation.Value.Substring(0, lineBreakIndex);
       var bytesKey = new TryteString(publicKeyString).DecodeBytesFromTryteString();
 
@@ -78,7 +78,7 @@
                {
                  NtruKey = new NTRUPublicKey(bytesKey),
                  ContactAddress = new Address(
-                   latestContactInformation.Value.Substring(lineBreakIndex + Constants.LineBreak.Length, Address.Length))
+                   latestContactInformation.Value.Substring(lineBreakIndex + Constants.LineBreak.Value.Length, Address.Length))
                };
     }
 
@@ -101,7 +101,7 @@
           new TryteString(),
           (current, tryteString) => current.Concat(tryteString.Fragment));
 
-        if (!bundleTrytes.Value.Contains(Constants.End) || !bundleTrytes.Value.Contains(Constants.LineBreak))
+        if (!bundleTrytes.Value.Contains(Constants.End.Value) || !bundleTrytes.Value.Contains(Constants.LineBreak.Value))
         {
           continue;
         }
@@ -109,7 +109,7 @@
         if (latestContactInformation == null)
         {
           latestContactInformation =
-            new TryteString(bundleTrytes.Value.Substring(0, bundleTrytes.Value.IndexOf(Constants.End, StringComparison.Ordinal)));
+            new TryteString(bundleTrytes.Value.Substring(0, bundleTrytes.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal)));
         }
         else
         {

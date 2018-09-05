@@ -71,7 +71,7 @@
         var messenger = new TangleMessenger(repository);
 
         var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-        var payload = TryteString.FromUtf8String("Hi. I'm a test").Concat(new TryteString(Constants.End));
+        var payload = TryteString.FromUtf8String("Hi. I'm a test").Concat(new TryteString(Constants.End.Value));
 
         await messenger.SendMessageAsync(new Message(MessageType.RequestContact, payload, receiver));
 

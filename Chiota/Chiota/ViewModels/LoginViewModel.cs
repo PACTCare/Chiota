@@ -96,11 +96,7 @@ namespace Chiota.ViewModels
                 await Navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
             else if (!IsBusy)
             {
-                var loading = new LoadingPopupModel()
-                {
-                    Message = "Addresses are generated..."
-                };
-                await PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), loading);
+                await this.DisplayLoadingSpinnerAsync("Addresses are generated...");
 
                 //Create a new user, if no instance exist yet.
                 if (UserNotYetGenerated())

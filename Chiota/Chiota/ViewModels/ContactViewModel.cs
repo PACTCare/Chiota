@@ -76,7 +76,7 @@
       this.Contacts = await this.GetContacts(searchInput);
     }
 
-    public async void OpenChatPage(Contact contact)
+    public async Task OpenChatPageAsync(Contact contact)
     {
       this.SelectedContact = null;
 
@@ -157,7 +157,7 @@
           Rejected = false
         };
 
-        this.contacts.Add(new ContactListViewModel(this.viewCellObject, botContact));
+        this.contacts.Add(new ContactListViewModel(null, null, this.viewCellObject, botContact));
       }
     }
   }
