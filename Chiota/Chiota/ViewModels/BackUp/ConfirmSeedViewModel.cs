@@ -34,6 +34,7 @@
         return new Command(
           async () =>
             {
+              // TODO: Seed does not get written to
               await this.PushAsync(new SetPasswordPage(), this.UserProperties);
               return;
 
