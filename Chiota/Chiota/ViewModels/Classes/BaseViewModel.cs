@@ -52,57 +52,41 @@
     /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
-        //Last page which was shown.
-        protected Page LastPage
-        {
-            get => AppNavigation.NavigationInstance.LastPage;
-            set => AppNavigation.NavigationInstance.LastPage = value;
-        }
+    /// <summary>
+    /// The navigation action.
+    /// </summary>
+    private enum NavigationAction
+    {
+      /// <summary>
+      /// The undefined.
+      /// </summary>
+      Undefined,
 
-        //Root page of the current navigation.
-        protected Page RootPage
-        {
-            get => AppNavigation.NavigationInstance.RootPage;
-            set => AppNavigation.NavigationInstance.RootPage = value;
-        }
+      /// <summary>
+      /// The insert.
+      /// </summary>
+      Insert,
 
-        //Init object of the current navigation.
-        protected object InitObject
-        {
-            get => AppNavigation.NavigationInstance.InitObject;
-            set => AppNavigation.NavigationInstance.InitObject = value;
-        }
+      /// <summary>
+      /// The push.
+      /// </summary>
+      Push,
 
-        //Reverse object of the current navigation.
-        protected object ReverseObject
-        {
-            get => AppNavigation.NavigationInstance.ReverseObject;
-            set => AppNavigation.NavigationInstance.ReverseObject = value;
-        }
+      /// <summary>
+      /// The pop.
+      /// </summary>
+      Pop,
 
-        public bool IsBusy
-        {
-            get => this.isBusy;
-            set
-            {
-                this.isBusy = value;
-                this.OnPropertyChanged();
-            }
-        }
+      /// <summary>
+      /// The pop root.
+      /// </summary>
+      PopRoot,
 
-        #endregion
-
-        #region NavigationAction
-
-        private enum NavigationAction
-        {
-            Undefined,
-            Insert,
-            Push,
-            Pop,
-            PopRoot,
-            Remove
-        }
+      /// <summary>
+      /// The remove.
+      /// </summary>
+      Remove
+    }
 
     /// <summary>
     /// The navigation typ.
@@ -145,7 +129,7 @@
       set
       {
         this.isBusy = value;
-        this.RaisePropertyChanged();
+        this.OnPropertyChanged();
       }
     }
 
@@ -189,21 +173,15 @@
       set => AppNavigation.NavigationInstance.LastPage = value;
     }
 
-            //Set the root page of the current navigation
-            var parent = CurrentPage.Parent;
-            if (parent == null || parent is Application)
-                RootPage = CurrentPage;
-            if (parent is NavigationPage navigation)
-                RootPage = navigation.RootPage;
-
-            //Call reverse and init method of the pagemodel.
-            if (CurrentPage.BindingContext is BaseViewModel viewmodel)
-            {
-                if (_navigationAction == NavigationAction.Push)
-                    viewmodel.Init(InitObject);
-                else if (_navigationAction == NavigationAction.Pop)
-                    viewmodel.Reverse(ReverseObject);
-            }
+    // Reverse object of the current navigation.
+    /// <summary>
+    /// Gets or sets the reverse object.
+    /// </summary>
+    protected object ReverseObject
+    {
+      get => AppNavigation.NavigationInstance.ReverseObject;
+      set => AppNavigation.NavigationInstance.ReverseObject = value;
+    }
 
     // Root page of the current navigation.
     /// <summary>
@@ -580,7 +558,7 @@
     /// <param name="propertyName">
     /// The property name.
     /// </param>
-    protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
       this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
@@ -654,12 +632,18 @@
       this.ViewIsAppearing();
     }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
+    /// <summary>
+    /// Will be called, when the page disappears.
+    /// </summary>
+    /// <param name="sender">
+    /// </param>
+    /// <param name="e">
+    /// </param>
+    private void OnDisappearing(object sender, EventArgs e)
+    {
+      this.ViewIsDisappearing();
     }
+
+
+  }
 }
