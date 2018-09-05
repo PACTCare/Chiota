@@ -1,33 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Exceptions;
-using Chiota.Extensions;
-using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
-
-namespace Chiota.ViewModels.Help
+﻿namespace Chiota.ViewModels.Help
 {
-    public class SeedHelpViewModel : BaseViewModel
-    {
-        #region Commands
+  using System.Windows.Input;
 
-        #region Continue
+  using Chiota.ViewModels.Classes;
 
-        public ICommand ContinueCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PopAsync();
-                });
-            }
-        }
+  using Xamarin.Forms;
 
-        #endregion
-
-        #endregion
-    }
+  /// <summary>
+  /// The seed help view model.
+  /// </summary>
+  public class SeedHelpViewModel : BaseViewModel
+  {
+    /// <summary>
+    /// Gets the continue command.
+    /// </summary>
+    public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
+  }
 }
