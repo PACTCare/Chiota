@@ -18,40 +18,19 @@
   /// </summary>
   public class NewSeedViewModel : BaseViewModel
   {
-    /// <summary>
-    /// The _is down visible.
-    /// </summary>
-    private bool _isDownVisible;
+    private bool isDownVisible;
 
-    /// <summary>
-    /// The _is seed view visible.
-    /// </summary>
-    private bool _isSeedViewVisible;
+    private bool isSeedViewVisible;
 
-    /// <summary>
-    /// The _is up visible.
-    /// </summary>
-    private bool _isUpVisible;
+    private bool isUpVisible;
 
-    /// <summary>
-    /// The _seed.
-    /// </summary>
-    private Seed _seed;
+    private Seed seed;
 
-    /// <summary>
-    /// The _seed line pointer.
-    /// </summary>
-    private int _seedLinePointer;
+    private int seedLinePointer;
 
-    /// <summary>
-    /// The _seed view padding.
-    /// </summary>
-    private Thickness _seedViewPadding;
+    private Thickness seedViewPadding;
 
-    /// <summary>
-    /// The _visible seed lines.
-    /// </summary>
-    private ObservableCollection<View> _visibleSeedLines;
+    private ObservableCollection<View> visibleSeedLines;
 
     /// <summary>
     /// Gets the continue command.
@@ -64,14 +43,13 @@
           async () =>
             {
               // If there exist no seed, show missing seed exception.
-              if (this._seed == null)
+              if (this.seed == null)
               {
                 await new AuthMissingSeedException(new ExcInfo()).ShowAlertAsync();
                 return;
               }
 
-              var seed = this.ExtractSeed();
-              await this.PushAsync(new BackUpPage(), seed);
+              await this.PushAsync(new BackUpPage(), this.ExtractSeed());
             });
       }
     }
@@ -86,14 +64,14 @@
         return new Command(
           () =>
             {
-              if (this._seedLinePointer > 8)
+              if (this.seedLinePointer > 8)
               {
                 return;
               }
 
-              this._seedLinePointer++;
+              this.seedLinePointer++;
               this.IsUpVisible = true;
-              if (this._seedLinePointer == 8)
+              if (this.seedLinePointer == 8)
               {
                 this.IsDownVisible = false;
                 this.SeedViewPadding = new Thickness(0, 0, 0, 36);
@@ -118,10 +96,10 @@
         return new Command(
           () =>
             {
-              this._seed = new Seed(this.GetNewSeed());
+              this.seed = new Seed(Tangle.Net.Entity.Seed.Random().Value);
 
               // Reset view.
-              this._seedLinePointer = 0;
+              this.seedLinePointer = 0;
               this.IsUpVisible = false;
               this.IsDownVisible = true;
 
@@ -138,10 +116,10 @@
     /// </summary>
     public bool IsDownVisible
     {
-      get => this._isDownVisible;
+      get => this.isDownVisible;
       set
       {
-        this._isDownVisible = value;
+        this.isDownVisible = value;
         this.OnPropertyChanged(nameof(this.IsDownVisible));
       }
     }
@@ -151,10 +129,10 @@
     /// </summary>
     public bool IsSeedViewVisible
     {
-      get => this._isSeedViewVisible;
+      get => this.isSeedViewVisible;
       set
       {
-        this._isSeedViewVisible = value;
+        this.isSeedViewVisible = value;
         this.OnPropertyChanged(nameof(this.IsSeedViewVisible));
       }
     }
@@ -164,10 +142,10 @@
     /// </summary>
     public bool IsUpVisible
     {
-      get => this._isUpVisible;
+      get => this.isUpVisible;
       set
       {
-        this._isUpVisible = value;
+        this.isUpVisible = value;
         this.OnPropertyChanged(nameof(this.IsUpVisible));
       }
     }
@@ -180,23 +158,28 @@
       get
       {
         return new Command(
-          (array) =>
+          array =>
             {
               var items = array as object[];
               var pointer = (int)items[0];
               var item = items[1] as Button;
 
-              if (!(item is Button button)) return;
+              if (!(item is Button button))
+              {
+                return;
+              }
 
               // Get the seed items random by utf8.
               var random = new Random();
               var result = random.Next(65, 91);
               if (result == 91)
+              {
                 result = 57;
+              }
 
               // Update the seed attribute.
               var resultChar = Encoding.UTF8.GetString(BitConverter.GetBytes(result)).Replace("\0", string.Empty);
-              this._seed.Lines[this._seedLinePointer].Items[pointer] = resultChar;
+              this.seed.Lines[this.seedLinePointer].Items[pointer] = resultChar;
               button.Text = resultChar;
             });
       }
@@ -207,10 +190,10 @@
     /// </summary>
     public Thickness SeedViewPadding
     {
-      get => this._seedViewPadding;
+      get => this.seedViewPadding;
       set
       {
-        this._seedViewPadding = value;
+        this.seedViewPadding = value;
         this.OnPropertyChanged(nameof(this.SeedViewPadding));
       }
     }
@@ -225,19 +208,24 @@
         return new Command(
           () =>
             {
-              if (this._seedLinePointer >= 0)
+              if (this.seedLinePointer < 0)
               {
-                this._seedLinePointer--;
-                this.IsDownVisible = true;
-                if (this._seedLinePointer == 0)
-                {
-                  this.IsUpVisible = false;
-                  this.SeedViewPadding = new Thickness(0, 36, 0, 0);
-                }
-                else this.SeedViewPadding = new Thickness(0);
-
-                this.UpdateSeedView();
+                return;
               }
+
+              this.seedLinePointer--;
+              this.IsDownVisible = true;
+              if (this.seedLinePointer == 0)
+              {
+                this.IsUpVisible = false;
+                this.SeedViewPadding = new Thickness(0, 36, 0, 0);
+              }
+              else
+              {
+                this.SeedViewPadding = new Thickness(0);
+              }
+
+              this.UpdateSeedView();
             });
       }
     }
@@ -247,30 +235,24 @@
     /// </summary>
     public ObservableCollection<View> VisibleSeedLines
     {
-      get => this._visibleSeedLines;
+      get => this.visibleSeedLines;
       set
       {
-        this._visibleSeedLines = value;
+        this.visibleSeedLines = value;
         this.OnPropertyChanged(nameof(this.VisibleSeedLines));
       }
     }
 
-    /// <summary>
-    /// The init.
-    /// </summary>
-    /// <param name="data">
-    /// The data.
-    /// </param>
+    /// <inheritdoc />
     public override void Init(object data = null)
     {
       this.SeedViewPadding = new Thickness(0, 36, 0, 0);
-
       base.Init(data);
     }
 
     /// <summary>
     /// Extract the seed from the view.
-    /// Maybe the user change single characters of the seed,
+    /// Maybe the user changed single characters of the seed,
     /// so we need the actual one.
     /// </summary>
     /// <returns>
@@ -280,7 +262,7 @@
     {
       var result = string.Empty;
 
-      foreach (var line in this._seed.Lines)
+      foreach (var line in this.seed.Lines)
       {
         foreach (var item in line.Items)
         {
@@ -292,35 +274,33 @@
     }
 
     /// <summary>
-    /// Returns a new generated iota seed.
-    /// </summary>
-    /// <returns>
-    /// The <see cref="string"/>.
-    /// </returns>
-    private string GetNewSeed()
-    {
-      return Tangle.Net.Entity.Seed.Random().Value;
-    }
-
-    /// <summary>
     /// The update seed view.
+    /// TODO: Remove code duplication (see WriteSeedViewModel)
     /// </summary>
     private void UpdateSeedView()
     {
       // Set the pointer for different layouts for the view.
       var enabledPointer = 1;
-      if (this._seedLinePointer == 0)
+      if (this.seedLinePointer == 0)
+      {
         enabledPointer = 0;
-      else if (this._seedLinePointer == 8)
+      }
+      else if (this.seedLinePointer == 8)
+      {
         enabledPointer = 2;
+      }
 
       var visibleIndex = 0;
-      if (this._seedLinePointer > 1 && this._seedLinePointer < 6)
-        visibleIndex = this._seedLinePointer - 1;
-      else if (this._seedLinePointer >= 6)
+      if (this.seedLinePointer > 1 && this.seedLinePointer < 6)
+      {
+        visibleIndex = this.seedLinePointer - 1;
+      }
+      else if (this.seedLinePointer >= 6)
+      {
         visibleIndex = 6;
+      }
 
-      var seedLines = this._seed.Lines.GetRange(visibleIndex, 3);
+      var seedLines = this.seed.Lines.GetRange(visibleIndex, 3);
       var tmp = new ObservableCollection<View>();
 
       for (var i = 0; i < seedLines.Count; i++)
@@ -328,7 +308,9 @@
         var lineView = new StackLayout { Orientation = StackOrientation.Horizontal, Spacing = 2 };
 
         if (i != enabledPointer)
+        {
           lineView.IsEnabled = false;
+        }
 
         for (var j = 0; j < seedLines[i].Items.Count; j++)
         {
@@ -351,7 +333,9 @@
           itemView.CommandParameter = new object[] { j, itemView };
 
           if (i != enabledPointer)
+          {
             itemView.BackgroundColor = Color.FromRgba(backgroundColor.R, backgroundColor.G, backgroundColor.B, 0.6);
+          }
 
           lineView.Children.Add(itemView);
         }

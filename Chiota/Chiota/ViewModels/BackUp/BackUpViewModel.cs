@@ -1,130 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.ViewModels.Classes;
-using Chiota.Pages.BackUp;
-using Xamarin.Forms;
-
-namespace Chiota.ViewModels.BackUp
+﻿namespace Chiota.ViewModels.BackUp
 {
-    public class BackUpViewModel : BaseViewModel
+  using System.Windows.Input;
+
+  using Chiota.Annotations;
+  using Chiota.Pages.BackUp;
+  using Chiota.ViewModels.Classes;
+
+  using Xamarin.Forms;
+
+  /// <summary>
+  /// The back up view model.
+  /// </summary>
+  public class BackUpViewModel : BaseViewModel
+  {
+    private bool isContinueVisible;
+
+    private string seed;
+
+    public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.seed); });
+
+    [UsedImplicitly]
+    public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.seed); });
+
+    public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.seed); });
+
+    public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.seed); });
+
+    /// <summary>
+    /// Gets or sets a value indicating whether is continue visible.
+    /// </summary>
+    public bool IsContinueVisible
     {
-        #region Attributes
-
-        private string _seed;
-        private bool _isContinueVisible;
-
-        #endregion
-
-        #region Properties
-
-        public bool IsContinueVisible
-        {
-            get => _isContinueVisible;
-            set
-            {
-                _isContinueVisible = value;
-                OnPropertyChanged(nameof(IsContinueVisible));
-            }
-        }
-
-        #endregion
-
-        #region Methods
-
-        #region Init
-
-        public override void Init(object data = null)
-        {
-            base.Init(data);
-
-            //Set the generated iota seed.
-            if(data != null)
-                _seed = data as string;
-
-            //Disable the continue button.
-            IsContinueVisible = false;
-        }
-
-        #endregion
-
-        #region Reverse
-
-        public override void Reverse(object data = null)
-        {
-            base.Reverse(data);
-
-            //Enable the continue button.
-            IsContinueVisible = true;
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Commands
-
-        #region WriteSeed
-
-        public ICommand WriteSeedCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new WriteSeedPage(), _seed);
-                });
-            }
-        }
-
-        #endregion
-
-        #region PrintPaper
-
-        public ICommand PrintPaperCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new PaperCopyPage(), _seed);
-                });
-            }
-        }
-
-        #endregion
-
-        #region QrCode
-
-        public ICommand QrCodeCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new QrCodePage(), _seed);
-                });
-            }
-        }
-
-        #endregion
-
-        #region Continue
-
-        public ICommand ContinueCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new ConfirmSeedPage(), _seed);
-                });
-            }
-        }
-
-        #endregion
-
-        #endregion
+      get => this.isContinueVisible;
+      set
+      {
+        this.isContinueVisible = value;
+        this.OnPropertyChanged(nameof(this.IsContinueVisible));
+      }
     }
+
+    /// <inheritdoc />
+    public override void Init(object data = null)
+    {
+      base.Init(data);
+
+      // Set the generated iota seed.
+      if (data != null)
+      {
+        this.seed = data as string;
+      }
+
+      // Disable the continue button.
+      this.IsContinueVisible = false;
+    }
+
+    /// <inheritdoc />
+    public override void Reverse(object data = null)
+    {
+      base.Reverse(data);
+
+      // Enable the continue button.
+      this.IsContinueVisible = true;
+    }
+  }
 }

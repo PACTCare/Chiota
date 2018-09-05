@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace Chiota.Pages.BackUp
+﻿namespace Chiota.Pages.BackUp
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class BackUpPage : ContentPage
-	{
-		public BackUpPage ()
-		{
-			InitializeComponent ();
+  using Chiota.ViewModels.Classes;
 
-		    //Setup the pagemodel
-		    if (BindingContext is BaseViewModel viewmodel)
-		        viewmodel.Setup(this);
-        }
-	}
+  using Xamarin.Forms;
+  using Xamarin.Forms.Xaml;
+
+  /// <summary>
+  /// The back up page.
+  /// </summary>
+  [XamlCompilation(XamlCompilationOptions.Compile)]
+  public partial class BackUpPage : ContentPage
+  {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BackUpPage"/> class.
+    /// </summary>
+    public BackUpPage()
+    {
+      this.InitializeComponent();
+
+      if (this.BindingContext is BaseViewModel viewmodel)
+      {
+        viewmodel.Setup(this);
+      }
+    }
+  }
 }

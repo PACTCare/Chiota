@@ -12,7 +12,9 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-    public class SetUserViewModel : BaseViewModel
+  using Chiota.Views;
+
+  public class SetUserViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -124,8 +126,7 @@ namespace Chiota.ViewModels.Authentication
                 {
                     if (!string.IsNullOrEmpty(Name))
                     {
-                        //TODO Navigate to the contact page.
-                        //await PushAsync(new RegisterPage());
+                        await this.PushAsync(new ContactPage());
                         return;
                     }
 
