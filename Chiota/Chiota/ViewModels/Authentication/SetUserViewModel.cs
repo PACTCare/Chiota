@@ -5,6 +5,7 @@
 
   using Chiota.Exceptions;
   using Chiota.Extensions;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
   using Chiota.Views;
 
@@ -17,24 +18,23 @@
   /// </summary>
   public class SetUserViewModel : BaseViewModel
   {
-    /// <summary>
-    /// The _name.
-    /// </summary>
     private string name;
 
-    /// <summary>
-    /// The _profile image opacity.
-    /// </summary>
     private double profileImageOpacity;
 
-    /// <summary>
-    /// The _profile image source.
-    /// </summary>
     private ImageSource profileImageSource;
 
     /// <summary>
-    /// Gets the continue command.
+    /// Initializes a new instance of the <see cref="SetUserViewModel"/> class.
     /// </summary>
+    /// <param name="userService">
+    /// The user service.
+    /// </param>
+    public SetUserViewModel(UserService userService)
+    {
+      this.UserService = userService;
+    }
+
     public ICommand ContinueCommand
     {
       get
@@ -44,7 +44,12 @@
             {
               if (!string.IsNullOrEmpty(this.Name))
               {
-                await this.PushAsync(new ContactPage());
+                await this.DisplayLoadingSpinnerAsync("Setting up your account");
+                this.UserProperties.Name = this.Name;
+                await this.UserService.CreateNew(this.UserProperties);
+                await this.PopPopupAsync();
+
+                Application.Current.MainPage = new ContactPage();
                 return;
               }
 
@@ -53,9 +58,6 @@
       }
     }
 
-    /// <summary>
-    /// Gets or sets the name.
-    /// </summary>
     public string Name
     {
       get => this.name;
@@ -66,9 +68,6 @@
       }
     }
 
-    /// <summary>
-    /// Gets the profile image command.
-    /// </summary>
     public ICommand ProfileImageCommand
     {
       get
@@ -97,9 +96,6 @@
       }
     }
 
-    /// <summary>
-    /// Gets or sets the profile image opacity.
-    /// </summary>
     public double ProfileImageOpacity
     {
       get => this.profileImageOpacity;
@@ -110,9 +106,6 @@
       }
     }
 
-    /// <summary>
-    /// Gets or sets the profile image source.
-    /// </summary>
     public ImageSource ProfileImageSource
     {
       get => this.profileImageSource;
@@ -123,10 +116,16 @@
       }
     }
 
+    private UserCreationProperties UserProperties { get; set; }
+
+    private UserService UserService { get; }
+
     /// <inheritdoc />
     public override void Init(object data = null)
     {
       base.Init(data);
+
+      this.UserProperties = data as UserCreationProperties;
 
       // Set the default opacity.
       this.ProfileImageSource = ImageSource.FromFile("account.png");

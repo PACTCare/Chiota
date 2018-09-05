@@ -5,6 +5,7 @@
   using Chiota.Exceptions;
   using Chiota.Extensions;
   using Chiota.Pages.Authentication;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Xamarin.Forms;
@@ -34,19 +35,18 @@
         return new Command(
           async () =>
             {
-              if (!string.IsNullOrEmpty(this.Password) && !string.IsNullOrEmpty(this.RepeatPassword))
+              if (string.IsNullOrEmpty(this.Password) || string.IsNullOrEmpty(this.RepeatPassword))
               {
-                if (this.Password != this.RepeatPassword)
-                {
+                await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputPasswordRepeat).ShowAlertAsync();
+              }
+              else if (this.Password != this.RepeatPassword)
+              { 
                   await new AuthFailedPasswordConfirmationException(new ExcInfo()).ShowAlertAsync();
                   return;
-                }
-
-                await this.PushAsync(new SetUserPage());
-                return;
               }
 
-              await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputPasswordRepeat).ShowAlertAsync();
+              this.UserProperties.Password = this.Password;
+              await this.PushAsync(new SetUserPage(), this.UserProperties);
             });
       }
     }
@@ -75,6 +75,15 @@
         this.repeatPassword = value;
         this.OnPropertyChanged(nameof(this.RepeatPassword));
       }
+    }
+
+    private UserCreationProperties UserProperties { get; set; }
+
+    /// <inheritdoc />
+    public override void Init(object data = null)
+    {
+      base.Init(data);
+      this.UserProperties = data as UserCreationProperties;
     }
 
     /// <inheritdoc />

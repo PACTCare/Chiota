@@ -43,13 +43,7 @@
       }
     }
 
-    public ICommand NewSeedCommand =>
-      new Command(
-        async () =>
-          {
-            // Show register page.
-            await this.PushAsync(new NewSeedPage());
-          });
+    public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
 
     public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
 

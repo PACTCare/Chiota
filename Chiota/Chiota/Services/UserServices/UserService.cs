@@ -1,16 +1,28 @@
 ﻿namespace Chiota.Services.UserServices
 {
+  using System.Threading.Tasks;
+
   using Chiota.Models;
+  using Chiota.Services.Storage;
+
+  using Tangle.Net.Entity;
 
   /// <summary>
   /// The user service.
   /// </summary>
-  public static class UserService
-  {
+  public class UserService
+  { 
+    public UserService(IUserFactory userFactory)
+    {
+      this.UserFactory = userFactory;
+    }
+
     /// <summary>
     /// Gets the current.
     /// </summary>
     public static User CurrentUser { get; private set; }
+
+    private IUserFactory UserFactory { get; }
 
     /// <summary>
     /// The set current user.
@@ -35,6 +47,18 @@
     public static T GetCurrentUserAs<T>() where T : User
     {
       return CurrentUser as T;
+    }
+
+    public async Task CreateNew(UserCreationProperties properties)
+    {
+      var user = await this.UserFactory.CreateAsync(properties.Seed, properties.Name);
+
+      var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
+      var requestAddressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
+      await user.TangleMessenger.SendMessageAsync(requestAddressTrytes, user.PublicKeyAddress);
+
+      new SecureStorage().StoreUser(user);
+      SetCurrentUser(user);
     }
   }
 }

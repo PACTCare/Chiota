@@ -9,6 +9,7 @@
   using Chiota.Extensions;
   using Chiota.Models.BackUp;
   using Chiota.Pages.BackUp;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Xamarin.Forms;
@@ -49,7 +50,7 @@
                 return;
               }
 
-              await this.PushAsync(new BackUpPage(), this.ExtractSeed());
+              await this.PushAsync(new BackUpPage(), new UserCreationProperties { Seed = new Tangle.Net.Entity.Seed(this.ExtractSeed()) });
             });
       }
     }

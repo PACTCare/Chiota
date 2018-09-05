@@ -5,6 +5,7 @@
   using Chiota.Exceptions;
   using Chiota.Extensions;
   using Chiota.Pages.Authentication;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Utils;
@@ -19,12 +20,7 @@
   public class ConfirmSeedViewModel : BaseViewModel
   {
     /// <summary>
-    /// The _expected seed.
-    /// </summary>
-    private string expectedSeed;
-
-    /// <summary>
-    /// The _seed.
+    /// The expected seed.
     /// </summary>
     private string seed;
 
@@ -38,6 +34,9 @@
         return new Command(
           async () =>
             {
+              await this.PushAsync(new SetPasswordPage(), this.UserProperties);
+              return;
+
               if (!string.IsNullOrEmpty(this.Seed))
               {
                 if (!InputValidator.IsTrytes(this.Seed))
@@ -46,13 +45,13 @@
                   return;
                 }
 
-                if (this.Seed != this.expectedSeed)
+                if (this.Seed != this.UserProperties.Seed.Value)
                 {
                   await new BackUpFailedSeedConfirmationException(new ExcInfo()).ShowAlertAsync();
                   return;
                 }
 
-                await this.PushAsync(new SetPasswordPage());
+                await this.PushAsync(new SetPasswordPage(), this.UserProperties);
                 return;
               }
 
@@ -103,12 +102,13 @@
       }
     }
 
+    private UserCreationProperties UserProperties { get; set; }
+
     /// <inheritdoc />
     public override void Init(object data = null)
     {
       base.Init(data);
-
-      this.expectedSeed = data as string;
+      this.UserProperties = data as UserCreationProperties;
     }
 
     /// <inheritdoc />

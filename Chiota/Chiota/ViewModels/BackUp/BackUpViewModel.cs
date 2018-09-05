@@ -4,6 +4,7 @@
 
   using Chiota.Annotations;
   using Chiota.Pages.BackUp;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Xamarin.Forms;
@@ -15,16 +16,16 @@
   {
     private bool isContinueVisible;
 
-    private string seed;
-
-    public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.seed); });
+    public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.UserProperties); });
 
     [UsedImplicitly]
-    public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.seed); });
+    public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.UserProperties.Seed.Value); });
 
-    public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.seed); });
+    public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.UserProperties.Seed.Value); });
 
-    public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.seed); });
+    public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.UserProperties.Seed.Value); });
+
+    private UserCreationProperties UserProperties { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether is continue visible.
@@ -47,7 +48,7 @@
       // Set the generated iota seed.
       if (data != null)
       {
-        this.seed = data as string;
+        this.UserProperties = data as UserCreationProperties;
       }
 
       // Disable the continue button.

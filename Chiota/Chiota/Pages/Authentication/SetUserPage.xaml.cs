@@ -1,5 +1,8 @@
 ﻿namespace Chiota.Pages.Authentication
 {
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Authentication;
   using Chiota.ViewModels.Classes;
 
   using Xamarin.Forms;
@@ -17,12 +20,9 @@
     public SetUserPage()
     {
       this.InitializeComponent();
+      this.BindingContext = new SetUserViewModel(DependencyResolver.Resolve<UserService>());
 
-      // Setup the pagemodel
-      if (this.BindingContext is BaseViewModel viewmodel)
-      {
-        viewmodel.Setup(this);
-      }
+      ((BaseViewModel)this.BindingContext).Setup(this);
     }
   }
 }
