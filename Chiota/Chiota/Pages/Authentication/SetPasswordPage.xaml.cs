@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace Chiota.Pages.Authentication
+﻿namespace Chiota.Pages.Authentication
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SetPasswordPage : ContentPage
-	{
-		public SetPasswordPage ()
-		{
-			InitializeComponent ();
+  using Chiota.ViewModels.Classes;
 
-		    //Setup the pagemodel
-		    if (BindingContext is BaseViewModel viewmodel)
-		        viewmodel.Setup(this);
-        }
-	}
+  using Xamarin.Forms;
+  using Xamarin.Forms.Xaml;
+
+  /// <summary>
+  /// The set password page.
+  /// </summary>
+  [XamlCompilation(XamlCompilationOptions.Compile)]
+  public partial class SetPasswordPage : ContentPage
+  {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetPasswordPage"/> class.
+    /// </summary>
+    public SetPasswordPage()
+    {
+      this.InitializeComponent();
+
+      // Setup the pagemodel
+      if (this.BindingContext is BaseViewModel viewmodel)
+      {
+        viewmodel.Setup(this);
+      }
+    }
+  }
 }

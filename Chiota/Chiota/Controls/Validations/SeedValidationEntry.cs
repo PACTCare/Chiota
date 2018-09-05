@@ -1,37 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace Chiota.Controls.Validations
+﻿namespace Chiota.Controls.Validations
 {
-    public class SeedValidationEntry : ValidationEntry
+  using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
+
+  /// <summary>
+  /// The seed validation entry.
+  /// </summary>
+  public class SeedValidationEntry : ValidationEntry
+  {
+    /// <summary>
+    /// The validate.
+    /// </summary>
+    /// <param name="text">
+    /// The text.
+    /// </param>
+    /// <returns>
+    /// The <see cref="bool"/>.
+    /// </returns>
+    protected override bool Validate(string text)
     {
-        #region Methods
-
-        #region Validate
-
-        protected override bool Validate(string text)
-        {
-            IsValid = false;
-            if (string.IsNullOrEmpty(text))
-                return false;
-
-            // Return true if strIn is in valid email format.
-            try
-            {
-                return Regex.IsMatch(text,
-                    @"([A-Z,9]{81})",
-                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
-
-        #endregion
-
-        #endregion
+      this.IsValid = false;
+      return !string.IsNullOrEmpty(text) && InputValidator.IsTrytes(text, Seed.Length);
     }
+  }
 }

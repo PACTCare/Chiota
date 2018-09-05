@@ -51,7 +51,7 @@
       }
 
       // Disable the continue button.
-      this.IsContinueVisible = false;
+      this.IsContinueVisible = true;
     }
 
     /// <inheritdoc />
