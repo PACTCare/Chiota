@@ -7,17 +7,12 @@
   /// <summary>
   /// The get approved contacts response.
   /// </summary>
-  public class GetContactsResponse
+  public class GetContactsResponse : BaseResponse
   {
     /// <summary>
     /// Gets or sets the contacts.
     /// </summary>
     public List<Contact> ApprovedContacts { get; set; }
-
-    /// <summary>
-    /// Gets or sets the code.
-    /// </summary>
-    public ResponseCode Code { get; set; }
 
     /// <summary>
     /// Gets or sets the pending contact requests.

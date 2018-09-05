@@ -16,7 +16,6 @@
   using Chiota.Views;
 
   using Models;
-  using Services;
 
   using Tangle.Net.Entity;
 
@@ -125,19 +124,19 @@
                            PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                          });
 
-      var loadedContacts = new GetContactsPresenter().Present(response, this.viewCellObject, searchText);
+      var contactViewModels = GetContactsPresenter.Present(response, this.viewCellObject, searchText);
 
-      foreach (var contact in loadedContacts)
+      foreach (var contactViewModel in contactViewModels)
       {
-        if (this.contacts.Any(c => c.ChatAddress == contact.ChatAddress))
+        if (this.contacts.Any(c => c.Contact.ChatAddress == contactViewModel.Contact.ChatAddress))
         {
           continue;
         }
 
-        this.contacts.Add(contact);
+        this.contacts.Add(contactViewModel);
       }
 
-      return new ObservableCollection<ContactListViewModel>(loadedContacts);
+      return new ObservableCollection<ContactListViewModel>(contactViewModels);
     }
 
     private void AddBotsToContacts()
@@ -158,7 +157,7 @@
           Rejected = false
         };
 
-        this.contacts.Add(ViewModelConverter.ContactToViewModel(botContact, this.viewCellObject));
+        this.contacts.Add(new ContactListViewModel(this.viewCellObject, botContact));
       }
     }
   }

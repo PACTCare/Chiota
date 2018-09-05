@@ -12,11 +12,11 @@
           Aspect="AspectFill"
           HorizontalOptions="Center"
           VerticalOptions="Center" 
-          Source="{Binding ImageHash}" >
+          Source="{Binding Contact.ImageHash}" >
       </controls:CircleImage>
       <StackLayout VerticalOptions="Center" HorizontalOptions="StartAndExpand" Padding="0,0,10,0">
-        <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold"></Label>
-        <Label Text="{Binding ChatAddress}" FontSize="10" TextColor="Gray"></Label>
+        <Label Text="{Binding Contact.Name}" FontSize="16" FontAttributes="Bold"></Label>
+        <Label Text="{Binding Contact.ChatAddress}" FontSize="10" TextColor="Gray"></Label>
       </StackLayout>
     </StackLayout>
   </ViewCell.View>

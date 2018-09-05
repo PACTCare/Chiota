@@ -8,6 +8,11 @@
   public static class MessageType
   {
     /// <summary>
+    /// The accept contact.
+    /// </summary>
+    public const string AcceptContact = "AcceptContact";
+
+    /// <summary>
     /// The key exchange.
     /// </summary>
     public const string KeyExchange = "KeyExchange";
@@ -22,7 +27,7 @@
     /// </summary>
     static MessageType()
     {
-      Types = new List<string> { RequestContact, KeyExchange };
+      Types = new List<string> { RequestContact, KeyExchange, AcceptContact };
     }
 
     /// <summary>

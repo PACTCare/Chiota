@@ -39,5 +39,10 @@
     /// Error code that is returned when contacts cannot be loaded
     /// </summary>
     ContactsUnavailable = -6,
+
+    /// <summary>
+    /// Error code that is returned when the password salt for the chat can not be generated
+    /// </summary>
+    ChatPasswordAndSaltCannotBeGenerated = -7
   }
 }

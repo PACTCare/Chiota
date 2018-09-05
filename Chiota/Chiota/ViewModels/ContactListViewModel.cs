@@ -1,118 +1,121 @@
 ﻿namespace Chiota.ViewModels
 {
-  using System.ComponentModel;
-  using System.Runtime.CompilerServices;
-  using System.Text;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Extensions;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.AcceptContact;
   using Chiota.Models;
   using Chiota.Persistence;
-  using Chiota.Services;
+  using Chiota.Popups.PopupModels;
+  using Chiota.Popups.PopupPageModels;
+  using Chiota.Popups.PopupPages;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Entity;
 
   using Xamarin.Forms;
 
-  public class ContactListViewModel : Contact
+  /// <summary>
+  /// The contact list view model.
+  /// </summary>
+  public class ContactListViewModel : BaseViewModel
   {
+    /// <summary>
+    /// The view cell object.
+    /// </summary>
     private readonly ViewCellObject viewCellObject;
 
-    private string poWText;
-
+    /// <summary>
+    /// The is clicked.
+    /// </summary>
     private bool isClicked;
 
-    public ContactListViewModel(ViewCellObject viewCellObject)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ContactListViewModel"/> class.
+    /// </summary>
+    /// <param name="viewCellObject">
+    /// The view cell object.
+    /// </param>
+    /// <param name="contact">
+    /// The contact.
+    /// </param>
+    public ContactListViewModel(ViewCellObject viewCellObject, Contact contact)
     {
-      this.PoWText = string.Empty;
       this.viewCellObject = viewCellObject;
-      this.ContactRepository = DependencyResolver.Resolve<AbstractSqlLiteContactRepository>();
+      this.Contact = contact;
     }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public AbstractSqlLiteContactRepository ContactRepository { get; }
 
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
 
     public ICommand DeclineCommand => new Command(async () => { await this.OnDecline(); });
 
-    public string PoWText
+    public Contact Contact { get; }
+
+    /// <summary>
+    /// The on accept.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
+    private async Task OnAccept()
     {
-      get => this.poWText;
-      set
+      await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(
+        new LoadingPopupPage(),
+        new LoadingPopupModel { Message = "Accepting Contact" });
+
+      var request = new AcceptContactRequest
+                      {
+                        UserName =
+                          Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string,
+                        UserImageHash =
+                          Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string,
+                        ChatAddress = new Address(this.Contact.ChatAddress),
+                        ChatKeyAddress = new Address(this.Contact.ChatKeyAddress),
+                        ContactAddress = new Address(this.Contact.ContactAddress),
+                        ContactPublicKeyAddress = new Address(this.Contact.PublicKeyAddress),
+                        UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                        UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                      };
+
+      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>();
+      var response = await interactor.ExecuteAsync(request);
+
+      await this.PopPopupAsync();
+
+      if (response.Code == ResponseCode.Success)
       {
-        this.poWText = value;
-        this.RaisePropertyChanged();
+        this.viewCellObject.RefreshContacts = true;
+      }
+      else
+      {
+        await this.Navigation.DisplayAlertAsync("Error", "An error occured while adding the contact.");
       }
     }
 
+    /// <summary>
+    /// The on decline.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
     private async Task OnDecline()
     {
       if (!this.isClicked)
       {
         this.isClicked = true;
-        await this.ContactRepository.AddContactAsync(this.ChatAddress, false, UserService.CurrentUser.PublicKeyAddress);
-        this.viewCellObject.RefreshContacts = true;
-        this.isClicked = false;
-      }
-    }
-
-    private async Task OnAccept()
-    {
-      if (!this.isClicked)
-      {
-        this.isClicked = true;
-        this.PoWText = " Proof-of-work in progress!";
-
-        await this.SaveParallelAcceptAsync();
+        await DependencyResolver.Resolve<AbstractSqlLiteContactRepository>().AddContactAsync(
+          this.Contact.ChatAddress,
+          false,
+          UserService.CurrentUser.PublicKeyAddress);
 
         this.viewCellObject.RefreshContacts = true;
         this.isClicked = false;
       }
-    }
-
-    private async Task SaveParallelAcceptAsync()
-    {
-      var encryptedChatKeyToTangle = this.GenerateChatKeyToTangle();
-      var saveSqlContact = this.ContactRepository.AddContactAsync(this.ChatAddress, true, UserService.CurrentUser.PublicKeyAddress);
-
-      var contact = new Contact
-                      {
-                        Name =
-                          Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as
-                            string,
-                        ImageHash =
-                          Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as
-                            string,
-                        ChatAddress = this.ChatAddress,
-                        ChatKeyAddress = this.ChatKeyAddress,
-                        ContactAddress = null,
-                        PublicKeyAddress = UserService.CurrentUser.PublicKeyAddress,
-                        Rejected = false,
-                        Request = false,
-                        NtruKey = null
-                      };
-
-      var chatInformationToTangle = UserService.CurrentUser.TangleMessenger.SendMessageAsync(IotaHelper.ObjectToTryteString(contact), this.ContactAddress);
-      await Task.WhenAll(saveSqlContact, chatInformationToTangle, encryptedChatKeyToTangle);
-    }
-
-    private async Task<Task<bool>> GenerateChatKeyToTangle()
-    {
-      var contacts = await IotaHelper.GetPublicKeysAndContactAddresses(UserService.CurrentUser.TangleMessenger, this.PublicKeyAddress);
-      var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, this.ChatKeyAddress);
-      var encryptedChatPasSalt = new NtruKex(true).Encrypt(contacts[0].NtruKey, Encoding.UTF8.GetBytes(pasSalt));
-      return UserService.CurrentUser.TangleMessenger.SendMessageAsync(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + ChiotaConstants.End), this.ChatKeyAddress);
-    }
-
-    public void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    {
-      this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }
