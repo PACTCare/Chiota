@@ -7,6 +7,8 @@
   using Chiota.Annotations;
   using Chiota.Models;
   using Chiota.Resources.Settings;
+  using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
@@ -15,6 +17,7 @@
   using Plugin.Media;
   using Plugin.Media.Abstractions;
 
+  using Tangle.Net.Entity;
   using Tangle.Net.Repository;
 
   using Xamarin.Forms;
@@ -161,15 +164,20 @@
       }
       else
       {
-        if (this.mediaFile?.Path != null)
+        if (this.Username != UserService.CurrentUser.Name || this.mediaFile?.Path != null)
         {
-          UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
-          this.mediaFile.Dispose();
+          await this.DisplayAlertAsync("Error", "I need to be a PW prompt. It is needed to change username and password");
+
+          //if (this.mediaFile?.Path != null)
+          //{
+          //  UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
+          //  this.mediaFile.Dispose();
+          //}
         }
 
         await this.ApplicationSettings.Save();
+        DependencyResolver.Reload();
 
-        // UserService.CurrentUser.TangleMessenger = new TangleMessenger(new Seed(UserService.CurrentUser.Seed));
         this.DisplaySettingsChangedPrompt();
       }
     }
