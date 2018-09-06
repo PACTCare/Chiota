@@ -4,6 +4,8 @@
 
   using Chiota.Annotations;
   using Chiota.Pages.BackUp;
+  using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
@@ -24,6 +26,13 @@
     public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.UserProperties.Seed.Value); });
 
     public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.UserProperties.Seed.Value); });
+
+    public ICommand CopyToClipboardCommand =>
+      new Command(
+        () =>
+          {
+            DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
+          });
 
     private UserCreationProperties UserProperties { get; set; }
 

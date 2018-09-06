@@ -41,6 +41,8 @@
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="Copy to Clipboard" FontAttributes="Bold" Command="{Binding CopyToClipboardCommand}"/>
+                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgLeastSecure}" HorizontalOptions="Center"/>
                     </StackLayout>
                 </StackLayout>
