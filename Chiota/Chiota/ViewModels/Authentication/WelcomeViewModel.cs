@@ -1,64 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.ViewModels.Classes;
-using Chiota.Pages.Authentication;
-using Chiota.Pages.Help;
-using Xamarin.Forms;
-
-namespace Chiota.ViewModels.Authentication
+﻿namespace Chiota.ViewModels.Authentication
 {
-    public class WelcomeViewModel : BaseViewModel
-    {
-        #region Commands
+  using System.Windows.Input;
 
-        #region NewSeed
+  using Chiota.Pages.Authentication;
+  using Chiota.Pages.Help;
+  using Chiota.ViewModels.Classes;
 
-        public ICommand NewSeedCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    //Show register page.
-                    await PushAsync(new NewSeedPage());
-                });
-            }
-        }
+  using Xamarin.Forms;
 
-        #endregion
+  /// <summary>
+  /// The welcome view model.
+  /// </summary>
+  public class WelcomeViewModel : BaseViewModel
+  {
+    public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
 
-        #region SetSeed
+    public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
 
-        public ICommand SetSeedCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new SetSeedPage());
-                });
-            }
-        }
-
-        #endregion
-
-        #region SeedHelp
-
-        public ICommand SeedHelpCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new SeedHelpPage());
-                });
-            }
-        }
-
-        #endregion
-
-        #endregion
-    }
+    public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedPage()); });
+  }
 }

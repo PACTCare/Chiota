@@ -2,10 +2,7 @@
 {
   using System;
 
-  using Chiota.Messenger.Entity;
-  using Chiota.Models;
-  using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Storage;
+  using Chiota.Pages.Authentication;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
 
@@ -84,11 +81,10 @@
       this.ContactsList.EndRefresh();
     }
 
-    private async void HandleLogoutClick(object sender, EventArgs e)
+    private void HandleLogoutClick(object sender, EventArgs e)
     {
-      new SecureStorage().DeleteUser();
-      //Application.Current.MainPage = new NavigationPage(DependencyResolver.Resolve<INavigationService>().LoginEntryPoint);
-      //this.Navigation.PopToRootAsync(true);
+      UserService.SetCurrentUser(null);
+      Application.Current.MainPage = new NavigationPage(new LogInPage());
     }
   }
 }

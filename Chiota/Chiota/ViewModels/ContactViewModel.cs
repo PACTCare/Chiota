@@ -67,7 +67,11 @@
     public void OnDisappearing()
     {
       // resets everything, reloads new messages contacts, public key check, etc.
-      UserService.CurrentUser.TangleMessenger.ShortStorageAddressList = new List<string>();
+      if (UserService.CurrentUser != null)
+      {
+        UserService.CurrentUser.TangleMessenger.ShortStorageAddressList = new List<string>();
+      }
+
       this.PageIsShown = false;
     }
 

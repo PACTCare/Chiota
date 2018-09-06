@@ -1,141 +1,147 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Exceptions;
-using Chiota.Extensions;
-using Chiota.ViewModels.Classes;
-using ImageCircle.Forms.Plugin.Abstractions;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
-using Xamarin.Forms;
-
-namespace Chiota.ViewModels.Authentication
+﻿namespace Chiota.ViewModels.Authentication
 {
-    public class SetUserViewModel : BaseViewModel
+  using System;
+  using System.Windows.Input;
+
+  using Chiota.Annotations;
+  using Chiota.Exceptions;
+  using Chiota.Extensions;
+  using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
+  using Chiota.Views;
+
+  using Plugin.FilePicker;
+
+  using Xamarin.Forms;
+
+  /// <summary>
+  /// The set user view model.
+  /// </summary>
+  public class SetUserViewModel : BaseViewModel
+  {
+    private string name;
+
+    private double profileImageOpacity;
+
+    private ImageSource profileImageSource;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SetUserViewModel"/> class.
+    /// </summary>
+    /// <param name="userService">
+    /// The user service.
+    /// </param>
+    public SetUserViewModel(UserService userService)
     {
-        #region Attributes
-
-        private string _name;
-        private double _profileImageOpacity;
-        private ImageSource _profileImageSource;
-
-        #endregion
-
-        #region Properties
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        public double ProfileImageOpacity
-        {
-            get => _profileImageOpacity;
-            set
-            {
-                _profileImageOpacity = value;
-                OnPropertyChanged(nameof(ProfileImageOpacity));
-            }
-        }
-
-        public ImageSource ProfileImageSource
-        {
-            get => _profileImageSource;
-            set
-            {
-                _profileImageSource = value;
-                OnPropertyChanged(nameof(ProfileImageSource));
-            }
-        }
-
-        #endregion
-
-        #region Init
-
-        public override void Init(object data = null)
-        {
-            base.Init(data);
-
-            //Set the default opacity.
-            ProfileImageSource = ImageSource.FromFile("account.png");
-            ProfileImageOpacity = 0.6;
-        }
-
-        #endregion
-
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            //Clear the user inputs.
-            Name = "";
-        }
-
-        #endregion
-
-        #region Commands
-
-        #region ProfileImage
-
-        public ICommand ProfileImageCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    //Open the file explorer of the device and the user choose a image.
-                    var fileData = await CrossFilePicker.Current.PickFile();
-                    if (fileData == null)
-                        return;
-
-                    try
-                    {
-                        //Load the image.
-                        var stream = fileData.GetStream();
-                        ProfileImageSource = ImageSource.FromStream(() => stream);
-                        ProfileImageOpacity = 1;
-                    }
-                    catch (Exception)
-                    {
-                        await new FailedLoadingFileException(new ExcInfo()).ShowAlertAsync();
-                        return;
-                    }
-                });
-            }
-        }
-
-        #endregion
-
-        #region Continue
-
-        public ICommand ContinueCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    if (!string.IsNullOrEmpty(Name))
-                    {
-                        //TODO Navigate to the contact page.
-                        //await PushAsync(new RegisterPage());
-                        return;
-                    }
-
-                    await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
-                });
-            }
-        }
-
-        #endregion
-
-        #endregion
+      this.UserService = userService;
     }
+
+    [UsedImplicitly]
+    public ICommand ContinueCommand
+    {
+      get
+      {
+        return new Command(
+          async () =>
+            {
+              if (string.IsNullOrEmpty(this.Name))
+              {
+                await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
+                return;
+              }
+
+              await this.DisplayLoadingSpinnerAsync("Setting up your account");
+              this.UserProperties.Name = this.Name;
+              await this.UserService.CreateNew(this.UserProperties);
+              await this.PopPopupAsync();
+
+              Application.Current.MainPage = new NavigationPage(new ContactPage());
+            });
+      }
+    }
+
+    public string Name
+    {
+      get => this.name;
+      set
+      {
+        this.name = value;
+        this.OnPropertyChanged(nameof(this.Name));
+      }
+    }
+
+    [UsedImplicitly]
+    public ICommand ProfileImageCommand
+    {
+      get
+      {
+        return new Command(
+          async () =>
+            {
+              // Open the file explorer of the device and the user choose a image.
+              var fileData = await CrossFilePicker.Current.PickFile();
+              if (fileData == null)
+              {
+                return;
+              }
+
+              try
+              {
+                // Load the image.
+                this.ProfileImageSource = ImageSource.FromStream(() => fileData.GetStream());
+                this.ProfileImageOpacity = 1;
+              }
+              catch (Exception)
+              {
+                await new FailedLoadingFileException(new ExcInfo()).ShowAlertAsync();
+              }
+            });
+      }
+    }
+
+    public double ProfileImageOpacity
+    {
+      get => this.profileImageOpacity;
+      set
+      {
+        this.profileImageOpacity = value;
+        this.OnPropertyChanged(nameof(this.ProfileImageOpacity));
+      }
+    }
+
+    public ImageSource ProfileImageSource
+    {
+      get => this.profileImageSource;
+      set
+      {
+        this.profileImageSource = value;
+        this.OnPropertyChanged(nameof(this.ProfileImageSource));
+      }
+    }
+
+    private UserCreationProperties UserProperties { get; set; }
+
+    private UserService UserService { get; }
+
+    /// <inheritdoc />
+    public override void Init(object data = null)
+    {
+      base.Init(data);
+
+      this.UserProperties = data as UserCreationProperties;
+
+      // Set the default opacity.
+      this.ProfileImageSource = ImageSource.FromFile("account.png");
+      this.ProfileImageOpacity = 0.6;
+    }
+
+    /// <inheritdoc />
+    protected override void ViewIsAppearing()
+    {
+      base.ViewIsAppearing();
+
+      // Clear the user inputs.
+      this.Name = string.Empty;
+    }
+  }
 }

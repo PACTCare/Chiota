@@ -1,123 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Exceptions;
-using Chiota.Extensions;
-using Chiota.ViewModels.Classes;
-using Chiota.Pages.Authentication;
-using Chiota.Pages.Help;
-using Tangle.Net.Utils;
-using Xamarin.Forms;
-using ZXing.Net.Mobile.Forms;
-
-namespace Chiota.ViewModels.Authentication
+﻿namespace Chiota.ViewModels.Authentication
 {
-    public class LogInViewModel : BaseViewModel
+  using System.Windows.Input;
+
+  using Chiota.Exceptions;
+  using Chiota.Extensions;
+  using Chiota.Pages.Authentication;
+  using Chiota.Pages.Help;
+  using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
+  using Chiota.Views;
+
+  using Xamarin.Forms;
+
+  /// <summary>
+  /// The log in view model.
+  /// </summary>
+  public class LogInViewModel : BaseViewModel
+  {
+    /// <summary>
+    /// The _password.
+    /// </summary>
+    private string password;
+
+    /// <summary>
+    /// Gets the log in command.
+    /// </summary>
+    public ICommand LogInCommand
     {
-        #region Attributes
-
-        private string _password;
-
-        #endregion
-
-        #region Properties
-
-        public string Password
-        {
-            get => _password;
-            set
+      get
+      {
+        return new Command(
+          async () =>
             {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
-        }
+              try
+              {
+                await this.DisplayLoadingSpinnerAsync("Logging you in ...");
 
-        #endregion
+                await SecureStorage.LoginUser(this.Password);
+                Application.Current.MainPage = new NavigationPage(new ContactPage());
 
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            //Clear the user inputs.
-            Password = "";
-        }
-
-        #endregion
-
-        #region Commands
-
-        #region LogIn
-
-        public ICommand LogInCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    //Check password.
-                    if (false)
-                    {
-                        //TODO Navigate to contact page.
-                        //await PushAsync(new SetUserPage());
-                        return;
-                    }
-
-                    await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
-                });
-            }
-        }
-
-        #endregion
-
-        #region NewSeed
-
-        public ICommand NewSeedCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    //Show register page.
-                    await PushAsync(new NewSeedPage());
-                });
-            }
-        }
-
-        #endregion
-
-        #region SetSeed
-
-        public ICommand SetSeedCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new SetSeedPage());
-                });
-            }
-        }
-
-        #endregion
-
-        #region SeedHelp
-
-        public ICommand SeedHelpCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync(new SeedHelpPage());
-                });
-            }
-        }
-
-        #endregion
-
-        #endregion
+                await this.PopPopupAsync();
+              }
+              catch (BaseException exception)
+              {
+                await exception.ShowAlertAsync();
+              }
+            });
+      }
     }
+
+    public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
+
+    public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
+
+    public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedPage()); });
+
+    /// <summary>
+    /// Gets or sets the password.
+    /// </summary>
+    public string Password
+    {
+      get => this.password;
+      set
+      {
+        this.password = value;
+        this.OnPropertyChanged(nameof(this.Password));
+      }
+    }
+
+    /// <inheritdoc />
+    protected override void ViewIsAppearing()
+    {
+      base.ViewIsAppearing();
+
+      // Clear the user inputs.
+      this.Password = string.Empty;
+    }
+  }
 }

@@ -3,6 +3,7 @@
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Annotations;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
@@ -47,8 +48,10 @@
       this.DeclineContactInteractor = declineContactInteractor;
     }
 
+    [UsedImplicitly]
     public ICommand AcceptCommand => new Command(async () => { await this.OnAccept(); });
 
+    [UsedImplicitly]
     public ICommand DeclineCommand => new Command(async () => { await this.OnDecline(); });
 
     public Contact Contact { get; }
@@ -72,10 +75,8 @@
       var response = await this.AcceptContactInteractor.ExecuteAsync(
                        new AcceptContactRequest
                          {
-                           UserName =
-                             Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string,
-                           UserImageHash =
-                             Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string,
+                           UserName = UserService.CurrentUser.Name,
+                           UserImageHash = UserService.CurrentUser.ImageHash,
                            ChatAddress = new Address(this.Contact.ChatAddress),
                            ChatKeyAddress = new Address(this.Contact.ChatKeyAddress),
                            ContactAddress = new Address(this.Contact.ContactAddress),

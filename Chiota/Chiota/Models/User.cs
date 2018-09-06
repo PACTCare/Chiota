@@ -2,6 +2,8 @@
 {
   using Chiota.Services.Iota;
 
+  using Newtonsoft.Json;
+
   using Tangle.Net.Entity;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
@@ -18,19 +20,12 @@
 
     public bool StoreSeed { get; set; }
 
-    /// <summary>
-    /// Gets or sets Chat Key Pair
-    /// </summary>
+    [JsonIgnore]
     public IAsymmetricKeyPair NtruKeyPair { get; set; }
 
-    /// <summary>
-    /// Gets or sets Seed, never upload or store!
-    /// </summary>
-    public Seed Seed { get; set; }
+    public string Seed { get; set; }
 
-    /// <summary>
-    /// Gets or sets TangleMessenger, never upload or store!
-    /// </summary>
+    [JsonIgnore]
     public TangleMessenger TangleMessenger { get; set; }
   }
 }

@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chiota.ViewModels.Classes;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace Chiota.Pages.BackUp
+﻿namespace Chiota.Pages.BackUp
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ConfirmSeedPage : ContentPage
-	{
-		public ConfirmSeedPage ()
-		{
-			InitializeComponent ();
+  using Chiota.ViewModels.Classes;
 
-		    //Setup the pagemodel
-		    if (BindingContext is BaseViewModel viewmodel)
-		        viewmodel.Setup(this);
-        }
-	}
+  using Xamarin.Forms;
+  using Xamarin.Forms.Xaml;
+
+  /// <summary>
+  /// The confirm seed page.
+  /// </summary>
+  [XamlCompilation(XamlCompilationOptions.Compile)]
+  public partial class ConfirmSeedPage : ContentPage
+  {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfirmSeedPage"/> class.
+    /// </summary>
+    public ConfirmSeedPage()
+    {
+      this.InitializeComponent();
+
+      // Setup the pagemodel
+      if (this.BindingContext is BaseViewModel viewmodel)
+      {
+        viewmodel.Setup(this);
+      }
+    }
+  }
 }

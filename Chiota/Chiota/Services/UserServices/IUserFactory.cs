@@ -17,12 +17,12 @@
     /// <param name="seed">
     /// The seed.
     /// </param>
-    /// <param name="storeSeed">
-    /// The store Seed.
+    /// <param name="name">
+    /// The name.
     /// </param>
     /// <returns>
     /// The <see cref="User"/>.
     /// </returns>
-    Task<User> CreateAsync(Seed seed, bool storeSeed);
+    Task<User> CreateAsync(Seed seed, string name);
   }
 }

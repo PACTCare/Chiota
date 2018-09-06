@@ -1,37 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace Chiota.Controls.Validations
+﻿namespace Chiota.Controls.Validations
 {
-    public class SeedValidationEntry : ValidationEntry
+  using Chiota.ViewModels.Authentication;
+  using Chiota.ViewModels.BackUp;
+
+  using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
+
+  using Xamarin.Forms;
+
+  /// <summary>
+  /// The seed validation entry.
+  /// </summary>
+  public class SeedValidationEntry : ValidationEntry
+  {
+    public SeedValidationEntry()
     {
-        #region Methods
-
-        #region Validate
-
-        protected override bool Validate(string text)
-        {
-            IsValid = false;
-            if (string.IsNullOrEmpty(text))
-                return false;
-
-            // Return true if strIn is in valid email format.
-            try
-            {
-                return Regex.IsMatch(text,
-                    @"([A-Z,9]{81})",
-                    RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
-
-        #endregion
-
-        #endregion
+      this.entry.TextChanged += this.OnTextChanged;
     }
+
+    protected override bool Validate(string text)
+    {
+      this.IsValid = false;
+      return !string.IsNullOrEmpty(text) && InputValidator.IsTrytes(text, Seed.Length);
+    }
+
+    private void OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+      if (this.BindingContext is ConfirmSeedViewModel confirmSeedModel)
+      {
+        confirmSeedModel.Seed = this.entry.Text;
+      }
+
+      if (this.BindingContext is SetSeedViewModel setSeedModel)
+      {
+        setSeedModel.Seed = this.entry.Text;
+      }
+    }
+  }
 }

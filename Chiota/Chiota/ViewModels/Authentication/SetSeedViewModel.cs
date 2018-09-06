@@ -1,112 +1,100 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Exceptions;
-using Chiota.Extensions;
-using Chiota.ViewModels.Classes;
-using Chiota.Pages.Authentication;
-using Chiota.Pages.BackUp;
-using Chiota.Popups.PopupModels;
-using Chiota.Popups.PopupPageModels;
-using Chiota.Popups.PopupPages;
-using Tangle.Net.Utils;
-using Xamarin.Forms;
-using ZXing.Net.Mobile.Forms;
-
-namespace Chiota.ViewModels.Authentication
+﻿namespace Chiota.ViewModels.Authentication
 {
-    public class SetSeedViewModel : BaseViewModel
+  using System.Windows.Input;
+
+  using Chiota.Exceptions;
+  using Chiota.Extensions;
+  using Chiota.Pages.Authentication;
+  using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
+
+  using Tangle.Net.Entity;
+  using Tangle.Net.Utils;
+
+  using Xamarin.Forms;
+
+  using ZXing.Net.Mobile.Forms;
+
+  /// <summary>
+  /// The set seed view model.
+  /// </summary>
+  public class SetSeedViewModel : BaseViewModel
+  {
+    /// <summary>
+    /// The _seed.
+    /// </summary>
+    private string seed;
+
+    public ICommand ContinueCommand
     {
-        #region Attributes
-
-        private string _seed;
-
-        #endregion
-
-        #region Properties
-
-        public string Seed
-        {
-            get => _seed;
-            set
+      get
+      {
+        return new Command(
+          async () =>
             {
-                _seed = value;
-                OnPropertyChanged(nameof(Seed));
-            }
-        }
-
-        #endregion
-
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            //Clear the user inputs.
-            Seed = "";
-        }
-
-        #endregion
-
-        #region Commands
-
-        #region ScanQrCode
-
-        public ICommand ScanQrCodeCommand
-        {
-            get
-            {
-                return new Command(async () =>
+              if (!string.IsNullOrEmpty(this.Seed))
+              {
+                if (!InputValidator.IsTrytes(this.Seed))
                 {
-                    //Scan a qr code and insert the result into the entry.
-                    var scanPage = new ZXingScannerPage();
-                    scanPage.OnScanResult += (result) =>
-                    {
-                        scanPage.IsScanning = false;
+                  await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
+                  return;
+                }
 
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            Navigation.PopAsync();
-                            Seed = result.Text;
-                        });
-                    };
+                await this.PushAsync(new SetPasswordPage(), new UserCreationProperties { Seed = new Seed(this.Seed) });
+                return;
+              }
 
-                    await PushAsync(scanPage);
-                });
-            }
-        }
-
-        #endregion
-
-        #region Continue
-
-        public ICommand ContinueCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    if (!string.IsNullOrEmpty(Seed))
-                    {
-                        if (!InputValidator.IsTrytes(Seed))
-                        {
-                            await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
-                            return;
-                        }
-
-                        await PushAsync(new SetPasswordPage());
-                        return;
-                    }
-
-                    await new MissingUserInputException(new ExcInfo(), Details.AuthMissingSeed).ShowAlertAsync();
-                });
-            }
-        }
-
-        #endregion
-
-        #endregion
+              await new MissingUserInputException(new ExcInfo(), Details.AuthMissingSeed).ShowAlertAsync();
+            });
+      }
     }
+
+    public ICommand ScanQrCodeCommand
+    {
+      get
+      {
+        return new Command(
+          async () =>
+            {
+              // Scan a qr code and insert the result into the entry.
+              var scanPage = new ZXingScannerPage();
+              scanPage.OnScanResult += (result) =>
+                {
+                  scanPage.IsScanning = false;
+
+                  Device.BeginInvokeOnMainThread(
+                    () =>
+                      {
+                        this.Navigation.PopAsync();
+                        this.Seed = result.Text;
+                      });
+                };
+
+              await this.PushAsync(scanPage);
+            });
+      }
+    }
+
+    /// <summary>
+    /// Gets or sets the seed.
+    /// </summary>
+    public string Seed
+    {
+      get => this.seed;
+      set
+      {
+        this.seed = value;
+        this.OnPropertyChanged(nameof(this.Seed));
+      }
+    }
+
+    /// <inheritdoc />
+    protected override void ViewIsAppearing()
+    {
+      base.ViewIsAppearing();
+
+      // Clear the user inputs.
+      this.Seed = string.Empty;
+    }
+  }
 }

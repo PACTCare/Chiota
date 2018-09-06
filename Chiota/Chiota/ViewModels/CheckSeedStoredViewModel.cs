@@ -6,6 +6,7 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Annotations;
   using Chiota.Models;
   using Chiota.Views;
 
@@ -26,7 +27,8 @@ namespace Chiota.ViewModels
 
     public ICommand SubmitCommand => new Command(async () => { await this.SeedCheck(); });
 
-    public ICommand BackCommand => new Command(async () => { await this.Back(); });
+    [UsedImplicitly]
+    public new ICommand BackCommand => new Command(async () => { await this.Back(); });
 
     public string SeedInput
     {
@@ -41,7 +43,7 @@ namespace Chiota.ViewModels
     private async Task SeedCheck()
     {
       this.SeedInput = this.SeedInput?.Trim();
-      if (this.user.Seed.ToString() != this.SeedInput)
+      if (this.user.Seed != this.SeedInput)
       {
         this.DisplayInvalidSeedPrompt();
       }

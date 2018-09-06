@@ -28,7 +28,7 @@
     <pages:PopupPage.Content>
         <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Spacing="32">
             <animated:AnimatedImage Source="Assets\loading.png" HeightRequest="128" WidthRequest="128" IsAnimated="{Binding PopupModel.IsAnimated, Mode=TwoWay}" Animation="Rotation" Interval="50" RotationValue="36"/>
-            <Label Style="{DynamicResource Label14}" Text="{Binding PopupModel.Message}"/>
+            <Label Style="{DynamicResource BasePopupLabel}" Text="{Binding PopupModel.Message}"/>
         </StackLayout>
     </pages:PopupPage.Content>
 </pages:PopupPage>

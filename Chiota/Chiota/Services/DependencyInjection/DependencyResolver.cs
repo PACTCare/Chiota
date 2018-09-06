@@ -62,6 +62,8 @@
 
       builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
 
+      builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
+
       foreach (var module in Modules)
       {
         builder.RegisterModule(module);
