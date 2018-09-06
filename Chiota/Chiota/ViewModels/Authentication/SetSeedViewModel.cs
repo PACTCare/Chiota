@@ -5,8 +5,10 @@
   using Chiota.Exceptions;
   using Chiota.Extensions;
   using Chiota.Pages.Authentication;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
+  using Tangle.Net.Entity;
   using Tangle.Net.Utils;
 
   using Xamarin.Forms;
@@ -38,7 +40,7 @@
                   return;
                 }
 
-                await this.PushAsync(new SetPasswordPage());
+                await this.PushAsync(new SetPasswordPage(), new UserCreationProperties { Seed = new Seed(this.Seed) });
                 return;
               }
 

@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Services.UserServices
 {
+  using System.Diagnostics.CodeAnalysis;
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
@@ -12,8 +13,7 @@
 
   using Tangle.Net.Entity;
 
-  using Xamarin.Forms;
-
+  [ExcludeFromCodeCoverage]
   public static class SecureStorage
   {
     private const string PasswordHash = "PasswordHash";

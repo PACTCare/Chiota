@@ -34,8 +34,12 @@
             {
               try
               {
+                await this.DisplayLoadingSpinnerAsync("Logging you in ...");
+
                 await SecureStorage.LoginUser(this.Password);
                 Application.Current.MainPage = new NavigationPage(new ContactPage());
+
+                await this.PopPopupAsync();
               }
               catch (BaseException exception)
               {
