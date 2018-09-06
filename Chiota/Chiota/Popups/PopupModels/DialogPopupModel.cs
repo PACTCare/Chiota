@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Chiota.Popups.Classes;
 using Chiota.Resources.Localizations;
 
@@ -18,6 +19,8 @@ namespace Chiota.Popups.PopupModels
         public string PosButtonText { get; set; }
         public string NegButtonText { get; set; }
         public bool IsNegButtonDefault { get; set; }
+
+        public Func<string, Task> OkCallback { get; set; }
 
         #endregion
 

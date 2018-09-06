@@ -5,7 +5,12 @@
   using System.Windows.Input;
 
   using Chiota.Annotations;
+  using Chiota.Exceptions;
+  using Chiota.Extensions;
   using Chiota.Models;
+  using Chiota.Popups.PopupModels;
+  using Chiota.Popups.PopupPageModels;
+  using Chiota.Popups.PopupPages;
   using Chiota.Resources.Settings;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
@@ -166,20 +171,49 @@
       {
         if (this.Username != UserService.CurrentUser.Name || this.mediaFile?.Path != null)
         {
-          await this.DisplayAlertAsync("Error", "I need to be a PW prompt. It is needed to change username and password");
+          await this.PushPopupAsync<DialogPopupPageModel, DialogPopupModel>(
+            new DialogPopupPage(),
+            new DialogPopupModel
+              {
+                Title = "Password required to change name or image.",
+                IsPassword = true,
+                OkCallback = async (password) =>
+                  {
+                    try
+                    {
+                      SecureStorage.ValidatePassword(password);
 
-          //if (this.mediaFile?.Path != null)
-          //{
-          //  UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
-          //  this.mediaFile.Dispose();
-          //}
+                      if (this.mediaFile?.Path != null)
+                      {
+                        UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
+                        this.mediaFile.Dispose();
+                      }
+
+                      UserService.CurrentUser.Name = this.Username;
+                      SecureStorage.UpdateUser(password);
+
+                      await this.SaveApplicationSettings();
+                    }
+                    catch (BaseException exception)
+                    {
+                      await exception.ShowAlertAsync();
+                    }
+                  }
+              });
         }
-
-        await this.ApplicationSettings.Save();
-        DependencyResolver.Reload();
-
-        this.DisplaySettingsChangedPrompt();
+        else
+        {
+          await this.SaveApplicationSettings();
+        }
       }
+    }
+
+    private async Task SaveApplicationSettings()
+    {
+      await this.ApplicationSettings.Save();
+      DependencyResolver.Reload();
+
+      await this.DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
     }
   }
 }

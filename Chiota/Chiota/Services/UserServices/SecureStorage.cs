@@ -86,7 +86,7 @@
       CrossSecureStorage.Current.SetValue(CurrentUser, encryptedUser);
     }
 
-    private static void ValidatePassword(string password)
+    public static void ValidatePassword(string password)
     {
       var passwordHash = UserDataEncryption.Hash(password);
       if (passwordHash != CrossSecureStorage.Current.GetValue(PasswordHash))
