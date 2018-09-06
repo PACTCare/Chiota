@@ -16,7 +16,7 @@
   using Chiota.Persistence;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Storage;
+  using Chiota.Services.UserServices;
 
   using Java.Lang;
 
@@ -39,13 +39,12 @@
       if (CrossConnectivity.Current.IsConnected)
       {
         // seed needs to be stored on device!!
-        var secureStorage = new SecureStorage();
         if (!SecureStorage.IsUserStored)
         {
           return true;
         }
 
-        var user = await secureStorage.GetUser();
+        var user = await SecureStorage.GetUser();
         if (user == null)
         {
           return true;

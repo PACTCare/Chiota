@@ -15,6 +15,7 @@ namespace Chiota.ViewModels
   using Plugin.Media;
   using Plugin.Media.Abstractions;
 
+  using Tangle.Net.Entity;
   using Tangle.Net.Repository;
 
   using Xamarin.Forms;
@@ -148,7 +149,7 @@ namespace Chiota.ViewModels
         Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
         Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
         await Application.Current.SavePropertiesAsync();
-        UserService.CurrentUser.TangleMessenger = new TangleMessenger(UserService.CurrentUser.Seed);
+        UserService.CurrentUser.TangleMessenger = new TangleMessenger(new Seed(UserService.CurrentUser.Seed));
         this.DisplaySettingsChangedPrompt();
       }
     }

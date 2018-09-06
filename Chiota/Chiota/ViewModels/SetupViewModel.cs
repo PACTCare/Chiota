@@ -9,9 +9,7 @@ namespace Chiota.ViewModels
   using Chiota.Events;
   using Chiota.Models;
   using Chiota.Services;
-  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Ipfs;
-  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
 
   using Plugin.Media;
@@ -121,7 +119,7 @@ namespace Chiota.ViewModels
 
         await StoreUserData(user);
         await StorePublicKeyOnTangle(user);
-        new SecureStorage().StoreUser(user);
+        SecureStorage.StoreUser(user, "");
 
         // Fire setup completed event to allow consumers to add behaviour
         SetupCompleted?.Invoke(this, new SetupEventArgs { User = user });

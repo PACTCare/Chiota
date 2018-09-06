@@ -40,7 +40,7 @@
         var addresses = new List<Address> { new Address(this.user.PublicKeyAddress) };
         do
         {
-          var newSeed = this.user.Seed.ToString().Substring(0, 75) + addresses[0].ToString().Substring(0, 6);
+          var newSeed = this.user.Seed.Substring(0, 75) + addresses[0].ToString().Substring(0, 6);
           var addressGenerator = new AddressGenerator(new Kerl(), new KeyGenerator(new Kerl(), new IssSigningHelper()));
           addresses = await Task.Factory.StartNew(() => addressGenerator.GetAddresses(new Seed(newSeed), SecurityLevel.Medium, 0, 1));
 

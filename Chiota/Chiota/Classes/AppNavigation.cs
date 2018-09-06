@@ -2,7 +2,7 @@
 {
   using Chiota.Pages.Authentication;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Storage;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Xamarin.Forms;

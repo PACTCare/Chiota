@@ -6,7 +6,6 @@
 
   using Chiota.Models;
   using Chiota.Services;
-  using Chiota.Services.Storage;
 
   using Windows.ApplicationModel.Background;
   using Windows.UI.Notifications;
@@ -17,6 +16,7 @@
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
 
@@ -70,14 +70,12 @@
 
     private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-      // Should be moved to the runtime component, but it's not possible to set a reference to Chiota
-      var secureStorage = new SecureStorage();
       if (!SecureStorage.IsUserStored)
       {
         return;
       }
 
-      var user = await secureStorage.GetUser();
+      var user = await SecureStorage.GetUser();
       if (user == null)
       {
         return;

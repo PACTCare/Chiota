@@ -3,13 +3,15 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Service;
   using Chiota.Models;
-  using Chiota.Services.Iota;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
 
-  using Xamarin.Forms;
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
+
+  using TangleMessenger = Iota.TangleMessenger;
 
   /// <inheritdoc />
   public class UserFactory : IUserFactory
@@ -17,38 +19,21 @@
     /// <inheritdoc />
     public async Task<User> CreateAsync(Seed seed, string name)
     {
-      var addresses = await GenerateChiotaAddresses(seed);
-      
-      // First time set default values
-      if (!Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsImageKey + addresses[0].Value))
-      {
-        Application.Current.Properties[ChiotaConstants.SettingsImageKey + addresses[0].Value] = "QmSZQmqVyaQmuHWnPK8hiDaifTY66KPJ7XcBNHBJvsfLEM"; // Default image
-        Application.Current.Properties[ChiotaConstants.SettingsNameKey + addresses[0].Value] = name;
-        Application.Current.Properties[ChiotaConstants.SettingsPowKey] = true;
-        Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = "https://field.deviota.com:443";
-        await Application.Current.SavePropertiesAsync();
-      }
+      // addresses can be generated based on each other to make it faster
+      var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 1));
+      addresses.Add(Helper.GenerateAddress(addresses[0]));
 
       return new User
                {
                  Name = name,
-                 Seed = seed,
+                 Seed = seed.Value,
                  ImageHash = null,
                  StoreSeed = true,
                  PublicKeyAddress = addresses[0].Value, 
                  RequestAddress = addresses[1].Value,
                  TangleMessenger = new TangleMessenger(seed),
-                 NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(seed.ToString().ToLower(), addresses[0].Value) 
+                 NtruKeyPair = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(seed.ToString().ToLower(), addresses[0].Value) 
                };
-    }
-
-    private static async Task<List<Address>> GenerateChiotaAddresses(Seed seed)
-    {
-      // addresses can be generated based on each other to make it faster
-      var addresses = await Task.Run(() => new AddressGenerator().GetAddresses(seed, SecurityLevel.Medium, 0, 1));
-      addresses.Add(Helper.GenerateAddress(addresses[0]));
-
-      return addresses;
     }
   }
 }

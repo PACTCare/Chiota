@@ -43,10 +43,5 @@
       addressString = addressString.Substring(0, length - 12) + TryteStringIncrement(addressString.Substring(length - 12, 12));
       return new Address(addressString);
     }
-
-    public static string ImageNameGenerator(string name, string publicKeyAddress)
-    {
-      return publicKeyAddress.Substring(0, 10) + name;
-    }
   }
 }

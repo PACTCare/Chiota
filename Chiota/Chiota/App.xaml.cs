@@ -2,6 +2,7 @@
 {
   using Chiota.Classes;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.UserServices;
 
   /// <summary>
   /// The app.
@@ -31,7 +32,7 @@
     /// </summary>
     protected override void OnSleep()
     {
-      // Handle when your app sleeps
+      UserService.SetCurrentUser(null);
     }
 
     /// <summary>

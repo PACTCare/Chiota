@@ -6,6 +6,7 @@
   using Chiota.Extensions;
   using Chiota.Pages.Authentication;
   using Chiota.Pages.Help;
+  using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
   using Chiota.Views;
 
@@ -31,15 +32,15 @@
         return new Command(
           async () =>
             {
-              // Check password.
-              if (true)
+              try
               {
-                // TODO Navigate to contact page.
+                await SecureStorage.LoginUser(this.Password);
                 Application.Current.MainPage = new NavigationPage(new ContactPage());
-                return;
               }
-
-              await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
+              catch (BaseException exception)
+              {
+                await exception.ShowAlertAsync();
+              }
             });
       }
     }
