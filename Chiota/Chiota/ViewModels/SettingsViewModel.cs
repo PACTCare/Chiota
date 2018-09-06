@@ -109,9 +109,6 @@
       }
     }
 
-    /// <summary>
-    /// The get settings.
-    /// </summary>
     private void LoadSettings()
     {
       this.ApplicationSettings = ApplicationSettings.Load();
@@ -120,15 +117,9 @@
       this.Username = UserService.CurrentUser.Name;
     }
 
-    /// <summary>
-    /// The save settings.
-    /// </summary>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
     private async Task SaveSettings()
     {
-      if (RepositoryFactory.NodeIsHealthy(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri))
+      if (!RepositoryFactory.NodeIsHealthy(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri))
       {
         await this.DisplayAlertAsync("Unresponsive node", "The selected node does not seem to be in sync or is not responding!");
       }
