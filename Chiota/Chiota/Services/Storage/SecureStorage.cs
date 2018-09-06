@@ -15,10 +15,7 @@ namespace Chiota.Services.Storage
 
         private const string PublicKeyAddressKey = "approvedAdressKey";
 
-        public bool CheckUserStored()
-        {
-            return CrossSecureStorage.Current.HasKey(SeedKey) && CrossSecureStorage.Current.HasKey(RequestAddressKey);
-        }
+        public static bool IsUserStored => CrossSecureStorage.Current.HasKey(SeedKey) && CrossSecureStorage.Current.HasKey(RequestAddressKey);
 
         public async Task<User> GetUser()
         {

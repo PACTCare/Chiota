@@ -40,7 +40,7 @@
       {
         // seed needs to be stored on device!!
         var secureStorage = new SecureStorage();
-        if (!secureStorage.CheckUserStored())
+        if (!SecureStorage.IsUserStored)
         {
           return true;
         }

@@ -7,6 +7,7 @@
   using Chiota.Pages.Authentication;
   using Chiota.Pages.Help;
   using Chiota.ViewModels.Classes;
+  using Chiota.Views;
 
   using Xamarin.Forms;
 
@@ -34,7 +35,7 @@
               if (true)
               {
                 // TODO Navigate to contact page.
-                await this.PushAsync(new SetUserPage());
+                Application.Current.MainPage = new NavigationPage(new ContactPage());
                 return;
               }
 

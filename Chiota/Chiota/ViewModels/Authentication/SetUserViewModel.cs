@@ -3,6 +3,7 @@
   using System;
   using System.Windows.Input;
 
+  using Chiota.Annotations;
   using Chiota.Exceptions;
   using Chiota.Extensions;
   using Chiota.Services.UserServices;
@@ -35,6 +36,7 @@
       this.UserService = userService;
     }
 
+    [UsedImplicitly]
     public ICommand ContinueCommand
     {
       get
@@ -42,18 +44,18 @@
         return new Command(
           async () =>
             {
-              if (!string.IsNullOrEmpty(this.Name))
+              if (string.IsNullOrEmpty(this.Name))
               {
-                await this.DisplayLoadingSpinnerAsync("Setting up your account");
-                this.UserProperties.Name = this.Name;
-                await this.UserService.CreateNew(this.UserProperties);
-                await this.PopPopupAsync();
-
-                Application.Current.MainPage = new ContactPage();
+                await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
                 return;
               }
 
-              await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
+              await this.DisplayLoadingSpinnerAsync("Setting up your account");
+              this.UserProperties.Name = this.Name;
+              await this.UserService.CreateNew(this.UserProperties);
+              await this.PopPopupAsync();
+
+              Application.Current.MainPage = new NavigationPage(new ContactPage());
             });
       }
     }
@@ -68,6 +70,7 @@
       }
     }
 
+    [UsedImplicitly]
     public ICommand ProfileImageCommand
     {
       get

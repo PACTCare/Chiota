@@ -72,7 +72,7 @@
     {
       // Should be moved to the runtime component, but it's not possible to set a reference to Chiota
       var secureStorage = new SecureStorage();
-      if (!secureStorage.CheckUserStored())
+      if (!SecureStorage.IsUserStored)
       {
         return;
       }

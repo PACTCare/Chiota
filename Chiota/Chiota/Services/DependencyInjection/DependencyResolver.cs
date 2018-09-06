@@ -13,6 +13,7 @@
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota.Repository;
+  using Chiota.Services.Storage;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
 
@@ -63,6 +64,7 @@
       builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
+      builder.RegisterType<SecureStorage>().As<SecureStorage>();
 
       foreach (var module in Modules)
       {
