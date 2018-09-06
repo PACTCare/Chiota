@@ -53,7 +53,7 @@
            FontSize="16"
            TextColor="White" 
            Text="Remote Proof-of-Work:"></Label>
-    <Switch Grid.Row="2" Grid.Column="1"  IsToggled="{Binding RemotePow}"></Switch>
+        <Switch Grid.Row="2" Grid.Column="1"  IsToggled="{Binding ApplicationSettings.DoRemotePoW}"></Switch>
     <Label Grid.Row="3" Grid.Column="0" 
            FontSize="16"
            TextColor="White"
@@ -64,7 +64,7 @@
            TextColor="White"
            PlaceholderColor="LightGray"
            BackgroundColor="#1d4999"
-           Text="{Binding DefaultNode}" 
+           Text="{Binding ApplicationSettings.IotaNodeUri}" 
            Keyboard="Url"></Entry>
   </Grid>
   </Frame>

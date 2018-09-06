@@ -1,56 +1,83 @@
-﻿using Chiota.ViewModels.Classes;
-
-namespace Chiota.ViewModels
+﻿namespace Chiota.ViewModels
 {
   using System;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Annotations;
   using Chiota.Models;
-  using Chiota.Services.Iota;
+  using Chiota.Resources.Settings;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
 
   using Plugin.Media;
   using Plugin.Media.Abstractions;
 
-  using Tangle.Net.Entity;
   using Tangle.Net.Repository;
 
   using Xamarin.Forms;
 
+  /// <summary>
+  /// The settings view model.
+  /// </summary>
   public class SettingsViewModel : BaseViewModel
   {
+    /// <summary>
+    /// The display invalid node prompt.
+    /// </summary>
     public Action DisplayInvalidNodePrompt;
 
+    /// <summary>
+    /// The display settings changed prompt.
+    /// </summary>
     public Action DisplaySettingsChangedPrompt;
 
-    private bool remotePoW = true;
+    /// <summary>
+    /// The application settings.
+    /// </summary>
+    private ApplicationSettings applicationSettings;
 
-    private string username;
-
+    /// <summary>
+    /// The image source.
+    /// </summary>
     private string imageSource;
 
+    /// <summary>
+    /// The media file.
+    /// </summary>
     private MediaFile mediaFile;
 
-    private string defaultNode = "https://field.deviota.com:443";
+    /// <summary>
+    /// The username.
+    /// </summary>
+    private string username;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
+    /// </summary>
     public SettingsViewModel()
     {
-      this.GetSettings();
+      this.LoadSettings();
     }
 
-    public string Username
+    /// <summary>
+    /// Gets or sets the application settings.
+    /// </summary>
+    public ApplicationSettings ApplicationSettings
     {
-      get => this.username;
+      get => this.applicationSettings;
       set
       {
-        this.username = value;
+        this.applicationSettings = value;
         this.OnPropertyChanged();
       }
     }
 
+    /// <summary>
+    /// Gets or sets the image source.
+    /// </summary>
     public string ImageSource
     {
       get => this.imageSource;
@@ -61,30 +88,28 @@ namespace Chiota.ViewModels
       }
     }
 
-    public bool RemotePow
-    {
-      get => this.remotePoW;
-      set
-      {
-        this.remotePoW = value;
-        this.OnPropertyChanged();
-      }
-    }
+    [UsedImplicitly]
+    public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
 
-    public string DefaultNode
-    {
-      get => this.defaultNode;
-      set
-      {
-        this.defaultNode = value;
-        this.OnPropertyChanged();
-      }
-    }
-
+    [UsedImplicitly]
     public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
 
-    public ICommand PrivacyCommand => new Command(this.OpenPrivacyPolicy);
+    /// <summary>
+    /// Gets or sets the username.
+    /// </summary>
+    public string Username
+    {
+      get => this.username;
+      set
+      {
+        this.username = value;
+        this.OnPropertyChanged();
+      }
+    }
 
+    /// <summary>
+    /// The add image.
+    /// </summary>
     public async void AddImage()
     {
       await CrossMedia.Current.Initialize();
@@ -101,26 +126,29 @@ namespace Chiota.ViewModels
       }
     }
 
-    private void GetSettings()
+    /// <summary>
+    /// The get settings.
+    /// </summary>
+    private void LoadSettings()
     {
-      var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
-      this.RemotePow = remote == true;
-      this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
-      this.ImageSource = ChiotaConstants.IpfsHashGateway + Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string;
-      this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string;
+      this.ApplicationSettings = ApplicationSettings.Load();
+
+      this.ImageSource = ChiotaConstants.IpfsHashGateway + UserService.CurrentUser.ImageHash;
+      this.Username = UserService.CurrentUser.Name;
     }
 
-    private void OpenPrivacyPolicy()
-    {
-      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
-    }
-
+    /// <summary>
+    /// The save settings.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="Task"/>.
+    /// </returns>
     private async Task SaveSettings()
     {
       RestIotaRepository node;
       try
       {
-        node = RepositoryFactory.GenerateNode(this.RemotePow, this.DefaultNode);
+        node = RepositoryFactory.GenerateNode(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri);
       }
       catch
       {
@@ -135,21 +163,13 @@ namespace Chiota.ViewModels
       {
         if (this.mediaFile?.Path != null)
         {
-          //var imageStream = await ImageService.Instance
-          //                    .LoadFile(this.mediaFile.Path)
-          //                    .DownSample(300)
-          //                    .AsJPGStreamAsync();
-
           UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
           this.mediaFile.Dispose();
         }
 
-        Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] = UserService.CurrentUser.ImageHash;
-        Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] = this.Username;
-        Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
-        Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
-        await Application.Current.SavePropertiesAsync();
-        UserService.CurrentUser.TangleMessenger = new TangleMessenger(new Seed(UserService.CurrentUser.Seed));
+        await this.ApplicationSettings.Save();
+
+        // UserService.CurrentUser.TangleMessenger = new TangleMessenger(new Seed(UserService.CurrentUser.Seed));
         this.DisplaySettingsChangedPrompt();
       }
     }

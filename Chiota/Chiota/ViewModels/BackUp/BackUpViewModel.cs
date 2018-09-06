@@ -29,12 +29,11 @@
 
     public ICommand CopyToClipboardCommand =>
       new Command(
-        () =>
+        async () =>
           {
             DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
+            await this.DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
           });
-
-    private UserCreationProperties UserProperties { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether is continue visible.
@@ -48,6 +47,8 @@
         this.OnPropertyChanged(nameof(this.IsContinueVisible));
       }
     }
+
+    private UserCreationProperties UserProperties { get; set; }
 
     /// <inheritdoc />
     public override void Init(object data = null)

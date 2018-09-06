@@ -67,12 +67,6 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Pages\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\CheckSeedStoredPage.xaml.cs">
-      <DependentUpon>CheckSeedStoredPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Pages\SetupPage.xaml.cs">
-      <DependentUpon>SetupPage.xaml</DependentUpon>
-    </Compile>
     <Compile Update="Resources\Localizations\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -155,9 +149,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\BotChatPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Pages\CheckSeedStoredPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\ContactPage.xaml">
