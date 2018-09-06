@@ -34,10 +34,6 @@
         return new Command(
           async () =>
             {
-              // TODO: Seed does not get written to
-              await this.PushAsync(new SetPasswordPage(), this.UserProperties);
-              return;
-
               if (!string.IsNullOrEmpty(this.Seed))
               {
                 if (!InputValidator.IsTrytes(this.Seed))
