@@ -28,14 +28,6 @@
     {
       var user = UserService.CurrentUser;
 
-      // old version check
-      if (!Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsImageKey + user.PublicKeyAddress))
-      {
-        return null;
-      }
-
-      user.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(user.Seed.ToLower(), user.PublicKeyAddress);
-
       try
       {
         return await new UserDataOnTangle(user).UniquePublicKey();
@@ -61,6 +53,8 @@
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
 
       decryptedUser.TangleMessenger = new TangleMessenger(new Seed(decryptedUser.Seed));
+      decryptedUser.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
+
       UserService.SetCurrentUser(decryptedUser);
 
       await GetUser();
