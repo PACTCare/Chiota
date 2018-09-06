@@ -13,7 +13,6 @@
   using Chiota.Popups.PopupPages;
   using Chiota.Resources.Settings;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
@@ -22,9 +21,6 @@
   using Plugin.Media;
   using Plugin.Media.Abstractions;
 
-  using Tangle.Net.Entity;
-  using Tangle.Net.Repository;
-
   using Xamarin.Forms;
 
   /// <summary>
@@ -32,16 +28,6 @@
   /// </summary>
   public class SettingsViewModel : BaseViewModel
   {
-    /// <summary>
-    /// The display invalid node prompt.
-    /// </summary>
-    public Action DisplayInvalidNodePrompt;
-
-    /// <summary>
-    /// The display settings changed prompt.
-    /// </summary>
-    public Action DisplaySettingsChangedPrompt;
-
     /// <summary>
     /// The application settings.
     /// </summary>
@@ -62,17 +48,13 @@
     /// </summary>
     private string username;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsViewModel"/> class.
-    /// </summary>
+    /// <inheritdoc />
     public SettingsViewModel()
     {
       this.LoadSettings();
     }
 
-    /// <summary>
-    /// Gets or sets the application settings.
-    /// </summary>
+    [UsedImplicitly]
     public ApplicationSettings ApplicationSettings
     {
       get => this.applicationSettings;
@@ -83,9 +65,7 @@
       }
     }
 
-    /// <summary>
-    /// Gets or sets the image source.
-    /// </summary>
+    [UsedImplicitly]
     public string ImageSource
     {
       get => this.imageSource;
@@ -97,14 +77,6 @@
     }
 
     [UsedImplicitly]
-    public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
-
-    [UsedImplicitly]
-    public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
-
-    /// <summary>
-    /// Gets or sets the username.
-    /// </summary>
     public string Username
     {
       get => this.username;
@@ -115,10 +87,13 @@
       }
     }
 
-    /// <summary>
-    /// The add image.
-    /// </summary>
-    public async void AddImage()
+    [UsedImplicitly]
+    public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
+
+    [UsedImplicitly]
+    public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
+
+    public async void SelectImage()
     {
       await CrossMedia.Current.Initialize();
 
@@ -153,19 +128,9 @@
     /// </returns>
     private async Task SaveSettings()
     {
-      RestIotaRepository node;
-      try
+      if (RepositoryFactory.NodeIsHealthy(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri))
       {
-        node = RepositoryFactory.GenerateNode(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri);
-      }
-      catch
-      {
-        node = null;
-      }
-
-      if (node == null || !RepositoryFactory.NodeIsHealthy(node))
-      {
-        this.DisplayInvalidNodePrompt();
+        await this.DisplayAlertAsync("Unresponsive node", "The selected node does not seem to be in sync or is not responding!");
       }
       else
       {

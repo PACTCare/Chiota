@@ -41,6 +41,12 @@
                : new RestIotaRepository(iotaClient, new PoWSrvService());
     }
 
+    public static bool NodeIsHealthy(bool doRemotePoW, string nodeUri)
+    {
+      var repository = GenerateNode(doRemotePoW, nodeUri);
+      return NodeIsHealthy(repository);
+    }
+
     /// <summary>
     /// The node is healthy.
     /// </summary>
