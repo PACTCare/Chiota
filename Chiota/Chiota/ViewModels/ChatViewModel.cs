@@ -154,6 +154,11 @@ namespace Chiota.ViewModels
         {
           foreach (var m in newMessages)
           {
+            if (messages.Any(message => message.MessagDateTime.Ticks == m.MessagDateTime.Ticks))
+            {
+              continue;
+            }
+
             messages.Add(m);
             await this.GenerateNewAddress();
           }

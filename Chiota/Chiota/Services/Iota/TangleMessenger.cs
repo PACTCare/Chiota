@@ -88,10 +88,10 @@
           if (!alreadyLoaded || alwaysLoadSql)
           {
             messagesList.Add(new TryteStringMessage
-                               {
-                                 Message = cachedTransaction.TransactionTrytes,
-                                 Stored = true
-                               });
+            {
+              Message = cachedTransaction.TransactionTrytes,
+              Stored = true
+            });
           }
         }
 

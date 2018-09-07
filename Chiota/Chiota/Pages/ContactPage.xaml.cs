@@ -2,7 +2,9 @@
 {
   using System;
 
+  using Chiota.Messenger.Cache;
   using Chiota.Pages.Authentication;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
 
@@ -81,9 +83,10 @@
       this.ContactsList.EndRefresh();
     }
 
-    private void HandleLogoutClick(object sender, EventArgs e)
+    private async void HandleLogoutClick(object sender, EventArgs e)
     {
       UserService.SetCurrentUser(null);
+      await DependencyResolver.Resolve<ITransactionCache>().FlushAsync();
       Application.Current.MainPage = new NavigationPage(new LogInPage());
     }
   }
