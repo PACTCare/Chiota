@@ -4,7 +4,7 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
 
-  using Chiota.Models;
+  using Chiota.Resources.Settings;
 
   using RestSharp;
 
@@ -12,8 +12,6 @@
   using Tangle.Net.ProofOfWork.Service;
   using Tangle.Net.Repository;
   using Tangle.Net.Repository.Client;
-
-  using Xamarin.Forms;
 
   /// <summary>
   /// The repository factory.
@@ -40,7 +38,13 @@
 
       return doRemotePoW
                ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient))
-               : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
+               : new RestIotaRepository(iotaClient, new PoWSrvService());
+    }
+
+    public static bool NodeIsHealthy(bool doRemotePoW, string nodeUri)
+    {
+      var repository = GenerateNode(doRemotePoW, nodeUri);
+      return NodeIsHealthy(repository);
     }
 
     /// <summary>
@@ -75,12 +79,10 @@
     /// <inheritdoc />
     public RestIotaRepository Create(int roundNumber = 0)
     {
-      return new RestIotaRepository(new RestClient("https://field.deviota.com:443"), new PoWSrvService());
-      this.nodeUriList.Insert(0, Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string);
-      var remoteSettings = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
-      var remote = remoteSettings == true;
+      var appSettings = ApplicationSettings.Load();
+      this.nodeUriList.Insert(0, appSettings.IotaNodeUri);
 
-      var node = GenerateNode(remote, this.nodeUriList[roundNumber]);
+      var node = GenerateNode(appSettings.DoRemotePoW, this.nodeUriList[roundNumber]);
 
       if (NodeIsHealthy(node))
       {
@@ -89,7 +91,7 @@
 
       foreach (var nodeUri in this.nodeUriList)
       {
-        node = GenerateNode(remote, nodeUri);
+        node = GenerateNode(appSettings.DoRemotePoW, nodeUri);
         if (NodeIsHealthy(node))
         {
           break;

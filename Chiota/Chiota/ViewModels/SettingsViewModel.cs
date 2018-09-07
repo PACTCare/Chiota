@@ -1,56 +1,71 @@
-﻿using Chiota.ViewModels.Classes;
-
-namespace Chiota.ViewModels
+﻿namespace Chiota.ViewModels
 {
   using System;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
+  using Chiota.Annotations;
+  using Chiota.Exceptions;
+  using Chiota.Extensions;
   using Chiota.Models;
-  using Chiota.Services.Iota;
+  using Chiota.Popups.PopupModels;
+  using Chiota.Popups.PopupPageModels;
+  using Chiota.Popups.PopupPages;
+  using Chiota.Resources.Settings;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
+  using Chiota.ViewModels.Classes;
 
   using Plugin.Media;
   using Plugin.Media.Abstractions;
 
-  using Tangle.Net.Entity;
-  using Tangle.Net.Repository;
-
   using Xamarin.Forms;
 
+  /// <summary>
+  /// The settings view model.
+  /// </summary>
   public class SettingsViewModel : BaseViewModel
   {
-    public Action DisplayInvalidNodePrompt;
+    /// <summary>
+    /// The application settings.
+    /// </summary>
+    private ApplicationSettings applicationSettings;
 
-    public Action DisplaySettingsChangedPrompt;
-
-    private bool remotePoW = true;
-
-    private string username;
-
+    /// <summary>
+    /// The image source.
+    /// </summary>
     private string imageSource;
 
+    /// <summary>
+    /// The media file.
+    /// </summary>
     private MediaFile mediaFile;
 
-    private string defaultNode = "https://field.deviota.com:443";
+    /// <summary>
+    /// The username.
+    /// </summary>
+    private string username;
 
+    /// <inheritdoc />
     public SettingsViewModel()
     {
-      this.GetSettings();
+      this.LoadSettings();
     }
 
-    public string Username
+    [UsedImplicitly]
+    public ApplicationSettings ApplicationSettings
     {
-      get => this.username;
+      get => this.applicationSettings;
       set
       {
-        this.username = value;
+        this.applicationSettings = value;
         this.OnPropertyChanged();
       }
     }
 
+    [UsedImplicitly]
     public string ImageSource
     {
       get => this.imageSource;
@@ -61,31 +76,24 @@ namespace Chiota.ViewModels
       }
     }
 
-    public bool RemotePow
+    [UsedImplicitly]
+    public string Username
     {
-      get => this.remotePoW;
+      get => this.username;
       set
       {
-        this.remotePoW = value;
+        this.username = value;
         this.OnPropertyChanged();
       }
     }
 
-    public string DefaultNode
-    {
-      get => this.defaultNode;
-      set
-      {
-        this.defaultNode = value;
-        this.OnPropertyChanged();
-      }
-    }
+    [UsedImplicitly]
+    public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
 
+    [UsedImplicitly]
     public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
 
-    public ICommand PrivacyCommand => new Command(this.OpenPrivacyPolicy);
-
-    public async void AddImage()
+    public async void SelectImage()
     {
       await CrossMedia.Current.Initialize();
 
@@ -101,57 +109,67 @@ namespace Chiota.ViewModels
       }
     }
 
-    private void GetSettings()
+    private void LoadSettings()
     {
-      var remote = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?;
-      this.RemotePow = remote == true;
-      this.DefaultNode = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
-      this.ImageSource = ChiotaConstants.IpfsHashGateway + Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] as string;
-      this.Username = Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] as string;
-    }
+      this.ApplicationSettings = ApplicationSettings.Load();
 
-    private void OpenPrivacyPolicy()
-    {
-      Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
+      this.ImageSource = ChiotaConstants.IpfsHashGateway + UserService.CurrentUser.ImageHash;
+      this.Username = UserService.CurrentUser.Name;
     }
 
     private async Task SaveSettings()
     {
-      RestIotaRepository node;
-      try
+      if (!RepositoryFactory.NodeIsHealthy(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri))
       {
-        node = RepositoryFactory.GenerateNode(this.RemotePow, this.DefaultNode);
-      }
-      catch
-      {
-        node = null;
-      }
-
-      if (node == null || !RepositoryFactory.NodeIsHealthy(node))
-      {
-        this.DisplayInvalidNodePrompt();
+        await this.DisplayAlertAsync("Unresponsive node", "The selected node does not seem to be in sync or is not responding!");
       }
       else
       {
-        if (this.mediaFile?.Path != null)
+        if (this.Username != UserService.CurrentUser.Name || this.mediaFile?.Path != null)
         {
-          //var imageStream = await ImageService.Instance
-          //                    .LoadFile(this.mediaFile.Path)
-          //                    .DownSample(300)
-          //                    .AsJPGStreamAsync();
+          await this.PushPopupAsync<DialogPopupPageModel, DialogPopupModel>(
+            new DialogPopupPage(),
+            new DialogPopupModel
+              {
+                Title = "Password required to change name or image.",
+                IsPassword = true,
+                OkCallback = async (password) =>
+                  {
+                    try
+                    {
+                      SecureStorage.ValidatePassword(password);
 
-          UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
-          this.mediaFile.Dispose();
+                      if (this.mediaFile?.Path != null)
+                      {
+                        UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
+                        this.mediaFile.Dispose();
+                      }
+
+                      UserService.CurrentUser.Name = this.Username;
+                      SecureStorage.UpdateUser(password);
+
+                      await this.SaveApplicationSettings();
+                    }
+                    catch (BaseException exception)
+                    {
+                      await exception.ShowAlertAsync();
+                    }
+                  }
+              });
         }
-
-        Application.Current.Properties[ChiotaConstants.SettingsImageKey + UserService.CurrentUser.PublicKeyAddress] = UserService.CurrentUser.ImageHash;
-        Application.Current.Properties[ChiotaConstants.SettingsNameKey + UserService.CurrentUser.PublicKeyAddress] = this.Username;
-        Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.DefaultNode;
-        Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.RemotePow;
-        await Application.Current.SavePropertiesAsync();
-        UserService.CurrentUser.TangleMessenger = new TangleMessenger(new Seed(UserService.CurrentUser.Seed));
-        this.DisplaySettingsChangedPrompt();
+        else
+        {
+          await this.SaveApplicationSettings();
+        }
       }
+    }
+
+    private async Task SaveApplicationSettings()
+    {
+      await this.ApplicationSettings.Save();
+      DependencyResolver.Reload();
+
+      await this.DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
     }
   }
 }

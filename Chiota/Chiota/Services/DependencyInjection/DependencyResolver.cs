@@ -16,6 +16,8 @@
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
 
+  using Tangle.Net.Repository;
+
   /// <summary>
   /// The dependency resolver.
   /// </summary>
@@ -47,7 +49,7 @@
       var builder = new ContainerBuilder();
 
       builder.RegisterType<UserFactory>().As<IUserFactory>();
-      builder.RegisterType<RepositoryFactory>().As<IRepositoryFactory>();
+      builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
 
       builder.RegisterType<TangleMessenger>().As<IMessenger>().PropertiesAutowired();
 
@@ -84,6 +86,11 @@
     public static T Resolve<T>()
     {
       return Container.Resolve<T>();
+    }
+
+    public static void Reload()
+    {
+      Init();
     }
   }
 }

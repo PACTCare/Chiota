@@ -43,6 +43,7 @@
               }
               catch (BaseException exception)
               {
+                await this.PopPopupAsync();
                 await exception.ShowAlertAsync();
               }
             });

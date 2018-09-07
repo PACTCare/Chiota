@@ -17,15 +17,12 @@
     public SettingsPage()
     {
       this.InitializeComponent();
-      var vm = new SettingsViewModel { Navigation = this.Navigation };
-      vm.DisplayInvalidNodePrompt += () => this.DisplayAlert("Error", "Invalid Node, try again", "OK");
-      vm.DisplaySettingsChangedPrompt += () => this.DisplayAlert("Saved", "Settings successfully updated", "OK");
-      this.BindingContext = vm;
+      this.BindingContext = new SettingsViewModel { Navigation = this.Navigation };
     }
 
     private void Button_OnClicked(object sender, EventArgs e)
     {
-      (this.BindingContext as SettingsViewModel)?.AddImage();
+      (this.BindingContext as SettingsViewModel)?.SelectImage();
     }
   }
 }

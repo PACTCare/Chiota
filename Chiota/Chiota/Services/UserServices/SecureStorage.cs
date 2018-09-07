@@ -41,11 +41,7 @@
 
     public static async Task LoginUser(string password)
     {
-      var passwordHash = UserDataEncryption.Hash(password);
-      if (passwordHash != CrossSecureStorage.Current.GetValue(PasswordHash))
-      {
-        throw new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword);
-      }
+      ValidatePassword(password);
 
       var encryptionSalt = CrossSecureStorage.Current.GetValue(EncryptionSalt);
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
@@ -77,6 +73,26 @@
       var encryptedUser = UserDataEncryption.Encrypt(serializedUser, password, encryptionSalt);
 
       CrossSecureStorage.Current.SetValue(CurrentUser, encryptedUser);
+    }
+
+    public static void UpdateUser(string password)
+    {
+      ValidatePassword(password);
+
+      var encryptionSalt = CrossSecureStorage.Current.GetValue(EncryptionSalt);
+      var serializedUser = JsonConvert.SerializeObject(UserService.CurrentUser);
+      var encryptedUser = UserDataEncryption.Encrypt(serializedUser, password, encryptionSalt);
+
+      CrossSecureStorage.Current.SetValue(CurrentUser, encryptedUser);
+    }
+
+    public static void ValidatePassword(string password)
+    {
+      var passwordHash = UserDataEncryption.Hash(password);
+      if (passwordHash != CrossSecureStorage.Current.GetValue(PasswordHash))
+      {
+        throw new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword);
+      }
     }
 
     public static void DeleteUser()
