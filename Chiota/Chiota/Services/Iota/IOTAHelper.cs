@@ -145,11 +145,6 @@
       return RemoveDuplicateContacts(contacts);
     }
 
-    public static TryteString ObjectToTryteString<T>(T data)
-    {
-      return TryteString.FromUtf8String(JsonConvert.SerializeObject(data));
-    }
-
     public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
     {
       // Todo sometimes only one tryte

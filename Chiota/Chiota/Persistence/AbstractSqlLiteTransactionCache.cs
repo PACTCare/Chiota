@@ -30,6 +30,12 @@
     public abstract SQLiteAsyncConnection Connection { get; }
 
     /// <inheritdoc />
+    public async Task FlushAsync()
+    {
+      await this.Connection.QueryAsync<SqLiteMessage>("DELETE FROM SqLiteMessage");
+    }
+
+    /// <inheritdoc />
     public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
     {
       var cachedItems = await this.Connection.QueryAsync<SqLiteMessage>(
@@ -41,7 +47,7 @@
                   {
                     Address = new Address(item.ChatAddress),
                     TransactionHash = new Hash(item.TransactionHash),
-                    TransactionTrytes = TryteString.FromUtf8String(item.MessageTryteString)
+                    TransactionTrytes = new TryteString(item.MessageTryteString)
                   }).ToList();
     }
 
@@ -52,7 +58,7 @@
                              {
                                TransactionHash = item.TransactionHash.Value,
                                ChatAddress = item.Address.Value,
-                               MessageTryteString = item.TransactionTrytes.ToUtf8String()
+                               MessageTryteString = item.TransactionTrytes.Value
                              };
 
       await this.Connection.InsertAsync(sqlLiteMessage);

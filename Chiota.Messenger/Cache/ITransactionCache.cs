@@ -10,26 +10,10 @@
   /// </summary>
   public interface ITransactionCache
   {
-    /// <summary>
-    /// The load transactions by address.
-    /// </summary>
-    /// <param name="address">
-    /// The address.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
+    Task FlushAsync();
+
     Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address);
 
-    /// <summary>
-    /// The save transaction.
-    /// </summary>
-    /// <param name="item">
-    /// The item.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
     Task SaveTransactionAsync(TransactionCacheItem item);
   }
 }
