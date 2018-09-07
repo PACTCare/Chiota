@@ -37,8 +37,8 @@
       var iotaClient = new RestIotaClient(new RestClient(nodeUri));
 
       return doRemotePoW
-               ? new RestIotaRepository(iotaClient, new RestPoWService(iotaClient))
-               : new RestIotaRepository(iotaClient, new PoWSrvService());
+               ? new RestIotaRepository(iotaClient, new PoWSrvService())
+               : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
     }
 
     public static bool NodeIsHealthy(bool doRemotePoW, string nodeUri)
