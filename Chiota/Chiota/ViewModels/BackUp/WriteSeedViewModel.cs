@@ -194,11 +194,11 @@ namespace Chiota.ViewModels.BackUp
             }
 
             var visibleIndex = 0;
-            if (this.seedLinePointer > 1 && this.seedLinePointer < 6)
+            if (this.seedLinePointer > 1 && this.seedLinePointer <= 6)
             {
                 visibleIndex = this.seedLinePointer - 1;
             }
-            else if (this.seedLinePointer >= 6)
+            else if (this.seedLinePointer > 6)
             {
                 visibleIndex = 6;
             }
