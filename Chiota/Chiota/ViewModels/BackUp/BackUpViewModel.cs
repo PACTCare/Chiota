@@ -1,77 +1,112 @@
 ﻿namespace Chiota.ViewModels.BackUp
 {
-  using System.Windows.Input;
+    using System.Windows.Input;
 
-  using Chiota.Annotations;
-  using Chiota.Pages.BackUp;
-  using Chiota.Services;
-  using Chiota.Services.DependencyInjection;
-  using Chiota.Services.UserServices;
-  using Chiota.ViewModels.Classes;
+    using Chiota.Annotations;
+    using Chiota.Pages.BackUp;
+    using Chiota.Services;
+    using Chiota.Services.DependencyInjection;
+    using Chiota.Services.UserServices;
+    using Chiota.ViewModels.Classes;
 
-  using Xamarin.Forms;
-
-  /// <summary>
-  /// The back up view model.
-  /// </summary>
-  public class BackUpViewModel : BaseViewModel
-  {
-    private bool isContinueVisible;
-
-    public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.UserProperties); });
-
-    [UsedImplicitly]
-    public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.UserProperties.Seed.Value); });
-
-    public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.UserProperties.Seed.Value); });
-
-    public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.UserProperties.Seed.Value); });
-
-    public ICommand CopyToClipboardCommand =>
-      new Command(
-        async () =>
-          {
-            DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
-            await this.DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
-          });
+    using Xamarin.Forms;
 
     /// <summary>
-    /// Gets or sets a value indicating whether is continue visible.
+    /// The back up view model.
     /// </summary>
-    public bool IsContinueVisible
+    public class BackUpViewModel : BaseViewModel
     {
-      get => this.isContinueVisible;
-      set
-      {
-        this.isContinueVisible = value;
-        this.OnPropertyChanged(nameof(this.IsContinueVisible));
-      }
+        #region Attributes
+
+        private bool isContinueVisible;
+
+        private UserCreationProperties UserProperties;
+
+        #endregion
+
+        #region Properties
+
+        public bool IsContinueVisible
+        {
+            get => this.isContinueVisible;
+            set
+            {
+                this.isContinueVisible = value;
+                this.OnPropertyChanged(nameof(this.IsContinueVisible));
+            }
+        }
+
+        #endregion
+
+        #region Init
+
+        /// <inheritdoc />
+        public override void Init(object data = null)
+        {
+            base.Init(data);
+
+            // Set the generated iota seed.
+            if (data != null)
+            {
+                this.UserProperties = data as UserCreationProperties;
+            }
+
+            // Disable the continue button.
+            this.IsContinueVisible = true;
+        }
+
+        #endregion
+
+        #region Reverse
+
+        /// <inheritdoc />
+        public override void Reverse(object data = null)
+        {
+            base.Reverse(data);
+
+            // Enable the continue button.
+            this.IsContinueVisible = true;
+        }
+
+        #endregion
+
+        #region Commands
+
+        #region WriteSeed
+
+        public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.UserProperties.Seed.Value); });
+
+        #endregion
+
+        #region PrintPaper
+
+        public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.UserProperties.Seed.Value); });
+
+        #endregion
+
+        #region QrCode
+
+        public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.UserProperties.Seed.Value); });
+
+        #endregion
+
+        #region CopyToClipboard
+
+        public ICommand CopyToClipboardCommand =>
+            new Command(async () =>
+            {
+                DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
+                await this.DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
+            });
+
+        #endregion
+
+        #region Continue
+
+        public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.UserProperties); });
+
+        #endregion
+
+        #endregion
     }
-
-    private UserCreationProperties UserProperties { get; set; }
-
-    /// <inheritdoc />
-    public override void Init(object data = null)
-    {
-      base.Init(data);
-
-      // Set the generated iota seed.
-      if (data != null)
-      {
-        this.UserProperties = data as UserCreationProperties;
-      }
-
-      // Disable the continue button.
-      this.IsContinueVisible = true;
-    }
-
-    /// <inheritdoc />
-    public override void Reverse(object data = null)
-    {
-      base.Reverse(data);
-
-      // Enable the continue button.
-      this.IsContinueVisible = true;
-    }
-  }
 }
