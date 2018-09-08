@@ -23,13 +23,10 @@
 
     public static ApplicationSettings Load()
     {
-      var node = Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string;
-      node = string.IsNullOrEmpty(node) ? DefaultNode : node;
+      var node = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsNodeKey) ? Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string : DefaultNode;
+      var remotePoW = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey) ? Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool? : true;
 
-      return new ApplicationSettings
-               {
-                 DoRemotePoW = Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool? == true, IotaNodeUri = node
-               };
+      return new ApplicationSettings { DoRemotePoW = remotePoW == true, IotaNodeUri = node };
     }
 
     public async Task Save()

@@ -103,7 +103,7 @@
 
     <!-- #endregion -->
 
-    <!--#region  Base popup layouts -->
+    <!--#region Base popup layouts -->
 
     <Style x:Key="PopupLayout" TargetType="StackLayout">
         <Setter Property="HorizontalOptions" Value="FillAndExpand"/>

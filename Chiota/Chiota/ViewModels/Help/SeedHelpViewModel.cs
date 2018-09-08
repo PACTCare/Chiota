@@ -1,19 +1,21 @@
-﻿namespace Chiota.ViewModels.Help
+﻿using System.Windows.Input;
+
+using Chiota.ViewModels.Classes;
+
+using Xamarin.Forms;
+
+namespace Chiota.ViewModels.Help
 {
-  using System.Windows.Input;
+    public class SeedHelpViewModel : BaseViewModel
+    {
+        #region Commands
 
-  using Chiota.ViewModels.Classes;
+        #region Continue
 
-  using Xamarin.Forms;
+        public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
 
-  /// <summary>
-  /// The seed help view model.
-  /// </summary>
-  public class SeedHelpViewModel : BaseViewModel
-  {
-    /// <summary>
-    /// Gets the continue command.
-    /// </summary>
-    public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
-  }
+        #endregion
+
+        #endregion
+    }
 }

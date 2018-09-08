@@ -1,22 +1,35 @@
-﻿namespace Chiota.ViewModels.Authentication
+﻿using System.Windows.Input;
+
+using Chiota.Pages.Authentication;
+using Chiota.Pages.Help;
+using Chiota.ViewModels.Classes;
+
+using Xamarin.Forms;
+
+namespace Chiota.ViewModels.Authentication
 {
-  using System.Windows.Input;
+    public class WelcomeViewModel : BaseViewModel
+    {
+        #region Commands
 
-  using Chiota.Pages.Authentication;
-  using Chiota.Pages.Help;
-  using Chiota.ViewModels.Classes;
+        #region NewSeed
 
-  using Xamarin.Forms;
+        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
 
-  /// <summary>
-  /// The welcome view model.
-  /// </summary>
-  public class WelcomeViewModel : BaseViewModel
-  {
-    public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
+        #endregion
 
-    public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
+        #region SetSeed
 
-    public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedPage()); });
-  }
+        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedPage()); });
+
+        #endregion
+
+        #region SeedHelp
+
+        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
+
+        #endregion
+
+        #endregion
+    }
 }

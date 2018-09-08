@@ -7,25 +7,10 @@ namespace Chiota.Popups.PopupModels
 {
     public class LoadingPopupModel : BasePopupModel
     {
-        #region Attributes
-
-        private bool _isAnimated;
-
-        #endregion
-
         #region Properties
 
-        public bool IsAnimated
-        {
-            get => _isAnimated;
-            set
-            {
-                _isAnimated = value;
-                OnPropertyChanged(nameof(IsAnimated));
-            }
-        }
-
         public string Message { get; set; }
+        public bool IsMessageVisible { get; set; }
 
         #endregion
 
@@ -33,6 +18,8 @@ namespace Chiota.Popups.PopupModels
 
         public LoadingPopupModel()
         {
+            //Set the default message.
+            Message = "Loading";
         }
 
         #endregion
