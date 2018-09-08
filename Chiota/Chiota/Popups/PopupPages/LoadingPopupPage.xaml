@@ -25,10 +25,34 @@
             HasBackgroundAnimation="True"/>
     </pages:PopupPage.Animation>
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="Loading" TargetType="Image">
+                <Setter Property="HeightRequest">
+                    <OnIdiom x:TypeArguments="x:Double" Phone="64" Tablet="64" Desktop="64" TV="64"/>
+                </Setter>
+                <Setter Property="WidthRequest">
+                    <OnIdiom x:TypeArguments="x:Double" Phone="64" Tablet="64" Desktop="64" TV="64"/>
+                </Setter>
+                <Setter Property="Source" Value="Assets\loading.png"/>
+            </Style>
+
+            <Style x:Key="LoadingPopupFrame" TargetType="Frame" BasedOn="{StaticResource PopupFrame}">
+                <Setter Property="WidthRequest">
+                    <OnIdiom x:TypeArguments="x:Double" Phone="192" Tablet="192" Desktop="192" TV="192"/>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <pages:PopupPage.Content>
-        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Spacing="32">
-            <animated:AnimatedImage Source="Assets\loading.png" HeightRequest="128" WidthRequest="128" IsAnimated="{Binding PopupModel.IsAnimated, Mode=TwoWay}" Animation="Rotation" Interval="50" RotationValue="36"/>
-            <Label Style="{DynamicResource BasePopupLabel}" Text="{Binding PopupModel.Message}"/>
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Frame Style="{DynamicResource LoadingPopupFrame}">
+                <StackLayout Style="{DynamicResource PopupLayout}">
+                    <animated:AnimatedImage Style="{DynamicResource Loading}" IsAnimated="{Binding IsAnimated, Mode=TwoWay}" Animation="Rotation" Interval="50" RotationValue="36"/>
+                    <Label Style="{DynamicResource PopupLabel14}" Text="{Binding PopupModel.Message}" IsVisible="{Binding PopupModel.IsMessageVisible}" HorizontalTextAlignment="Center" HorizontalOptions="Center"/>
+                </StackLayout>
+            </Frame>
         </StackLayout>
     </pages:PopupPage.Content>
 </pages:PopupPage>

@@ -10,31 +10,64 @@ namespace Chiota.Popups.PopupPageModels
 {
     public class LoadingPopupPageModel : BasePopupPageModel<LoadingPopupModel>
     {
-        #region Constructors
+        #region Attributes
 
-        public LoadingPopupPageModel() : base()
-        {
-            PopupModel = new LoadingPopupModel();
-        }
+        private bool _isAnimated;
 
-        public LoadingPopupPageModel(LoadingPopupModel popupModel) : base(popupModel)
+        #endregion
+
+        #region Properties
+
+        public bool IsAnimated
         {
+            get => _isAnimated;
+            set
+            {
+                _isAnimated = value;
+                OnPropertyChanged(nameof(IsAnimated));
+            }
         }
 
         #endregion
 
+        #region Constructors
+
+        public LoadingPopupPageModel() : base(new LoadingPopupModel())
+        {
+            //Set the message visible, if there is any message.
+            if (!string.IsNullOrEmpty(PopupModel.Message))
+                PopupModel.IsMessageVisible = true;
+        }
+
+        public LoadingPopupPageModel(LoadingPopupModel popupModel) : base(popupModel)
+        {
+            //Set the message visible, if there is any message.
+            if (!string.IsNullOrEmpty(PopupModel.Message))
+                PopupModel.IsMessageVisible = true;
+        }
+
+        #endregion
+
+        #region ViewIsAppearing
+
         protected override void ViewIsAppearing()
         {
-            base.ViewIsAppearing();
+            IsAnimated = true;
 
-            PopupModel.IsAnimated = true;
+            base.ViewIsAppearing();
         }
+
+        #endregion
+
+        #region ViewIsDisappearing
 
         protected override void ViewIsDisappearing()
         {
-            PopupModel.IsAnimated = false;
+            IsAnimated = false;
 
             base.ViewIsDisappearing();
         }
+
+        #endregion
     }
 }
