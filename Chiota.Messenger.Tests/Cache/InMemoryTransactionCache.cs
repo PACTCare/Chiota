@@ -27,6 +27,12 @@
     /// </summary>
     public List<TransactionCacheItem> Items { get; }
 
+    /// <inheritdoc />
+    public Task FlushAsync()
+    {
+      return null;
+    }
+
     /// <summary>
     /// The load transactions by address.
     /// </summary>
