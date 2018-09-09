@@ -4,6 +4,8 @@
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Pages.Authentication.SetUserPage"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              NavigationPage.HasBackButton="False"
              Title="{extensions:Translate CmnSetUser}">
 

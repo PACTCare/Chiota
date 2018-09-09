@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Services.DependencyInjection
 {
+  using System;
   using System.Collections.Generic;
 
   using Autofac;
@@ -15,38 +16,31 @@
   using Chiota.Services.Iota.Repository;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
+  using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Repository;
 
-  /// <summary>
-  /// The dependency resolver.
-  /// </summary>
   public static class DependencyResolver
   {
-    /// <summary>
-    /// Initializes static members of the <see cref="DependencyResolver"/> class.
-    /// </summary>
     static DependencyResolver()
     {
       Modules = new List<IModule>();
     }
 
-    /// <summary>
-    /// Gets or sets the modules.
-    /// </summary>
     public static List<IModule> Modules { get; set; }
 
-    /// <summary>
-    /// Gets or sets the container.
-    /// </summary>
     private static IContainer Container { get; set; }
 
-    /// <summary>
-    /// The init.
-    /// </summary>
     public static void Init()
     {
       var builder = new ContainerBuilder();
+
+      foreach (var module in Modules)
+      {
+        builder.RegisterModule(module);
+      }
+
+      builder.RegisterModule(new ViewModelInjectionModule());
 
       builder.RegisterType<UserFactory>().As<IUserFactory>();
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
@@ -66,26 +60,17 @@
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
 
-      foreach (var module in Modules)
-      {
-        builder.RegisterModule(module);
-      }
-
       Container = builder.Build();
     }
 
-    /// <summary>
-    /// The resolve.
-    /// </summary>
-    /// <typeparam name="T">
-    /// The type.
-    /// </typeparam>
-    /// <returns>
-    /// The <see cref="T"/>.
-    /// </returns>
     public static T Resolve<T>()
     {
       return Container.Resolve<T>();
+    }
+
+    public static object Resolve(Type type)
+    {
+      return Container.Resolve(type);
     }
 
     public static void Reload()
