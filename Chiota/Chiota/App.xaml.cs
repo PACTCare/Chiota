@@ -1,5 +1,7 @@
 ﻿namespace Chiota
 {
+  using System;
+
   using Chiota.Classes;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
@@ -32,7 +34,6 @@
     /// </summary>
     protected override void OnSleep()
     {
-      UserService.SetCurrentUser(null);
     }
 
     /// <summary>
