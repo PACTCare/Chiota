@@ -1,85 +1,85 @@
 ﻿namespace Chiota.Popups.PopupPageModels
 {
-  using System.Windows.Input;
+    using System.Windows.Input;
 
-  using Chiota.Popups.Classes;
-  using Chiota.Popups.PopupModels;
+    using Chiota.Popups.Classes;
+    using Chiota.Popups.PopupModels;
 
-  using Xamarin.Forms;
-
-  /// <summary>
-  /// The alert popup page model.
-  /// </summary>
-  public class AlertPopupPageModel : BasePopupPageModel<AlertPopupModel>
-  {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AlertPopupPageModel"/> class.
-    /// </summary>
-    public AlertPopupPageModel()
-      : base()
-    {
-    }
-
-    public AlertPopupPageModel(AlertPopupModel popupModel)
-      : base(popupModel)
-    {
-      if (!string.IsNullOrEmpty(this.PopupModel.Title))
-      {
-        this.PopupModel.IsTitleVisible = true;
-      }
-
-      if (this.PopupModel.IsNegButtonDefault)
-      {
-        this.NegButtonTextColor = (Color)Application.Current.Resources["HighlightedTextColor"];
-        this.PosButtonTextColor = (Color)Application.Current.Resources["FadedTextColor"];
-        return;
-      }
-
-      this.NegButtonTextColor = (Color)Application.Current.Resources["FadedTextColor"];
-      this.PosButtonTextColor = (Color)Application.Current.Resources["HighlightedTextColor"];
-    }
+    using Xamarin.Forms;
 
     /// <summary>
-    /// Gets or sets the neg button text color.
+    /// The alert popup page model.
     /// </summary>
-    public Color NegButtonTextColor { get; set; }
-
-    /// <summary>
-    /// Cancel method of the popup
-    /// </summary>
-    public ICommand NegCommand
+    public class AlertPopupPageModel : BasePopupPageModel<AlertPopupModel>
     {
-      get
-      {
-        return new Command(
-          async () =>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AlertPopupPageModel"/> class.
+        /// </summary>
+        public AlertPopupPageModel()
+          : base()
+        {
+        }
+
+        public AlertPopupPageModel(AlertPopupModel popupModel)
+          : base(popupModel)
+        {
+            if (!string.IsNullOrEmpty(this.PopupModel.Title))
             {
-              this.PopupModel.Result = false;
+                this.PopupModel.IsTitleVisible = true;
+            }
 
-              this.Finish = true;
-              await this.PopPopupAsync();
-            });
-      }
-    }
-
-    public Color PosButtonTextColor { get; set; }
-
-    /// <summary>
-    /// Ok method of the popup.
-    /// </summary>
-    public ICommand PosCommand
-    {
-      get
-      {
-        return new Command(
-          async () =>
+            if (this.PopupModel.IsNegButtonDefault)
             {
-              this.PopupModel.Result = true;
+                this.NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+                this.PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
+                return;
+            }
 
-              this.Finish = true;
-              await this.PopPopupAsync();
-            });
-      }
+            this.NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
+            this.PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+        }
+
+        /// <summary>
+        /// Gets or sets the neg button text color.
+        /// </summary>
+        public Color NegButtonColor { get; set; }
+
+        /// <summary>
+        /// Cancel method of the popup
+        /// </summary>
+        public ICommand NegCommand
+        {
+            get
+            {
+                return new Command(
+                  async () =>
+                    {
+                        this.PopupModel.Result = false;
+
+                        this.Finish = true;
+                        await this.PopPopupAsync();
+                    });
+            }
+        }
+
+        public Color PosButtonColor { get; set; }
+
+        /// <summary>
+        /// Ok method of the popup.
+        /// </summary>
+        public ICommand PosCommand
+        {
+            get
+            {
+                return new Command(
+                  async () =>
+                    {
+                        this.PopupModel.Result = true;
+
+                        this.Finish = true;
+                        await this.PopPopupAsync();
+                    });
+            }
+        }
     }
-  }
 }

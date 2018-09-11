@@ -137,6 +137,7 @@
     <Compile Include="InjectionModule.cs" />
     <Compile Include="Persistence\SqlLiteTransactionCache.cs" />
     <Compile Include="Persistence\SqlLiteContactRepository.cs" />
+    <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
     <Compile Include="Services\ClipboardService.cs" />
