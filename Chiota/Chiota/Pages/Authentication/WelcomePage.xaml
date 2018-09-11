@@ -24,12 +24,16 @@
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgNewSeed}" WidthRequest="256" Command="{Binding NewSeedCommand}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSetSeed}" WidthRequest="256" Command="{Binding SetSeedCommand}"/>
                     </StackLayout>
-
                     <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgHelpSeed}" HorizontalOptions="Center" Opacity="0.6">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
-                        </Label.GestureRecognizers>
+                      <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                      </Label.GestureRecognizers>
                     </Label>
+                  <Label Text="Open Privacy Policy" Style="{DynamicResource Label14}" HorizontalOptions="Center" Opacity="0.6">
+                    <Label.GestureRecognizers>
+                      <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
+                    </Label.GestureRecognizers>
+                  </Label>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

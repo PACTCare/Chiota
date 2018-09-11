@@ -87,12 +87,6 @@
       }
     }
 
-    [UsedImplicitly]
-    public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
-
-    [UsedImplicitly]
-    public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
-
     public async void SelectImage()
     {
       await CrossMedia.Current.Initialize();

@@ -12,7 +12,11 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-    /// <summary>
+  using System;
+
+  using Chiota.Annotations;
+
+  /// <summary>
     /// The log in view model.
     /// </summary>
     public class LogInViewModel : BaseViewModel
@@ -99,8 +103,11 @@ namespace Chiota.ViewModels.Authentication
 
         public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
 
-        #endregion
+    #endregion
 
-        #endregion
-    }
+      [UsedImplicitly]
+      public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
+
+    #endregion
+  }
 }
