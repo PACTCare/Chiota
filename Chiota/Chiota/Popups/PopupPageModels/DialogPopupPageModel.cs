@@ -19,16 +19,16 @@
     {
       if (this.PopupModel.IsNegButtonDefault)
       {
-        this.NegButtonTextColor = (Color)Application.Current.Resources["HighlightedTextColor"];
-        this.PosButtonTextColor = (Color)Application.Current.Resources["FadedTextColor"];
+        this.NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+        this.PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
         return;
       }
 
-      this.NegButtonTextColor = (Color)Application.Current.Resources["FadedTextColor"];
-      this.PosButtonTextColor = (Color)Application.Current.Resources["HighlightedTextColor"];
+      this.NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
+      this.PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
     }
 
-    public Color NegButtonTextColor { get; set; }
+    public Color NegButtonColor { get; set; }
 
     /// <summary>
     /// Cancel method of the popup
@@ -49,7 +49,7 @@
       }
     }
 
-    public Color PosButtonTextColor { get; set; }
+    public Color PosButtonColor { get; set; }
 
     /// <summary>
     /// Ok method of the popup.
