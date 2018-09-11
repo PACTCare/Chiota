@@ -1,7 +1,9 @@
 # Build Status
-    | Chiota Android | Messenger Package |
-    |----------------|-------------------|
-    |[![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Android)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=10)             | [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Messenger%20Package)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=9)                  |
+    Chiota Android
+    [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Android)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=10)
+
+    Messenger Package             
+    [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Messenger%20Package)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=9)                  
 
 
 
