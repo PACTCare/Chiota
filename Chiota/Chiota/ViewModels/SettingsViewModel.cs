@@ -113,48 +113,41 @@
 
     private async Task SaveSettings()
     {
-      if (!RepositoryFactory.NodeIsHealthy(this.ApplicationSettings.DoRemotePoW, this.ApplicationSettings.IotaNodeUri))
+      if (this.Username != UserService.CurrentUser.Name || this.mediaFile?.Path != null)
       {
-        await this.DisplayAlertAsync("Unresponsive node", "The selected node does not seem to be in sync or is not responding!");
+        await this.PushPopupAsync<DialogPopupPageModel, DialogPopupModel>(
+          new DialogPopupPage(),
+          new DialogPopupModel
+            {
+              Title = "Password required to change name or image.",
+              IsPassword = true,
+              OkCallback = async (password) =>
+                {
+                  try
+                  {
+                    SecureStorage.ValidatePassword(password);
+
+                    if (this.mediaFile?.Path != null)
+                    {
+                      UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
+                      this.mediaFile.Dispose();
+                    }
+
+                    UserService.CurrentUser.Name = this.Username;
+                    SecureStorage.UpdateUser(password);
+
+                    await this.SaveApplicationSettings();
+                  }
+                  catch (BaseException exception)
+                  {
+                    await exception.ShowAlertAsync();
+                  }
+                }
+            });
       }
       else
       {
-        if (this.Username != UserService.CurrentUser.Name || this.mediaFile?.Path != null)
-        {
-          await this.PushPopupAsync<DialogPopupPageModel, DialogPopupModel>(
-            new DialogPopupPage(),
-            new DialogPopupModel
-              {
-                Title = "Password required to change name or image.",
-                IsPassword = true,
-                OkCallback = async (password) =>
-                  {
-                    try
-                    {
-                      SecureStorage.ValidatePassword(password);
-
-                      if (this.mediaFile?.Path != null)
-                      {
-                        UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(this.mediaFile.Path);
-                        this.mediaFile.Dispose();
-                      }
-
-                      UserService.CurrentUser.Name = this.Username;
-                      SecureStorage.UpdateUser(password);
-
-                      await this.SaveApplicationSettings();
-                    }
-                    catch (BaseException exception)
-                    {
-                      await exception.ShowAlertAsync();
-                    }
-                  }
-              });
-        }
-        else
-        {
-          await this.SaveApplicationSettings();
-        }
+        await this.SaveApplicationSettings();
       }
     }
 
