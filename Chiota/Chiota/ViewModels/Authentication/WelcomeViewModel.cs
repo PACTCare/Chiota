@@ -8,7 +8,11 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-    public class WelcomeViewModel : BaseViewModel
+  using System;
+
+  using Chiota.Annotations;
+
+  public class WelcomeViewModel : BaseViewModel
     {
         #region Commands
 
@@ -28,8 +32,11 @@ namespace Chiota.ViewModels.Authentication
 
         public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
 
-        #endregion
+        [UsedImplicitly]
+        public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
 
-        #endregion
-    }
+    #endregion
+
+    #endregion
+  }
 }
