@@ -187,7 +187,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log in with your password or switch the account by set a seed or generating a new one..
+        ///   Looks up a localized string similar to Log in with your password or switch the account by setting a seed or generating a new one..
         /// </summary>
         internal static string DlgDescLogIn {
             get {
@@ -196,7 +196,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press the button to generate a new seed single characters of the seed to change them individual..
+        ///   Looks up a localized string similar to Press the button to generate a new seed. Click single characters of the seed to change them individually..
         /// </summary>
         internal static string DlgDescNewSeed {
             get {
@@ -205,7 +205,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please print your seed and keep him safe..
+        ///   Looks up a localized string similar to Please print your seed and keep it safe..
         /// </summary>
         internal static string DlgDescPrintPaperCopy {
             get {
@@ -214,7 +214,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please save your QR code and keep him safe..
+        ///   Looks up a localized string similar to Please save your QR code and keep it safe..
         /// </summary>
         internal static string DlgDescQrCode {
             get {
@@ -268,7 +268,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please write your seed down and keep him safe..
+        ///   Looks up a localized string similar to Please write your seed down and keep it safe..
         /// </summary>
         internal static string DlgDescWriteSeedDown {
             get {
@@ -313,7 +313,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can use it to access your account from any device, where chiota is installed..
+        ///   Looks up a localized string similar to You can use it to access your account from any device, where Chiota is installed..
         /// </summary>
         internal static string DlgHelpSeedDesc1 {
             get {
@@ -322,7 +322,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to But if you lose your seed, you also lose your account..
+        ///   Looks up a localized string similar to If you lose your seed, you also lose access to your account..
         /// </summary>
         internal static string DlgHelpSeedDesc2 {
             get {

@@ -34,7 +34,7 @@
           await view.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
           break;
         default:
-          await view.DisplayAlertAsync("Error", "Your message couldn't be send.");
+          await view.DisplayAlertAsync("Error", $"Your message couldn't be send. (Code: {(int)response.Code})");
           break;
       }
     }

@@ -160,16 +160,16 @@
     <value>Please confirm your seed.</value>
   </data>
   <data name="DlgDescLogIn" xml:space="preserve">
-    <value>Log in with your password or switch the account by set a seed or generating a new one.</value>
+    <value>Log in with your password or switch the account by setting a seed or generating a new one.</value>
   </data>
   <data name="DlgDescNewSeed" xml:space="preserve">
-    <value>Press the button to generate a new seed single characters of the seed to change them individual.</value>
+    <value>Press the button to generate a new seed. Click single characters of the seed to change them individually.</value>
   </data>
   <data name="DlgDescPrintPaperCopy" xml:space="preserve">
-    <value>Please print your seed and keep him safe.</value>
+    <value>Please print your seed and keep it safe.</value>
   </data>
   <data name="DlgDescQrCode" xml:space="preserve">
-    <value>Please save your QR code and keep him safe.</value>
+    <value>Please save your QR code and keep it safe.</value>
   </data>
   <data name="DlgDescSeedView" xml:space="preserve">
     <value>Navigate up and down, to see the full seed.</value>
@@ -187,7 +187,7 @@
     <value>Take a new seed to create an account or set a seed to get access to an existing.</value>
   </data>
   <data name="DlgDescWriteSeedDown" xml:space="preserve">
-    <value>Please write your seed down and keep him safe.</value>
+    <value>Please write your seed down and keep it safe.</value>
   </data>
   <data name="DlgGenerateSeed" xml:space="preserve">
     <value>Generate new seed</value>
@@ -202,10 +202,10 @@
     <value>Your seed is the master key to your account. It is 81 characters long, using only letters A-Z or the number 9.</value>
   </data>
   <data name="DlgHelpSeedDesc1" xml:space="preserve">
-    <value>You can use it to access your account from any device, where chiota is installed.</value>
+    <value>You can use it to access your account from any device, where Chiota is installed.</value>
   </data>
   <data name="DlgHelpSeedDesc2" xml:space="preserve">
-    <value>But if you lose your seed, you also lose your account.</value>
+    <value>If you lose your seed, you also lose access to your account.</value>
   </data>
   <data name="DlgLeastSecure" xml:space="preserve">
     <value>Least secure</value>
