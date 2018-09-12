@@ -30,7 +30,7 @@
         case ResponseCode.Success:
           await view.DisplayAlertAsync(
             "Successful Request",
-            "Your new contact needs to accept the request before you can start chatting!.");
+            "Your new contact needs to accept the request before you can start chatting!");
           break;
         case ResponseCode.NoContactInformationPresent:
         case ResponseCode.AmbiguousContactInformation:

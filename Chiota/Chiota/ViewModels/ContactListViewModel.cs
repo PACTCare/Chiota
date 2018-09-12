@@ -93,7 +93,7 @@
       }
       else
       {
-        await this.DisplayAlertAsync("Error", "An error occured while adding the contact.");
+        await this.DisplayAlertAsync("Error", $"An error (Code: {(int)response.Code}) occured while adding the contact.");
       }
     }
 
