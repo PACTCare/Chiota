@@ -7,9 +7,9 @@
     <Color x:Key="NavigationBarTextColor">#ffffff</Color>
     <Color x:Key="ButtonTextColor">#ffffff</Color>
     <Color x:Key="PopupTextColor">#ffffff</Color>
-    <Color x:Key="HighlightedTextColor">#81d4fa</Color>
+    <Color x:Key="HighlightedColor">#48ffffff</Color>
     <Color x:Key="AttentionHighlightedTextColor">#ff0000</Color>
-    <Color x:Key="FadedTextColor">#bdbdbd</Color>
+    <Color x:Key="FadedColor">#16ffffff</Color>
 
     <Color x:Key="AccentDarkColor">#00236a</Color>
     <Color x:Key="AccentColor">#1d4999</Color>

@@ -44,18 +44,10 @@
                     </Frame>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <StackLayout HorizontalOptions="CenterAndExpand">
-                            <Label Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupLabel14}" TextColor="{Binding NegButtonTextColor}" HorizontalOptions="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding NegCommand}"/>
-                                </Label.GestureRecognizers>
-                            </Label>
+                          <Button Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding NegButtonColor}" HorizontalOptions="Center" Command="{Binding NegCommand}"/>
                         </StackLayout>
                         <StackLayout HorizontalOptions="CenterAndExpand">
-                            <Label Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupLabel14}" TextColor="{Binding PosButtonTextColor}" HorizontalOptions="Center">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding PosCommand}"/>
-                                </Label.GestureRecognizers>
-                            </Label>
+                          <Button Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding PosButtonColor}" HorizontalOptions="Center" Command="{Binding PosCommand}"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

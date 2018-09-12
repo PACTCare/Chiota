@@ -55,6 +55,9 @@
     }
 
     [UsedImplicitly]
+    public ICommand SaveCommand => new Command(async () => { await this.SaveSettings(); });
+
+    [UsedImplicitly]
     public ApplicationSettings ApplicationSettings
     {
       get => this.applicationSettings;

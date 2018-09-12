@@ -34,7 +34,7 @@
                 <Setter Property="WidthRequest">
                     <OnIdiom x:TypeArguments="x:Double" Phone="64" Tablet="64" Desktop="64" TV="64"/>
                 </Setter>
-                <Setter Property="Source" Value="Assets\loading.png"/>
+                <Setter Property="Source" Value="loading.png"/>
             </Style>
 
             <Style x:Key="LoadingPopupFrame" TargetType="Frame" BasedOn="{StaticResource PopupFrame}">

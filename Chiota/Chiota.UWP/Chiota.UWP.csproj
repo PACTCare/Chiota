@@ -177,7 +177,7 @@
     <Content Include="chiota.png" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
-    <Content Include="Assets\loading.png" />
+    <Content Include="loading.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
