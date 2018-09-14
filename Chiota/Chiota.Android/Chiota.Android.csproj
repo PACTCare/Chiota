@@ -19,7 +19,8 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <AndroidKeyStore>false</AndroidKeyStore>
-    <AndroidSigningKeyStore>C:\Users\david\AppData\Local\Xamarin\Mono for Android\Keystore\Noc2\Noc2.keystore</AndroidSigningKeyStore>
+    <AndroidSigningKeyStore>
+    </AndroidSigningKeyStore>
     <AndroidSigningStorePass>
     </AndroidSigningStorePass>
     <AndroidSigningKeyAlias>

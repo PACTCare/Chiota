@@ -6,8 +6,6 @@
 
   using Tangle.Net.Entity;
 
-  using Xamarin.Forms;
-
   /// <summary>
   /// The user service.
   /// </summary>
@@ -18,9 +16,6 @@
       this.UserFactory = userFactory;
     }
 
-    /// <summary>
-    /// Gets the current.
-    /// </summary>
     public static User CurrentUser { get; private set; }
 
     private IUserFactory UserFactory { get; }
