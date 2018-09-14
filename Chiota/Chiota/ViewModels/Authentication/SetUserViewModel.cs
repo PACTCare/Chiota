@@ -151,7 +151,7 @@ namespace Chiota.ViewModels.Authentication
                         await this.UserService.CreateNew(this.UserProperties);
                         await this.PopPopupAsync();
 
-                        Application.Current.MainPage = new NavigationPage(new ContactPage());
+                        Application.Current.MainPage = new NavigationPage(new ContactView());
                     });
             }
         }

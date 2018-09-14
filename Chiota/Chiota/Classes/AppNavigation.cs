@@ -1,5 +1,4 @@
-﻿using Chiota.Pages.Authentication;
-using Chiota.Services.DependencyInjection;
+﻿using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 
@@ -7,7 +6,9 @@ using Xamarin.Forms;
 
 namespace Chiota.Classes
 {
-    public static class AppNavigation
+  using Chiota.Views.Authentication;
+
+  public static class AppNavigation
     {
         #region Attributes
 
@@ -33,12 +34,12 @@ namespace Chiota.Classes
             if (SecureStorage.IsUserStored)
             {
                 // User is logged in.
-                container = SetNavigationStyles(new NavigationPage(new LogInPage()));
+                container = SetNavigationStyles(new NavigationPage(new LogInView()));
             }
             else
             {
                 // Database is empty or no user is logged in.
-                container = SetNavigationStyles(new NavigationPage(new WelcomePage()));
+                container = SetNavigationStyles(new NavigationPage(new WelcomeView()));
             }
 
             // Show the page.

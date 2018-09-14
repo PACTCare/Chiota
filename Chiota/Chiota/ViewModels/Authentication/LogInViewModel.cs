@@ -2,8 +2,6 @@
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Pages.Authentication;
-using Chiota.Pages.Help;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 using Chiota.Views;
@@ -15,6 +13,8 @@ namespace Chiota.ViewModels.Authentication
   using System;
 
   using Chiota.Annotations;
+  using Chiota.Views.Authentication;
+  using Chiota.Views.Help;
 
   /// <summary>
     /// The log in view model.
@@ -72,7 +72,7 @@ namespace Chiota.ViewModels.Authentication
                             await this.DisplayLoadingSpinnerAsync("Logging you in ...");
 
                             await SecureStorage.LoginUser(this.Password);
-                            Application.Current.MainPage = new NavigationPage(new ContactPage());
+                            Application.Current.MainPage = new NavigationPage(new ContactView());
 
                             await this.PopPopupAsync();
                         }
@@ -89,19 +89,19 @@ namespace Chiota.ViewModels.Authentication
 
         #region NewSeed
 
-        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedPage()); });
+        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedView()); });
 
         #endregion
 
         #region SetSeed
 
-        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedPage()); });
+        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedView()); });
 
         #endregion
 
         #region SeedHelp
 
-        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpPage()); });
+        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpView()); });
 
     #endregion
 

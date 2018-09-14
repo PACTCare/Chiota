@@ -3,11 +3,11 @@
     using System.Windows.Input;
 
     using Chiota.Annotations;
-    using Chiota.Pages.BackUp;
     using Chiota.Services;
     using Chiota.Services.DependencyInjection;
     using Chiota.Services.UserServices;
     using Chiota.ViewModels.Classes;
+    using Chiota.Views.BackUp;
 
     using Xamarin.Forms;
 
@@ -74,19 +74,19 @@
 
         #region WriteSeed
 
-        public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedPage(), this.UserProperties.Seed.Value); });
+        public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedView(), this.UserProperties.Seed.Value); });
 
         #endregion
 
         #region PrintPaper
 
-        public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyPage(), this.UserProperties.Seed.Value); });
+        public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyView(), this.UserProperties.Seed.Value); });
 
         #endregion
 
         #region QrCode
 
-        public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodePage(), this.UserProperties.Seed.Value); });
+        public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodeView(), this.UserProperties.Seed.Value); });
 
         #endregion
 
@@ -103,7 +103,7 @@
 
         #region Continue
 
-        public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedPage(), this.UserProperties); });
+        public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedView(), this.UserProperties); });
 
         #endregion
 

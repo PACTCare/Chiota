@@ -4,8 +4,6 @@
   using System.Globalization;
   using System.Reflection;
 
-  using Autofac;
-
   using Chiota.Services.DependencyInjection;
 
   using Xamarin.Forms;
@@ -44,9 +42,14 @@
 
       var viewType = view.GetType();
 
-      var viewName = viewType.FullName.Replace(".Pages.", ".ViewModels.");
+      if (viewType.FullName == null)
+      {
+        return;
+      }
+
+      var viewName = viewType.FullName.Replace(".Views.", ".ViewModels.");
       var viewAssemblyName = viewType.GetTypeInfo().Assembly.FullName;
-      var viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}Model, {1}", viewName, viewAssemblyName).Replace("Page", "View");
+      var viewModelName = string.Format(CultureInfo.InvariantCulture, "{0}Model, {1}", viewName, viewAssemblyName);
 
       var viewModelType = Type.GetType(viewModelName);
       if (viewModelType == null)
@@ -56,6 +59,11 @@
 
       var viewModel = DependencyResolver.Resolve(viewModelType);
       view.BindingContext = viewModel;
+
+      if (viewModel is BaseViewModel baseViewModel && view is Page page)
+      {
+        baseViewModel.Setup(page);
+      }
     }
   }
 }
