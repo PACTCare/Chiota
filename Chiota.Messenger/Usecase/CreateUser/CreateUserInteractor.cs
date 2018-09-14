@@ -25,6 +25,7 @@
     private IAddressGenerator AddressGenerator { get; }
 
     /// <inheritdoc />
+    /// TODO: move the contact information uploading to contact repository
     public async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
     {
       try
@@ -36,6 +37,7 @@
 
         var ntruKeyPair =
           new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);
+
         var publicKeyTrytes = ntruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
 
         var requestAddressPayload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
