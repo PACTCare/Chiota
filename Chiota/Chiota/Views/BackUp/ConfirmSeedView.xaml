@@ -1,35 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
-             x:Class="Chiota.Views.Authentication.SetPasswordView"
+             xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
+             x:Class="Chiota.Views.BackUp.ConfirmSeedView"
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
-             NavigationPage.HasBackButton="False"
-             Title="{extensions:Translate CmnSetPassword}">
+             Title="{extensions:Translate CmnConfirmSeed}">
 
     <ContentPage.BindingContext>
-      <authentication:SetPasswordViewModel/>
+        <backUp:ConfirmSeedViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescSetPassword}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescConfirmSeed}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand">
-                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True"/>
-                        </Frame>
-                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding RepeatPassword}" Placeholder="{extensions:Translate DlgRepeatPassword}" IsPassword="True"/>
-                        </Frame>
+                        <!--<Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
+                        </Frame>-->
+                        <validations:SeedValidationEntry Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" WidthRequest="256" FontAttributes="Bold" Text="{extensions:Translate DlgScanQrCode}" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

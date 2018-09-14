@@ -5,6 +5,8 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
              x:Class="Chiota.Views.Authentication.SetSeedView"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              Title="{extensions:Translate CmnSetSeed}">
 
     <ContentPage.BindingContext>

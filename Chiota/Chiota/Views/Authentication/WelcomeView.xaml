@@ -4,6 +4,8 @@
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.Authentication.WelcomeView"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              NavigationPage.HasNavigationBar="False">
 
     <ContentPage.BindingContext>

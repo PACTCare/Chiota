@@ -4,6 +4,8 @@
              xmlns:help="clr-namespace:Chiota.ViewModels.Help"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.Help.SeedHelpView"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              Title="{extensions:Translate CmnHelp}">
 
     <ContentPage.BindingContext>

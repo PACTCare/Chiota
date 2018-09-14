@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
-             xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              x:Class="Chiota.Views.Authentication.LogInView"
              NavigationPage.HasNavigationBar="False">
 

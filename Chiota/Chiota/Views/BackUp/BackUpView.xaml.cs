@@ -1,13 +1,12 @@
-﻿namespace Chiota.Views.Authentication
+﻿namespace Chiota.Views.BackUp
 {
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;
 
-  /// <inheritdoc />
   [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class LogInView : ContentPage
+  public partial class BackUpView : ContentPage
   {
-    public LogInView()
+    public BackUpView()
     {
       this.InitializeComponent();
     }

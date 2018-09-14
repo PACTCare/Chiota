@@ -35,41 +35,46 @@
     {
       var builder = new ContainerBuilder();
 
+      builder.RegisterModule(new ViewModelInjectionModule());
       foreach (var module in Modules)
       {
         builder.RegisterModule(module);
       }
 
-      builder.RegisterModule(new ViewModelInjectionModule());
-
       builder.RegisterType<UserFactory>().As<IUserFactory>();
+      builder.RegisterType<UserService>().PropertiesAutowired();
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
 
       builder.RegisterType<TangleMessenger>().As<IMessenger>().PropertiesAutowired();
 
       builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
-      builder.RegisterType<AddContactViewModel>().As<AddContactViewModel>().PropertiesAutowired();
-
       builder.RegisterType<GetContactsInteractor>().As<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>()
         .PropertiesAutowired();
-
       builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>().PropertiesAutowired();
       builder.RegisterType<DeclineContactInteractor>().As<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>().PropertiesAutowired();
 
       builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
-
-      builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
 
       Container = builder.Build();
     }
 
     public static T Resolve<T>()
     {
+      if (Container == null)
+      {
+        Init();
+      }
+
       return Container.Resolve<T>();
     }
 
     public static object Resolve(Type type)
     {
+      if (Container == null)
+      {
+        Init();
+      }
+
       return Container.Resolve(type);
     }
 

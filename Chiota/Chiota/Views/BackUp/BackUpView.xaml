@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             x:Class="Chiota.Views.BackUp.BackUpView"
+             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             NavigationPage.HasBackButton="False"
+             Title="{extensions:Translate CmnBackUp}">
+
+    <ContentPage.BindingContext>
+      <backUp:BackUpViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+
+        <Style x:Key="BoxViewSeperator" TargetType="BoxView">
+            <Setter Property="BackgroundColor" Value="#000000"/>
+            <Setter Property="HorizontalOptions" Value="Center"/>
+            <Setter Property="WidthRequest" Value="1"/>
+            <Setter Property="HeightRequest" Value="16"/>
+        </Style>
+
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                        <!-- Logo of the iota chat app-->
+                        <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescBackUp}"/>
+                    </StackLayout>
+
+                    <StackLayout VerticalOptions="CenterAndExpand" Spacing="2">
+                        <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgMostSecure}" HorizontalOptions="Center"/>
+                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgWriteSeedDown}" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
+                        <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="Print paper copy" FontAttributes="Bold" Command="{Binding PrintPaperCommand}"/>-->
+                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>
+                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="Copy to Clipboard" FontAttributes="Bold" Command="{Binding CopyToClipboardCommand}"/>
+                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgLeastSecure}" HorizontalOptions="Center"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" IsVisible="{Binding IsContinueVisible}" Command="{Binding ContinueCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

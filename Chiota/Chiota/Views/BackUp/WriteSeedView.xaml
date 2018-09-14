@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication;assembly=Chiota"
+             xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp"
              xmlns:bindable="clr-namespace:Chiota.Controls.Bindable;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             x:Class="Chiota.Views.BackUp.WriteSeedView"
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
-             x:Class="Chiota.Views.Authentication.NewSeedView"
-             Title="{extensions:Translate CmnNewSeed}">
+             Title="{extensions:Translate CmnWriteSeedDown}">
 
     <ContentPage.BindingContext>
-      <authentication:NewSeedViewModel/>
+      <backUp:WriteSeedViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Resources>
@@ -31,7 +31,7 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescNewSeed}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescWriteSeedDown}"/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand" IsVisible="{Binding IsSeedViewVisible}">
@@ -51,7 +51,6 @@
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGenerateSeed}" WidthRequest="256"  Command="{Binding GenerateSeedCommand}"/>
                     <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
