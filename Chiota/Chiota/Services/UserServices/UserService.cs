@@ -49,10 +49,6 @@
     {
       var user = await this.UserFactory.CreateAsync(properties.Seed, properties.Name);
 
-      var publicKeyTrytes = user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
-      var requestAddressTrytes = new TryteString(publicKeyTrytes + ChiotaConstants.LineBreak + user.RequestAddress + ChiotaConstants.End);
-      await user.TangleMessenger.SendMessageAsync(requestAddressTrytes, user.PublicKeyAddress);
-
       SecureStorage.StoreUser(user, properties.Password);
       SetCurrentUser(user);
     }
