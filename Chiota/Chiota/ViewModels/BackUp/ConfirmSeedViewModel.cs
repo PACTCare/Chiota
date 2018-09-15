@@ -2,7 +2,6 @@
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Pages.Authentication;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 
@@ -14,7 +13,9 @@ using ZXing.Net.Mobile.Forms;
 
 namespace Chiota.ViewModels.BackUp
 {
-    public class ConfirmSeedViewModel : BaseViewModel
+  using Chiota.Views.Authentication;
+
+  public class ConfirmSeedViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -114,7 +115,7 @@ namespace Chiota.ViewModels.BackUp
                             return;
                         }
 
-                        await this.PushAsync(new SetPasswordPage(), this.UserProperties);
+                        await this.PushAsync(new SetPasswordView(), this.UserProperties);
                         return;
                     }
 

@@ -1,10 +1,6 @@
 ﻿namespace Chiota
 {
-  using System;
-
   using Chiota.Classes;
-  using Chiota.Services.DependencyInjection;
-  using Chiota.Services.UserServices;
 
   /// <summary>
   /// The app.
@@ -41,7 +37,6 @@
     /// </summary>
     protected override void OnStart()
     {
-      DependencyResolver.Init();
     }
   }
 }

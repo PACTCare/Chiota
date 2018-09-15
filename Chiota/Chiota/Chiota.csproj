@@ -58,14 +58,56 @@
     <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
       <DependentUpon>*.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    <Compile Update="Views\Authentication\LogInView.xaml.cs">
+      <DependentUpon>LogInView.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Pages\AddContactPage.xaml.cs">
-      <DependentUpon>AddContactPage.xaml</DependentUpon>
+    <Compile Update="Views\Authentication\NewSeedView.xaml.cs">
+      <DependentUpon>NewSeedView.xaml</DependentUpon>
     </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Pages\ChatPage.xaml.cs">
-      <DependentUpon>ChatPage.xaml</DependentUpon>
+    <Compile Update="Views\Authentication\SetPasswordView.xaml.cs">
+      <DependentUpon>SetPasswordView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authentication\SetSeedView.xaml.cs">
+      <DependentUpon>SetSeedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authentication\SetUserView.xaml.cs">
+      <DependentUpon>SetUserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Authentication\WelcomeView.xaml.cs">
+      <DependentUpon>WelcomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BackUp\BackUpView.xaml.cs">
+      <DependentUpon>BackUpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BackUp\ConfirmSeedView.xaml.cs">
+      <DependentUpon>ConfirmSeedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BackUp\PaperCopyView.xaml.cs">
+      <DependentUpon>PaperCopyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BackUp\QrCodeView.xaml.cs">
+      <DependentUpon>QrCodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BackUp\WriteSeedView.xaml.cs">
+      <DependentUpon>WriteSeedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BotChatView.xaml.cs">
+      <DependentUpon>BotChatView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ContactView.xaml.cs">
+      <DependentUpon>ContactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Help\SeedHelpView.xaml.cs">
+      <DependentUpon>SeedHelpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\AddContactView.xaml.cs">
+      <DependentUpon>AddContactView.xaml</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Views\ChatView.xaml.cs">
+      <DependentUpon>ChatView.xaml</DependentUpon>
     </Compile>
     <Compile Update="Resources\Localizations\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -86,40 +128,40 @@
     <EmbeddedResource Update="CustomCells\RequestContactViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\LogInPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\LogInView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\NewSeedPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\NewSeedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\SetPasswordPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\SetPasswordView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\SetSeedPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\SetSeedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\SetUserPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\SetUserView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Authentication\WelcomePage.xaml">
+    <EmbeddedResource Update="Views\Authentication\WelcomeView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BackUp\BackUpPage.xaml">
+    <EmbeddedResource Update="Views\BackUp\BackUpView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BackUp\ConfirmSeedPage.xaml">
+    <EmbeddedResource Update="Views\BackUp\ConfirmSeedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BackUp\PaperCopyPage.xaml">
+    <EmbeddedResource Update="Views\BackUp\PaperCopyView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BackUp\QrCodePage.xaml">
+    <EmbeddedResource Update="Views\BackUp\QrCodeView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BackUp\WriteSeedPage.xaml">
+    <EmbeddedResource Update="Views\BackUp\WriteSeedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\Help\SeedHelpPage.xaml">
+    <EmbeddedResource Update="Views\Help\SeedHelpView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Popups\PopupPages\AlertPopupPage.xaml">
@@ -145,13 +187,13 @@
     <EmbeddedResource Update="Resources\Themes\DefaultTheme.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\AddContactPage.xaml">
+    <EmbeddedResource Update="Views\AddContactView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\BotChatPage.xaml">
+    <EmbeddedResource Update="Views\BotChatView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\ContactPage.xaml">
+    <EmbeddedResource Update="Views\ContactView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="CustomCells\IncomingViewCell.xaml">
@@ -160,7 +202,7 @@
     <EmbeddedResource Update="CustomCells\OutgoingViewCell.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Authentication\LoginPage.xaml">
+    <EmbeddedResource Update="Views\Authentication\LogInView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

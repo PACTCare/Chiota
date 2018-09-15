@@ -2,7 +2,6 @@
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Pages.Authentication;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 
@@ -10,7 +9,9 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-    public class SetPasswordViewModel : BaseViewModel
+  using Chiota.Views.Authentication;
+
+  public class SetPasswordViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -92,7 +93,7 @@ namespace Chiota.ViewModels.Authentication
                         }
 
                         this.UserProperties.Password = this.Password;
-                        await this.PushAsync(new SetUserPage(), this.UserProperties);
+                        await this.PushAsync(new SetUserView(), this.UserProperties);
                     });
             }
         }

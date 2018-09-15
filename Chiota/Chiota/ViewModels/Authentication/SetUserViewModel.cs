@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-    public class SetUserViewModel : BaseViewModel
+  public class SetUserViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -63,12 +63,6 @@ namespace Chiota.ViewModels.Authentication
 
         #region Constructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetUserViewModel"/> class.
-        /// </summary>
-        /// <param name="userService">
-        /// The user service.
-        /// </param>
         public SetUserViewModel(UserService userService)
         {
             this.UserService = userService;
@@ -157,7 +151,7 @@ namespace Chiota.ViewModels.Authentication
                         await this.UserService.CreateNew(this.UserProperties);
                         await this.PopPopupAsync();
 
-                        Application.Current.MainPage = new NavigationPage(new ContactPage());
+                        Application.Current.MainPage = new NavigationPage(new ContactView());
                     });
             }
         }

@@ -19,8 +19,6 @@
 
   using Tangle.Net.Entity;
 
-  using ChatPage = Views.ChatPage;
-
   public class ContactViewModel : BaseViewModel
   {
     private ObservableCollection<ContactListViewModel> contactList;
@@ -88,11 +86,11 @@
       var bot = BotList.Bots.Find(b => b.BotSlogan == contact.ChatAddress);
       if (bot != null)
       {
-        await this.Navigation.PushAsync(new BotChatPage(bot));
+        await this.Navigation.PushAsync(new BotChatView(bot));
       }
       else
       {
-        await this.Navigation.PushAsync(new ChatPage(contact));
+        await this.Navigation.PushAsync(new ChatView(contact));
       }
     }
 

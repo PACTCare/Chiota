@@ -6,15 +6,16 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.BackUp;
-using Chiota.Pages.BackUp;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
-{    
-    /// <summary>
+{
+  using Chiota.Views.BackUp;
+
+  /// <summary>
     /// The new seed view model.
     /// </summary>
     public class NewSeedViewModel : BaseViewModel
@@ -243,7 +244,7 @@ namespace Chiota.ViewModels.Authentication
                         return;
                     }
 
-                    await this.PushAsync(new BackUpPage(), new UserCreationProperties { Seed = new Tangle.Net.Entity.Seed(this.ExtractSeed()) });
+                    await this.PushAsync(new BackUpView(), new UserCreationProperties { Seed = new Tangle.Net.Entity.Seed(this.ExtractSeed()) });
                 });
             }
         }
