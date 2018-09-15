@@ -3,8 +3,6 @@
   using System;
   using System.Text;
 
-  using Tangle.Net.Entity;
-
   public static class Helper
   {
     public static string TryteStringIncrement(string tryteString)
@@ -34,14 +32,6 @@
       }
 
       return tryteString;
-    }
-
-    public static Address GenerateAddress(Address baseAddress)
-    {
-      var addressString = baseAddress.ToString();
-      var length = addressString.Length;
-      addressString = addressString.Substring(0, length - 12) + TryteStringIncrement(addressString.Substring(length - 12, 12));
-      return new Address(addressString);
     }
   }
 }

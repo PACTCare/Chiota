@@ -2,42 +2,30 @@
 {
   using System.Collections.Generic;
 
-  /// <summary>
-  /// The message type.
-  /// </summary>
   public static class MessageType
   {
-    /// <summary>
-    /// The accept contact.
-    /// </summary>
     public const string AcceptContact = "AcceptContact";
 
-    /// <summary>
-    /// The chat message.
-    /// </summary>
     public const string ChatMessage = "ChatMessage";
 
-    /// <summary>
-    /// The key exchange.
-    /// </summary>
     public const string KeyExchange = "KeyExchange";
 
-    /// <summary>
-    /// The request contact.
-    /// </summary>
     public const string RequestContact = "RequestContact";
 
-    /// <summary>
-    /// Initializes static members of the <see cref="MessageType"/> class.
-    /// </summary>
+    public const string CreateUser = "CreateUser";
+
     static MessageType()
     {
-      Types = new List<string> { RequestContact, KeyExchange, AcceptContact, ChatMessage };
+      Types = new List<string>
+                {
+                  RequestContact,
+                  KeyExchange,
+                  AcceptContact,
+                  ChatMessage,
+                  CreateUser
+                };
     }
 
-    /// <summary>
-    /// Gets or sets the types.
-    /// </summary>
     public static List<string> Types { get; set; }
   }
 }

@@ -2,6 +2,7 @@
 {
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Repository;
   using Chiota.Models;
 
   using Xamarin.Forms;
@@ -11,8 +12,6 @@
   /// </summary>
   public class ApplicationSettings
   {
-    public const string DefaultNode = "https://field.deviota.com:443";
-
     private ApplicationSettings()
     {
     }
@@ -23,8 +22,13 @@
 
     public static ApplicationSettings Load()
     {
-      var node = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsNodeKey) ? Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string : DefaultNode;
-      var remotePoW = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey) ? Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool? : true;
+      var node = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsNodeKey)
+                   ? Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string
+                   : MessengerIotaClient.DefaultNodeUri;
+
+      var remotePoW = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey)
+                        ? Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?
+                        : true;
 
       return new ApplicationSettings { DoRemotePoW = remotePoW == true, IotaNodeUri = node };
     }
