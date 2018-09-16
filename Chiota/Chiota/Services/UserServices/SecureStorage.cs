@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
+  using Chiota.Messenger.Service;
   using Chiota.Models;
   using Chiota.Services.Iota;
 
@@ -12,6 +13,8 @@
   using Plugin.SecureStorage;
 
   using Tangle.Net.Entity;
+
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
   [ExcludeFromCodeCoverage]
   public static class SecureStorage
@@ -32,9 +35,12 @@
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
-      decryptedUser.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
-      decryptedUser = await UserDataOnTangle.CheckPublicKeyForSingularity(decryptedUser);
+      decryptedUser.NtruKeyPair =
+        new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(
+          decryptedUser.Seed.ToLower(),
+          decryptedUser.PublicKeyAddress);
 
+      decryptedUser = await UserDataOnTangle.CheckPublicKeyForSingularity(decryptedUser);
       UserService.SetCurrentUser(decryptedUser);
     }
 

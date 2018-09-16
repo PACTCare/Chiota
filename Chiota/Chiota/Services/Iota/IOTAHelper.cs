@@ -59,7 +59,8 @@
             encryptedMessage = new TryteString(sortedEncryptedMessages[i + 1].Message + sortedEncryptedMessages[i].Message);
           }
 
-          var decryptedMessage = Encoding.UTF8.GetString(new NtruKex().Decrypt(keyPair, encryptedMessage.DecodeBytesFromTryteString()));
+          var decryptedMessage = Encoding.UTF8.GetString(
+            new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1).Decrypt(keyPair, encryptedMessage.DecodeBytesFromTryteString()));
           messageViewModels.Add(new MessageViewModel
           {
             Text = decryptedMessage,
@@ -122,7 +123,7 @@
         try
         {
           var pasSalt = Encoding.UTF8.GetString(
-            new NtruKex(true).Decrypt(user.NtruKeyPair, message.Payload.DecodeBytesFromTryteString()));
+            new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Decrypt(user.NtruKeyPair, message.Payload.DecodeBytesFromTryteString()));
           if (pasSalt != string.Empty)
           {
             chatPasSalt.Add(pasSalt);
