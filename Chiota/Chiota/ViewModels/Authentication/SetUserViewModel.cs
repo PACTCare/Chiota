@@ -4,12 +4,11 @@ using System.Windows.Input;
 using Chiota.Annotations;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 using Chiota.Views;
-
-using Plugin.FilePicker;
-
+using Plugin.Media;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -21,6 +20,7 @@ namespace Chiota.ViewModels.Authentication
         private string name;
         private double profileImageOpacity;
         private ImageSource profileImageSource;
+        private string imagePath;
 
         private UserCreationProperties UserProperties;
         private UserService UserService;
@@ -80,7 +80,8 @@ namespace Chiota.ViewModels.Authentication
             this.UserProperties = data as UserCreationProperties;
 
             // Set the default opacity.
-            this.ProfileImageSource = ImageSource.FromFile("account.png");
+            imagePath = "account.png";
+            this.ProfileImageSource = ImageSource.FromFile(imagePath);
             this.ProfileImageOpacity = 0.6;
         }
 
@@ -110,16 +111,20 @@ namespace Chiota.ViewModels.Authentication
                 return new Command(async () =>
                     {
                         // Open the file explorer of the device and the user choose a image.
-                        var fileData = await CrossFilePicker.Current.PickFile();
-                        if (fileData == null)
-                        {
+                        await CrossMedia.Current.Initialize();
+
+                        if (!CrossMedia.Current.IsPickPhotoSupported)
                             return;
-                        }
+
+                        var media = await CrossMedia.Current.PickPhotoAsync();
+                        if (media?.Path == null)
+                            return;
 
                         try
                         {
                             // Load the image.
-                            this.ProfileImageSource = ImageSource.FromStream(() => fileData.GetStream());
+                            imagePath = media.Path;
+                            this.ProfileImageSource = ImageSource.FromFile(imagePath);
                             this.ProfileImageOpacity = 1;
                         }
                         catch (Exception)
@@ -147,8 +152,13 @@ namespace Chiota.ViewModels.Authentication
                         }
 
                         await this.DisplayLoadingSpinnerAsync("Setting up your account");
+
                         this.UserProperties.Name = this.Name;
                         await this.UserService.CreateNew(this.UserProperties);
+
+                        UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(imagePath);
+                        SecureStorage.UpdateUser(UserProperties.Password);
+
                         await this.PopPopupAsync();
 
                         Application.Current.MainPage = new NavigationPage(new ContactView());
