@@ -80,7 +80,7 @@
     /// </returns>
     private async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
     {
-      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new RequestContactBundleParser());
+      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new MessageBundleParser());
       var chatPasSalt = new List<string>();
       foreach (var message in messages)
       {

@@ -23,7 +23,7 @@
 
     public async Task<User> UniquePublicKey()
     {
-      var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, this.user.PublicKeyAddress, true);
+      var publicKeyList = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.PublicKeyAddress);
       var requestAdressTrytes = new TryteString(this.user.NtruKeyPair.PublicKey.ToBytes().EncodeBytesAsString() + ChiotaConstants.LineBreak + this.user.RequestAddress + ChiotaConstants.End);
 
       // after a snapshot, upload public key again
@@ -45,7 +45,7 @@
           addresses = await Task.Factory.StartNew(() => addressGenerator.GetAddresses(new Seed(newSeed), SecurityLevel.Medium, 0, 1));
 
           // returns also null if something wrong with ntru key pair
-          newContacts = await IotaHelper.GetPublicKeysAndContactAddresses(this.user.TangleMessenger, addresses[0].ToString(), true);
+          newContacts = await IotaHelper.GetPublicKeysAndContactAddresses(addresses[0].ToString());
 
           if (newContacts == null || newContacts.Count == 0)
           {

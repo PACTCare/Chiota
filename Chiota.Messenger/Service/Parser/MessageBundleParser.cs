@@ -7,7 +7,7 @@
 
   using Tangle.Net.Entity;
 
-  public class RequestContactBundleParser : IBundleParser
+  public class MessageBundleParser : IBundleParser
   {
     /// <inheritdoc />
     public List<Message> ParseBundle(Bundle bundle)

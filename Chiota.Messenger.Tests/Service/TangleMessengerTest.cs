@@ -69,7 +69,7 @@
 
         await messenger.SendMessageAsync(new Message(payload, receiver));
 
-        var sentMessages = await messenger.GetMessagesByAddressAsync(receiver, new RequestContactBundleParser());
+        var sentMessages = await messenger.GetMessagesByAddressAsync(receiver, new MessageBundleParser());
 
         Assert.AreEqual("Hi. I'm a test", sentMessages[0].Payload.ToUtf8String());
       }

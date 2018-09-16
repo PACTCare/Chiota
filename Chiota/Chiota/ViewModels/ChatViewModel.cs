@@ -149,7 +149,7 @@ namespace Chiota.ViewModels
       if (this.loadNewMessages)
       {
         this.loadNewMessages = false;
-        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact, UserService.CurrentUser.TangleMessenger);
+        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact);
         if (newMessages.Count > 0)
         {
           foreach (var m in newMessages)

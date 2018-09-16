@@ -67,14 +67,15 @@
         var contactNotificationId = 0;
         foreach (var contact in response.ApprovedContacts.Where(c => !c.Rejected))
         {
-          var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
+          // TODO: currently not working since transaction cache gets wiped on logout
+          //var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
 
-          if (encryptedMessages.Any(c => !c.Stored))
-          {
-            this.CreateNotification(contactNotificationId, contact);
-          }
+          //if (encryptedMessages.Any(c => !c.Stored))
+          //{
+          //  this.CreateNotification(contactNotificationId, contact);
+          //}
 
-          contactNotificationId++;
+          //contactNotificationId++;
         }
       }
 

@@ -8,11 +8,12 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Service;
+  using Chiota.Messenger.Service.Parser;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
   using Chiota.ViewModels;
-
-  using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
 
@@ -24,51 +25,16 @@
   /// </summary>
   public static class IotaHelper
   {
-    /// <summary>
-    /// The extract message.
-    /// </summary>
-    /// <param name="bundle">
-    /// The bundle.
-    /// </param>
-    /// <returns>
-    /// The <see cref="TryteString"/>.
-    /// </returns>
-    public static TryteString ExtractMessage(Bundle bundle)
+    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact)
     {
-      var messageTrytes = string.Empty;
-
-      // multiple message per bundle?
-      foreach (var transaction in bundle.Transactions)
-      {
-        if (transaction.Value < 0)
-        {
-          continue;
-        }
-
-        if (!transaction.Fragment.IsEmpty)
-        {
-          messageTrytes += transaction.Fragment.Value;
-        }
-      }
-
-      if (!messageTrytes.Contains(ChiotaConstants.End))
-      {
-        return null;
-      }
-
-      var index = messageTrytes.IndexOf(ChiotaConstants.End, StringComparison.Ordinal);
-      return new TryteString(messageTrytes.Substring(0, index));
-    }
-
-    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
-    {
-      var trytes = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
+      var messages = await DependencyResolver.Resolve<IMessenger>()
+                       .GetMessagesByAddressAsync(new Address(contact.ChatAddress), new MessageBundleParser());
       var messagesEncrypted = new List<ChatMessage>();
-      foreach (var tryte in trytes)
+      foreach (var message in messages)
       {
         try
         {
-          messagesEncrypted.Add(ReadChatMessage(tryte));
+          messagesEncrypted.Add(ReadChatMessage(message));
         }
         catch
         {
@@ -77,7 +43,7 @@
       }
 
       var sortedEncryptedMessages = messagesEncrypted.OrderBy(o => o.Date).ToList();
-      var messages = new List<MessageViewModel>();
+      var messageViewModels = new List<MessageViewModel>();
 
       for (var i = 0; i < sortedEncryptedMessages.Count - 1; i = i + 2)
       {
@@ -94,7 +60,7 @@
           }
 
           var decryptedMessage = Encoding.UTF8.GetString(new NtruKex().Decrypt(keyPair, encryptedMessage.DecodeBytesFromTryteString()));
-          messages.Add(new MessageViewModel
+          messageViewModels.Add(new MessageViewModel
           {
             Text = decryptedMessage,
             MessagDateTime = sortedEncryptedMessages[i].Date.ToLocalTime(),
@@ -108,16 +74,17 @@
         }
       }
 
-      return messages;
+      return messageViewModels;
     }
 
-    public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(TangleMessenger tangleMessenger, string receiverAddress, bool dontLoadSql = false)
+    public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(string receiverAddress)
     {
-      var trytes = await tangleMessenger.GetMessagesAsync(receiverAddress, 3, false, dontLoadSql);
+      var messages = await DependencyResolver.Resolve<IMessenger>()
+                       .GetMessagesByAddressAsync(new Address(receiverAddress), new MessageBundleParser());
       var contacts = new List<Contact>();
-      foreach (var tryte in trytes)
+      foreach (var message in messages)
       {
-        var trytesString = tryte.Message.ToString();
+        var trytesString = message.Payload.Value;
         if (!trytesString.Contains(ChiotaConstants.LineBreak))
         {
           continue;
@@ -147,15 +114,15 @@
 
     public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
     {
-      // Todo sometimes only one tryte
-      var trytes = await user.TangleMessenger.GetMessagesAsync(chatKeyAddress, 3, false, false, true);
+      var messages = await DependencyResolver.Resolve<IMessenger>()
+                       .GetMessagesByAddressAsync(new Address(chatKeyAddress), new MessageBundleParser());
       var chatPasSalt = new List<string>();
-      foreach (var tryte in trytes)
+      foreach (var message in messages)
       {
         try
         {
           var pasSalt = Encoding.UTF8.GetString(
-            new NtruKex(true).Decrypt(user.NtruKeyPair, tryte.Message.DecodeBytesFromTryteString()));
+            new NtruKex(true).Decrypt(user.NtruKeyPair, message.Payload.DecodeBytesFromTryteString()));
           if (pasSalt != string.Empty)
           {
             chatPasSalt.Add(pasSalt);
@@ -175,9 +142,9 @@
       return null;
     }
 
-    private static ChatMessage ReadChatMessage(TryteStringMessage tryte)
+    private static ChatMessage ReadChatMessage(Message message)
     {
-      var trytesString = tryte.Message.ToString();
+      var trytesString = message.Payload.Value;
       var firstBreakIndex = trytesString.IndexOf(ChiotaConstants.FirstBreak, StringComparison.Ordinal);
       var secondBreakIndex = trytesString.IndexOf(ChiotaConstants.SecondBreak, StringComparison.Ordinal);
 
