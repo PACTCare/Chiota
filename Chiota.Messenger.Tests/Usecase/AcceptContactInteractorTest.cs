@@ -43,7 +43,7 @@
       Assert.Inconclusive("TODO: To be tested the crypto module needs to be separated from interactor.");
       var inMemoryMessenger = new InMemoryMessenger();
 
-      inMemoryMessenger.SentMessages.Add(new Message(MessageType.RequestContact, new TryteString(""), new Address(Hash.Empty.Value)));
+      inMemoryMessenger.SentMessages.Add(new Message(new TryteString(""), new Address(Hash.Empty.Value)));
 
       var interactor = new AcceptContactInteractor(new InMemoryContactRepository(), inMemoryMessenger);
       var response = await interactor.ExecuteAsync(new AcceptContactRequest

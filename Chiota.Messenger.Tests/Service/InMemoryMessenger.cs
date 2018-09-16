@@ -7,6 +7,7 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
+  using Chiota.Messenger.Service.Parser;
 
   using Tangle.Net.Entity;
 
@@ -30,7 +31,7 @@
     public List<Message> SentMessages { get; set; }
 
     /// <inheritdoc />
-    public async Task<List<Message>> GetMessagesByAddressAsync(Address address)
+    public async Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser)
     {
       return this.SentMessages.Where(m => m.Receiver.Value == address.Value).ToList();
     }

@@ -39,7 +39,7 @@
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
 
-        await this.SendContactDetails(MessageType.RequestContact, requesterDetails, contactInformation.ContactAddress);
+        await this.SendContactDetails(requesterDetails, contactInformation.ContactAddress);
         await this.ExchangeKey(requesterDetails, contactInformation.NtruKey, GetChatPasSalt());
 
         await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);

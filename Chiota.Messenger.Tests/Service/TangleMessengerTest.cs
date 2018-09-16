@@ -6,6 +6,8 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
+  using Chiota.Messenger.Service.Parser;
+  using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Usecase;
 
@@ -17,22 +19,14 @@
     public class TangleMessengerTest
     {
       [TestMethod]
-      [ExpectedException(typeof(MessengerException))]
-      public async Task TestMessageTypeIsUnkownShouldThrowException()
-      {
-        var messenger = new TangleMessenger(new InMemoryIotaRepository());
-        await messenger.SendMessageAsync(new Message("SomeUnkownType", new TryteString(), new Address()));
-      }
-
-      [TestMethod]
       public async Task TestIotaRepositoryThrowsExceptionShouldSetAsInnerExceptionAndRethrowExceptionWithErrorCode()
       {
         var exceptionThrown = false;
 
         try
         {
-          var messenger = new TangleMessenger(new ExceptionIotaRepository());
-          await messenger.SendMessageAsync(new Message(MessageType.RequestContact, new TryteString(), new Address()));
+          var messenger = new TangleMessenger(new ExceptionIotaRepository(), new InMemoryTransactionCache());
+          await messenger.SendMessageAsync(new Message(new TryteString(), new Address()));
         }
         catch (Exception exception)
         {
@@ -50,10 +44,10 @@
       {
         var repository = new InMemoryIotaRepository();
 
-        var messenger = new TangleMessenger(repository);
+        var messenger = new TangleMessenger(repository, new InMemoryTransactionCache());
         var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
         var payload = new TryteString("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        await messenger.SendMessageAsync(new Message(MessageType.RequestContact, payload, receiver));
+        await messenger.SendMessageAsync(new Message(payload, receiver));
 
 
         Assert.AreEqual(1, repository.SentBundles.Count);
@@ -68,14 +62,14 @@
       {
         var repository = new InMemoryIotaRepository();
 
-        var messenger = new TangleMessenger(repository);
+        var messenger = new TangleMessenger(repository, new InMemoryTransactionCache());
 
         var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
         var payload = TryteString.FromUtf8String("Hi. I'm a test").Concat(new TryteString(Constants.End.Value));
 
-        await messenger.SendMessageAsync(new Message(MessageType.RequestContact, payload, receiver));
+        await messenger.SendMessageAsync(new Message(payload, receiver));
 
-        var sentMessages = await messenger.GetMessagesByAddressAsync(receiver);
+        var sentMessages = await messenger.GetMessagesByAddressAsync(receiver, new RequestContactBundleParser());
 
         Assert.AreEqual("Hi. I'm a test", sentMessages[0].Payload.ToUtf8String());
       }

@@ -9,6 +9,7 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
+  using Chiota.Messenger.Service.Parser;
 
   using Tangle.Net.Entity;
 
@@ -48,7 +49,7 @@
         var chatPasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactPublicKeyAddress);
-        await this.SendContactDetails(MessageType.AcceptContact, contactDetails, request.ContactAddress);
+        await this.SendContactDetails(contactDetails, request.ContactAddress);
         await this.ExchangeKey(contactDetails, contactInformation.NtruKey, chatPasSalt);
 
         await this.Repository.AddContactAsync(request.ChatAddress.Value, true, contactDetails.PublicKeyAddress);
@@ -79,7 +80,7 @@
     /// </returns>
     private async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
     {
-      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress);
+      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new RequestContactBundleParser());
       var chatPasSalt = new List<string>();
       foreach (var message in messages)
       {

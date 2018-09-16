@@ -7,7 +7,7 @@
   /// <summary>
   /// The chat adress comparer.
   /// </summary>
-  public class ChatAddressComparer : IEqualityComparer<Contact>
+  public class ContactComparer : IEqualityComparer<Contact>
   {
     /// <summary>
     /// The equals.
