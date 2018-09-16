@@ -47,8 +47,6 @@
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
-
-      decryptedUser.TangleMessenger = new TangleMessenger(new Seed(decryptedUser.Seed));
       decryptedUser.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
 
       UserService.SetCurrentUser(decryptedUser);

@@ -4,8 +4,10 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Service;
   using Chiota.Models;
   using Chiota.Services;
+  using Chiota.Services.DependencyInjection;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Curl;
@@ -29,7 +31,7 @@
       // after a snapshot, upload public key again
       if (publicKeyList.Count == 0)
       {
-        await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, this.user.PublicKeyAddress);
+        await DependencyResolver.Resolve<IMessenger>().SendMessageAsync(new Message(requestAdressTrytes, new Address(this.user.PublicKeyAddress)));
       }
       else if (publicKeyList.Count > 1) 
       {
@@ -49,7 +51,7 @@
 
           if (newContacts == null || newContacts.Count == 0)
           {
-            await this.user.TangleMessenger.SendMessageAsync(requestAdressTrytes, addresses[0].ToString());
+            await DependencyResolver.Resolve<IMessenger>().SendMessageAsync(new Message(requestAdressTrytes, addresses[0]));
           }
 
           this.user.PublicKeyAddress = addresses[0].ToString();

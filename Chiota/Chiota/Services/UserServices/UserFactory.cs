@@ -8,8 +8,6 @@
 
   using Tangle.Net.Entity;
 
-  using TangleMessenger = Iota.TangleMessenger;
-
   /// <inheritdoc />
   public class UserFactory : IUserFactory
   {
@@ -33,7 +31,6 @@
                  StoreSeed = true,
                  PublicKeyAddress = response.PublicKeyAddress.Value, 
                  RequestAddress = response.RequestAddress.Value,
-                 TangleMessenger = new TangleMessenger(seed),
                  NtruKeyPair = response.NtruKeyPair
                };
     }
