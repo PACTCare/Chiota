@@ -30,12 +30,10 @@
                             <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgLogIn}" WidthRequest="256" Command="{Binding LogInCommand}"/>
                         </StackLayout>
 
-                        <Label Text="Open Privacy Policy" 
-                               Style="{DynamicResource Label14}"
-                               HorizontalOptions="Center">
-                          <Label.GestureRecognizers>
-                          <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
-                        </Label.GestureRecognizers>
+                        <Label Text="{extensions:Translate CmnPrivacyPolicy}" Style="{DynamicResource Label14}" HorizontalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
+                            </Label.GestureRecognizers>
                         </Label>
 
                         <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgHelpSeed}" HorizontalOptions="Center" Opacity="0.6">

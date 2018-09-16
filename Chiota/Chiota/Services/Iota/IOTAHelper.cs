@@ -60,7 +60,7 @@
       return new TryteString(messageTrytes.Substring(0, index));
     }
 
-    public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
+    /*public static async Task<List<MessageViewModel>> GetNewMessages(IAsymmetricKeyPair keyPair, Contact contact, TangleMessenger tangle)
     {
       var trytes = await tangle.GetMessagesAsync(contact.ChatAddress, 3, true);
       var messagesEncrypted = new List<ChatMessage>();
@@ -109,7 +109,7 @@
       }
 
       return messages;
-    }
+    }*/
 
     public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(TangleMessenger tangleMessenger, string receiverAddress, bool dontLoadSql = false)
     {

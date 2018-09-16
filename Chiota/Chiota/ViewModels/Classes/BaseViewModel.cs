@@ -629,7 +629,7 @@ namespace Chiota.ViewModels.Classes
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task DisplayAlertAsync(string title, string message)
+        public async Task PushAlertAsync(string title, string message)
         {
             await this.PushPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), new AlertPopupModel { Title = title, Message = message });
         }
@@ -643,7 +643,7 @@ namespace Chiota.ViewModels.Classes
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task DisplayLoadingSpinnerAsync(string text)
+        public async Task PushLoadingSpinnerAsync(string text)
         {
             await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), new LoadingPopupModel { Message = text });
         }

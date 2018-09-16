@@ -1,4 +1,6 @@
-﻿namespace Chiota.ViewModels.Classes
+﻿using Chiota.ViewModels.Messenger;
+
+namespace Chiota.ViewModels.Classes
 {
   using Autofac;
 
@@ -25,9 +27,8 @@
 
       builder.RegisterType<SeedHelpViewModel>().PropertiesAutowired();
 
-      builder.RegisterType<AddContactViewModel>().PropertiesAutowired();
-      builder.RegisterType<ContactViewModel>().PropertiesAutowired();
-      builder.RegisterType<SettingsViewModel>().PropertiesAutowired();
+      builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
+      builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
     }
   }
 }

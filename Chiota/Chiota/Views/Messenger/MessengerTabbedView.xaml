@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:messengerviewmodels="clr-namespace:Chiota.ViewModels.Messenger;assembly=Chiota"
+            xmlns:messengerviews="clr-namespace:Chiota.Views.Messenger;assembly=Chiota"
+            xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+            x:Class="Chiota.Views.Messenger.MessengerTabbedView"
+            Title="{DynamicResource AppName}"
+            BarBackgroundColor="{DynamicResource AccentColor}"
+            BarTextColor="{DynamicResource NavigationBarTextColor}">
+
+    <TabbedPage.BindingContext>
+        <messengerviewmodels:MessengerTabbedViewModel/>
+    </TabbedPage.BindingContext>
+
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Order="Primary" Icon="search.png"/>
+        <ToolbarItem Order="Secondary" Text="New Contact" Command="{Binding NewContactCommand}"/>
+        <ToolbarItem Order="Secondary" Text="Profile" Command="{Binding ProfileCommand}"/>
+        <ToolbarItem Order="Secondary" Text="Settings" Command="{Binding SettingsCommand}"/>
+        <ToolbarItem Order="Secondary" Text="Log out" Command="{Binding LogOutCommand}"/>
+    </TabbedPage.ToolbarItems>
+
+    <!-- Children of the tabbedpage -->
+    <messengerviews:ChatsView Title="{extensions:Translate CmnChats}"/>
+    <messengerviews:ContactsView Title="{extensions:Translate CmnContacts}"/>
+</TabbedPage>

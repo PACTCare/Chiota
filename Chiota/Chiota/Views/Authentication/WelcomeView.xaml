@@ -16,7 +16,6 @@
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
                 <StackLayout VerticalOptions="Center" Spacing="24">
-                    <!-- Logo of the iota chat app-->
                     <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" WidthRequest="128" HeightRequest="128"/>
                     <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescWelcome}"/>
                 </StackLayout>
@@ -26,16 +25,16 @@
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgNewSeed}" WidthRequest="256" Command="{Binding NewSeedCommand}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSetSeed}" WidthRequest="256" Command="{Binding SetSeedCommand}"/>
                     </StackLayout>
-                    <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgHelpSeed}" HorizontalOptions="Center" Opacity="0.6">
-                      <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
-                      </Label.GestureRecognizers>
+                    <Label Text="{extensions:Translate CmnPrivacyPolicy}" Style="{DynamicResource Label14}" HorizontalOptions="Center" Opacity="0.6">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
+                        </Label.GestureRecognizers>
                     </Label>
-                  <Label Text="Open Privacy Policy" Style="{DynamicResource Label14}" HorizontalOptions="Center" Opacity="0.6">
-                    <Label.GestureRecognizers>
-                      <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
-                    </Label.GestureRecognizers>
-                  </Label>
+                    <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgHelpSeed}" HorizontalOptions="Center" Opacity="0.6">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

@@ -172,6 +172,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="account.png" />
+    <Content Include="search.png" />
     <Content Include="clear.png" />
     <Content Include="done.png" />
     <Content Include="chiota.png" />

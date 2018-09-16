@@ -96,7 +96,7 @@
             new Command(async () =>
             {
                 DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
-                await this.DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
+                await this.PushAlertAsync("Seed copied", "The seed has been copied to your clipboard");
             });
 
         #endregion

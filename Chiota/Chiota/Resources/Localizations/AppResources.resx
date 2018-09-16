@@ -120,8 +120,14 @@
   <data name="CmnBackUp" xml:space="preserve">
     <value>Back up</value>
   </data>
+  <data name="CmnChats" xml:space="preserve">
+    <value>Chats</value>
+  </data>
   <data name="CmnConfirmSeed" xml:space="preserve">
     <value>Confirm seed</value>
+  </data>
+  <data name="CmnContacts" xml:space="preserve">
+    <value>Contacts</value>
   </data>
   <data name="CmnHelp" xml:space="preserve">
     <value>Help</value>
@@ -131,6 +137,9 @@
   </data>
   <data name="CmnPrintPaperCopy" xml:space="preserve">
     <value>Print paper copy</value>
+  </data>
+  <data name="CmnPrivacyPolicy" xml:space="preserve">
+    <value>Open Privacy Policy</value>
   </data>
   <data name="CmnQrCode" xml:space="preserve">
     <value>QR code</value>

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 
 using Chiota.Annotations;
+using Chiota.Classes;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.Ipfs;
@@ -80,8 +81,8 @@ namespace Chiota.ViewModels.Authentication
             this.UserProperties = data as UserCreationProperties;
 
             // Set the default opacity.
-            imagePath = "account.png";
-            this.ProfileImageSource = ImageSource.FromFile(imagePath);
+            imagePath = string.Empty;
+            this.ProfileImageSource = ImageSource.FromFile("account.png");
             this.ProfileImageOpacity = 0.6;
         }
 
@@ -151,17 +152,20 @@ namespace Chiota.ViewModels.Authentication
                             return;
                         }
 
-                        await this.DisplayLoadingSpinnerAsync("Setting up your account");
+                        await this.PushLoadingSpinnerAsync("Setting up your account");
 
                         this.UserProperties.Name = this.Name;
                         await this.UserService.CreateNew(this.UserProperties);
 
-                        UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(imagePath);
-                        SecureStorage.UpdateUser(UserProperties.Password);
+                        if (!string.IsNullOrEmpty(imagePath))
+                        {
+                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(imagePath);
+                            SecureStorage.UpdateUser(UserProperties.Password);
+                        }
 
                         await this.PopPopupAsync();
 
-                        Application.Current.MainPage = new NavigationPage(new ContactView());
+                        AppNavigation.ShowMessenger();
                     });
             }
         }

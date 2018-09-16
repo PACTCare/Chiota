@@ -70,11 +70,29 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chats.
+        /// </summary>
+        internal static string CmnChats {
+            get {
+                return ResourceManager.GetString("CmnChats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm seed.
         /// </summary>
         internal static string CmnConfirmSeed {
             get {
                 return ResourceManager.GetString("CmnConfirmSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacts.
+        /// </summary>
+        internal static string CmnContacts {
+            get {
+                return ResourceManager.GetString("CmnContacts", resourceCulture);
             }
         }
         
@@ -102,6 +120,15 @@ namespace Chiota.Resources.Localizations {
         internal static string CmnPrintPaperCopy {
             get {
                 return ResourceManager.GetString("CmnPrintPaperCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Privacy Policy.
+        /// </summary>
+        internal static string CmnPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("CmnPrivacyPolicy", resourceCulture);
             }
         }
         

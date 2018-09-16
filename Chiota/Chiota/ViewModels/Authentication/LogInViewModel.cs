@@ -1,5 +1,5 @@
 ﻿using System.Windows.Input;
-
+using Chiota.Classes;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.UserServices;
@@ -69,12 +69,12 @@ namespace Chiota.ViewModels.Authentication
                     {
                         try
                         {
-                            await this.DisplayLoadingSpinnerAsync("Logging you in ...");
+                            await this.PushLoadingSpinnerAsync("Logging you in ...");
 
                             await SecureStorage.LoginUser(this.Password);
-                            Application.Current.MainPage = new NavigationPage(new ContactView());
-
                             await this.PopPopupAsync();
+
+                            AppNavigation.ShowMessenger();
                         }
                         catch (BaseException exception)
                         {

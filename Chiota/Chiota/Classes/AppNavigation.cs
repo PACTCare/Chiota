@@ -1,7 +1,7 @@
 ﻿using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
-
+using Chiota.Views.Messenger;
 using Xamarin.Forms;
 
 namespace Chiota.Classes
@@ -43,6 +43,17 @@ namespace Chiota.Classes
             }
 
             // Show the page.
+            Application.Current.MainPage = container;
+        }
+
+        #endregion
+
+        #region ShowMessenger
+
+        public static void ShowMessenger()
+        {
+            // Show the page.
+            var container = SetNavigationStyles(new NavigationPage(new MessengerTabbedView()));
             Application.Current.MainPage = container;
         }
 
