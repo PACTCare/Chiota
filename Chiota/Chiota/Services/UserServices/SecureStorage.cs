@@ -24,21 +24,6 @@
       CrossSecureStorage.Current.HasKey(PasswordHash) && CrossSecureStorage.Current.HasKey(CurrentUser)
                                                       && CrossSecureStorage.Current.HasKey(EncryptionSalt);
 
-    public static async Task<User> GetUser()
-    {
-      var user = UserService.CurrentUser;
-
-      try
-      {
-        return await new UserDataOnTangle(user).UniquePublicKey();
-      }
-      catch
-      {
-        // incomplete => setup interrupted or not yet finished
-        return null;
-      }
-    }
-
     public static async Task LoginUser(string password)
     {
       ValidatePassword(password);
@@ -48,10 +33,9 @@
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
       decryptedUser.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
+      decryptedUser = await UserDataOnTangle.CheckPublicKeyForSingularity(decryptedUser);
 
       UserService.SetCurrentUser(decryptedUser);
-
-      await GetUser();
     }
 
     public static void StoreUser(User user, string password)

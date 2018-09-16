@@ -16,6 +16,7 @@
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
@@ -75,7 +76,7 @@
         return;
       }
 
-      var user = await SecureStorage.GetUser();
+      var user = await UserDataOnTangle.CheckPublicKeyForSingularity(UserService.CurrentUser);
       if (user == null)
       {
         return;

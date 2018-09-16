@@ -64,8 +64,7 @@
       var bytes = new List<byte[]>();
       using (var cipher = new NTRUEncrypt(this.ntruParameters))
       {
-        var arraySplit = ArraySplit(input, this.maxSize);
-        foreach (var byt in arraySplit)
+        foreach (var byt in ArraySplit(input, this.maxSize))
         {
           cipher.Initialize(publicKey);
           bytes.Add(cipher.Encrypt(byt));
@@ -107,25 +106,24 @@
       return bytesList.SelectMany(a => a).ToArray();
     }
 
-    private static IEnumerable<byte[]> ArraySplit(byte[] bArray, int intBufforLengt)
+    private static IEnumerable<byte[]> ArraySplit(byte[] bytes, int bufferLength)
     {
-      var bArrayLenght = bArray.Length;
-      byte[] bReturn;
+      byte[] result;
 
       var i = 0;
-      for (; bArrayLenght > (i + 1) * intBufforLengt; i++)
+      for (; bytes.Length > (i + 1) * bufferLength; i++)
       {
-        bReturn = new byte[intBufforLengt];
-        Array.Copy(bArray, i * intBufforLengt, bReturn, 0, intBufforLengt);
-        yield return bReturn;
+        result = new byte[bufferLength];
+        Array.Copy(bytes, i * bufferLength, result, 0, bufferLength);
+        yield return result;
       }
 
-      var intBufforLeft = bArrayLenght - (i * intBufforLengt);
-      if (intBufforLeft > 0)
+      var bufferLeft = bytes.Length - (i * bufferLength);
+      if (bufferLeft > 0)
       {
-        bReturn = new byte[intBufforLeft];
-        Array.Copy(bArray, i * intBufforLengt, bReturn, 0, intBufforLeft);
-        yield return bReturn;
+        result = new byte[bufferLeft];
+        Array.Copy(bytes, i * bufferLength, result, 0, bufferLeft);
+        yield return result;
       }
     }
   }

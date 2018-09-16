@@ -30,7 +30,7 @@
 
       if (!messageTrytes.Contains(Constants.End.Value))
       {
-        return null;
+        return new List<Message>();
       }
 
       var index = messageTrytes.IndexOf(Constants.End.Value, StringComparison.Ordinal);

@@ -9,13 +9,11 @@
   using Android.OS;
   using Android.Support.V4.App;
 
-  using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Persistence;
-  using Chiota.Services;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Java.Lang;
@@ -44,7 +42,7 @@
           return true;
         }
 
-        var user = await SecureStorage.GetUser();
+        var user = await UserDataOnTangle.CheckPublicKeyForSingularity(UserService.CurrentUser);
         if (user == null)
         {
           return true;
