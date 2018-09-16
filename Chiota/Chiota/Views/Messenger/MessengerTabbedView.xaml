@@ -15,10 +15,10 @@
 
     <TabbedPage.ToolbarItems>
         <ToolbarItem Order="Primary" Icon="search.png"/>
-        <ToolbarItem Order="Secondary" Text="New Contact" Command="{Binding NewContactCommand}"/>
-        <ToolbarItem Order="Secondary" Text="Profile" Command="{Binding ProfileCommand}"/>
-        <ToolbarItem Order="Secondary" Text="Settings" Command="{Binding SettingsCommand}"/>
-        <ToolbarItem Order="Secondary" Text="Log out" Command="{Binding LogOutCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnNewContact}" Command="{Binding NewContactCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnProfile}" Command="{Binding ProfileCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnLogOut}" Command="{Binding LogOutCommand}"/>
     </TabbedPage.ToolbarItems>
 
     <!-- Children of the tabbedpage -->

@@ -106,6 +106,24 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        internal static string CmnLogOut {
+            get {
+                return ResourceManager.GetString("CmnLogOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New contact.
+        /// </summary>
+        internal static string CmnNewContact {
+            get {
+                return ResourceManager.GetString("CmnNewContact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New seed.
         /// </summary>
         internal static string CmnNewSeed {
@@ -133,6 +151,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string CmnProfile {
+            get {
+                return ResourceManager.GetString("CmnProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to QR code.
         /// </summary>
         internal static string CmnQrCode {
@@ -156,6 +183,15 @@ namespace Chiota.Resources.Localizations {
         internal static string CmnSetSeed {
             get {
                 return ResourceManager.GetString("CmnSetSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string CmnSettings {
+            get {
+                return ResourceManager.GetString("CmnSettings", resourceCulture);
             }
         }
         

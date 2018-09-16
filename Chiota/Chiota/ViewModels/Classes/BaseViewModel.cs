@@ -203,11 +203,9 @@ namespace Chiota.ViewModels.Classes
             if (this.CurrentPage.BindingContext is BaseViewModel viewmodel)
             {
                 if (_navigationAction == NavigationAction.Push)
-                    if (this.InitObject != null)
-                        viewmodel.Init(this.InitObject);
-                    else if (_navigationAction == NavigationAction.Pop)
-                        if (this.ReverseObject != null)
-                            viewmodel.Reverse(this.ReverseObject);
+                    viewmodel.Init(this.InitObject);
+                else if (_navigationAction == NavigationAction.Pop)
+                    viewmodel.Reverse(this.ReverseObject);
             }
 
             // Clear the param objects of the pagemodel.

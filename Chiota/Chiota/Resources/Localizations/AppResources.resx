@@ -132,6 +132,12 @@
   <data name="CmnHelp" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="CmnLogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="CmnNewContact" xml:space="preserve">
+    <value>New contact</value>
+  </data>
   <data name="CmnNewSeed" xml:space="preserve">
     <value>New seed</value>
   </data>
@@ -141,6 +147,9 @@
   <data name="CmnPrivacyPolicy" xml:space="preserve">
     <value>Open Privacy Policy</value>
   </data>
+  <data name="CmnProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
   <data name="CmnQrCode" xml:space="preserve">
     <value>QR code</value>
   </data>
@@ -149,6 +158,9 @@
   </data>
   <data name="CmnSetSeed" xml:space="preserve">
     <value>Set seed</value>
+  </data>
+  <data name="CmnSettings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="CmnSetUser" xml:space="preserve">
     <value>Set user</value>

@@ -1,4 +1,7 @@
-﻿using Chiota.ViewModels.Messenger;
+﻿using Chiota.ViewModels.Contact;
+using Chiota.ViewModels.Messenger;
+using Chiota.ViewModels.Profile;
+using Chiota.ViewModels.Settings;
 
 namespace Chiota.ViewModels.Classes
 {
@@ -29,6 +32,12 @@ namespace Chiota.ViewModels.Classes
 
       builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
       builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
+
+      builder.RegisterType<NewContactViewModel>().PropertiesAutowired();
+
+      builder.RegisterType<ProfileViewModel>().PropertiesAutowired();
+
+      builder.RegisterType<SettingsViewModel>().PropertiesAutowired();
     }
   }
 }
