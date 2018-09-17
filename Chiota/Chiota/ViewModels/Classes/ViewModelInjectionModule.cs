@@ -30,6 +30,8 @@ namespace Chiota.ViewModels.Classes
 
       builder.RegisterType<SeedHelpViewModel>().PropertiesAutowired();
 
+      builder.RegisterType<MessengerTabbedViewModel>().PropertiesAutowired();
+
       builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
       builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
 

@@ -26,7 +26,7 @@ namespace Chiota.UWP.Renderer
                 (byte)(frame.BackgroundColor.G * 255),
                 (byte)(frame.BackgroundColor.B * 255));
 
-            Control.CornerRadius = new CornerRadius(frame.CornerRadius);
+            Control.CornerRadius = new Windows.UI.Xaml.CornerRadius(frame.CornerRadius);
 
             Control.Background = new SolidColorBrush(frameBrush);
             frame.BackgroundColor = Color.Transparent;
