@@ -135,9 +135,6 @@
   <data name="CmnLogOut" xml:space="preserve">
     <value>Log out</value>
   </data>
-  <data name="CmnNewContact" xml:space="preserve">
-    <value>New contact</value>
-  </data>
   <data name="CmnNewSeed" xml:space="preserve">
     <value>New seed</value>
   </data>
@@ -266,5 +263,14 @@
   </data>
   <data name="DlgWriteSeedDown" xml:space="preserve">
     <value>Write seed down</value>
+  </data>
+  <data name="CmnAddContact" xml:space="preserve">
+    <value>Add contact</value>
+  </data>
+  <data name="CmnContactAddress" xml:space="preserve">
+    <value>Contact address</value>
+  </data>
+  <data name="DlgHelpContactAddress" xml:space="preserve">
+    <value>What is a contact address?</value>
   </data>
 </root>

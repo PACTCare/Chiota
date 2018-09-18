@@ -141,7 +141,10 @@
     <EmbeddedResource Update="Views\BackUp\WriteSeedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Contact\NewContactView.xaml">
+    <EmbeddedResource Update="Views\Contact\AddContactView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Contact\ContactAddressView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Help\SeedHelpView.xaml">

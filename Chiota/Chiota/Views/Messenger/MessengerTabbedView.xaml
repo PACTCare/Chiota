@@ -4,7 +4,9 @@
             xmlns:messengerviewmodels="clr-namespace:Chiota.ViewModels.Messenger;assembly=Chiota"
             xmlns:messengerviews="clr-namespace:Chiota.Views.Messenger;assembly=Chiota"
             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+            xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
             x:Class="Chiota.Views.Messenger.MessengerTabbedView"
+            classes:ViewModelLocator.AutoWireViewModel="true"
             Title="{DynamicResource AppName}"
             BarBackgroundColor="{DynamicResource AccentColor}"
             BarTextColor="{DynamicResource NavigationBarTextColor}">
@@ -15,7 +17,8 @@
 
     <TabbedPage.ToolbarItems>
         <ToolbarItem Order="Primary" Icon="search.png"/>
-        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnNewContact}" Command="{Binding NewContactCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnAddContact}" Command="{Binding AddContactCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnProfile}" Command="{Binding ProfileCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnLogOut}" Command="{Binding LogOutCommand}"/>

@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
+             xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
-             x:Class="Chiota.Views.Authentication.SetSeedView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
-             Title="{extensions:Translate CmnSetSeed}">
+             x:Class="Chiota.Views.Contact.AddContactView"
+             classes:ViewModelLocator.AutoWireViewModel="true"
+             Title="{extensions:Translate CmnAddContact}">
 
     <ContentPage.BindingContext>
-      <authentication:SetSeedViewModel/>
+        <contact:AddContactViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
@@ -20,11 +20,11 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescSetSeed}"/>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="Insert the address of a user for a contact request."/>
                     </StackLayout>
 
                     <StackLayout VerticalOptions="CenterAndExpand">
-                        <validations:SeedValidationEntry Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
+                        <validations:SeedValidationEntry Text="{Binding ContactAddress}" Placeholder="{extensions:Translate CmnContactAddress}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgScanQrCode}" WidthRequest="256" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>

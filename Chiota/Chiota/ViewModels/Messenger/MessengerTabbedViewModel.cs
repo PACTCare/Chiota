@@ -19,15 +19,30 @@ namespace Chiota.ViewModels.Messenger
     {
         #region Commands
 
-        #region NewContact
+        #region ContactAddress
 
-        public ICommand NewContactCommand
+        public ICommand ContactAddressCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new NewContactView());
+                    await PushAsync(new ContactAddressView());
+                });
+            }
+        }
+
+        #endregion
+
+        #region AddContact
+
+        public ICommand AddContactCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await PushAsync(new AddContactView());
                 });
             }
         }

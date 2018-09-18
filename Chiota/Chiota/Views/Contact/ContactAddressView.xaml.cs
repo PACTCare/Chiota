@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Chiota.Views.Contact
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class NewContactView : ContentPage
+	public partial class ContactAddressView : ContentPage
 	{
-		public NewContactView ()
+		public ContactAddressView ()
 		{
 			InitializeComponent ();
 		}

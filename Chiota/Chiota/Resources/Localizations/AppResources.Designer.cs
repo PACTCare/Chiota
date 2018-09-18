@@ -61,6 +61,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add contact.
+        /// </summary>
+        internal static string CmnAddContact {
+            get {
+                return ResourceManager.GetString("CmnAddContact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back up.
         /// </summary>
         internal static string CmnBackUp {
@@ -88,6 +97,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contact address.
+        /// </summary>
+        internal static string CmnContactAddress {
+            get {
+                return ResourceManager.GetString("CmnContactAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Contacts.
         /// </summary>
         internal static string CmnContacts {
@@ -111,15 +129,6 @@ namespace Chiota.Resources.Localizations {
         internal static string CmnLogOut {
             get {
                 return ResourceManager.GetString("CmnLogOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to New contact.
-        /// </summary>
-        internal static string CmnNewContact {
-            get {
-                return ResourceManager.GetString("CmnNewContact", resourceCulture);
             }
         }
         
@@ -354,6 +363,15 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgGotIt {
             get {
                 return ResourceManager.GetString("DlgGotIt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What is a contact address?.
+        /// </summary>
+        internal static string DlgHelpContactAddress {
+            get {
+                return ResourceManager.GetString("DlgHelpContactAddress", resourceCulture);
             }
         }
         

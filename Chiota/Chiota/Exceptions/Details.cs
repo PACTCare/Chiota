@@ -31,5 +31,12 @@ namespace Chiota.Exceptions
         public static string BackUpInvalidUserInputSeed = "Invalid user input of the argument 'seed' expected.";
 
         #endregion
+
+        #region Contact
+
+        public static string ContactMissingContactAddress = "Missing user input of the argument 'contact address' expected.";
+        public static string ContactInvalidUserInputContactAddress = "Invalid user input of the argument 'contact address' expected.";
+
+        #endregion
     }
 }

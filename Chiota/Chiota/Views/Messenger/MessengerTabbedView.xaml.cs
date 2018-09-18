@@ -15,10 +15,6 @@ namespace Chiota.Views.Messenger
         public MessengerTabbedView ()
         {
             InitializeComponent();
-
-            //Setup the pagemodel
-            /*if (BindingContext is BaseViewModel pagemodel)
-                pagemodel.Setup(this);*/
         }
     }
 }
