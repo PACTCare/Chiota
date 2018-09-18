@@ -5,7 +5,10 @@
 
   using Chiota.Exceptions;
   using Chiota.Messenger.Service;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Models;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
 
   using Newtonsoft.Json;
@@ -40,7 +43,20 @@
           decryptedUser.Seed.ToLower(),
           decryptedUser.PublicKeyAddress);
 
-      decryptedUser = await UserDataOnTangle.CheckPublicKeyForSingularity(decryptedUser);
+      var checkUserResponse = await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
+                                new CheckUserRequest
+                                  {
+                                    PublicKey = decryptedUser.NtruKeyPair.PublicKey,
+                                    PublicKeyAddress = new Address(decryptedUser.PublicKeyAddress),
+                                    RequestAddress = new Address(decryptedUser.RequestAddress),
+                                    Seed = new Seed(decryptedUser.Seed)
+                                  });
+
+      if (checkUserResponse.Code == ResponseCode.NewPublicKeyAddress)
+      {
+        decryptedUser.PublicKeyAddress = checkUserResponse.PublicKeyAddress.Value;
+      }
+
       UserService.SetCurrentUser(decryptedUser);
     }
 

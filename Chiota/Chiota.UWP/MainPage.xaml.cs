@@ -76,18 +76,12 @@
         return;
       }
 
-      var user = await UserDataOnTangle.CheckPublicKeyForSingularity(UserService.CurrentUser);
-      if (user == null)
-      {
-        return;
-      }
-
       var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
-                           ContactRequestAddress = new Address(user.RequestAddress),
-                           PublicKeyAddress = new Address(user.PublicKeyAddress)
+                           ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                          });
 
       if (response.Code != ResponseCode.Success)
