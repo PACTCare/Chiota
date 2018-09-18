@@ -57,7 +57,7 @@
       {
         return new CheckUserResponse { Code = exception.Code };
       }
-      catch (Exception e)
+      catch (Exception)
       {
         return new CheckUserResponse { Code = ResponseCode.UnkownException };
       }

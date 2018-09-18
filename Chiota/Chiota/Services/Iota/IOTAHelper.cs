@@ -78,41 +78,6 @@
       return messageViewModels;
     }
 
-    public static async Task<List<Contact>> GetPublicKeysAndContactAddresses(string receiverAddress)
-    {
-      var messages = await DependencyResolver.Resolve<IMessenger>()
-                       .GetMessagesByAddressAsync(new Address(receiverAddress), new MessageBundleParser());
-      var contacts = new List<Contact>();
-      foreach (var message in messages)
-      {
-        var trytesString = message.Payload.Value;
-        if (!trytesString.Contains(ChiotaConstants.LineBreak))
-        {
-          continue;
-        }
-
-        try
-        {
-          var index = trytesString.IndexOf(ChiotaConstants.LineBreak, StringComparison.Ordinal);
-          var publicKeyString = trytesString.Substring(0, index);
-          var bytesKey = new TryteString(publicKeyString).DecodeBytesFromTryteString();
-
-          contacts.Add(
-            new Contact
-            {
-              NtruKey = new NTRUPublicKey(bytesKey),
-              ContactAddress = trytesString.Substring(index + ChiotaConstants.LineBreak.Length, 81)
-            });
-        }
-        catch
-        {
-          // ignored
-        }
-      }
-
-      return RemoveDuplicateContacts(contacts);
-    }
-
     public static async Task<string> GetChatPasSalt(User user, string chatKeyAddress)
     {
       var messages = await DependencyResolver.Resolve<IMessenger>()
@@ -163,24 +128,6 @@
     private static bool TwoPartsOfMessage(List<ChatMessage> sortedEncryptedMessages, int i)
     {
       return sortedEncryptedMessages[i].IsFirstPart != sortedEncryptedMessages[i + 1].IsFirstPart;
-    }
-
-    private static List<Contact> RemoveDuplicateContacts(List<Contact> contactList)
-    {
-      var index = 0;
-      while (index < contactList.Count - 1)
-      {
-        if (contactList[index].ContactAddress == contactList[index + 1].ContactAddress)
-        {
-          contactList.RemoveAt(index);
-        }
-        else
-        {
-          index++;
-        }
-      }
-
-      return contactList;
     }
   }
 }

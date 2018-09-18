@@ -16,7 +16,6 @@
   using Moq;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Utils;
 
   [TestClass]
   public class CheckUserInteractorTest

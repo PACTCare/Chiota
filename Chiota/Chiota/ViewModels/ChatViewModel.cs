@@ -99,14 +99,13 @@ namespace Chiota.ViewModels
 
     public async void MessageRestriction(Entry entry)
     {
-      var val = entry.Text;
-
-      if (val?.Length > Constants.MessageCharacterLimit)
+      if (string.IsNullOrEmpty(entry.Text) || entry.Text.Length <= Constants.MessageCharacterLimit)
       {
-        val = val.Remove(val.Length - 1);
-        entry.Text = val;
-        await this.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
+        return;
       }
+
+      entry.Text.Remove(entry.Text.Length - 1);
+      await this.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
     }
 
     private async Task SendMessage()
