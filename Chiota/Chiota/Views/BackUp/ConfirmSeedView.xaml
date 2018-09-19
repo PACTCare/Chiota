@@ -23,12 +23,9 @@
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescConfirmSeed}"/>
                     </StackLayout>
 
-                    <StackLayout VerticalOptions="CenterAndExpand">
-                        <!--<Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
-                        </Frame>-->
+                    <StackLayout VerticalOptions="Center" Margin="32, 0, 0, 0">
                         <validations:SeedValidationEntry Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" WidthRequest="256" FontAttributes="Bold" Text="{extensions:Translate DlgScanQrCode}" Command="{Binding ScanQrCodeCommand}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Margin="0, 0, 32, 0" FontAttributes="Bold" Text="{extensions:Translate DlgScanQrCode}" Command="{Binding ScanQrCodeCommand}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
