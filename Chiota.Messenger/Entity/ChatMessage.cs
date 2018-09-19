@@ -1,4 +1,4 @@
-﻿namespace Chiota.Models
+﻿namespace Chiota.Messenger.Entity
 {
   using System;
 
@@ -10,6 +10,6 @@
 
     public string Signature { get; set; }
 
-    public bool IsFirstPart { get; set; }
+    internal bool IsFirstPart { get; set; }
   }
 }

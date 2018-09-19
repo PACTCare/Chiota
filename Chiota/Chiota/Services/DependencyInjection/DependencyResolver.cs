@@ -14,6 +14,7 @@
   using Chiota.Messenger.Usecase.CreateUser;
   using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Messenger.Usecase.GetContacts;
+  using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
@@ -61,6 +62,8 @@
       builder.RegisterType<CreateUserInteractor>().As<IUsecaseInteractor<CreateUserRequest, CreateUserResponse>>().PropertiesAutowired();
 
       builder.RegisterType<CheckUserInteractor>().As<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().PropertiesAutowired();
+
+      builder.RegisterType<GetMessagesInteractor>().As<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().PropertiesAutowired();
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
       Container = builder.Build();

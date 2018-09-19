@@ -13,6 +13,7 @@ namespace Chiota.ViewModels
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Models;
   using Chiota.Presenters;
@@ -150,7 +151,10 @@ namespace Chiota.ViewModels
       if (this.loadNewMessages)
       {
         this.loadNewMessages = false;
-        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact);
+        var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+          new GetMessagesRequest { ChatAddress = new Address(this.contact.ChatAddress), ChatKeyPair = this.ntruChatKeyPair });
+        var newMessages = GetMessagesPresenter.Present(messagesResponse, this.contact);
+
         if (newMessages.Count > 0)
         {
           foreach (var m in newMessages)
