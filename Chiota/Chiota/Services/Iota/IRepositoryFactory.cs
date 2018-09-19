@@ -1,4 +1,4 @@
-﻿namespace Chiota.Services.Iota.Repository
+﻿namespace Chiota.Services.Iota
 {
   using Tangle.Net.Repository;
 

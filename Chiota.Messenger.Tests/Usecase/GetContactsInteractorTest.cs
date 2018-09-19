@@ -6,8 +6,10 @@
 
   using Chiota.Messenger.Cache;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Service;
   using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Repository;
+  using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetContacts;
 
@@ -39,7 +41,7 @@
     [TestMethod]
     public async Task TestNoContactsExistShouldReturnEmptyList()
     {
-      var interactor = new GetContactsInteractor(new InMemoryContactRepository(), new InMemoryTransactionCache(), new InMemoryIotaRepository());
+      var interactor = new GetContactsInteractor(new InMemoryContactRepository(), new InMemoryMessenger());
       var response = await interactor.ExecuteAsync(new GetContactsRequest { PublicKeyAddress = new Address(Hash.Empty.Value) });
 
       Assert.AreEqual(0, response.ApprovedContacts.Count);
@@ -71,7 +73,7 @@
       iotaRepositoryMock.Setup(i => i.FindTransactionsByAddressesAsync(It.IsAny<List<Address>>())).ReturnsAsync(
         new TransactionHashList { Hashes = new List<Hash> { cacheItem.TransactionHash } });
 
-      var interactor = new GetContactsInteractor(contactRepository, transactionCache, iotaRepositoryMock.Object);
+      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepositoryMock.Object, transactionCache));
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
@@ -121,7 +123,7 @@
 
       transactionCache.Items.Add(cacheItem);
 
-      var interactor = new GetContactsInteractor(contactRepository, transactionCache, iotaRepository);
+      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepository, transactionCache));
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
@@ -158,7 +160,7 @@
     [TestMethod]
     public async Task TestExceptionGetsThrownShouldReturnErrorCode()
     {
-      var interactor = new GetContactsInteractor(new ExceptionContactRepository(), new InMemoryTransactionCache(), new InMemoryIotaRepository());
+      var interactor = new GetContactsInteractor(new ExceptionContactRepository(), new InMemoryMessenger());
       var response = await interactor.ExecuteAsync(new GetContactsRequest { PublicKeyAddress = new Address(Hash.Empty.Value) });
 
       Assert.AreEqual(ResponseCode.ContactsUnavailable, response.Code);

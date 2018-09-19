@@ -42,7 +42,7 @@
 
         var requestAddressPayload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
 
-        await this.Messenger.SendMessageAsync(new Message(MessageType.RequestContact, requestAddressPayload, publicKeyAddress));
+        await this.Messenger.SendMessageAsync(new Message(requestAddressPayload, publicKeyAddress));
         return new CreateUserResponse
                  {
                    Code = ResponseCode.Success,

@@ -86,7 +86,6 @@
     private async void HandleLogoutClick(object sender, EventArgs e)
     {
       UserService.SetCurrentUser(null);
-      await DependencyResolver.Resolve<ITransactionCache>().FlushAsync();
       Application.Current.MainPage = new NavigationPage(new LogInView());
     }
   }

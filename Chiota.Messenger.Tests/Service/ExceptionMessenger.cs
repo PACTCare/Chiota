@@ -8,6 +8,7 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
+  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Usecase;
 
   using Tangle.Net.Entity;
@@ -26,7 +27,7 @@
     private Exception Exception { get; }
 
     /// <inheritdoc />
-    public Task<List<Message>> GetMessagesByAddressAsync(Address address)
+    public Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser)
     {
       return null;
     }

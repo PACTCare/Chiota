@@ -13,7 +13,6 @@
   using Chiota.Popups.PopupPages;
   using Chiota.Resources.Settings;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota.Repository;
   using Chiota.Services.Ipfs;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;

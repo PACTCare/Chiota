@@ -10,13 +10,13 @@
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
   using Chiota.Messenger.Usecase.AddContact;
+  using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Messenger.Usecase.CreateUser;
   using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Messenger.Usecase.SendMessage;
-  using Chiota.Services.Iota.Repository;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
-  using Chiota.ViewModels;
   using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Cryptography;
@@ -59,6 +59,8 @@
       builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
 
       builder.RegisterType<CreateUserInteractor>().As<IUsecaseInteractor<CreateUserRequest, CreateUserResponse>>().PropertiesAutowired();
+
+      builder.RegisterType<CheckUserInteractor>().As<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().PropertiesAutowired();
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
       Container = builder.Build();

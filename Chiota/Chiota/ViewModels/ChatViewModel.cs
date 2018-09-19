@@ -11,6 +11,7 @@ namespace Chiota.ViewModels
 
   using Chiota.Messenger;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Models;
@@ -22,6 +23,7 @@ namespace Chiota.ViewModels
 
   using Tangle.Net.Entity;
 
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   using Xamarin.Forms;
@@ -30,7 +32,7 @@ namespace Chiota.ViewModels
   {
     private readonly Contact contact;
 
-    private readonly NtruKex ntruKex;
+    private readonly NtruKeyExchange ntruKex;
 
     private readonly ListView messagesListView;
 
@@ -46,7 +48,7 @@ namespace Chiota.ViewModels
 
     public ChatViewModel(ListView messagesListView, Contact contact)
     {
-      this.ntruKex = new NtruKex();
+      this.ntruKex = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1);
       this.contact = contact;
       this.messagesListView = messagesListView;
       this.Messages = new ObservableCollection<MessageViewModel>();
@@ -97,14 +99,13 @@ namespace Chiota.ViewModels
 
     public async void MessageRestriction(Entry entry)
     {
-      var val = entry.Text;
-
-      if (val?.Length > Constants.MessageCharacterLimit)
+      if (string.IsNullOrEmpty(entry.Text) || entry.Text.Length <= Constants.MessageCharacterLimit)
       {
-        val = val.Remove(val.Length - 1);
-        entry.Text = val;
-        await this.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
+        return;
       }
+
+      entry.Text.Remove(entry.Text.Length - 1);
+      await this.DisplayAlertAsync("Error", $"Message is too long. Limit is {Constants.MessageCharacterLimit} characters.");
     }
 
     private async Task SendMessage()
@@ -149,7 +150,7 @@ namespace Chiota.ViewModels
       if (this.loadNewMessages)
       {
         this.loadNewMessages = false;
-        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact, UserService.CurrentUser.TangleMessenger);
+        var newMessages = await IotaHelper.GetNewMessages(this.ntruChatKeyPair, this.contact);
         if (newMessages.Count > 0)
         {
           foreach (var m in newMessages)

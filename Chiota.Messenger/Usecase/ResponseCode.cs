@@ -6,6 +6,11 @@
   public enum ResponseCode
   {
     /// <summary>
+    /// Code returned when the public key address had to be adjusted
+    /// </summary>
+    NewPublicKeyAddress = 2,
+
+    /// <summary>
     /// Returned if the use case is executed successfully
     /// </summary>
     Success = 1,
