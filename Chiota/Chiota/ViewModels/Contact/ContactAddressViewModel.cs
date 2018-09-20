@@ -55,7 +55,7 @@ namespace Chiota.ViewModels.Contact
                 return new Command(async () =>
                 {
                     DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(ContactAddress);
-                    await this.PushAlertAsync("Address copied", "The address has been copied to your clipboard");
+                    await this.DisplayAlertAsync("Address copied", "The address has been copied to your clipboard");
                 });
             }
         }

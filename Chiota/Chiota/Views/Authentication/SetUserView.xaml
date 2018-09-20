@@ -9,7 +9,7 @@
              NavigationPage.HasBackButton="False"
              Title="{extensions:Translate CmnSetUser}">
 
-  <ContentPage.Content>
+    <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">

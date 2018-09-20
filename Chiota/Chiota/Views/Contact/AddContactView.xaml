@@ -23,9 +23,9 @@
                         <Label Style="{DynamicResource DescriptionLabel}" Text="Insert the address of a user for a contact request."/>
                     </StackLayout>
 
-                    <StackLayout VerticalOptions="CenterAndExpand">
+                    <StackLayout VerticalOptions="CenterAndExpand" Margin="32, 0, 0, 0">
                         <validations:SeedValidationEntry Text="{Binding ContactAddress}" Placeholder="{extensions:Translate CmnContactAddress}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgScanQrCode}" WidthRequest="256" Command="{Binding ScanQrCodeCommand}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgScanQrCode}" WidthRequest="256" Command="{Binding ScanQrCodeCommand}" Margin="0, 0, 32, 0"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

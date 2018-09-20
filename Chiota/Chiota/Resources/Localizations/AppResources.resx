@@ -273,4 +273,10 @@
   <data name="DlgHelpContactAddress" xml:space="preserve">
     <value>What is a contact address?</value>
   </data>
+  <data name="DlgSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CmnEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
 </root>

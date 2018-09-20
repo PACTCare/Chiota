@@ -115,6 +115,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string CmnEdit {
+            get {
+                return ResourceManager.GetString("CmnEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         internal static string CmnHelp {
@@ -480,6 +489,15 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgRepeatPassword {
             get {
                 return ResourceManager.GetString("DlgRepeatPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string DlgSave {
+            get {
+                return ResourceManager.GetString("DlgSave", resourceCulture);
             }
         }
         

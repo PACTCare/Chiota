@@ -48,6 +48,10 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <Style x:Key="Label20" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
     <Style x:Key="DescriptionLabel" TargetType="Label" BasedOn="{StaticResource Label14}">
         <Setter Property="WidthRequest" Value="256"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>

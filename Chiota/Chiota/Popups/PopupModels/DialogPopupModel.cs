@@ -20,8 +20,6 @@ namespace Chiota.Popups.PopupModels
         public string NegButtonText { get; set; }
         public bool IsNegButtonDefault { get; set; }
 
-        public Func<string, Task> OkCallback { get; set; }
-
         #endregion
 
         #region Constructors
