@@ -9,7 +9,6 @@ using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 using Chiota.Views.Authentication;
 using Chiota.Views.Contact;
-using Chiota.Views.Profile;
 using Chiota.Views.Settings;
 using Xamarin.Forms;
 

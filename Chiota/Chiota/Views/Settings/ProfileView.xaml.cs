@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota.Views.Profile
+namespace Chiota.Views.Settings
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ProfileView : ContentPage

@@ -279,4 +279,7 @@
   <data name="CmnEdit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="CmnAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

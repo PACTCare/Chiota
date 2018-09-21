@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
+             xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             x:Class="Chiota.Views.Settings.AboutView"
+             classes:ViewModelLocator.AutoWireViewModel="true"
+             Title="{extensions:Translate CmnAbout}">
+
+    <ContentPage.BindingContext>
+        <settings:AboutViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
+                <StackLayout VerticalOptions="Center" Spacing="32">
+                    <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" WidthRequest="128" HeightRequest="128"/>
+                    <StackLayout Spacing="24">
+                        <Label Style="{DynamicResource Label14}" Text="Version 1.0" HorizontalTextAlignment="Center" Opacity="0.8"/>
+                        <StackLayout>
+                            <Label Style="{DynamicResource Label14}" Text="© 2018 Pact Care BV All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>
+                            <Label Style="{DynamicResource Label14}" Text="All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

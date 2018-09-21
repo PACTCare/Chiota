@@ -5,7 +5,7 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
-             x:Class="Chiota.Views.Profile.ProfileView"
+             x:Class="Chiota.Views.Settings.ProfileView"
              classes:ViewModelLocator.AutoWireViewModel="true"
              Title="{extensions:Translate CmnProfile}">
 

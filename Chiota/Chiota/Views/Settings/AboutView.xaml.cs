@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Chiota.Views.Settings
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class HelpView : ContentPage
+	public partial class AboutView : ContentPage
 	{
-		public HelpView ()
+		public AboutView ()
 		{
 			InitializeComponent ();
 		}

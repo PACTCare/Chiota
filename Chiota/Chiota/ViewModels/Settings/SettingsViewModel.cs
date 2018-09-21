@@ -4,7 +4,7 @@ using System.Text;
 using Chiota.Models;
 using Chiota.Services.Share;
 using Chiota.ViewModels.Classes;
-using Chiota.Views.Profile;
+using Chiota.Views.Settings;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Settings
@@ -76,25 +76,19 @@ namespace Chiota.ViewModels.Settings
                         var message = "You should check out Chiota, your IOTA messenger!";
                         var url = "https://play.google.com/store/apps/details?id=chiotaapp.chiotaapp";
 
-                        try
+                        await CrossShare.Current.Share(new ShareMessage()
                         {
-                            await CrossShare.Current.Share(new ShareMessage()
-                            {
-                                Title = title,
-                                Text = message,
-                                Url = url
-                            });
-                        }
-                        catch (Exception e)
-                        {
-                        }
+                            Title = title,
+                            Text = message,
+                            Url = url
+                        });
                     })
                 },
                 new SettingsItem()
                 {
-                    Name = "Help",
+                    Name = "About",
                     Icon = "help.png",
-                    TapCommand = new Command(async () => { await PushAsync(new ProfileView()); })
+                    TapCommand = new Command(async () => { await PushAsync(new AboutView()); })
                 }
             };
 

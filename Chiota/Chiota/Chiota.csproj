@@ -191,10 +191,7 @@
     <EmbeddedResource Update="Views\Messenger\MessengerTabbedView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Settings\HelpView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Settings\InviteFriendsView.xaml">
+    <EmbeddedResource Update="Views\Settings\AboutView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Settings\ProfileView.xaml">
