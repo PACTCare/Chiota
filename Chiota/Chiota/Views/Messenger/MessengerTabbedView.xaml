@@ -19,7 +19,6 @@
         <ToolbarItem Order="Primary" Icon="search.png"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnAddContact}" Command="{Binding AddContactCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
-        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnProfile}" Command="{Binding ProfileCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnLogOut}" Command="{Binding LogOutCommand}"/>
     </TabbedPage.ToolbarItems>

@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
              xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.Settings.SettingsView"
-             classes:ViewModelLocator.AutoWireViewModel="true">
+             classes:ViewModelLocator.AutoWireViewModel="true"
+             Title="{extensions:Translate CmnSettings}">
 
     <ContentPage.BindingContext>
         <settings:SettingsViewModel/>
@@ -12,9 +14,26 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <ListView ItemsSource="{Binding SettingsList, Mode=TwoWay}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Image Source="{Binding Icon}" HeightRequest="32" WidthRequest="32" Margin="24"/>
+                                </StackLayout>
+                                <StackLayout VerticalOptions="Center">
+                                    <Label Style="{DynamicResource Label18}" Text="{Binding Name}" VerticalOptions="Center"/>
+                                </StackLayout>
+
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding TapCommand}" CommandParameter="{Binding .}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

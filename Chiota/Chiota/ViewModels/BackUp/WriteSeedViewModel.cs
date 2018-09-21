@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-
-using Chiota.Models.BackUp;
+using Chiota.Models;
 using Chiota.ViewModels.Classes;
 
 using Xamarin.Forms;
@@ -16,7 +15,7 @@ namespace Chiota.ViewModels.BackUp
         private bool isSeedViewVisible;
         private bool isUpVisible;
 
-        private Seed seed;
+        private SeedView seed;
         private int seedLinePointer;
         private Thickness seedViewPadding;
         private ObservableCollection<View> visibleSeedLines;
@@ -89,7 +88,7 @@ namespace Chiota.ViewModels.BackUp
             this.IsDownVisible = true;
 
             // Set a new generated seed.
-            this.seed = new Seed(data as string);
+            this.seed = new SeedView(data as string);
             this.UpdateSeedView();
             this.IsSeedViewVisible = true;
 

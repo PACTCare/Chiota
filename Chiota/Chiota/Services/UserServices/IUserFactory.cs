@@ -23,6 +23,6 @@
     /// <returns>
     /// The <see cref="User"/>.
     /// </returns>
-    Task<User> CreateAsync(Seed seed, string name);
+    Task<User> CreateAsync(Tangle.Net.Entity.Seed seed, string name);
   }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
@@ -14,10 +12,11 @@ using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
+using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Profile
+namespace Chiota.ViewModels.Settings
 {
     public class ProfileViewModel : BaseViewModel
     {
@@ -117,6 +116,40 @@ namespace Chiota.ViewModels.Profile
                     {
                         Username = _originUsername;
                         ProfileImageSource = _originImageSource;
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region ProfileImage
+
+        public ICommand ProfileImageCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    // Open the file explorer of the device and the user choose a image.
+                    await CrossMedia.Current.Initialize();
+
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                        return;
+
+                    _mediaFile = await CrossMedia.Current.PickPhotoAsync();
+                    if (_mediaFile?.Path == null)
+                        return;
+
+                    try
+                    {
+                        // Load the image.
+                        var path = _mediaFile.Path;
+                        ProfileImageSource = ImageSource.FromFile(path);
+                    }
+                    catch (Exception)
+                    {
+                        await new FailedLoadingFileException(new ExcInfo()).ShowAlertAsync();
                     }
                 });
             }

@@ -21,7 +21,7 @@
     private IUsecaseInteractor<CreateUserRequest, CreateUserResponse> CreateUserInteractor { get; }
 
     /// <inheritdoc />
-    public async Task<User> CreateAsync(Seed seed, string name)
+    public async Task<User> CreateAsync(Tangle.Net.Entity.Seed seed, string name)
     {
       var response = await this.CreateUserInteractor.ExecuteAsync(new CreateUserRequest { Seed = seed });
 

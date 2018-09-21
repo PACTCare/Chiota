@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
-using Chiota.Models.BackUp;
+using Chiota.Models;
 using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
@@ -38,7 +38,7 @@ namespace Chiota.ViewModels.BackUp
             base.Init(data);
 
             //Set a new generated seed.
-            var seed = new Seed(data as string);
+            var seed = new SeedView(data as string);
             UpdateSeedView(seed);
         }
 
@@ -48,7 +48,7 @@ namespace Chiota.ViewModels.BackUp
 
         #region UpdateSeedView
 
-        private void UpdateSeedView(Seed seed)
+        private void UpdateSeedView(SeedView seed)
         {
             var tmp = new ObservableCollection<View>();
 

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Models.BackUp;
+using Chiota.Models;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 
@@ -26,7 +26,7 @@ namespace Chiota.ViewModels.Authentication
         private bool isSeedViewVisible;
         private bool isUpVisible;
 
-        private Seed seed;
+        private SeedView seed;
         private int seedLinePointer;
 
         private Thickness seedViewPadding;
@@ -212,7 +212,7 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(() =>
                 {
-                    this.seed = new Seed(Tangle.Net.Entity.Seed.Random().Value);
+                    this.seed = new SeedView(Tangle.Net.Entity.Seed.Random().Value);
 
                     // Reset view.
                     this.seedLinePointer = 0;

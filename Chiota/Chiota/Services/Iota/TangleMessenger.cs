@@ -27,13 +27,13 @@
   {
     private const int Depth = 8;
 
-    private readonly Seed seed;
+    private readonly Tangle.Net.Entity.Seed seed;
 
     private AbstractSqlLiteTransactionCache TransactionCache { get; }
 
     private IIotaRepository Repository { get; }
 
-    public TangleMessenger(Seed seed, int minWeightMagnitude = 14)
+    public TangleMessenger(Tangle.Net.Entity.Seed seed, int minWeightMagnitude = 14)
     {
       this.seed = seed;
       this.MinWeight = minWeightMagnitude;

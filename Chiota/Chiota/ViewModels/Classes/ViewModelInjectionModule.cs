@@ -1,6 +1,5 @@
 ﻿using Chiota.ViewModels.Contact;
 using Chiota.ViewModels.Messenger;
-using Chiota.ViewModels.Profile;
 using Chiota.ViewModels.Settings;
 
 namespace Chiota.ViewModels.Classes

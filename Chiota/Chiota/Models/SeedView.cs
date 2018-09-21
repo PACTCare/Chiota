@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Chiota.Models.Classes;
 
-namespace Chiota.Models.BackUp
+namespace Chiota.Models
 {
-    public class Seed : BaseModel
+    public class SeedView : BaseModel
     {
         #region Attributes
 
@@ -29,7 +27,7 @@ namespace Chiota.Models.BackUp
 
         #region Constructors
 
-        public Seed(string seed)
+        public SeedView(string seed)
         {
             //Init the list.
             Lines = new List<SeedLine>();

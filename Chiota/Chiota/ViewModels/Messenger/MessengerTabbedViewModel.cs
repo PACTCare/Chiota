@@ -49,21 +49,6 @@ namespace Chiota.ViewModels.Messenger
 
         #endregion
 
-        #region Profile
-
-        public ICommand ProfileCommand
-        {
-            get
-            {
-                return new Command(async() =>
-                {
-                    await PushAsync(new ProfileView());
-                });
-            }
-        }
-
-        #endregion
-
         #region Settings
 
         public ICommand SettingsCommand

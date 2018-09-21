@@ -48,6 +48,10 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <Style x:Key="Label18" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
     <Style x:Key="Label20" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
         <Setter Property="FontSize" Value="20"/>
     </Style>
