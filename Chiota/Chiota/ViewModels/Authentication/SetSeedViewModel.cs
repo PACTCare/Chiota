@@ -38,19 +38,6 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region ViewAppearing
-
-        /// <inheritdoc />
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            // Clear the user inputs.
-            Seed = string.Empty;
-        }
-
-        #endregion
-
         #region Commands
 
         #region ScanQrCode
