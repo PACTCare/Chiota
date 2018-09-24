@@ -41,49 +41,49 @@
         /// </summary>
         protected ValidationEntry()
         {
-            this.entry = new Entry { Style = (Style)Application.Current.Resources["Entry16"] };
-            this.entry.TextChanged += this.TextChanged;
-            this.frame = new Frame
+            entry = new Entry { Style = (Style)Application.Current.Resources["Entry16"] };
+            entry.TextChanged += TextChanged;
+            frame = new Frame
             {
                 Style = (Style)Application.Current.Resources["RoundedFrame8"],
                 WidthRequest = 256,
                 BackgroundColor = (Color)Application.Current.Resources["EntryColor"],
-                Content = this.entry
+                Content = entry
             };
-            this.frame.Margin = new Thickness(0, 0, 32, 0);
+            frame.Margin = new Thickness(0, 0, 32, 0);
 
-            this.image = new Image() { WidthRequest = 24, HeightRequest = 24, IsVisible = false };
+            image = new Image() { WidthRequest = 24, HeightRequest = 24, IsVisible = false };
 
-            this.Children.Add(this.frame);
-            this.Children.Add(this.image);
-            this.Spacing = 8;
-            this.Orientation = StackOrientation.Horizontal;
-            this.HorizontalOptions = LayoutOptions.Center;
-            this.VerticalOptions = LayoutOptions.Center;
+            Children.Add(frame);
+            Children.Add(image);
+            Spacing = 8;
+            Orientation = StackOrientation.Horizontal;
+            HorizontalOptions = LayoutOptions.Center;
+            VerticalOptions = LayoutOptions.Center;
         }
 
         public bool IsPassword
         {
-            get => (bool)this.GetValue(IsPasswordProperty);
-            set => this.SetValue(IsPasswordProperty, value);
+            get => (bool)GetValue(IsPasswordProperty);
+            set => SetValue(IsPasswordProperty, value);
         }
 
         public bool IsValid
         {
-            get => (bool)this.GetValue(IsValidProperty);
-            set => this.SetValue(IsValidProperty, value);
+            get => (bool)GetValue(IsValidProperty);
+            set => SetValue(IsValidProperty, value);
         }
 
         public string Placeholder
         {
-            get => (string)this.GetValue(PlaceholderProperty);
-            set => this.SetValue(PlaceholderProperty, value);
+            get => (string)GetValue(PlaceholderProperty);
+            set => SetValue(PlaceholderProperty, value);
         }
 
         public string Text
         {
-            get => (string)this.GetValue(TextProperty);
-            set => this.SetValue(TextProperty, value);
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
         protected abstract bool Validate(string text);
@@ -108,29 +108,29 @@
 
         private void OnIsPasswordChanged(bool isPassword)
         {
-            this.entry.IsPassword = isPassword;
+            entry.IsPassword = isPassword;
         }
 
         private void OnPlaceholderChanged(string placeholder)
         {
-            this.entry.Placeholder = placeholder;
+            entry.Placeholder = placeholder;
         }
 
         private void OnTextChanged(string text)
         {
-            this.entry.Text = text;
+            entry.Text = text;
         }
 
         private void TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.entry.Text))
+            if (!string.IsNullOrEmpty(entry.Text))
             {
-                var result = this.Validate(this.entry.Text);
-                this.UpdateValidationImage(result, true);
+                var result = Validate(entry.Text);
+                UpdateValidationImage(result, true);
             }
             else
             {
-                this.UpdateValidationImage(false);
+                UpdateValidationImage(false);
             }
         }
 
@@ -146,12 +146,12 @@
         private void UpdateValidationImage(bool valid, bool visible = false)
         {
             if (visible)
-                this.frame.Margin = new Thickness(0);
+                frame.Margin = new Thickness(0);
             else
-                this.frame.Margin = new Thickness(0, 0, 32, 0);
+                frame.Margin = new Thickness(0, 0, 32, 0);
 
-            this.image.Source = valid ? "done.png" : "clear.png";
-            this.image.IsVisible = visible;
+            image.Source = valid ? "done.png" : "clear.png";
+            image.IsVisible = visible;
         }
     }
 }

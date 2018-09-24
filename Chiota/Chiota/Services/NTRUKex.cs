@@ -21,16 +21,16 @@
       if (keyExchangeParameters)
       {
         // For initial key exchange!
-        this.ntruParameters = NTRUParamSets.APR2011743FAST;
-        this.maxSize = 105;
-        this.maxEncryptionSize = 1022;
+        ntruParameters = NTRUParamSets.APR2011743FAST;
+        maxSize = 105;
+        maxEncryptionSize = 1022;
       }
       else
       {
         // 38 times faster, but results in to messages instead of one
-        this.ntruParameters = NTRUParamSets.EES1499EP1FAST;
-        this.maxSize = 247;
-        this.maxEncryptionSize = 2062;
+        ntruParameters = NTRUParamSets.EES1499EP1FAST;
+        maxSize = 247;
+        maxEncryptionSize = 2062;
       }
     }
 
@@ -45,7 +45,7 @@
       var passphrase = Encoding.UTF8.GetBytes(seed);
       var salt = Encoding.UTF8.GetBytes(saltAddress);
 
-      var keyGen = new NTRUKeyGenerator(this.ntruParameters, false);
+      var keyGen = new NTRUKeyGenerator(ntruParameters, false);
 
       var keys = keyGen.GenerateKeyPair(passphrase, salt);
 
@@ -60,14 +60,14 @@
     /// <returns>Decrypted string</returns>
     public byte[] Decrypt(IAsymmetricKeyPair keyPair, byte[] encryptedBytes)
     {
-      var splitArray = encryptedBytes.Select((x, i) => new { Key = i / this.maxEncryptionSize, Value = x })
+      var splitArray = encryptedBytes.Select((x, i) => new { Key = i / maxEncryptionSize, Value = x })
         .GroupBy(x => x.Key, x => x.Value, (k, g) => g.ToArray())
         .ToArray();
       var bytesList = new List<byte[]>();
 
       foreach (var bytes in splitArray)
       {
-        using (var cipher = new NTRUEncrypt(this.ntruParameters))
+        using (var cipher = new NTRUEncrypt(ntruParameters))
         {
           try
           {

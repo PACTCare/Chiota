@@ -28,11 +28,11 @@
 
         public bool IsContinueVisible
         {
-            get => this.isContinueVisible;
+            get => isContinueVisible;
             set
             {
-                this.isContinueVisible = value;
-                this.OnPropertyChanged(nameof(this.IsContinueVisible));
+                isContinueVisible = value;
+                OnPropertyChanged(nameof(IsContinueVisible));
             }
         }
 
@@ -48,11 +48,11 @@
             // Set the generated iota seed.
             if (data != null)
             {
-                this.UserProperties = data as UserCreationProperties;
+                UserProperties = data as UserCreationProperties;
             }
 
             // Disable the continue button.
-            this.IsContinueVisible = true;
+            IsContinueVisible = true;
         }
 
         #endregion
@@ -65,7 +65,7 @@
             base.Reverse(data);
 
             // Enable the continue button.
-            this.IsContinueVisible = true;
+            IsContinueVisible = true;
         }
 
         #endregion
@@ -74,19 +74,19 @@
 
         #region WriteSeed
 
-        public ICommand WriteSeedCommand => new Command(async () => { await this.PushAsync(new WriteSeedView(), this.UserProperties.Seed.Value); });
+        public ICommand WriteSeedCommand => new Command(async () => { await PushAsync<WriteSeedView>(UserProperties.Seed.Value); });
 
         #endregion
 
         #region PrintPaper
 
-        public ICommand PrintPaperCommand => new Command(async () => { await this.PushAsync(new PaperCopyView(), this.UserProperties.Seed.Value); });
+        public ICommand PrintPaperCommand => new Command(async () => { await PushAsync<PaperCopyView>(UserProperties.Seed.Value); });
 
         #endregion
 
         #region QrCode
 
-        public ICommand QrCodeCommand => new Command(async () => { await this.PushAsync(new QrCodeView(), this.UserProperties.Seed.Value); });
+        public ICommand QrCodeCommand => new Command(async () => { await PushAsync<QrCodeView>(UserProperties.Seed.Value); });
 
         #endregion
 
@@ -95,15 +95,15 @@
         public ICommand CopyToClipboardCommand =>
             new Command(async () =>
             {
-                DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(this.UserProperties.Seed.Value);
-                await this.DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
+                DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserProperties.Seed.Value);
+                await DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
             });
 
         #endregion
 
         #region Continue
 
-        public ICommand ContinueCommand => new Command(async () => { await this.PushAsync(new ConfirmSeedView(), this.UserProperties); });
+        public ICommand ContinueCommand => new Command(async () => { await PushAsync<ConfirmSeedView>(UserProperties); });
 
         #endregion
 

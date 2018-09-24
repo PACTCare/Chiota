@@ -1,14 +1,19 @@
-﻿namespace Chiota.Views.Help
-{
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+﻿using Chiota.ViewModels.Classes;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class SeedHelpView : ContentPage
-  {
-    public SeedHelpView()
+namespace Chiota.Views.Help
+{
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SeedHelpView : ContentPage
     {
-      this.InitializeComponent();
+        public SeedHelpView()
+        {
+            InitializeComponent();
+
+            if (BindingContext is BaseViewModel viewModel)
+                viewModel.Setup(this);
+        }
     }
-  }
 }

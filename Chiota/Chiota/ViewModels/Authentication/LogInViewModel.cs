@@ -31,11 +31,11 @@ namespace Chiota.ViewModels.Authentication
 
         public string Password
         {
-            get => this.password;
+            get => password;
             set
             {
-                this.password = value;
-                this.OnPropertyChanged(nameof(this.Password));
+                password = value;
+                OnPropertyChanged(nameof(Password));
             }
         }
 
@@ -49,7 +49,7 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Password = string.Empty;
+            Password = string.Empty;
         }
 
         #endregion
@@ -69,16 +69,16 @@ namespace Chiota.ViewModels.Authentication
                     {
                         try
                         {
-                            await this.PushLoadingSpinnerAsync("Logging you in ...");
+                            await PushLoadingSpinnerAsync("Logging you in ...");
 
-                            await SecureStorage.LoginUser(this.Password);
-                            await this.PopPopupAsync();
+                            await SecureStorage.LoginUser(Password);
+                            await PopPopupAsync();
 
                             AppNavigation.ShowMessenger();
                         }
                         catch (BaseException exception)
                         {
-                            await this.PopPopupAsync();
+                            await PopPopupAsync();
                             await exception.ShowAlertAsync();
                         }
                     });
@@ -89,19 +89,19 @@ namespace Chiota.ViewModels.Authentication
 
         #region NewSeed
 
-        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedView()); });
+        public ICommand NewSeedCommand => new Command(async () => { await PushAsync<NewSeedView>(); });
 
         #endregion
 
         #region SetSeed
 
-        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedView()); });
+        public ICommand SetSeedCommand => new Command(async () => { await PushAsync<SetSeedView>(); });
 
         #endregion
 
         #region SeedHelp
 
-        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpView()); });
+        public ICommand SeedHelpCommand => new Command(async () => { await PushAsync<SeedHelpView>(); });
 
     #endregion
 

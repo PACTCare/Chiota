@@ -11,25 +11,25 @@
 
     public IpfsHelper(string host = "https://ipfsnode.de:5002/") // https://ipfs.infura.io:5001 , https://ipfsnode.de:5002/, 
     {
-      this.ipfs = new IpfsClient(host);
+      ipfs = new IpfsClient(host);
     }
 
     public async Task<string> CatString(string qmName)
     {
-      return await this.ipfs.FileSystem.ReadAllTextAsync(qmName);
+      return await ipfs.FileSystem.ReadAllTextAsync(qmName);
     }
 
     public async Task<string> PinFile(string path)
     {
       var addFileOptions = new AddFileOptions { Pin = true };
-      var nodeInfo = await this.ipfs.FileSystem.AddFileAsync(path, addFileOptions);
+      var nodeInfo = await ipfs.FileSystem.AddFileAsync(path, addFileOptions);
       return nodeInfo.Id.Hash.ToString();
     }
 
     public async Task<string> PinString(string input)
     {
       var addFileOptions = new AddFileOptions { Pin = true };
-      var nodeInfo = await this.ipfs.FileSystem.AddTextAsync(input, addFileOptions);
+      var nodeInfo = await ipfs.FileSystem.AddTextAsync(input, addFileOptions);
       return nodeInfo.Id.Hash.ToString();
     }
   }

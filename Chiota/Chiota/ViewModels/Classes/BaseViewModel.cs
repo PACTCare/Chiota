@@ -24,6 +24,7 @@ namespace Chiota.ViewModels.Classes
 
         private static NavigationAction _navigationAction;
         private static NavigationTyp _navigationTyp;
+        private static bool _isInitialized;
 
         /// <summary>
         /// Navigation of the application.
@@ -114,6 +115,7 @@ namespace Chiota.ViewModels.Classes
 
         protected BaseViewModel()
         {
+            _isInitialized = false;
         }
 
         #endregion
@@ -129,8 +131,19 @@ namespace Chiota.ViewModels.Classes
         public void Setup(Page page)
         {
             // Activate appearing events for the page model.
-            page.Appearing += this.OnAppearing;
-            page.Disappearing += this.OnDisappearing;
+            page.Appearing += OnAppearing;
+            page.Disappearing += OnDisappearing;
+
+            // Call reverse and init method of the pagemodel.
+            if (page.BindingContext is BaseViewModel viewmodel)
+                if (!_isInitialized)
+                {
+                    viewmodel.Init(InitObject);
+                    _isInitialized = true;
+                }
+
+            // Clear the param objects of the pagemodel.
+            InitObject = null;
         }
 
         #endregion
@@ -176,47 +189,44 @@ namespace Chiota.ViewModels.Classes
         private void OnAppearing(object sender, EventArgs e)
         {
             // Set current page and navigation.
-            this.CurrentPage = (Page)sender;
-            this.Navigation = this.CurrentPage.Navigation;
+            CurrentPage = (Page)sender;
+            Navigation = CurrentPage.Navigation;
 
             // Set the last page for the viewmodel.
             IReadOnlyList<Page> stack = null;
             if (_navigationTyp == NavigationTyp.Modal)
-                stack = this.Navigation.ModalStack;
+                stack = Navigation.ModalStack;
             else
-                stack = this.Navigation.NavigationStack;
-            this.LastPage = null;
+                stack = Navigation.NavigationStack;
+            LastPage = null;
             if (stack.Count > 1)
                 for (var i = stack.Count - 1; i > 0; i--)
                 {
-                    if (stack[i] != this.CurrentPage) continue;
-                    this.LastPage = stack[i - 1];
+                    if (stack[i] != CurrentPage) continue;
+                    LastPage = stack[i - 1];
                     break;
                 }
 
             // Set the root page of the current navigation
-            var parent = this.CurrentPage.Parent;
-            if (parent == null || parent is Application) this.RootPage = this.CurrentPage;
-            if (parent is NavigationPage navigation) this.RootPage = navigation.RootPage;
+            var parent = CurrentPage.Parent;
+            if (parent == null || parent is Application) RootPage = CurrentPage;
+            if (parent is NavigationPage navigation) RootPage = navigation.RootPage;
 
             // Call reverse and init method of the pagemodel.
-            if (this.CurrentPage.BindingContext is BaseViewModel viewmodel)
+            if (CurrentPage.BindingContext is BaseViewModel viewmodel)
             {
-                if (_navigationAction == NavigationAction.Push)
-                    viewmodel.Init(this.InitObject);
-                else if (_navigationAction == NavigationAction.Pop)
-                    viewmodel.Reverse(this.ReverseObject);
+                if (_navigationAction == NavigationAction.Pop)
+                    viewmodel.Reverse(ReverseObject);
             }
 
             // Clear the param objects of the pagemodel.
-            this.InitObject = null;
-            this.ReverseObject = null;
+            ReverseObject = null;
 
             // Clear the navigation enums.
             _navigationAction = NavigationAction.Undefined;
             _navigationTyp = NavigationTyp.Undefined;
 
-            this.ViewIsAppearing();
+            ViewIsAppearing();
         }
 
         /// <summary>
@@ -239,7 +249,7 @@ namespace Chiota.ViewModels.Classes
         /// </param>
         private void OnDisappearing(object sender, EventArgs e)
         {
-            this.ViewIsDisappearing();
+            ViewIsDisappearing();
         }
 
         /// <summary>
@@ -267,17 +277,18 @@ namespace Chiota.ViewModels.Classes
         /// <param name="data">
         /// The parameter which pass to the pagemodel.
         /// </param>
-        public void InsertPageBefore(Page page, Page before, object data = null)
+        public void InsertPageBefore<T>(Page before, object data = null) where T : Page
         {
             // For this action we need to call the push method.
-            if (before == this.CurrentPage) return;
+            if (before == CurrentPage) return;
 
             _navigationAction = NavigationAction.Insert;
             _navigationTyp = NavigationTyp.Undefined;
 
-            this.InitObject = data;
+            InitObject = data;
+            var page = (T)Activator.CreateInstance(typeof(T));
 
-            this.Navigation.InsertPageBefore(page, before);
+            Navigation.InsertPageBefore(page, before);
         }
 
         #endregion
@@ -299,14 +310,15 @@ namespace Chiota.ViewModels.Classes
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task PushAsync(Page page, object data = null, bool animated = false)
+        public async Task PushAsync<T>(object data = null, bool animated = false) where T : Page
         {
             _navigationAction = NavigationAction.Push;
             _navigationTyp = NavigationTyp.Navigation;
 
-            this.InitObject = data;
+            InitObject = data;
+            var page = (T)Activator.CreateInstance(typeof(T));
 
-            await this.Navigation.PushAsync(page, animated);
+            await Navigation.PushAsync(page, animated);
         }
 
         /// <summary>
@@ -324,14 +336,15 @@ namespace Chiota.ViewModels.Classes
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task PushModalAsync(Page page, object data = null, bool animated = false)
+        public async Task PushModalAsync<T>(object data = null, bool animated = false) where T: Page
         {
             _navigationAction = NavigationAction.Push;
             _navigationTyp = NavigationTyp.Modal;
 
-            this.InitObject = data;
+            InitObject = data;
+            var page = (T)Activator.CreateInstance(typeof(T));
 
-            await this.Navigation.PushModalAsync(page, animated);
+            await Navigation.PushModalAsync(page, animated);
         }
 
         #endregion
@@ -352,14 +365,14 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public async Task<Page> PopAsync(object data = null, bool animated = false)
         {
-            if (this.LastPage == null) return null;
+            if (LastPage == null) return null;
 
             _navigationAction = NavigationAction.Pop;
             _navigationTyp = NavigationTyp.Navigation;
 
-            this.ReverseObject = data;
+            ReverseObject = data;
 
-            return await this.Navigation.PopAsync(animated);
+            return await Navigation.PopAsync(animated);
         }
 
         /// <summary>
@@ -376,14 +389,14 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public async Task<Page> PopModalAsync(object data = null, bool animated = false)
         {
-            if (this.LastPage == null) return null;
+            if (LastPage == null) return null;
 
             _navigationAction = NavigationAction.Pop;
             _navigationTyp = NavigationTyp.Modal;
 
-            this.ReverseObject = data;
+            ReverseObject = data;
 
-            return await this.Navigation.PopModalAsync(animated);
+            return await Navigation.PopModalAsync(animated);
         }
 
         #endregion
@@ -404,14 +417,14 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public async Task PopToRootAsync(object data = null, bool animated = false)
         {
-            if (this.RootPage == this.CurrentPage) return;
+            if (RootPage == CurrentPage) return;
 
             _navigationAction = NavigationAction.PopRoot;
             _navigationTyp = NavigationTyp.Undefined;
 
-            this.ReverseObject = data;
+            ReverseObject = data;
 
-            await this.Navigation.PopToRootAsync(animated);
+            await Navigation.PopToRootAsync(animated);
         }
 
         #endregion
@@ -429,7 +442,7 @@ namespace Chiota.ViewModels.Classes
             _navigationAction = NavigationAction.Remove;
             _navigationTyp = NavigationTyp.Undefined;
 
-            this.Navigation.RemovePage(page);
+            Navigation.RemovePage(page);
         }
 
         #endregion
@@ -475,7 +488,7 @@ namespace Chiota.ViewModels.Classes
             page.Appearing += popupPageModel.OnAppearing;
             page.Disappearing += popupPageModel.OnDisappearing;
 
-            return this.Navigation.DisplayPopupAsync<TA, TB>(page, popupModel, animated);
+            return Navigation.DisplayPopupAsync<TA, TB>(page, popupModel, animated);
         }
 
         #endregion
@@ -516,7 +529,7 @@ namespace Chiota.ViewModels.Classes
             page.Appearing += popupPageModel.OnAppearing;
             page.Disappearing += popupPageModel.OnDisappearing;
 
-            return this.Navigation.PushPopupAsync(page, animated);
+            return Navigation.PushPopupAsync(page, animated);
         }
 
         /// <summary>
@@ -533,7 +546,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public Task PushPopupAsync(PopupPage page, bool animated = true)
         {
-            return this.Navigation.PushPopupAsync(page, animated);
+            return Navigation.PushPopupAsync(page, animated);
         }
 
         #endregion
@@ -550,7 +563,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public Task PopPopupAsync(bool animate = true)
         {
-            return this.Navigation.PopPopupAsync(animate);
+            return Navigation.PopPopupAsync(animate);
         }
 
 
@@ -568,7 +581,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public Task PopToRootPopupAsync(bool animate = true)
         {
-            return this.Navigation.PopAllPopupAsync(animate);
+            return Navigation.PopAllPopupAsync(animate);
         }
 
         #endregion
@@ -587,7 +600,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public Task RemovePopupPageAsync(PopupPage page, bool animate = true)
         {
-            return this.Navigation.RemovePopupPageAsync(page, animate);
+            return Navigation.RemovePopupPageAsync(page, animate);
         }
 
         #endregion
@@ -605,7 +618,7 @@ namespace Chiota.ViewModels.Classes
         {
             get
             {
-                return new Command(async () => { await this.PopAsync(); });
+                return new Command(async () => { await PopAsync(); });
             }
         }
 
@@ -629,7 +642,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public async Task DisplayAlertAsync(string title, string message)
         {
-            await this.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), new AlertPopupModel { Title = title, Message = message });
+            await DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), new AlertPopupModel { Title = title, Message = message });
         }
 
         /// <summary>
@@ -643,7 +656,7 @@ namespace Chiota.ViewModels.Classes
         /// </returns>
         public async Task PushLoadingSpinnerAsync(string text)
         {
-            await this.PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), new LoadingPopupModel { Message = text });
+            await PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), new LoadingPopupModel { Message = text });
         }
 
         #endregion
@@ -653,14 +666,14 @@ namespace Chiota.ViewModels.Classes
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Will update a specific propertie, which is binded to the ui.
+        /// Will update a specific properties, which are binded to the ui.
         /// </summary>
         /// <param name="propertyName">
         /// The property name.
         /// </param>
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

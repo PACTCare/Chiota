@@ -18,11 +18,12 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+    using Contact = Messenger.Entity.Contact;
 
-  /// <summary>
-  /// The iota helper.
-  /// </summary>
-  public static class IotaHelper
+    /// <summary>
+    /// The iota helper.
+    /// </summary>
+    public static class IotaHelper
   {
     /// <summary>
     /// The extract message.

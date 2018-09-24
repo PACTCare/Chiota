@@ -18,19 +18,19 @@ namespace Chiota.ViewModels.Authentication
 
         #region NewSeed
 
-        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedView()); });
+        public ICommand NewSeedCommand => new Command(async () => { await PushAsync<NewSeedView>(); });
 
         #endregion
 
         #region SetSeed
 
-        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedView()); });
+        public ICommand SetSeedCommand => new Command(async () => { await PushAsync<SetSeedView>(); });
 
         #endregion
 
         #region SeedHelp
 
-        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpView()); });
+        public ICommand SeedHelpCommand => new Command(async () => { await PushAsync<SeedHelpView>(); });
 
         [UsedImplicitly]
         public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });

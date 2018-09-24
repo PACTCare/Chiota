@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Chiota.Models;
 using Chiota.Services.Share;
@@ -64,7 +65,7 @@ namespace Chiota.ViewModels.Settings
                 {
                     Name = "Profile",
                     Icon = "account.png",
-                    TapCommand = new Command(async () => { await PushAsync(new ProfileView()); })
+                    TapCommand = new Command(async () => { await PushAsync<ProfileView>(); })
                 },
                 new SettingsItem()
                 {
@@ -73,7 +74,7 @@ namespace Chiota.ViewModels.Settings
                     TapCommand = new Command(async () =>
                     {
                         var title = "Chiota";
-                        var message = "You should check out Chiota, your IOTA messenger!";
+                        var message = "You should check out Chiota, Your IOTA Chat App";
                         var url = "https://play.google.com/store/apps/details?id=chiotaapp.chiotaapp";
 
                         await CrossShare.Current.Share(new ShareMessage()
@@ -88,7 +89,7 @@ namespace Chiota.ViewModels.Settings
                 {
                     Name = "About",
                     Icon = "help.png",
-                    TapCommand = new Command(async () => { await PushAsync(new AboutView()); })
+                    TapCommand = new Command(async () => { await PushAsync<AboutView>(); })
                 }
             };
 

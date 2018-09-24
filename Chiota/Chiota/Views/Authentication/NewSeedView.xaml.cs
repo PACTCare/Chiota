@@ -1,15 +1,20 @@
-﻿namespace Chiota.Views.Authentication
-{
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+﻿using Chiota.ViewModels.Classes;
 
-  /// <inheritdoc />
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class NewSeedView : ContentPage
-  {
-    public NewSeedView()
+namespace Chiota.Views.Authentication
+{
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
+    /// <inheritdoc />
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class NewSeedView : ContentPage
     {
-      this.InitializeComponent();
+        public NewSeedView()
+        {
+            InitializeComponent();
+
+            if (BindingContext is BaseViewModel viewModel)
+                viewModel.Setup(this);
+        }
     }
-  }
 }

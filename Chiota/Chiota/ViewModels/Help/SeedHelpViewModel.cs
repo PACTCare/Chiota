@@ -12,7 +12,7 @@ namespace Chiota.ViewModels.Help
 
         #region Continue
 
-        public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
+        public ICommand ContinueCommand => new Command(async () => { await PopAsync(); });
 
         #endregion
 

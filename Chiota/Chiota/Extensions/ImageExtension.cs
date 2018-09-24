@@ -11,10 +11,10 @@ namespace Chiota.Extensions
 
         public object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (this.Source == null)
+            if (Source == null)
                 return null;
 
-            var imageSource = ImageSource.FromResource(this.Source);
+            var imageSource = ImageSource.FromResource(Source);
 
             return imageSource;
         }

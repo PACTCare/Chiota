@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-  public class SetUserViewModel : BaseViewModel
+    public class SetUserViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -23,7 +23,7 @@ namespace Chiota.ViewModels.Authentication
         private ImageSource profileImageSource;
         private string imagePath;
 
-        private UserCreationProperties UserProperties;
+        private static UserCreationProperties UserProperties;
         private UserService UserService;
 
         #endregion
@@ -32,31 +32,31 @@ namespace Chiota.ViewModels.Authentication
 
         public string Name
         {
-            get => this.name;
+            get => name;
             set
             {
-                this.name = value;
-                this.OnPropertyChanged(nameof(this.Name));
+                name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
-        
+
         public double ProfileImageOpacity
         {
-            get => this.profileImageOpacity;
+            get => profileImageOpacity;
             set
             {
-                this.profileImageOpacity = value;
-                this.OnPropertyChanged(nameof(this.ProfileImageOpacity));
+                profileImageOpacity = value;
+                OnPropertyChanged(nameof(ProfileImageOpacity));
             }
         }
 
         public ImageSource ProfileImageSource
         {
-            get => this.profileImageSource;
+            get => profileImageSource;
             set
             {
-                this.profileImageSource = value;
-                this.OnPropertyChanged(nameof(this.ProfileImageSource));
+                profileImageSource = value;
+                OnPropertyChanged(nameof(ProfileImageSource));
             }
         }
 
@@ -66,7 +66,7 @@ namespace Chiota.ViewModels.Authentication
 
         public SetUserViewModel(UserService userService)
         {
-            this.UserService = userService;
+            UserService = userService;
         }
 
         #endregion
@@ -78,12 +78,12 @@ namespace Chiota.ViewModels.Authentication
         {
             base.Init(data);
 
-            this.UserProperties = data as UserCreationProperties;
+            UserProperties = data as UserCreationProperties;
 
             // Set the default opacity.
             imagePath = string.Empty;
-            this.ProfileImageSource = ImageSource.FromFile("account.png");
-            this.ProfileImageOpacity = 0.6;
+            ProfileImageSource = ImageSource.FromFile("account.png");
+            ProfileImageOpacity = 0.6;
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Name = string.Empty;
+            Name = string.Empty;
         }
 
         #endregion
@@ -125,8 +125,8 @@ namespace Chiota.ViewModels.Authentication
                         {
                             // Load the image.
                             imagePath = media.Path;
-                            this.ProfileImageSource = ImageSource.FromFile(imagePath);
-                            this.ProfileImageOpacity = 1;
+                            ProfileImageSource = ImageSource.FromFile(imagePath);
+                            ProfileImageOpacity = 1;
                         }
                         catch (Exception)
                         {
@@ -146,16 +146,16 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                     {
-                        if (string.IsNullOrEmpty(this.Name))
+                        if (string.IsNullOrEmpty(Name))
                         {
                             await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
                             return;
                         }
 
-                        await this.PushLoadingSpinnerAsync("Setting up your account");
+                        await PushLoadingSpinnerAsync("Setting up your account");
 
-                        this.UserProperties.Name = this.Name;
-                        await this.UserService.CreateNew(this.UserProperties);
+                        UserProperties.Name = Name;
+                        await UserService.CreateNew(UserProperties);
 
                         if (!string.IsNullOrEmpty(imagePath))
                         {
@@ -163,7 +163,7 @@ namespace Chiota.ViewModels.Authentication
                             SecureStorage.UpdateUser(UserProperties.Password);
                         }
 
-                        await this.PopPopupAsync();
+                        await PopPopupAsync();
 
                         AppNavigation.ShowMessenger();
                     });

@@ -25,9 +25,9 @@ namespace Chiota.Exceptions
 
         public ExcInfo([CallerFilePath] string filePath = "", [CallerMemberName] string methodName = "", [CallerLineNumber] int lineNumber = 0)
         {
-            this.FilePath = filePath;
-            this.MethodName = methodName;
-            this.LineNumber = lineNumber;
+            FilePath = filePath;
+            MethodName = methodName;
+            LineNumber = lineNumber;
         }
 
         #endregion

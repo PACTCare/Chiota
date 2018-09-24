@@ -20,7 +20,7 @@
                     <StackLayout Spacing="24">
                         <Label Style="{DynamicResource Label14}" Text="Version 1.0" HorizontalTextAlignment="Center" Opacity="0.8"/>
                         <StackLayout>
-                            <Label Style="{DynamicResource Label14}" Text="© 2018 Pact Care BV All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>
+                            <Label Style="{DynamicResource Label14}" Text="© 2018 Pact Care BV" HorizontalTextAlignment="Center" Opacity="0.6"/>
                             <Label Style="{DynamicResource Label14}" Text="All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>
                         </StackLayout>
                     </StackLayout>

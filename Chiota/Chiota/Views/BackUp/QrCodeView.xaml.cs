@@ -1,14 +1,19 @@
-﻿namespace Chiota.Views.BackUp
-{
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+﻿using Chiota.ViewModels.Classes;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class QrCodeView : ContentPage
-  {
-    public QrCodeView()
+namespace Chiota.Views.BackUp
+{
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class QrCodeView : ContentPage
     {
-      this.InitializeComponent();
+        public QrCodeView()
+        {
+            InitializeComponent();
+
+            if (BindingContext is BaseViewModel viewModel)
+                viewModel.Setup(this);
+        }
     }
-  }
 }

@@ -15,25 +15,25 @@
   {
     public SeedValidationEntry()
     {
-      this.entry.TextChanged += this.OnTextChanged;
+      entry.TextChanged += OnTextChanged;
     }
 
     protected override bool Validate(string text)
     {
-      this.IsValid = false;
+      IsValid = false;
       return !string.IsNullOrEmpty(text) && InputValidator.IsTrytes(text, Seed.Length);
     }
 
     private void OnTextChanged(object sender, TextChangedEventArgs e)
     {
-      if (this.BindingContext is ConfirmSeedViewModel confirmSeedModel)
+      if (BindingContext is ConfirmSeedViewModel confirmSeedModel)
       {
-        confirmSeedModel.Seed = this.entry.Text;
+        confirmSeedModel.Seed = entry.Text;
       }
 
-      if (this.BindingContext is SetSeedViewModel setSeedModel)
+      if (BindingContext is SetSeedViewModel setSeedModel)
       {
-        setSeedModel.Seed = this.entry.Text;
+        setSeedModel.Seed = entry.Text;
       }
     }
   }

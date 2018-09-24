@@ -42,7 +42,7 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="1" Grid.Column="1" Style="{DynamicResource BaseButton}" CornerRadius="32" Image="camera.png" Command="{Binding ProfileImageCommand}"/>
+                                <Button Grid.Row="1" Grid.Column="1" Style="{DynamicResource BaseButton}" CornerRadius="32" Image="camera.png" Command="{Binding ProfileImageCommand}" IsVisible="{Binding IsEdit}"/>
                             </Grid>
                         </Grid>
 

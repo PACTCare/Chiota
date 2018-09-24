@@ -22,7 +22,7 @@
       : base(iotaRepository)
     {
       // There needs to be a better way for this
-      this.Connection?.CreateTableAsync<SqLiteContacts>();
+      Connection?.CreateTableAsync<SqLiteContacts>();
     }
 
     /// <summary>
@@ -33,13 +33,13 @@
     /// <inheritdoc />
     public override async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
-      await this.Connection.InsertAsync(new SqLiteContacts { ChatAddress = address, Accepted = accepted, PublicKeyAddress = publicKeyAddress });
+      await Connection.InsertAsync(new SqLiteContacts { ChatAddress = address, Accepted = accepted, PublicKeyAddress = publicKeyAddress });
     }
 
     /// <inheritdoc />
     public override async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
     {
-      var contactsResult = await this.Connection.QueryAsync<SqLiteContacts>(
+      var contactsResult = await Connection.QueryAsync<SqLiteContacts>(
                              "SELECT * FROM SqLiteContacts WHERE PublicKeyAddress = ? ORDER BY Id",
                              publicKeyAddress);
 

@@ -8,8 +8,8 @@
     public AlertPopupModel()
     {
       // Set default attributes
-      this.PosButtonText = AppResources.DlgOk;
-      this.NegButtonText = AppResources.DlgCancel;
+      PosButtonText = AppResources.DlgOk;
+      NegButtonText = AppResources.DlgCancel;
     }
 
     public bool IsNegButtonDefault { get; set; }

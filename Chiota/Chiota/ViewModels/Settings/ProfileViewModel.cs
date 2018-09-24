@@ -191,6 +191,9 @@ namespace Chiota.ViewModels.Settings
                     if(!result.Result)
                         return;
 
+                    //Show loading popup.
+                    await PushLoadingSpinnerAsync("Loading");
+
                     try
                     {
                         SecureStorage.ValidatePassword(result.ResultText);
@@ -209,13 +212,13 @@ namespace Chiota.ViewModels.Settings
 
                         DependencyResolver.Reload();
 
+                        await PopPopupAsync();
                         await DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
-
-                        await PopAsync();
                         return;
                     }
                     catch (BaseException exception)
                     {
+                        await PopPopupAsync();
                         await exception.ShowAlertAsync();
                     }
                 });

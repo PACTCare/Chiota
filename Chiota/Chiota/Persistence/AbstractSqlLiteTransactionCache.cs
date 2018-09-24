@@ -21,7 +21,7 @@
     /// </summary>
     public AbstractSqlLiteTransactionCache()
     {
-      this.Connection?.CreateTableAsync<SqLiteMessage>();
+      Connection?.CreateTableAsync<SqLiteMessage>();
     }
 
     /// <summary>
@@ -32,13 +32,13 @@
     /// <inheritdoc />
     public async Task FlushAsync()
     {
-      await this.Connection.QueryAsync<SqLiteMessage>("DELETE FROM SqLiteMessage");
+      await Connection.QueryAsync<SqLiteMessage>("DELETE FROM SqLiteMessage");
     }
 
     /// <inheritdoc />
     public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
     {
-      var cachedItems = await this.Connection.QueryAsync<SqLiteMessage>(
+      var cachedItems = await Connection.QueryAsync<SqLiteMessage>(
                           "SELECT * FROM SqLiteMessage WHERE ChatAddress = ? ORDER BY Id",
                           address.Value);
 
@@ -61,7 +61,7 @@
                                MessageTryteString = item.TransactionTrytes.Value
                              };
 
-      await this.Connection.InsertAsync(sqlLiteMessage);
+      await Connection.InsertAsync(sqlLiteMessage);
     }
   }
 }

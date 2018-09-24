@@ -56,12 +56,12 @@ namespace Chiota.ViewModels.Contact
 
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            this.Navigation.PopAsync();
-                            this.ContactAddress = result.Text;
+                            Navigation.PopAsync();
+                            ContactAddress = result.Text;
                         });
                     };
 
-                    await this.PushAsync(scanPage);
+                    await CurrentPage.Navigation.PushAsync(scanPage);
                 });
             }
         }
@@ -91,14 +91,14 @@ namespace Chiota.ViewModels.Contact
                         {
                             await PushLoadingSpinnerAsync("Adding Contact");
 
-                            /*var response = await this.AddContactInteractor.ExecuteAsync(
+                            /*var response = await AddContactInteractor.ExecuteAsync(
                                 new AddContactRequest
                                 {
                                     Name = UserService.CurrentUser.Name,
                                     ImageHash = UserService.CurrentUser.ImageHash,
                                     RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                                     PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                                    ContactAddress = new Address(this.ReceiverAdress)
+                                    ContactAddress = new Address(ReceiverAdress)
                                 });*/
 
                             await PopPopupAsync();

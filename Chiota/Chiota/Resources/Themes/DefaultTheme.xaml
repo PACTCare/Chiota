@@ -3,17 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Chiota.Resources.Themes.DefaultTheme">
     
-    <Color x:Key="TextColor">#000000</Color>
-    <Color x:Key="NavigationBarTextColor">#ffffff</Color>
-    <Color x:Key="ButtonTextColor">#ffffff</Color>
-    <Color x:Key="PopupTextColor">#ffffff</Color>
+    <Color x:Key="DarkTextColor">#000000</Color>
+    <Color x:Key="BrightTextColor">#ffffff</Color>
     <Color x:Key="HighlightedColor">#48ffffff</Color>
     <Color x:Key="AttentionHighlightedTextColor">#ff0000</Color>
     <Color x:Key="FadedColor">#16ffffff</Color>
 
-    <Color x:Key="AccentDarkColor">#00236a</Color>
-    <Color x:Key="AccentColor">#1d4999</Color>
-    <Color x:Key="AccentBrightColor">#5874ca</Color>
+    <Color x:Key="AccentDarkColor">#0d47a1</Color>
+    <Color x:Key="AccentColor">#1565c0</Color>
+    <Color x:Key="AccentBrightColor">#1976d2</Color>
     <Color x:Key="ButtonColor">#5874ca</Color>
     <Color x:Key="EntryColor">#32000000</Color>
 

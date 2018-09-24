@@ -26,7 +26,7 @@ namespace Chiota.ViewModels.Messenger
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new ContactAddressView());
+                    await PushAsync<ContactAddressView>();
                 });
             }
         }
@@ -41,7 +41,7 @@ namespace Chiota.ViewModels.Messenger
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new AddContactView());
+                    await PushAsync<AddContactView>();
                 });
             }
         }
@@ -56,7 +56,7 @@ namespace Chiota.ViewModels.Messenger
             {
                 return new Command(async () =>
                 {
-                    await PushAsync(new SettingsView());
+                    await PushAsync<SettingsView>();
                 });
             }
         }

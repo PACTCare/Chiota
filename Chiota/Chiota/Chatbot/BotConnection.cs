@@ -22,7 +22,7 @@
     {
       // Todo: restore previous converstation if there was one 
       // https://github.com/tompaana/twitter-bot-fw-integration/blob/master/TwitterBotFWIntegration/DirectLineManager.cs
-      this.bot = bot;
+      bot = bot;
       if (CrossSecureStorage.Current.HasKey(ConversationIdKey))
       {
         if (int.TryParse(CrossSecureStorage.Current.GetValue(WatermarkKey), out var watermarkNumber))
@@ -30,12 +30,12 @@
           if (watermarkNumber > 1)
           {
             // shows the last message of Florence when reopened
-            this.watermark = (watermarkNumber - 2).ToString();
+            watermark = (watermarkNumber - 2).ToString();
           }
         }
         else
         {
-          this.watermark = watermarkNumber.ToString();
+          watermark = watermarkNumber.ToString();
         }
       }
       else
@@ -44,9 +44,9 @@
         var tokenResponse = new DirectLineClient(bot.DirectLineSecret).Tokens.GenerateTokenForNewConversation();
 
         // Use token to create conversation
-        using (this.directLineClient = new DirectLineClient(tokenResponse.Token))
+        using (directLineClient = new DirectLineClient(tokenResponse.Token))
         {
-          this.directLineClient.Conversations.StartConversation();
+          directLineClient.Conversations.StartConversation();
           CrossSecureStorage.Current.SetValue(ConversationIdKey, tokenResponse.ConversationId);
         }
       }
@@ -59,20 +59,20 @@
     public async Task<ActivitySet> GetActivitiesAsync()
     {
       ActivitySet activitySet;
-      using (this.directLineClient = new DirectLineClient(this.bot.DirectLineSecret))
+      using (directLineClient = new DirectLineClient(bot.DirectLineSecret))
       {
-        this.directLineClient.Conversations.ReconnectToConversation(
+        directLineClient.Conversations.ReconnectToConversation(
           CrossSecureStorage.Current.GetValue(ConversationIdKey),
-          this.watermark);
-        activitySet = await this.directLineClient.Conversations.GetActivitiesAsync(
+          watermark);
+        activitySet = await directLineClient.Conversations.GetActivitiesAsync(
                         CrossSecureStorage.Current.GetValue(ConversationIdKey),
-                        this.watermark);
+                        watermark);
       }
 
-      this.watermark = activitySet?.Watermark;
-      if (this.watermark != null)
+      watermark = activitySet?.Watermark;
+      if (watermark != null)
       {
-        CrossSecureStorage.Current.SetValue(WatermarkKey, this.watermark);
+        CrossSecureStorage.Current.SetValue(WatermarkKey, watermark);
       }
 
       return activitySet;
@@ -89,7 +89,7 @@
     /// </returns>
     public async Task SendMessageAsync(string message)
     {
-      using (this.directLineClient = new DirectLineClient(this.bot.DirectLineSecret))
+      using (directLineClient = new DirectLineClient(bot.DirectLineSecret))
       {
         var activity = new Activity
         {
@@ -103,7 +103,7 @@
           Text = message,
           Type = ActivityTypes.Message
         };
-        await this.directLineClient.Conversations.PostActivityAsync(CrossSecureStorage.Current.GetValue(ConversationIdKey), activity);
+        await directLineClient.Conversations.PostActivityAsync(CrossSecureStorage.Current.GetValue(ConversationIdKey), activity);
       }
     }
   }

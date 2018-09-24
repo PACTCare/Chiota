@@ -47,9 +47,9 @@
     public RestIotaRepository Create(int roundNumber = 0)
     {
       var appSettings = ApplicationSettings.Load();
-      this.nodeUriList.Insert(0, appSettings.IotaNodeUri);
+      nodeUriList.Insert(0, appSettings.IotaNodeUri);
 
-      var iotaClient = new MessengerIotaClient(this.nodeUriList);
+      var iotaClient = new MessengerIotaClient(nodeUriList);
 
       return appSettings.DoRemotePoW
                ? new RestIotaRepository(iotaClient, new PoWSrvService())

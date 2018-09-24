@@ -1,15 +1,20 @@
-﻿namespace Chiota.Views.Authentication
-{
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+﻿using Chiota.ViewModels.Classes;
 
-  /// <inheritdoc />
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class LogInView : ContentPage
-  {
-    public LogInView()
+namespace Chiota.Views.Authentication
+{
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
+
+    /// <inheritdoc />
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class LogInView : ContentPage
     {
-      this.InitializeComponent();
+        public LogInView()
+        {
+            InitializeComponent();
+
+            if (BindingContext is BaseViewModel viewModel)
+                viewModel.Setup(this);
+        }
     }
-  }
 }

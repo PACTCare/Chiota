@@ -17,15 +17,15 @@
         public DialogPopupPageModel(DialogPopupModel popupModel)
           : base(popupModel)
         {
-            if (this.PopupModel.IsNegButtonDefault)
+            if (PopupModel.IsNegButtonDefault)
             {
-                this.NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
-                this.PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
+                NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+                PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
                 return;
             }
 
-            this.NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
-            this.PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+            NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
+            PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
         }
 
         public Color NegButtonColor { get; set; }
@@ -40,11 +40,11 @@
                 return new Command(
                   async () =>
                     {
-                        this.PopupModel.Result = false;
-                        this.PopupModel.ResultText = string.Empty;
+                        PopupModel.Result = false;
+                        PopupModel.ResultText = string.Empty;
 
-                        this.Finish = true;
-                        await this.PopPopupAsync();
+                        Finish = true;
+                        await PopPopupAsync();
                     });
             }
         }
@@ -61,10 +61,10 @@
                 return new Command(
                   async () =>
                     {
-                        this.PopupModel.Result = true;
+                        PopupModel.Result = true;
 
-                        this.Finish = true;
-                        await this.PopPopupAsync();
+                        Finish = true;
+                        await PopPopupAsync();
                     });
             }
         }

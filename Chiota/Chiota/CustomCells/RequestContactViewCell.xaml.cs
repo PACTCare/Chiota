@@ -8,7 +8,7 @@
   {
     public RequestContactViewCell()
     {
-      this.InitializeComponent();
+      InitializeComponent();
     }
   }
 }

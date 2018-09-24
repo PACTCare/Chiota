@@ -19,11 +19,12 @@
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
+    using Contact = Messenger.Entity.Contact;
 
-  /// <summary>
-  /// The main page.
-  /// </summary>
-  public sealed partial class MainPage
+    /// <summary>
+    /// The main page.
+    /// </summary>
+    public sealed partial class MainPage
   {
     private const string BackgroundTaskName = "UWPNotifications";
 

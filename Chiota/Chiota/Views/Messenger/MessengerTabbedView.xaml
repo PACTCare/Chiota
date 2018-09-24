@@ -9,7 +9,7 @@
             classes:ViewModelLocator.AutoWireViewModel="true"
             Title="{DynamicResource AppName}"
             BarBackgroundColor="{DynamicResource AccentColor}"
-            BarTextColor="{DynamicResource NavigationBarTextColor}">
+            BarTextColor="{DynamicResource BrightTextColor}">
 
     <TabbedPage.BindingContext>
         <messengerviewmodels:MessengerTabbedViewModel/>

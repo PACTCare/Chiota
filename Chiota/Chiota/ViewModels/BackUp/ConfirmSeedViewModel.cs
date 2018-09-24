@@ -29,11 +29,11 @@ namespace Chiota.ViewModels.BackUp
 
         public string Seed
         {
-            get => this.seed;
+            get => seed;
             set
             {
-                this.seed = value;
-                this.OnPropertyChanged(nameof(this.Seed));
+                seed = value;
+                OnPropertyChanged(nameof(Seed));
             }
         }
 
@@ -45,7 +45,7 @@ namespace Chiota.ViewModels.BackUp
         public override void Init(object data = null)
         {
             base.Init(data);
-            this.UserProperties = data as UserCreationProperties;
+            UserProperties = data as UserCreationProperties;
         }
 
         #endregion
@@ -58,7 +58,7 @@ namespace Chiota.ViewModels.BackUp
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Seed = string.Empty;
+            Seed = string.Empty;
         }
 
         #endregion
@@ -80,13 +80,13 @@ namespace Chiota.ViewModels.BackUp
                         scanPage.IsScanning = false;
                         Device.BeginInvokeOnMainThread(() =>
                         {
-                            this.Navigation.PopAsync();
-                            this.Seed = result.Text;
+                            Navigation.PopAsync();
+                            Seed = result.Text;
 
                         });
 
                     };
-                    await this.PushAsync(scanPage);
+                    await CurrentPage.Navigation.PushAsync(scanPage);
                 });
             }
         }
@@ -101,21 +101,21 @@ namespace Chiota.ViewModels.BackUp
             {
                 return new Command(async () =>
                 {
-                    if (!string.IsNullOrEmpty(this.Seed))
+                    if (!string.IsNullOrEmpty(Seed))
                     {
-                        if (!InputValidator.IsTrytes(this.Seed))
+                        if (!InputValidator.IsTrytes(Seed))
                         {
                             await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                             return;
                         }
 
-                        if (this.Seed != this.UserProperties.Seed.Value)
+                        if (Seed != UserProperties.Seed.Value)
                         {
                             await new BackUpFailedSeedConfirmationException(new ExcInfo()).ShowAlertAsync();
                             return;
                         }
 
-                        await this.PushAsync(new SetPasswordView(), this.UserProperties);
+                        await PushAsync<SetPasswordView>(UserProperties);
                         return;
                     }
 

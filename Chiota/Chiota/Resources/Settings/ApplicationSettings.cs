@@ -35,8 +35,8 @@
 
     public async Task Save()
     {
-      Application.Current.Properties[ChiotaConstants.SettingsPowKey] = this.DoRemotePoW;
-      Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = this.IotaNodeUri;
+      Application.Current.Properties[ChiotaConstants.SettingsPowKey] = DoRemotePoW;
+      Application.Current.Properties[ChiotaConstants.SettingsNodeKey] = IotaNodeUri;
       await Application.Current.SavePropertiesAsync();
     }
   }

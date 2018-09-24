@@ -35,11 +35,11 @@
 
     public TangleMessenger(Tangle.Net.Entity.Seed seed, int minWeightMagnitude = 14)
     {
-      this.seed = seed;
-      this.MinWeight = minWeightMagnitude;
-      this.Repository = DependencyResolver.Resolve<IIotaRepository>();
-      this.ShortStorageAddressList = new List<string>();
-      this.TransactionCache = DependencyResolver.Resolve<AbstractSqlLiteTransactionCache>();
+      seed = seed;
+      MinWeight = minWeightMagnitude;
+      Repository = DependencyResolver.Resolve<IIotaRepository>();
+      ShortStorageAddressList = new List<string>();
+      TransactionCache = DependencyResolver.Resolve<AbstractSqlLiteTransactionCache>();
     }
 
     public List<string> ShortStorageAddressList { get; set; }
@@ -51,14 +51,14 @@
       var roundNumber = 0;
       while (roundNumber < retryNumber)
       {
-        //this.UpdateNode(roundNumber);
+        //UpdateNode(roundNumber);
 
         var bundle = new Bundle();
         bundle.AddTransfer(CreateTransfer(message, address));
 
         try
         {
-          await this.Repository.SendTransferAsync(this.seed, bundle, SecurityLevel.Medium, Depth, this.MinWeight);
+          await Repository.SendTransferAsync(seed, bundle, SecurityLevel.Medium, Depth, MinWeight);
           return true;
         }
         catch (Exception e)
@@ -78,9 +78,9 @@
 
       if (!dontLoadSql)
       {
-        var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(new Address(address));
+        var cachedTransactions = await TransactionCache.LoadTransactionsByAddressAsync(new Address(address));
 
-        var alreadyLoaded = this.AddressLoadedCheck(address);
+        var alreadyLoaded = AddressLoadedCheck(address);
         foreach (var cachedTransaction in cachedTransactions)
         {
           cachedHashes.Add(cachedTransaction.TransactionHash);
@@ -102,14 +102,14 @@
         }
       }
 
-      var transactions = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address) });
+      var transactions = await Repository.FindTransactionsByAddressesAsync(new List<Address> { new Address(address) });
       var hashes = transactions.Hashes.Union(cachedHashes, new TryteComparer<Hash>()).ToList();
 
       foreach (var transactionsHash in hashes)
       {
-        var bundle = await this.Repository.GetBundleAsync(transactionsHash);
+        var bundle = await Repository.GetBundleAsync(transactionsHash);
         var message = new TryteStringMessage { Message = IotaHelper.ExtractMessage(bundle), Stored = false };
-        await this.TransactionCache.SaveTransactionAsync(
+        await TransactionCache.SaveTransactionAsync(
           new TransactionCacheItem { Address = new Address(address), TransactionHash = transactionsHash, TransactionTrytes = message.Message });
         messagesList.Add(message);
       }
@@ -131,10 +131,10 @@
 
     private bool AddressLoadedCheck(string addresse)
     {
-      var alreadyLoaded = this.ShortStorageAddressList.Contains(addresse);
+      var alreadyLoaded = ShortStorageAddressList.Contains(addresse);
       if (!alreadyLoaded)
       {
-        this.ShortStorageAddressList.Add(addresse);
+        ShortStorageAddressList.Add(addresse);
       }
 
       return alreadyLoaded;

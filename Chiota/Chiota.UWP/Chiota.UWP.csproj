@@ -177,7 +177,6 @@
     <Content Include="friends.png" />
     <Content Include="edit.png" />
     <Content Include="camera.png" />
-    <Content Include="modify.png" />
     <Content Include="search.png" />
     <Content Include="clear.png" />
     <Content Include="done.png" />

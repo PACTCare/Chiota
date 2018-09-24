@@ -28,11 +28,11 @@ namespace Chiota.ViewModels.Authentication
 
         public string Seed
         {
-            get => this.seed;
+            get => seed;
             set
             {
-                this.seed = value;
-                this.OnPropertyChanged(nameof(this.Seed));
+                seed = value;
+                OnPropertyChanged(nameof(Seed));
             }
         }
 
@@ -46,7 +46,7 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Seed = string.Empty;
+            Seed = string.Empty;
         }
 
         #endregion
@@ -69,12 +69,12 @@ namespace Chiota.ViewModels.Authentication
 
                             Device.BeginInvokeOnMainThread(() =>
                                 {
-                                    this.Navigation.PopAsync();
-                                    this.Seed = result.Text;
+                                    Navigation.PopAsync();
+                                    Seed = result.Text;
                                 });
                         };
 
-                        await this.PushAsync(scanPage);
+                        await CurrentPage.Navigation.PushAsync(scanPage);
                     });
             }
         }
@@ -90,15 +90,15 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                     {
-                        if (!string.IsNullOrEmpty(this.Seed))
+                        if (!string.IsNullOrEmpty(Seed))
                         {
-                            if (!InputValidator.IsTrytes(this.Seed))
+                            if (!InputValidator.IsTrytes(Seed))
                             {
                                 await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                                 return;
                             }
 
-                            await this.PushAsync(new SetPasswordView(), new UserCreationProperties { Seed = new Seed(this.Seed) });
+                            await PushAsync<SetPasswordView>(new UserCreationProperties { Seed = new Seed(Seed) });
                             return;
                         }
 

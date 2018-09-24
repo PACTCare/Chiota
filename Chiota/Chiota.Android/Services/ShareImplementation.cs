@@ -39,7 +39,7 @@ namespace Chiota.Droid.Services
                     Application.Context.StartActivity(intent);
                 }
                 else
-                {
+                    return Task.FromResult(false);
                     /*var tabsBuilder = new CustomTabsIntent.Builder();
                     tabsBuilder.SetShowTitle(options?.ChromeShowTitle ?? false);
 
@@ -49,7 +49,6 @@ namespace Chiota.Droid.Services
 
                     var intent = tabsBuilder.Build();
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));*/
-                }
 
                 return Task.FromResult(true);
             }

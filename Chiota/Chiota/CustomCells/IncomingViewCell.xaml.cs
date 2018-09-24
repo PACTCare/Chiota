@@ -8,7 +8,7 @@
   {
     public IncomingViewCell()
     {
-      this.InitializeComponent();
+      InitializeComponent();
     }
   }
 }

@@ -12,7 +12,7 @@
     /// </summary>
     public App()
     {
-      this.InitializeComponent();
+      InitializeComponent();
 
       AppNavigation.ShowStartUp();
     }
