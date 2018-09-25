@@ -62,7 +62,7 @@
 
       if (viewModel is BaseViewModel baseViewModel && view is Page page)
       {
-        //baseViewModel.Setup(page);
+        baseViewModel.Setup(page);
       }
     }
   }
