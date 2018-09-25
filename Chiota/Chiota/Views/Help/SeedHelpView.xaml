@@ -6,11 +6,11 @@
              x:Class="Chiota.Views.Help.SeedHelpView"
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance help:SeedHelpViewModel}"
              Title="{extensions:Translate CmnHelp}">
-
-    <ContentPage.BindingContext>
-      <help:SeedHelpViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

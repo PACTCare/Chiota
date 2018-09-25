@@ -1,14 +1,14 @@
 ﻿namespace Chiota.Views.Settings
 {
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class SettingsView : ContentPage
-  {
-    public SettingsView()
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SettingsView : ContentPage
     {
-      this.InitializeComponent();
+        public SettingsView()
+        {
+            this.InitializeComponent();
+        }
     }
-  }
 }

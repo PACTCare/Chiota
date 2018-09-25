@@ -15,9 +15,6 @@ namespace Chiota.Views.Settings
 		public AboutView ()
 		{
 			InitializeComponent ();
-
-		    if (BindingContext is BaseViewModel viewModel)
-		        viewModel.Setup(this);
         }
 	}
 }

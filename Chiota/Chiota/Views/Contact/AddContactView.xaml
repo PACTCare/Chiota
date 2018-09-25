@@ -7,11 +7,11 @@
              xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
              x:Class="Chiota.Views.Contact.AddContactView"
              classes:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance contact:AddContactViewModel}"
              Title="{extensions:Translate CmnAddContact}">
-
-    <ContentPage.BindingContext>
-        <contact:AddContactViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

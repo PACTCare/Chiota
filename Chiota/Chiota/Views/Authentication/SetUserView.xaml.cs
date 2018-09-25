@@ -15,9 +15,6 @@ namespace Chiota.Views.Authentication
         public SetUserView()
         {
             InitializeComponent();
-
-            if (BindingContext is BaseViewModel viewModel)
-                viewModel.Setup(this);
         }
     }
 }

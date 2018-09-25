@@ -6,11 +6,11 @@
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
              x:Class="Chiota.Views.Authentication.LogInView"
-             NavigationPage.HasNavigationBar="False">
-
-    <ContentPage.BindingContext>
-      <authentication:LogInViewModel/>
-    </ContentPage.BindingContext>
+             NavigationPage.HasNavigationBar="False"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance authentication:LogInViewModel}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

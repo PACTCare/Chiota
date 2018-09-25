@@ -11,9 +11,6 @@ namespace Chiota.Views.Help
         public SeedHelpView()
         {
             InitializeComponent();
-
-            if (BindingContext is BaseViewModel viewModel)
-                viewModel.Setup(this);
         }
     }
 }

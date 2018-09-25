@@ -7,13 +7,14 @@
             xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
             x:Class="Chiota.Views.Messenger.MessengerTabbedView"
             classes:ViewModelLocator.AutoWireViewModel="true"
+            xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:contact="clr-namespace:Chiota.Views.Contact;assembly=Chiota"
+            mc:Ignorable="design"
+            design:DataContext="{design:DesignInstance messengerviewmodels:MessengerTabbedViewModel}"
             Title="{DynamicResource AppName}"
             BarBackgroundColor="{DynamicResource AccentColor}"
             BarTextColor="{DynamicResource BrightTextColor}">
-
-    <TabbedPage.BindingContext>
-        <messengerviewmodels:MessengerTabbedViewModel/>
-    </TabbedPage.BindingContext>
 
     <TabbedPage.ToolbarItems>
         <ToolbarItem Order="Primary" Icon="search.png"/>
@@ -25,5 +26,5 @@
 
     <!-- Children of the tabbedpage -->
     <messengerviews:ChatsView Title="{extensions:Translate CmnChats}"/>
-    <messengerviews:ContactsView Title="{extensions:Translate CmnContacts}"/>
+    <contact:ContactsView Title="{extensions:Translate CmnContacts}"/>
 </TabbedPage>

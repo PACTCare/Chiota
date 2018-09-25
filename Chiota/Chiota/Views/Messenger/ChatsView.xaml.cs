@@ -15,9 +15,6 @@ namespace Chiota.Views.Messenger
 		public ChatsView ()
 		{
 			InitializeComponent ();
-
-		    if (BindingContext is BaseViewModel viewModel)
-		        viewModel.Setup(this);
         }
 	}
 }

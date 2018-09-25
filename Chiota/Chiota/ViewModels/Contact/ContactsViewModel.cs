@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
@@ -11,7 +10,7 @@ using Chiota.ViewModels.Classes;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Messenger
+namespace Chiota.ViewModels.Contact
 {
     public class ContactsViewModel : BaseViewModel
     {
@@ -44,11 +43,11 @@ namespace Chiota.ViewModels.Messenger
 
         #endregion
 
-        #region ViewIsAppearing
+        #region Init
 
         protected override void ViewIsAppearing()
         {
-            UpdateViewAsync();
+            UpdateView();
 
             base.ViewIsAppearing();
         }
@@ -59,11 +58,9 @@ namespace Chiota.ViewModels.Messenger
 
         #region UpdateView
 
-        private async void UpdateViewAsync()
+        private async void UpdateView()
         {
-            await PushLoadingSpinnerAsync("Loading");
             ContactList = await GetContactListAsync();
-            await PopPopupAsync();
         }
 
         #endregion
@@ -88,6 +85,25 @@ namespace Chiota.ViewModels.Messenger
                 tmp.Add(new ContactBinding(pending, false));
 
             return tmp;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Commands
+
+        #region Refresh
+
+        public ICommand RefreshCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    UpdateView();
+                });
+            }
         }
 
         #endregion

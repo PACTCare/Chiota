@@ -4,11 +4,11 @@
              xmlns:messenger="clr-namespace:Chiota.ViewModels.Messenger;assembly=Chiota"
              xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              x:Class="Chiota.Views.Messenger.ChatsView"
-             classes:ViewModelLocator.AutoWireViewModel="true">
-
-    <ContentPage.BindingContext>
-        <messenger:ChatsViewModel/>
-    </ContentPage.BindingContext>
+             classes:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance messenger:ChatsViewModel}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

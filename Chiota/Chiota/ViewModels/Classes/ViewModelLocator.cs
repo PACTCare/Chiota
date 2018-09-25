@@ -62,6 +62,7 @@
 
       if (viewModel is BaseViewModel baseViewModel && view is Page page)
       {
+        page.BindingContext = viewModel;
         baseViewModel.Setup(page);
       }
     }

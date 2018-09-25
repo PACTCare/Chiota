@@ -8,11 +8,11 @@
              xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
              x:Class="Chiota.Views.Contact.ContactAddressView"
              classes:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance contact:ContactAddressViewModel}"
              Title="{extensions:Translate CmnContactAddress}">
-
-    <ContentPage.BindingContext>
-        <contact:ContactAddressViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

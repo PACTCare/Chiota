@@ -15,9 +15,6 @@ namespace Chiota.Views.Settings
 		public ProfileView ()
 		{
 			InitializeComponent ();
-
-		    if (BindingContext is BaseViewModel viewModel)
-		        viewModel.Setup(this);
         }
 	}
 }

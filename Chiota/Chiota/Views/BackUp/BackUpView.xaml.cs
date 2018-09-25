@@ -11,9 +11,6 @@ namespace Chiota.Views.BackUp
         public BackUpView()
         {
             InitializeComponent();
-
-            if (BindingContext is BaseViewModel viewModel)
-                viewModel.Setup(this);
         }
     }
 }

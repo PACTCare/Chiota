@@ -7,11 +7,11 @@
              xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
              x:Class="Chiota.Views.Settings.ProfileView"
              classes:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance settings:ProfileViewModel}"
              Title="{extensions:Translate CmnProfile}">
-
-    <ContentPage.BindingContext>
-        <settings:ProfileViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Text="{extensions:Translate CmnEdit}" Icon="edit.png" Command="{Binding EditCommand}"/>

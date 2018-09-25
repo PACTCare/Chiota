@@ -8,11 +8,11 @@
              x:Class="Chiota.Views.BackUp.QrCodeView"
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance backUp:QrCodeViewModel}"
              Title="{extensions:Translate CmnQrCode}">
-
-    <ContentPage.BindingContext>
-      <backUp:QrCodeViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

@@ -15,9 +15,6 @@ namespace Chiota.Views.Contact
 		public ContactAddressView ()
 		{
 			InitializeComponent ();
-
-		    if (BindingContext is BaseViewModel viewModel)
-		        viewModel.Setup(this);
         }
 	}
 }

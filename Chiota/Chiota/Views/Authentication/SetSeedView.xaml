@@ -7,11 +7,11 @@
              x:Class="Chiota.Views.Authentication.SetSeedView"
              xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance authentication:SetSeedViewModel}"
              Title="{extensions:Translate CmnSetSeed}">
-
-    <ContentPage.BindingContext>
-      <authentication:SetSeedViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

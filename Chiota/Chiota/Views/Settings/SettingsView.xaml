@@ -5,9 +5,14 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.Settings.SettingsView"
              classes:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance settings:SettingsViewModel}"
              Title="{extensions:Translate CmnSettings}">
 
-  <ContentPage.Content>
+    <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <ListView ItemsSource="{Binding SettingsList}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
