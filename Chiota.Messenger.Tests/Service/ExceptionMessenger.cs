@@ -29,7 +29,12 @@
     /// <inheritdoc />
     public Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser)
     {
-      return null;
+      if (this.Exception != null)
+      {
+        throw this.Exception;
+      }
+
+      throw new MessengerException(ResponseCode.MessengerException);
     }
 
     /// <inheritdoc />
@@ -40,7 +45,7 @@
         throw this.Exception;
       }
 
-      throw new MessengerException(ResponseCode.MessengerException, null);
+      throw new MessengerException(ResponseCode.MessengerException);
     }
   }
 }

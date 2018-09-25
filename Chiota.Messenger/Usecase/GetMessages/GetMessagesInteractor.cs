@@ -8,6 +8,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Service.Parser;
 
@@ -27,33 +28,38 @@
     /// <inheritdoc />
     public async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
     {
-      var rawMessages = await this.Messenger.GetMessagesByAddressAsync(request.ChatAddress, new MessageBundleParser());
-
-      var encryptedMessages = rawMessages.Select(ReadChatMessage).ToList();
-      var sortedEncryptedMessages = encryptedMessages.OrderBy(o => o.Date).ToList();
-
-      var decryptedMessages = new List<ChatMessage>();
-      for (var i = 0; i < sortedEncryptedMessages.Count - 1; i = i + 2)
+      try
       {
-        if (HasMessageTwoParts(sortedEncryptedMessages, i))
-        {
-          var encryptedMessage = sortedEncryptedMessages[i].IsFirstPart
-                                   ? new TryteString(sortedEncryptedMessages[i].Message + sortedEncryptedMessages[i + 1].Message)
-                                   : new TryteString(sortedEncryptedMessages[i + 1].Message + sortedEncryptedMessages[i].Message);
+        var rawMessages = await this.Messenger.GetMessagesByAddressAsync(request.ChatAddress, new MessageBundleParser());
+        var parsedMessages = ReadChatMessages(rawMessages);
 
-          var decryptedMessage = Encoding.UTF8.GetString(
-            new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1).Decrypt(request.ChatKeyPair, encryptedMessage.DecodeBytesFromTryteString()));
-
-          decryptedMessages.Add(
-            new ChatMessage { Date = sortedEncryptedMessages[i].Date, Message = decryptedMessage, Signature = sortedEncryptedMessages[i].Signature });
-        }
-        else
+        var decryptedMessages = new List<ChatMessage>();
+        for (var i = 0; i < parsedMessages.Count - 1; i = i + 2)
         {
-          i--;
+          if (HasMessageTwoParts(parsedMessages, i))
+          {
+            var encryptedMessage = parsedMessages[i].IsFirstPart
+                                     ? new TryteString(parsedMessages[i].Message + parsedMessages[i + 1].Message)
+                                     : new TryteString(parsedMessages[i + 1].Message + parsedMessages[i].Message);
+
+            var decryptedMessage = Encoding.UTF8.GetString(
+              new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1).Decrypt(request.ChatKeyPair, encryptedMessage.DecodeBytesFromTryteString()));
+
+            decryptedMessages.Add(
+              new ChatMessage { Date = parsedMessages[i].Date, Message = decryptedMessage, Signature = parsedMessages[i].Signature });
+          }
+          else
+          {
+            i--;
+          }
         }
+
+        return new GetMessagesResponse { Code = ResponseCode.Success, Messages = decryptedMessages };
       }
-
-      return new GetMessagesResponse { Code = ResponseCode.Success, Messages = decryptedMessages };
+      catch (MessengerException exception)
+      {
+        return new GetMessagesResponse { Code = exception.Code };
+      }
     }
 
     private static bool HasMessageTwoParts(IReadOnlyList<ChatMessage> sortedEncryptedMessages, int i)
@@ -61,24 +67,36 @@
       return sortedEncryptedMessages[i].IsFirstPart != sortedEncryptedMessages[i + 1].IsFirstPart;
     }
 
-    private static ChatMessage ReadChatMessage(Message message)
+    private static List<ChatMessage> ReadChatMessages(IEnumerable<Message> messages)
     {
-      var messagePayload = message.Payload.Value;
-      var firstBreakIndex = messagePayload.IndexOf(Constants.FirstBreak.Value, StringComparison.Ordinal);
-      var secondBreakIndex = messagePayload.IndexOf(Constants.SecondBreak.Value, StringComparison.Ordinal);
+      var parsedMessages = new List<ChatMessage>();
+      foreach (var message in messages)
+      {
+        var messagePayload = message.Payload.Value;
+        var firstBreakIndex = messagePayload.IndexOf(Constants.FirstBreak.Value, StringComparison.Ordinal);
+        var secondBreakIndex = messagePayload.IndexOf(Constants.SecondBreak.Value, StringComparison.Ordinal);
 
-      var dateTrytes = new TryteString(
-        messagePayload.Substring(
-          secondBreakIndex + Constants.SecondBreak.Value.Length,
-          messagePayload.Length - secondBreakIndex - Constants.SecondBreak.Value.Length - 1));
+        if (firstBreakIndex == -1 || secondBreakIndex == -1)
+        {
+          continue;
+        }
 
-      return new ChatMessage
-               {
-                 Message = messagePayload.Substring(0, firstBreakIndex),
-                 Date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture),
-                 Signature = messagePayload.Substring(firstBreakIndex + Constants.FirstBreak.Value.Length, 30),
-                 IsFirstPart = messagePayload[messagePayload.Length - 1] == 'A'
-               };
+        var dateTrytes = new TryteString(
+          messagePayload.Substring(
+            secondBreakIndex + Constants.SecondBreak.Value.Length,
+            messagePayload.Length - secondBreakIndex - Constants.SecondBreak.Value.Length - 1));
+
+        parsedMessages.Add(
+          new ChatMessage
+            {
+              Message = messagePayload.Substring(0, firstBreakIndex),
+              Date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture),
+              Signature = messagePayload.Substring(firstBreakIndex + Constants.FirstBreak.Value.Length, 30),
+              IsFirstPart = messagePayload[messagePayload.Length - 1] == 'A'
+            });
+      }
+
+      return parsedMessages.OrderBy(o => o.Date).ToList();
     }
   }
 }
