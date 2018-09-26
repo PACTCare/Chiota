@@ -9,13 +9,12 @@
   using Android.OS;
   using Android.Support.V4.App;
 
-  using Chiota.Messenger.Comparison;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Persistence;
-  using Chiota.Services;
+  using Chiota.Models;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Java.Lang;
@@ -44,18 +43,12 @@
           return true;
         }
 
-        var user = await SecureStorage.GetUser();
-        if (user == null)
-        {
-          return true;
-        }
-
         var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
         var response = await interactor.ExecuteAsync(
                          new GetContactsRequest
                            {
-                             ContactRequestAddress = new Address(user.RequestAddress),
-                             PublicKeyAddress = new Address(user.PublicKeyAddress)
+                             ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                             PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                            });
 
         if (response.Code != ResponseCode.Success)
@@ -67,14 +60,15 @@
         var contactNotificationId = 0;
         foreach (var contact in response.ApprovedContacts.Where(c => !c.Rejected))
         {
-          var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
+          // TODO: currently not working since transaction cache gets wiped on logout
+          //var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
 
-          if (encryptedMessages.Any(c => !c.Stored))
-          {
-            this.CreateNotification(contactNotificationId, contact);
-          }
+          //if (encryptedMessages.Any(c => !c.Stored))
+          //{
+          //  this.CreateNotification(contactNotificationId, contact);
+          //}
 
-          contactNotificationId++;
+          //contactNotificationId++;
         }
       }
 

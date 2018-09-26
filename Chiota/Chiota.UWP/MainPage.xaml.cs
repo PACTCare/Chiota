@@ -16,6 +16,7 @@
   using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
+  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
@@ -76,18 +77,12 @@
         return;
       }
 
-      var user = await SecureStorage.GetUser();
-      if (user == null)
-      {
-        return;
-      }
-
       var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
-                           ContactRequestAddress = new Address(user.RequestAddress),
-                           PublicKeyAddress = new Address(user.PublicKeyAddress)
+                           ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                          });
 
       if (response.Code != ResponseCode.Success)
@@ -98,12 +93,13 @@
       // currently no messages for contact request due to perfomance issues
       foreach (var contact in response.ApprovedContacts.Where(c => !c.Rejected))
       {
-        var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
+        // TODO: currently not working since transaction cache gets wiped on logout
+        //var encryptedMessages = await user.TangleMessenger.GetMessagesAsync(contact.ChatAddress);
 
-        if (encryptedMessages.Any(c => !c.Stored))
-        {
-          this.CreateNotification(contact);
-        }
+        //if (encryptedMessages.Any(c => !c.Stored))
+        //{
+        //  this.CreateNotification(contact);
+        //}
       }
     }
 

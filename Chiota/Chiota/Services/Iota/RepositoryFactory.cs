@@ -1,9 +1,8 @@
-﻿namespace Chiota.Services.Iota.Repository
+﻿namespace Chiota.Services.Iota
 {
   using System.Collections.Generic;
 
   using Chiota.Messenger.Repository;
-  using Chiota.Messenger.Service;
   using Chiota.Resources.Settings;
 
   using Tangle.Net.ProofOfWork;

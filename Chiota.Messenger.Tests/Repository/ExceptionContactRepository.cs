@@ -18,21 +18,38 @@
   [ExcludeFromCodeCoverage]
   internal class ExceptionContactRepository : IContactRepository
   {
+    public ExceptionContactRepository(Exception exception = null)
+    {
+      this.Exception = exception;
+    }
+
+    private Exception Exception { get; }
+
     /// <inheritdoc />
     public Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
     {
+      if (this.Exception != null)
+      {
+        throw this.Exception;
+      }
+
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
     }
 
     public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
     {
+      if (this.Exception != null)
+      {
+        throw this.Exception;
+      }
+
       throw new MessengerException(ResponseCode.CannotAddContact, new Exception());
     }
 
     /// <inheritdoc />
     public Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
     {
-      return null;
+      throw this.Exception;
     }
   }
 }

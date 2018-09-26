@@ -1,10 +1,6 @@
 ﻿namespace Chiota.Models
 {
-  using Chiota.Services.Iota;
-
   using Newtonsoft.Json;
-
-  using Tangle.Net.Entity;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
@@ -24,8 +20,5 @@
     public IAsymmetricKeyPair NtruKeyPair { get; set; }
 
     public string Seed { get; set; }
-
-    [JsonIgnore]
-    public TangleMessenger TangleMessenger { get; set; }
   }
 }

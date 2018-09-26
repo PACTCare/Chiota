@@ -2,10 +2,13 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Cache;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Usecase;
 
   using Tangle.Net.Entity;
@@ -20,23 +23,41 @@
   /// </summary>
   public class TangleMessenger : IMessenger
   {
-    public TangleMessenger(IIotaRepository repository)
+    public TangleMessenger(IIotaRepository repository, ITransactionCache transactionCache)
     {
       this.Repository = repository;
+      this.TransactionCache = transactionCache;
     }
 
     private IIotaRepository Repository { get; }
 
+    private ITransactionCache TransactionCache { get; }
+
     /// <inheritdoc />
-    public async Task<List<Message>> GetMessagesByAddressAsync(Address address)
+    public async Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser)
     {
       var result = new List<Message>();
-      var transactionHashes = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { address });
 
-      foreach (var transactionHash in transactionHashes.Hashes)
+      var cachedTransactions = await this.TransactionCache.LoadTransactionsByAddressAsync(address);
+      foreach (var cachedTransaction in cachedTransactions)
       {
-        var bundle = await this.Repository.GetBundleAsync(transactionHash);
-        result.Add(new Message(MessageType.RequestContact, ExtractMessage(bundle), address));
+        result.Add(new Message(cachedTransaction.TransactionTrytes));
+      }
+
+      var transactionHashesFromTangle = await this.Repository.FindTransactionsByAddressesAsync(new List<Address> { address });
+      foreach (var transactionHash in transactionHashesFromTangle.Hashes)
+      {
+        if (cachedTransactions.Any(h => h.TransactionHash.Value == transactionHash.Value))
+        {
+          continue;
+        }
+
+        var messages = bundleParser.ParseBundle(await this.Repository.GetBundleAsync(transactionHash));
+        result.AddRange(messages);
+
+        messages.ForEach(
+          async m => await this.TransactionCache.SaveTransactionAsync(
+                       new TransactionCacheItem { Address = address, TransactionHash = transactionHash, TransactionTrytes = m.Payload }));
       }
 
       return result;
@@ -45,11 +66,6 @@
     /// <inheritdoc />
     public async Task SendMessageAsync(Message message)
     {
-      if (!message.HasKnownType)
-      {
-        throw new MessengerException(ResponseCode.MessengerException, new UnknownMessageException(message.Type));
-      }
-
       try
       {
         var bundle = new Bundle();
@@ -71,33 +87,6 @@
       {
         throw new MessengerException(ResponseCode.MessengerException, exception);
       }
-    }
-
-    private static TryteString ExtractMessage(Bundle bundle)
-    {
-      var messageTrytes = string.Empty;
-
-      // multiple message per bundle?
-      foreach (var transaction in bundle.Transactions)
-      {
-        if (transaction.Value < 0)
-        {
-          continue;
-        }
-
-        if (!transaction.Fragment.IsEmpty)
-        {
-          messageTrytes += transaction.Fragment.Value;
-        }
-      }
-
-      if (!messageTrytes.Contains(Constants.End.Value))
-      {
-        return null;
-      }
-
-      var index = messageTrytes.IndexOf(Constants.End.Value, StringComparison.Ordinal);
-      return new TryteString(messageTrytes.Substring(0, index));
     }
   }
 }

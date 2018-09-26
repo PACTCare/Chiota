@@ -4,7 +4,11 @@
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
+  using Chiota.Messenger.Service;
+  using Chiota.Messenger.Usecase;
+  using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Models;
+  using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
 
   using Newtonsoft.Json;
@@ -12,6 +16,8 @@
   using Plugin.SecureStorage;
 
   using Tangle.Net.Entity;
+
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
   [ExcludeFromCodeCoverage]
   public static class SecureStorage
@@ -24,21 +30,6 @@
       CrossSecureStorage.Current.HasKey(PasswordHash) && CrossSecureStorage.Current.HasKey(CurrentUser)
                                                       && CrossSecureStorage.Current.HasKey(EncryptionSalt);
 
-    public static async Task<User> GetUser()
-    {
-      var user = UserService.CurrentUser;
-
-      try
-      {
-        return await new UserDataOnTangle(user).UniquePublicKey();
-      }
-      catch
-      {
-        // incomplete => setup interrupted or not yet finished
-        return null;
-      }
-    }
-
     public static async Task LoginUser(string password)
     {
       ValidatePassword(password);
@@ -47,13 +38,26 @@
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
+      decryptedUser.NtruKeyPair =
+        new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(
+          decryptedUser.Seed.ToLower(),
+          decryptedUser.PublicKeyAddress);
 
-      decryptedUser.TangleMessenger = new TangleMessenger(new Seed(decryptedUser.Seed));
-      decryptedUser.NtruKeyPair = new NtruKex(true).CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
+      var checkUserResponse = await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
+                                new CheckUserRequest
+                                  {
+                                    PublicKey = decryptedUser.NtruKeyPair.PublicKey,
+                                    PublicKeyAddress = new Address(decryptedUser.PublicKeyAddress),
+                                    RequestAddress = new Address(decryptedUser.RequestAddress),
+                                    Seed = new Seed(decryptedUser.Seed)
+                                  });
+
+      if (checkUserResponse.Code == ResponseCode.NewPublicKeyAddress)
+      {
+        decryptedUser.PublicKeyAddress = checkUserResponse.PublicKeyAddress.Value;
+      }
 
       UserService.SetCurrentUser(decryptedUser);
-
-      await GetUser();
     }
 
     public static void StoreUser(User user, string password)
