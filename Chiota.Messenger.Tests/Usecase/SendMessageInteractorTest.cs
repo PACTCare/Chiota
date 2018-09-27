@@ -38,7 +38,6 @@
     [TestMethod]
     public async Task TestMessengerThrowsExceptionShouldReturnErrorCode()
     {
-      Assert.Inconclusive("TODO: extract crypto service to make this testable");
       var interactor = new SendMessageInteractor(new ExceptionMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(
                        new SendMessageRequest

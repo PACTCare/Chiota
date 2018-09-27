@@ -51,7 +51,29 @@
     [TestMethod]
     public async Task TestValidMessageCanBeParsedCorrectly()
     {
-      // TODO: extract crypto class
+      Assert.Inconclusive("TODO: Encryption Stub");
+      var messenger = new InMemoryMessenger();
+      var sendMessageInteractor = new SendMessageInteractor(messenger, new EncryptionStub());
+      await sendMessageInteractor.ExecuteAsync(
+        new SendMessageRequest
+          {
+            ChatAddress = new Address(Hash.Empty.Value),
+            KeyPair = InMemoryContactRepository.NtruKeyPair,
+            Message = "Hallo",
+            UserPublicKeyAddress = new Address(Hash.Empty.Value)
+          });
+
+      var interactor = new GetMessagesInteractor(messenger, new EncryptionStub());
+      var result = await interactor.ExecuteAsync(
+                     new GetMessagesRequest
+                       {
+                         ChatAddress = new Address(Hash.Empty.Value),
+                         ChatKeyPair = InMemoryContactRepository.NtruKeyPair
+                       });
+
+      Assert.AreEqual(ResponseCode.Success, result.Code);
+      Assert.AreEqual(1, result.Messages.Count);
+      Assert.AreEqual("Hallo", result.Messages[0].Message);
     }
   }
 }
