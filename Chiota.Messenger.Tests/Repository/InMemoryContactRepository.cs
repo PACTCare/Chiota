@@ -5,13 +5,12 @@
   using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
-  using Chiota.Messenger.Service;
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
@@ -51,12 +50,7 @@
       return this.PersistedContacts.Where(c => c.PublicKeyAddress == publicKeyAddress && !c.Rejected).ToList();
     }
 
-    /// <summary>
-    /// The ntru key pair.
-    /// </summary>
     internal static IAsymmetricKeyPair NtruKeyPair =>
-      new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(
-        Seed.Random().Value.ToLower(),
-        Seed.Random().Value.ToLower());
+      NtruEncryption.Key.CreateAsymmetricKeyPair(Seed.Random().Value.ToLower(), Seed.Random().Value.ToLower());
   }
 }

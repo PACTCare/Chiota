@@ -3,6 +3,7 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
@@ -32,7 +33,7 @@
 
     protected async Task ExchangeKey(Contact requesterDetails, IAsymmetricKey ntruKey, string chatPasSalt)
     {
-      var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(ntruKey, Encoding.UTF8.GetBytes(chatPasSalt));
+      var encryptedChatPasSalt = NtruEncryption.Key.Encrypt(ntruKey, Encoding.UTF8.GetBytes(chatPasSalt));
 
       await this.Messenger.SendMessageAsync(
         new Message(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + Constants.End), new Address(requesterDetails.ChatKeyAddress)));

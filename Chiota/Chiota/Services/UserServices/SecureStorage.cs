@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.CheckUser;
@@ -38,10 +39,7 @@
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
-      decryptedUser.NtruKeyPair =
-        new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(
-          decryptedUser.Seed.ToLower(),
-          decryptedUser.PublicKeyAddress);
+      decryptedUser.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
 
       var checkUserResponse = await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
                                 new CheckUserRequest

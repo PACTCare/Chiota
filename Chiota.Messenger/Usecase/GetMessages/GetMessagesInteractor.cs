@@ -7,6 +7,7 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
@@ -14,16 +15,17 @@
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
-
   public class GetMessagesInteractor : IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>
   {
-    public GetMessagesInteractor(IMessenger messenger)
+    public GetMessagesInteractor(IMessenger messenger, IEncryption encryption)
     {
       this.Messenger = messenger;
+      this.Encryption = encryption;
     }
 
     private IMessenger Messenger { get; }
+
+    private IEncryption Encryption { get; }
 
     /// <inheritdoc />
     public async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
@@ -42,8 +44,8 @@
                                      ? new TryteString(parsedMessages[i].Message + parsedMessages[i + 1].Message)
                                      : new TryteString(parsedMessages[i + 1].Message + parsedMessages[i].Message);
 
-            var decryptedMessage = Encoding.UTF8.GetString(
-              new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1).Decrypt(request.ChatKeyPair, encryptedMessage.DecodeBytesFromTryteString()));
+            var decryptedMessage =
+              Encoding.UTF8.GetString(this.Encryption.Decrypt(request.ChatKeyPair, encryptedMessage.DecodeBytesFromTryteString()));
 
             decryptedMessages.Add(
               new ChatMessage { Date = parsedMessages[i].Date, Message = decryptedMessage, Signature = parsedMessages[i].Signature });

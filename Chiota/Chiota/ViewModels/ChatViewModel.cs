@@ -10,6 +10,7 @@ namespace Chiota.ViewModels
   using System.Windows.Input;
 
   using Chiota.Messenger;
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
@@ -33,7 +34,7 @@ namespace Chiota.ViewModels
   {
     private readonly Contact contact;
 
-    private readonly NtruKeyExchange ntruKex;
+    private readonly NtruEncryption ntruKex;
 
     private readonly ListView messagesListView;
 
@@ -49,7 +50,7 @@ namespace Chiota.ViewModels
 
     public ChatViewModel(ListView messagesListView, Contact contact)
     {
-      this.ntruKex = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.E1499EP1);
+      this.ntruKex = NtruEncryption.Default;
       this.contact = contact;
       this.messagesListView = messagesListView;
       this.Messages = new ObservableCollection<MessageViewModel>();

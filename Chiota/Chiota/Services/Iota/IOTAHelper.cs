@@ -4,6 +4,7 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Service.Parser;
   using Chiota.Models;
@@ -26,8 +27,7 @@
       {
         try
         {
-          var pasSalt = Encoding.UTF8.GetString(
-            new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Decrypt(user.NtruKeyPair, message.Payload.DecodeBytesFromTryteString()));
+          var pasSalt = Encoding.UTF8.GetString(NtruEncryption.Key.Decrypt(user.NtruKeyPair, message.Payload.DecodeBytesFromTryteString()));
           if (pasSalt != string.Empty)
           {
             chatPasSalt.Add(pasSalt);

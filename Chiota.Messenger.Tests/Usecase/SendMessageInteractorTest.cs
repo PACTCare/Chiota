@@ -3,6 +3,7 @@
   using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Tests.Encryption;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
@@ -27,7 +28,7 @@
     [TestMethod]
     public async Task TestMessageIsTooLongShouldReturnErrorCode()
     {
-      var interactor = new SendMessageInteractor(new InMemoryMessenger());
+      var interactor = new SendMessageInteractor(new InMemoryMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(
                        new SendMessageRequest { Message = new string(Enumerable.Repeat('a', Constants.MessageCharacterLimit + 1).ToArray()) });
 
@@ -38,7 +39,7 @@
     public async Task TestMessengerThrowsExceptionShouldReturnErrorCode()
     {
       Assert.Inconclusive("TODO: extract crypto service to make this testable");
-      var interactor = new SendMessageInteractor(new ExceptionMessenger());
+      var interactor = new SendMessageInteractor(new ExceptionMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(
                        new SendMessageRequest
                          {
