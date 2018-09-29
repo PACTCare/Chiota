@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:messenger="clr-namespace:Chiota.ViewModels.Messenger;assembly=Chiota"
              xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              x:Class="Chiota.Views.Contact.ContactsView"
              classes:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactsViewModel}">
 
@@ -17,11 +17,17 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <StackLayout Orientation="Horizontal" BackgroundColor="{Binding BackgroundColor}" Padding="8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Image Source="{Binding ImageSource}" HeightRequest="48" WidthRequest="48"/>
+                                    <abstractions:CircleImage Source="{Binding ImageSource}" HeightRequest="48" WidthRequest="48"/>
                                 </StackLayout>
-                                <StackLayout VerticalOptions="Center" Spacing="2">
+
+                                <StackLayout VerticalOptions="Center" Spacing="2" IsVisible="{Binding IsNotApproved}">
+                                    <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
+                                    <Label Style="{DynamicResource Label14}" Text="Tap to answer the contact request." VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
+                                </StackLayout>
+
+                                <StackLayout VerticalOptions="Center" Spacing="2" IsVisible="{Binding IsApproved}">
                                     <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
                                     <Label Style="{DynamicResource Label14}" Text="{Binding Contact.ChatAddress}" VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
                                 </StackLayout>

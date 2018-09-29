@@ -2,7 +2,6 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:messengerviewmodels="clr-namespace:Chiota.ViewModels.Messenger;assembly=Chiota"
-            xmlns:messengerviews="clr-namespace:Chiota.Views.Messenger;assembly=Chiota"
             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
             xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
             x:Class="Chiota.Views.Messenger.MessengerTabbedView"
@@ -10,6 +9,7 @@
             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:contact="clr-namespace:Chiota.Views.Contact;assembly=Chiota"
+            xmlns:chat="clr-namespace:Chiota.Views.Chat;assembly=Chiota"
             mc:Ignorable="design"
             design:DataContext="{design:DesignInstance messengerviewmodels:MessengerTabbedViewModel}"
             Title="{DynamicResource AppName}"
@@ -25,6 +25,6 @@
     </TabbedPage.ToolbarItems>
 
     <!-- Children of the tabbedpage -->
-    <messengerviews:ChatsView Title="{extensions:Translate CmnChats}"/>
+    <chat:ChatsView Title="{extensions:Translate CmnChats}"/>
     <contact:ContactsView Title="{extensions:Translate CmnContacts}"/>
 </TabbedPage>

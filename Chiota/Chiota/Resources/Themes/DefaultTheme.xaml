@@ -6,7 +6,6 @@
     <Color x:Key="DarkTextColor">#000000</Color>
     <Color x:Key="BrightTextColor">#ffffff</Color>
     <Color x:Key="HighlightedColor">#48ffffff</Color>
-    <Color x:Key="AttentionHighlightedTextColor">#ff0000</Color>
     <Color x:Key="FadedColor">#16ffffff</Color>
 
     <Color x:Key="AccentDarkColor">#0d47a1</Color>
@@ -15,7 +14,7 @@
     <Color x:Key="ButtonColor">#5874ca</Color>
     <Color x:Key="EntryColor">#32000000</Color>
 
-    <Color x:Key="BackgroundDarkColor">#e0e0e0</Color>
+    <Color x:Key="PopupColor">#0d47a1</Color>
     <Color x:Key="BackgroundColor">#f5f5f5</Color>
 
 </ResourceDictionary>

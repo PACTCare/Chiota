@@ -282,4 +282,13 @@
   <data name="CmnAbout" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="DlgAccept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="DlgDecline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="CmnContactRequest" xml:space="preserve">
+    <value>Contact request</value>
+  </data>
 </root>

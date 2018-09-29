@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Chiota.Exceptions;
+using Chiota.Extensions;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
+using Chiota.Popups.PopupModels;
+using Chiota.Popups.PopupPageModels;
+using Chiota.Popups.PopupPages;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
+using Chiota.Views.Contact;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -78,11 +84,11 @@ namespace Chiota.ViewModels.Contact
                 PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
-            foreach (var approved in response.ApprovedContacts)
-                tmp.Add(new ContactBinding(approved, true));
-
             foreach (var pending in response.PendingContactRequests)
-                tmp.Add(new ContactBinding(pending, false));
+                tmp.Add(new ContactBinding(pending, false, TapContactRequestCommand));
+
+            foreach (var approved in response.ApprovedContacts)
+                tmp.Add(new ContactBinding(approved, true, TapContactCommand));
 
             return tmp;
         }
@@ -102,6 +108,39 @@ namespace Chiota.ViewModels.Contact
                 return new Command(() =>
                 {
                     UpdateView();
+                });
+            }
+        }
+
+        #endregion
+
+        #region TapContactRequest
+
+        public ICommand TapContactRequestCommand
+        {
+            get
+            {
+                return new Command(async(param) =>
+                {
+                    if (param is ContactBinding contact)
+                        await PushAsync<ContactRequestView>(contact.Contact);
+                    else
+                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                });
+            }
+        }
+
+        #endregion
+
+        #region TapContact
+
+        public ICommand TapContactCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+
                 });
             }
         }

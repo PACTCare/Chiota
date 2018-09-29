@@ -16,23 +16,33 @@ namespace Chiota.Models
 
         public bool IsApproved { get; }
 
-        public ImageSource ImageSource { get; set; }
+        public bool IsNotApproved { get; }
 
-        public ICommand TapCommand { get; set; }
+        public ImageSource ImageSource { get;}
+
+        public Color BackgroundColor { get; }
+
+        public ICommand TapCommand { get; }
 
         #endregion
 
         #region Constructors
 
-        public ContactBinding(Contact contact, bool isApproved)
+        public ContactBinding(Contact contact, bool isApproved, ICommand command)
         {
             Contact = contact;
             IsApproved = isApproved;
+            IsNotApproved = !isApproved;
+
+            if (!IsApproved)
+                BackgroundColor = Color.FromHex("#321565c0");
 
             if(string.IsNullOrEmpty(contact.ImageHash))
                 ImageSource = ImageSource.FromFile("account.png");
             else
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImageHash;
+
+            TapCommand = command;
         }
 
         #endregion

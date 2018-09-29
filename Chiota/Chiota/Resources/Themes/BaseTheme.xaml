@@ -124,7 +124,7 @@
         <Setter Property="Margin" Value="16"/>
         <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
         <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-        <Setter Property="BackgroundColor" Value="{DynamicResource AccentDarkColor}"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource PopupColor}"/>
     </Style>
 
     <!-- Label styles -->

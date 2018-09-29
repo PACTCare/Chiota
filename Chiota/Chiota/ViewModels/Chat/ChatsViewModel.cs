@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using Chiota.Models;
 using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Messenger
+namespace Chiota.ViewModels.Chat
 {
     public class ChatsViewModel : BaseViewModel
     {
         #region Attributes
 
-        private static List<Chat> _chatList;
+        private static List<Models.Chat> _chatList;
 
         #endregion
 
         #region Properties
 
-        public List<Chat> ChatList
+        public List<Models.Chat> ChatList
         {
             get => _chatList;
             set
@@ -45,18 +43,20 @@ namespace Chiota.ViewModels.Messenger
 
         #region UpdateView
 
-        private void UpdateView()
+        private async void UpdateView()
         {
-            var tmp = new List<Chat>
+            //var test = await IotaHelper.GetNewMessages();
+
+            var tmp = new List<Models.Chat>
             {
-                new Chat()
+                new Models.Chat()
                 {
                     Name = "David",
                     LastMessage = "Hi",
                     LastMessageTime = DateTime.Now.ToString("d", CultureInfo.CurrentCulture),
                     ImageSource = ImageSource.FromFile("account.png")
                 },
-                new Chat()
+                new Models.Chat()
                 {
                     Name = "Sebastian",
                     LastMessage = "Great",

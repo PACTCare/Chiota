@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.ViewModels.Classes;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota.Views.Messenger
+namespace Chiota.Views.Contact
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ChatsView : ContentPage
+	public partial class ContactRequestView : ContentPage
 	{
-		public ChatsView ()
+		public ContactRequestView ()
 		{
 			InitializeComponent ();
-        }
+		}
 	}
 }

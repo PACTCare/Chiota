@@ -177,13 +177,13 @@
     <Content Include="friends.png" />
     <Content Include="edit.png" />
     <Content Include="camera.png" />
+    <Content Include="loading.png" />
     <Content Include="search.png" />
     <Content Include="clear.png" />
     <Content Include="done.png" />
     <Content Include="chiota.png" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
-    <Content Include="loading.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
