@@ -5,38 +5,35 @@ namespace Chiota.ViewModels
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Linq;
-  using System.Text.RegularExpressions;
   using System.Threading.Tasks;
   using System.Windows.Input;
 
   using Chiota.Messenger;
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.Messenger.Usecase.SendMessage;
-  using Chiota.Models;
   using Chiota.Presenters;
-  using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   using Xamarin.Forms;
 
   public class ChatViewModel : BaseViewModel
   {
-    private readonly Contact contact;
-
     private readonly NtruEncryption ntruKex;
 
     private readonly ListView messagesListView;
+
+    private readonly Contact contact;
+
+    private Address currentChatAddress;
 
     private IAsymmetricKeyPair ntruChatKeyPair;
 
@@ -46,12 +43,11 @@ namespace Chiota.ViewModels
 
     private bool loadNewMessages;
 
-    private int messageNumber;
-
     public ChatViewModel(ListView messagesListView, Contact contact)
     {
       this.ntruKex = NtruEncryption.Default;
       this.contact = contact;
+      this.currentChatAddress = new Address(contact.ChatAddress);
       this.messagesListView = messagesListView;
       this.Messages = new ObservableCollection<MessageViewModel>();
       this.OutGoingText = null;
@@ -122,7 +118,7 @@ namespace Chiota.ViewModels
         var response = await interactor.ExecuteAsync(
           new SendMessageRequest
             {
-              ChatAddress = new Address(this.contact.ChatAddress),
+              ChatAddress = this.currentChatAddress,
               KeyPair = this.ntruChatKeyPair,
               Message = this.OutGoingText,
               UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
@@ -153,7 +149,9 @@ namespace Chiota.ViewModels
       {
         this.loadNewMessages = false;
         var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
-          new GetMessagesRequest { ChatAddress = new Address(this.contact.ChatAddress), ChatKeyPair = this.ntruChatKeyPair });
+          new GetMessagesRequest { ChatAddress = this.currentChatAddress, ChatKeyPair = this.ntruChatKeyPair });
+
+        this.currentChatAddress = messagesResponse.CurrentChatAddress;
         var newMessages = GetMessagesPresenter.Present(messagesResponse, this.contact);
 
         if (newMessages.Count > 0)
@@ -166,35 +164,12 @@ namespace Chiota.ViewModels
             }
 
             messages.Add(m);
-            await this.GenerateNewAddress();
           }
 
           this.ScrollToNewMessage();
         }
 
         this.loadNewMessages = true;
-      }
-    }
-
-    private async Task GenerateNewAddress()
-    {
-      this.messageNumber++;
-      if (this.messageNumber >= ChiotaConstants.MessagesOnAddress)
-      {
-        // next chat address is generated based on decrypted messages to make sure nobody excapt the people chatting know the next address
-        // it's also based on an incrementing Trytestring, so if you always send the same messages it won't result in the same next address
-        this.loadNewMessages = false;
-        var rgx = new Regex("[^A-Z]");
-        var incrementPart = Helper.TryteStringIncrement(this.contact.ChatAddress.Substring(0, 15));
-
-        var str = incrementPart + rgx.Replace(this.Messages[this.Messages.Count - 1].Text.ToUpper(), string.Empty)
-                                + rgx.Replace(this.Messages[this.Messages.Count - 3].Text.ToUpper(), string.Empty)
-                                + rgx.Replace(this.Messages[this.Messages.Count - 2].Text.ToUpper(), string.Empty);
-        str = str.Truncate(70);
-        this.contact.ChatAddress = str + this.contact.ChatAddress.Substring(str.Length);
-        this.messageNumber = 0;
-        this.loadNewMessages = true;
-        await this.AddNewMessagesAsync(this.Messages);
       }
     }
 

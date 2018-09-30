@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Tests.Usecase
 {
+  using System.Collections.Generic;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
