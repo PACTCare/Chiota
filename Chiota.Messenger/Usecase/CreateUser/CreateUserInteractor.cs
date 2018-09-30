@@ -9,15 +9,22 @@
   using Chiota.Messenger.Service;
 
   using Tangle.Net.Cryptography;
+  using Tangle.Net.Cryptography.Curl;
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
 
   public class CreateUserInteractor : IUsecaseInteractor<CreateUserRequest, CreateUserResponse>
   {
-    public CreateUserInteractor(IMessenger messenger, IAddressGenerator addressGenerator, IEncryption encryption)
+    public CreateUserInteractor(
+      IMessenger messenger,
+      IAddressGenerator addressGenerator,
+      IEncryption encryption,
+      ISignatureFragmentGenerator signatureFragmentGenerator)
     {
       this.Messenger = messenger;
       this.AddressGenerator = addressGenerator;
       this.Encryption = encryption;
+      this.SignatureFragmentGenerator = signatureFragmentGenerator;
     }
 
     private IMessenger Messenger { get; }
@@ -26,8 +33,9 @@
 
     private IEncryption Encryption { get; }
 
+    private ISignatureFragmentGenerator SignatureFragmentGenerator { get; }
+
     /// <inheritdoc />
-    /// TODO: move the contact information uploading to contact repository
     public async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
     {
       try
@@ -40,9 +48,15 @@
         var ntruKeyPair = this.Encryption.CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);
         var publicKeyTrytes = ntruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
 
-        var requestAddressPayload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
+        var payload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
 
-        await this.Messenger.SendMessageAsync(new Message(requestAddressPayload, publicKeyAddress));
+        var signature = this.SignatureFragmentGenerator.Generate(publicKeyAddress.PrivateKey, new Hash(requestAddress.Value));
+        foreach (var fragment in signature)
+        {
+          payload = payload.Concat(fragment);
+        }
+
+        await this.Messenger.SendMessageAsync(new Message(payload, publicKeyAddress));
         return new CreateUserResponse
                  {
                    Code = ResponseCode.Success,
