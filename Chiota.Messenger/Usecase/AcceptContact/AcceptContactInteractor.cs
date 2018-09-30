@@ -5,6 +5,7 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Repository;
@@ -13,7 +14,6 @@
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
@@ -22,10 +22,13 @@
   public class AcceptContactInteractor : AbstractContactInteractor<AcceptContactRequest, AcceptContactResponse>
   {
     /// <inheritdoc />
-    public AcceptContactInteractor(IContactRepository repository, IMessenger messenger)
+    public AcceptContactInteractor(IContactRepository repository, IMessenger messenger, IEncryption encryption)
       : base(repository, messenger)
     {
+      this.Encryption = encryption;
     }
+
+    private IEncryption Encryption { get; }
 
     /// <inheritdoc />
     public override async Task<AcceptContactResponse> ExecuteAsync(AcceptContactRequest request)
@@ -67,7 +70,6 @@
 
     /// <summary>
     /// The get chat password salt.
-    /// TODO: This is currently not testable and needs to be put in some kind of crypto class
     /// </summary>
     /// <param name="chatKeyAddress">
     /// The chat key address.
@@ -86,8 +88,7 @@
       {
         try
         {
-          var pasSalt = Encoding.UTF8.GetString(
-            new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
+          var pasSalt = Encoding.UTF8.GetString(this.Encryption.Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
           if (pasSalt != string.Empty)
           {
             chatPasSalt.Add(pasSalt);

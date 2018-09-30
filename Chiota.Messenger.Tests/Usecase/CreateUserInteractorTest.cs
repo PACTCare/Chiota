@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Tests.Encryption;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.CreateUser;
@@ -22,7 +23,7 @@
     {
       var exception = exceptionType == typeof(MessengerException) ? new MessengerException(code) : new Exception();
 
-      var interactor = new CreateUserInteractor(new ExceptionMessenger(exception), new InMemoryAddressGenerator());
+      var interactor = new CreateUserInteractor(new ExceptionMessenger(exception), new InMemoryAddressGenerator(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(new CreateUserRequest { Seed = Seed.Random() });
 
       Assert.AreEqual(code, response.Code);
@@ -32,7 +33,7 @@
     public async Task TestCreatedUserDataIsSentViaMessengerAndReturned()
     {
       var seed = Seed.Random();
-      var interactor = new CreateUserInteractor(new InMemoryMessenger(), new InMemoryAddressGenerator());
+      var interactor = new CreateUserInteractor(new InMemoryMessenger(), new InMemoryAddressGenerator(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(new CreateUserRequest { Seed = seed });
 
       Assert.AreEqual(ResponseCode.Success, response.Code);
