@@ -4,7 +4,8 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Exception;
-  using Chiota.Messenger.Repository;
+  using Chiota.Messenger.Extensions;
+  using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,7 +34,7 @@
         iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>()))
           .ReturnsAsync(new TransactionHashList { Hashes = new List<Hash>() });
 
-        var repository = new ContactRepositoryStub(iotaRepository.Object);
+        var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub());
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -58,10 +59,10 @@
         iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>())).ReturnsAsync(
           new TransactionHashList { Hashes = new List<Hash> { invalidBundleOne.Hash, invalidBundleTwo.Hash } });
 
-        iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleOne.Hash.Value))).ReturnsAsync(invalidBundleOne);
-        iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == invalidBundleTwo.Hash.Value))).ReturnsAsync(invalidBundleTwo);
+        iotaRepository.Setup(r => r.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(
+          new List<TransactionTrytes> { invalidBundleOne.Transactions[0].ToTrytes(), invalidBundleTwo.Transactions[0].ToTrytes() });
 
-        var repository = new ContactRepositoryStub(iotaRepository.Object);
+        var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub(false));
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -74,46 +75,14 @@
     }
 
     [TestMethod]
-    public async Task TestAddressHasMoreThanOneValidTransactionShouldReturnErrorCode()
-    {
-      var exceptionThrown = false;
-      try
-      {
-        var contactAddress = new Address(Seed.Random().Value);
-        var ntruKey = InMemoryContactRepository.NtruKeyPair.PublicKey;
-        var publicKeyTrytes = ntruKey.ToBytes().EncodeBytesAsString();
-        var requestAdressTrytes = new TryteString(publicKeyTrytes + Constants.LineBreak + contactAddress.Value + Constants.End);
-
-        var validBundleOne = CreateBundle(requestAdressTrytes);
-        var validBundleTwo = CreateBundle(requestAdressTrytes);
-
-        var iotaRepository = new Mock<IIotaRepository>();
-        iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>())).ReturnsAsync(
-          new TransactionHashList { Hashes = new List<Hash> { validBundleOne.Hash, validBundleTwo.Hash } });
-
-        iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleOne.Hash.Value))).ReturnsAsync(validBundleOne);
-        iotaRepository.Setup(r => r.GetBundleAsync(It.Is<Hash>(h => h.Value == validBundleTwo.Hash.Value))).ReturnsAsync(validBundleTwo);
-
-        var repository = new ContactRepositoryStub(iotaRepository.Object);
-        await repository.LoadContactInformationByAddressAsync(new Address());
-      }
-      catch (MessengerException exception)
-      {
-        exceptionThrown = true;
-        Assert.AreEqual(ResponseCode.AmbiguousContactInformation, exception.Code);
-      }
-
-      Assert.IsTrue(exceptionThrown);
-    }
-
-    [TestMethod]
     public async Task TestAddressHasInvalidTransactionsShouldBeSkippedAndReturnValidData()
     {
       var contactAddress = new Address(Seed.Random().Value);
       var ntruKey = InMemoryContactRepository.NtruKeyPair.PublicKey;
 
       var publicKeyTrytes = ntruKey.ToBytes().EncodeBytesAsString();
-      var requestAdressTrytes = new TryteString(publicKeyTrytes + Constants.LineBreak + contactAddress.Value + Constants.End);
+      var requestAdressTrytes = new TryteString(publicKeyTrytes + Constants.LineBreak + contactAddress.Value + Constants.End).Concat(new Fragment())
+        .Concat(new Fragment());
 
       var invalidBundle = CreateBundle(new TryteString("999999999999999"));
       var validBundle = CreateBundle(requestAdressTrytes);
@@ -122,9 +91,11 @@
       iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>())).ReturnsAsync(
         new TransactionHashList { Hashes = new List<Hash> { invalidBundle.Hash, validBundle.Hash } });
 
-      iotaRepository.SetupSequence(r => r.GetBundleAsync(It.IsAny<Hash>())).ReturnsAsync(invalidBundle).ReturnsAsync(validBundle);
+      var transactionTrytes = invalidBundle.ToTrytes();
+      transactionTrytes.AddRange(validBundle.ToTrytes());
+      iotaRepository.Setup(r => r.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(transactionTrytes);
 
-      var repository = new ContactRepositoryStub(iotaRepository.Object);
+      var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub());
       var contact = await repository.LoadContactInformationByAddressAsync(new Address());
 
       Assert.AreEqual(contactAddress.Value, contact.ContactAddress.Value);
@@ -137,7 +108,7 @@
       bundle.AddTransfer(
         new Transfer
           {
-            Address = new Address(Hash.Empty.Value),
+            Address = new Address(Seed.Random().Value),
             Message = requestAdressTrytes,
             Tag = Constants.Tag,
             Timestamp = Timestamp.UnixSecondsTimestamp

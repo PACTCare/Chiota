@@ -8,6 +8,7 @@
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
 
   using Tangle.Net.Entity;

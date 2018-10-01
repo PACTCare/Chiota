@@ -33,7 +33,6 @@
             "Your new contact needs to accept the request before you can start chatting!");
           break;
         case ResponseCode.NoContactInformationPresent:
-        case ResponseCode.AmbiguousContactInformation:
           await view.DisplayAlertAsync("Error", "It seems like the provided address is not a valid contact address.");
           break;
         case ResponseCode.MessengerException:

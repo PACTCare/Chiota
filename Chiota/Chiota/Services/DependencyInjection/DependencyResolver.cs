@@ -52,6 +52,7 @@
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
       builder.RegisterType<AddressGenerator>().As<IAddressGenerator>();
       builder.RegisterInstance(new SignatureFragmentGenerator(new Kerl())).As<ISignatureFragmentGenerator>();
+      builder.RegisterType<SignatureValidator>().As<ISignatureValidator>();
 
       builder.RegisterType<TangleMessenger>().As<IMessenger>().PropertiesAutowired();
 

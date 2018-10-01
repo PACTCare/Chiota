@@ -5,6 +5,7 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
 
@@ -80,7 +81,7 @@
     private async Task<CheckUserResponse> UploadContactInformationToNewAddressAsync(TryteString payload, TryteString publicKeyAddress, TryteString seed)
     {
       var newSeed = seed.Value.Substring(0, 75) + publicKeyAddress.Value.Substring(0, 6);
-      var newPublicKeyAddress = this.AddressGenerator.GetAddress(new Seed(newSeed), SecurityLevel.Medium, 0);
+      var newPublicKeyAddress = this.AddressGenerator.GetAddress(new Seed(newSeed), Constants.MessengerSecurityLevel, 0);
 
       var resultState = await this.LoadUserInformationAsync(newPublicKeyAddress);
       if (resultState == ResponseCode.Success)

@@ -8,6 +8,7 @@
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Service.Parser;

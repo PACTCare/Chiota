@@ -5,6 +5,7 @@
 
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
 

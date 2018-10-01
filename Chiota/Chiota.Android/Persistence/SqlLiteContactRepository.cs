@@ -7,13 +7,14 @@
 
   using SQLite;
 
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Repository;
 
   public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
   {
     /// <inheritdoc />
-    public SqlLiteContactRepository(IIotaRepository iotaRepository)
-      : base(iotaRepository)
+    public SqlLiteContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
+      : base(iotaRepository, signatureValidator)
     {
     }
 

@@ -7,33 +7,26 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Usecase;
 
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
   using Tangle.Net.Repository;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
-  /// <summary>
-  /// The tangle contact information repository.
-  /// </summary>
   public abstract class AbstractTangleContactRepository : IContactRepository
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AbstractTangleContactRepository"/> class.
-    /// </summary>
-    /// <param name="iotaRepository">
-    /// The iota repository.
-    /// </param>
-    public AbstractTangleContactRepository(IIotaRepository iotaRepository)
+    public AbstractTangleContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
     {
       this.IotaRepository = iotaRepository;
+      this.SignatureValidator = signatureValidator;
     }
 
-    /// <summary>
-    /// Gets the iota repository.
-    /// </summary>
     private IIotaRepository IotaRepository { get; }
+
+    private ISignatureValidator SignatureValidator { get; }
 
     /// <inheritdoc />
     public abstract Task AddContactAsync(string address, bool accepted, string publicKeyAddress);
@@ -47,7 +40,7 @@
         throw new MessengerException(ResponseCode.NoContactInformationPresent);
       }
 
-      var latestContactInformation = await this.LoadRawContactInformationFromTangle(transactionHashesOnAddress.Hashes);
+      var latestContactInformation = await this.LoadRawContactInformationFromTangle(transactionHashesOnAddress.Hashes, address);
       if (latestContactInformation == null)
       {
         throw new MessengerException(ResponseCode.NoContactInformationPresent);
@@ -59,15 +52,6 @@
     /// <inheritdoc />
     public abstract Task<List<Contact>> LoadContactsAsync(string publicKeyAddress);
 
-    /// <summary>
-    /// The extract contact information.
-    /// </summary>
-    /// <param name="latestContactInformation">
-    /// The latest contact information.
-    /// </param>
-    /// <returns>
-    /// The <see cref="ContactInformation"/>.
-    /// </returns>
     private static ContactInformation ExtractContactInformation(TryteString latestContactInformation)
     {
       var lineBreakIndex = latestContactInformation.Value.IndexOf(Constants.LineBreak.Value, StringComparison.Ordinal);
@@ -82,42 +66,68 @@
                };
     }
 
-    /// <summary>
-    /// The load contact information from tangle.
-    /// </summary>
-    /// <param name="transactionHashes">
-    /// The transaction hashes on address.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
-    private async Task<TryteString> LoadRawContactInformationFromTangle(IEnumerable<Hash> transactionHashes)
+    private async Task<TryteString> LoadRawContactInformationFromTangle(List<Hash> transactionHashes, Address address)
     {
-      TryteString latestContactInformation = null;
-      foreach (var transactionHash in transactionHashes)
+      foreach (var bundle in await this.LoadTransactionBundlesAsync(transactionHashes))
       {
-        var contactInformationBundle = await this.IotaRepository.GetBundleAsync(transactionHash);
-        var bundleTrytes = contactInformationBundle.Transactions.Aggregate(
-          new TryteString(),
-          (current, tryteString) => current.Concat(tryteString.Fragment));
+        try
+        {
+          var bundleTrytes = bundle.Transactions.OrderBy(t => t.CurrentIndex).Aggregate(
+            new TryteString(),
+            (current, tryteString) => current.Concat(tryteString.Fragment));
 
-        if (!bundleTrytes.Value.Contains(Constants.End.Value) || !bundleTrytes.Value.Contains(Constants.LineBreak.Value))
-        {
-          continue;
-        }
+          if (!bundleTrytes.Value.Contains(Constants.End.Value) || !bundleTrytes.Value.Contains(Constants.LineBreak.Value))
+          {
+            continue;
+          }
 
-        if (latestContactInformation == null)
-        {
-          latestContactInformation =
-            new TryteString(bundleTrytes.Value.Substring(0, bundleTrytes.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal)));
+          var contactPayloadEnd = bundleTrytes.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal);
+          if (this.ValidateSignature(address, bundleTrytes, contactPayloadEnd))
+          {
+            return new TryteString(bundleTrytes.Value.Substring(0, contactPayloadEnd));
+          }
         }
-        else
+        catch
         {
-          throw new MessengerException(ResponseCode.AmbiguousContactInformation);
+          // ignored, since invalid transactions on the address will lead us here
         }
       }
 
-      return latestContactInformation;
+      return null;
+    }
+
+    private async Task<List<Bundle>> LoadTransactionBundlesAsync(List<Hash> transactionHashes)
+    {
+      var transactions = (await this.IotaRepository.GetTrytesAsync(transactionHashes)).Select(t => Transaction.FromTrytes(t)).ToList();
+      var bundles = new List<Bundle>();
+
+      foreach (var transaction in transactions)
+      {
+        var bundle = bundles.FirstOrDefault(b => b.Hash.Value == transaction.BundleHash.Value);
+        if (bundle != null)
+        {
+          bundle.Transactions.Add(transaction);
+        }
+        else
+        {
+          bundle = new Bundle();
+          bundle.Transactions.Add(transaction);
+          bundles.Add(bundle);
+        }
+      }
+
+      return bundles;
+    }
+
+    private bool ValidateSignature(Address address, TryteString bundleTrytes, int contactPayloadEnd)
+    {
+      var signatureLength = Constants.MessengerSecurityLevel * Fragment.Length;
+      var signature = bundleTrytes.GetChunk(contactPayloadEnd + Constants.End.TrytesLength, signatureLength);
+
+      return this.SignatureValidator.ValidateFragments(
+        signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
+        new Hash(address.DeriveRequestAddress().Value),
+        address);
     }
   }
 }

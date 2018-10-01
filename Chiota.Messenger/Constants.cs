@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger
 {
+  using Tangle.Net.Cryptography;
   using Tangle.Net.Entity;
 
   /// <summary>
@@ -8,6 +9,8 @@
   public static class Constants
   {
     public static int MaxMessagesOnAddress = 6;
+
+    public static int MessengerSecurityLevel = SecurityLevel.Medium;
 
     public static TryteString End => new TryteString("9ENDEGUTALLESGUT9");
 
