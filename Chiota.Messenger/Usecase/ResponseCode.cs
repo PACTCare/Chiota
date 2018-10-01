@@ -36,23 +36,18 @@
     NoContactInformationPresent = -4,
 
     /// <summary>
-    /// Error code that is returned when more than one valid contact information entry is found at an address
-    /// </summary>
-    AmbiguousContactInformation = -5,
-
-    /// <summary>
     /// Error code that is returned when contacts cannot be loaded
     /// </summary>
-    ContactsUnavailable = -6,
+    ContactsUnavailable = -5,
 
     /// <summary>
     /// Error code that is returned when the password salt for the chat can not be generated
     /// </summary>
-    ChatPasswordAndSaltCannotBeGenerated = -7,
+    ChatPasswordAndSaltCannotBeGenerated = -6,
 
     /// <summary>
     /// Error code that is returned when the given message is too long (see Constants.MessageCharacterLimit)
     /// </summary>
-    MessageTooLong = -8
+    MessageTooLong = -7
   }
 }

@@ -13,13 +13,12 @@
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <inheritdoc />
   public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T> where T : BaseResponse
   {
-    public AbstractContactInteractor(IContactRepository repository, IMessenger messenger)
+    protected AbstractContactInteractor(IContactRepository repository, IMessenger messenger)
     {
       this.Repository = repository;
       this.Messenger = messenger;

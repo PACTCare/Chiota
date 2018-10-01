@@ -10,22 +10,21 @@
   using Chiota.Messenger.Service;
 
   using Tangle.Net.Cryptography;
-  using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
 
-  public class CreateUserInteractor : IUsecaseInteractor<CreateUserRequest, CreateUserResponse>
+  public class CreateUserInteractor : AbstractUserInteractor<CreateUserRequest, CreateUserResponse>
   {
     public CreateUserInteractor(
       IMessenger messenger,
       IAddressGenerator addressGenerator,
       IEncryption encryption,
-      ISignatureFragmentGenerator signatureFragmentGenerator)
+      ISignatureFragmentGenerator signatureGenerator)
+      : base(signatureGenerator)
     {
       this.Messenger = messenger;
       this.AddressGenerator = addressGenerator;
       this.Encryption = encryption;
-      this.SignatureFragmentGenerator = signatureFragmentGenerator;
     }
 
     private IMessenger Messenger { get; }
@@ -34,10 +33,8 @@
 
     private IEncryption Encryption { get; }
 
-    private ISignatureFragmentGenerator SignatureFragmentGenerator { get; }
-
     /// <inheritdoc />
-    public async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
+    public override async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
     {
       try
       {
@@ -45,15 +42,7 @@
         var requestAddress = publicKeyAddress.DeriveRequestAddress();
 
         var ntruKeyPair = this.Encryption.CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);
-        var publicKeyTrytes = ntruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
-
-        var payload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
-
-        var signature = this.SignatureFragmentGenerator.Generate(publicKeyAddress.PrivateKey, new Hash(requestAddress.Value));
-        foreach (var fragment in signature)
-        {
-          payload = payload.Concat(fragment);
-        }
+        var payload = this.CreateSignedPublicKeyPayload(ntruKeyPair.PublicKey, requestAddress, publicKeyAddress.PrivateKey);
 
         await this.Messenger.SendMessageAsync(new Message(payload, publicKeyAddress));
         return new CreateUserResponse
@@ -61,7 +50,7 @@
                    Code = ResponseCode.Success,
                    NtruKeyPair = ntruKeyPair,
                    PublicKeyAddress = publicKeyAddress,
-                   RequestAddress = new Address(requestAddress.Value)
+                   RequestAddress = requestAddress
                  };
       }
       catch (MessengerException exception)

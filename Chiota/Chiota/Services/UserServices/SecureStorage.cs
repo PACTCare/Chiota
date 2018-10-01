@@ -5,20 +5,16 @@
 
   using Chiota.Exceptions;
   using Chiota.Messenger.Encryption;
-  using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Models;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
 
   using Newtonsoft.Json;
 
   using Plugin.SecureStorage;
 
   using Tangle.Net.Entity;
-
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
   [ExcludeFromCodeCoverage]
   public static class SecureStorage
