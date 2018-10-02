@@ -85,7 +85,9 @@
       await transactionCache.SaveTransactionAsync(
         new TransactionCacheItem
           {
-            Address = receiver, TransactionHash = Hash.Empty, TransactionTrytes = TryteString.FromUtf8String("Hi. I'm a test")
+            Address = receiver,
+            TransactionHash = new Hash(Seed.Random().Value),
+            TransactionTrytes = new TransactionTrytes(TryteString.FromUtf8String("Hi. I'm a test").Concat(Constants.End).Value)
           });
 
       var sentMessages = await messenger.GetMessagesByAddressAsync(receiver, new MessageBundleParser());

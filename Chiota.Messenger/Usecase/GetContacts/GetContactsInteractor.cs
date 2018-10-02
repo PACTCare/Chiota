@@ -40,7 +40,6 @@
         var pendingContactRequests = requestedContacts.Union(localApprovedContacts, addressComparer).ToList()
           .Except(localApprovedContacts, addressComparer).ToList();
 
-        // Request does not get updated so we need to set it here. TODO: Find a way to do this another way
         var approvedContacts = requestedContacts.Intersect(localApprovedContacts, addressComparer).ToList();
         approvedContacts.ForEach(c => c.Request = false);
 

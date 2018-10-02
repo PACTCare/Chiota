@@ -58,13 +58,12 @@
       var transactionCache = new InMemoryTransactionCache();
 
       var cacheItem = new TransactionCacheItem
-                                   {
-                                     Address = contactRequestAddress,
-                                     TransactionHash = new Hash(Seed.Random().Value),
-                                     TransactionTrytes = TryteString.FromUtf8String(
-                                       JsonConvert.SerializeObject(
-                                         new Contact { ChatAddress = storedContactAddress }))
-                                   };
+                        {
+                          Address = contactRequestAddress,
+                          TransactionHash = new Hash(Seed.Random().Value),
+                          TransactionTrytes = new TransactionTrytes(
+                            TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress })).Value)
+                        };
 
       await transactionCache.SaveTransactionAsync(cacheItem);
       await contactRepository.AddContactAsync(storedContactAddress, true, pubKeyAddress);
@@ -72,6 +71,7 @@
       var iotaRepositoryMock = new Mock<IIotaRepository>();
       iotaRepositoryMock.Setup(i => i.FindTransactionsByAddressesAsync(It.IsAny<List<Address>>())).ReturnsAsync(
         new TransactionHashList { Hashes = new List<Hash> { cacheItem.TransactionHash } });
+      iotaRepositoryMock.Setup(i => i.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(new List<TransactionTrytes>());
 
       var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepositoryMock.Object, transactionCache));
       var response = await interactor.ExecuteAsync(
@@ -118,7 +118,7 @@
                         {
                           Address = contactRequestAddress,
                           TransactionHash = approvedContactBundle.Transactions[0].Hash,
-                          TransactionTrytes = approvedContactMessage
+                          TransactionTrytes = new TransactionTrytes(approvedContactMessage.Value)
       };
 
       transactionCache.Items.Add(cacheItem);
@@ -138,8 +138,8 @@
 
     private static Bundle CreateBundle(Address contactRequestAddress, TryteString rejectedContactMessage)
     {
-      var rejectedContactBundle = new Bundle();
-      rejectedContactBundle.AddTransfer(
+      var bundle = new Bundle();
+      bundle.AddTransfer(
         new Transfer
           {
             Address = contactRequestAddress,
@@ -148,13 +148,13 @@
             Tag = Constants.Tag
           });
 
-      rejectedContactBundle.Finalize();
-      rejectedContactBundle.Sign();
+      bundle.Finalize();
+      bundle.Sign();
 
       // calculate hashes
-      var transactions = rejectedContactBundle.Transactions;
-      rejectedContactBundle.Transactions = transactions.Select(t => Transaction.FromTrytes(t.ToTrytes())).ToList();
-      return rejectedContactBundle;
+      var transactions = bundle.Transactions;
+      bundle.Transactions = transactions.Select(t => Transaction.FromTrytes(t.ToTrytes())).ToList();
+      return bundle;
     }
 
     [TestMethod]
