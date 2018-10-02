@@ -22,12 +22,12 @@
 
     public abstract Task<T> ExecuteAsync(TIn request);
 
-    protected TryteString CreateSignedPublicKeyPayload(IAsymmetricKey publicKey, TryteString requestAddress, AbstractPrivateKey addressPrivateKey)
+    protected async Task<TryteString> CreateSignedPublicKeyPayloadAsync(IAsymmetricKey publicKey, TryteString requestAddress, AbstractPrivateKey addressPrivateKey)
     {
       var publicKeyTrytes = publicKey.ToBytes().EncodeBytesAsString();
       var payload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
 
-      var signature = this.SignatureGenerator.Generate(addressPrivateKey, new Hash(requestAddress.Value));
+      var signature = await Task.Run(() => this.SignatureGenerator.Generate(addressPrivateKey, new Hash(requestAddress.Value)));
       foreach (var fragment in signature)
       {
         payload = payload.Concat(fragment);

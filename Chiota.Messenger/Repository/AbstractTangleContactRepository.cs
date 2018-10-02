@@ -82,7 +82,7 @@
           }
 
           var contactPayloadEnd = bundleTrytes.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal);
-          if (this.ValidateSignature(address, bundleTrytes, contactPayloadEnd))
+          if (await this.ValidateSignatureAsync(address, bundleTrytes, contactPayloadEnd))
           {
             return new TryteString(bundleTrytes.Value.Substring(0, contactPayloadEnd));
           }
@@ -119,15 +119,16 @@
       return bundles;
     }
 
-    private bool ValidateSignature(Address address, TryteString bundleTrytes, int contactPayloadEnd)
+    private async Task<bool> ValidateSignatureAsync(Address address, TryteString bundleTrytes, int contactPayloadEnd)
     {
       var signatureLength = Constants.MessengerSecurityLevel * Fragment.Length;
       var signature = bundleTrytes.GetChunk(contactPayloadEnd + Constants.End.TrytesLength, signatureLength);
 
-      return this.SignatureValidator.ValidateFragments(
-        signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
-        new Hash(address.DeriveRequestAddress().Value),
-        address);
+      return await Task.Run(
+               () => this.SignatureValidator.ValidateFragments(
+                 signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
+                 new Hash(address.DeriveRequestAddress().Value),
+                 address));
     }
   }
 }

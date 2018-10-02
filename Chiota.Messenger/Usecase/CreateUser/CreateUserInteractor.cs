@@ -38,11 +38,11 @@
     {
       try
       {
-        var publicKeyAddress = this.AddressGenerator.GetAddress(request.Seed, Constants.MessengerSecurityLevel, 0);
+        var publicKeyAddress = await Task.Run(() => this.AddressGenerator.GetAddress(request.Seed, Constants.MessengerSecurityLevel, 0));
         var requestAddress = publicKeyAddress.DeriveRequestAddress();
 
         var ntruKeyPair = this.Encryption.CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);
-        var payload = this.CreateSignedPublicKeyPayload(ntruKeyPair.PublicKey, requestAddress, publicKeyAddress.PrivateKey);
+        var payload = await this.CreateSignedPublicKeyPayloadAsync(ntruKeyPair.PublicKey, requestAddress, publicKeyAddress.PrivateKey);
 
         await this.Messenger.SendMessageAsync(new Message(payload, publicKeyAddress));
         return new CreateUserResponse

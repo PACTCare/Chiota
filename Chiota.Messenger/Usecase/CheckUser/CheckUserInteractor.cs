@@ -45,7 +45,7 @@
 
         // The address needs to be generated newly so we have access to its private key
         var publicKeyAddress = this.AddressGenerator.GetAddress(request.Seed, Constants.MessengerSecurityLevel, 0);
-        var payload = this.CreateSignedPublicKeyPayload(request.PublicKey, request.RequestAddress, publicKeyAddress.PrivateKey);
+        var payload = await this.CreateSignedPublicKeyPayloadAsync(request.PublicKey, request.RequestAddress, publicKeyAddress.PrivateKey);
         await this.Messenger.SendMessageAsync(new Message(payload, publicKeyAddress));
 
         return new CheckUserResponse { Code = ResponseCode.Success };
