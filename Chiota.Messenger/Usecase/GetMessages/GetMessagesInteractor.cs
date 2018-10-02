@@ -73,6 +73,7 @@
       var str = increment + rgx.Replace(messages[messages.Count - 1].Message.ToUpper(), string.Empty)
                           + rgx.Replace(messages[messages.Count - 3].Message.ToUpper(), string.Empty) 
                           + rgx.Replace(messages[messages.Count - 2].Message.ToUpper(), string.Empty);
+
       str = str.Truncate(70);
 
       return new Address(str + contactAddress.Value.Substring(str.Length));
@@ -144,7 +145,7 @@
         return decryptedMessages;
       }
 
-      this.CurrentChatAddress = GenerateNextAddress(this.CurrentChatAddress, decryptedMessages);
+      this.CurrentChatAddress = GenerateNextAddress(this.CurrentChatAddress, parsedMessages);
       decryptedMessages.AddRange(await this.LoadMessagesOnAddressAsync(chatKeyPair));
       return decryptedMessages;
     }
