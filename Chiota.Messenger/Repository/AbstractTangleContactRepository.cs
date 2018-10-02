@@ -123,11 +123,12 @@
     {
       var signatureLength = Constants.MessengerSecurityLevel * Fragment.Length;
       var signature = bundleTrytes.GetChunk(contactPayloadEnd + Constants.End.TrytesLength, signatureLength);
+      var publicKeyPayload = new PublicKeyPayload(bundleTrytes.GetChunk(0, contactPayloadEnd + Constants.End.TrytesLength).Value);
 
       return await Task.Run(
                () => this.SignatureValidator.ValidateFragments(
                  signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
-                 new Hash(address.DeriveRequestAddress().Value),
+                 publicKeyPayload.Hash,
                  address));
     }
   }

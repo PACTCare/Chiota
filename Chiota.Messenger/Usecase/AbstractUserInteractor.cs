@@ -2,7 +2,7 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Extensions;
+  using Chiota.Messenger.Entity;
 
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Signing;
@@ -24,16 +24,16 @@
 
     protected async Task<TryteString> CreateSignedPublicKeyPayloadAsync(IAsymmetricKey publicKey, TryteString requestAddress, AbstractPrivateKey addressPrivateKey)
     {
-      var publicKeyTrytes = publicKey.ToBytes().EncodeBytesAsString();
-      var payload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
+      var payload = new PublicKeyPayload(publicKey, requestAddress);
+      var signature = await Task.Run(() => this.SignatureGenerator.Generate(addressPrivateKey, payload.Hash));
 
-      var signature = await Task.Run(() => this.SignatureGenerator.Generate(addressPrivateKey, new Hash(requestAddress.Value)));
+      var signedPayload = (TryteString)payload;
       foreach (var fragment in signature)
       {
-        payload = payload.Concat(fragment);
+        signedPayload = signedPayload.Concat(fragment);
       }
 
-      return payload;
+      return signedPayload;
     }
   }
 }
