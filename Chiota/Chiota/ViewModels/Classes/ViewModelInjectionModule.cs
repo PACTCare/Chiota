@@ -33,10 +33,11 @@ namespace Chiota.ViewModels.Classes
             builder.RegisterType<MessengerTabbedViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
-            builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
+            builder.RegisterType<ChatViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ContactAddressViewModel>().PropertiesAutowired();
             builder.RegisterType<AddContactViewModel>().PropertiesAutowired();
+            builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
             builder.RegisterType<ContactRequestViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ProfileViewModel>().PropertiesAutowired();

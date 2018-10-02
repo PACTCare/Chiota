@@ -13,7 +13,7 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <ListView ItemsSource="{Binding ContactList, Mode=TwoWay}" HasUnevenRows="True" IsPullToRefreshEnabled="True" RefreshAllowed="True" RefreshCommand="{Binding RefreshCommand}">
+            <ListView ItemsSource="{Binding ContactList}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

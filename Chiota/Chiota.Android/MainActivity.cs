@@ -19,7 +19,7 @@ namespace Chiota.Droid
 
     using Xamarin.Forms;
 
-    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private JobScheduler jobScheduler;

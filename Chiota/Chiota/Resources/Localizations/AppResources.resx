@@ -291,4 +291,7 @@
   <data name="CmnContactRequest" xml:space="preserve">
     <value>Contact request</value>
   </data>
+  <data name="DlgMessage" xml:space="preserve">
+    <value>Message</value>
+  </data>
 </root>

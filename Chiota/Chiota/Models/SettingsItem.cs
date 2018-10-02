@@ -7,15 +7,33 @@ using Xamarin.Forms;
 
 namespace Chiota.Models
 {
+    public enum SettingsItemType
+    {
+        Profile,
+        InviteFriends,
+        About
+    }
+
     public class SettingsItem : BaseModel
     {
         #region Properties
 
-        public string Name { get; set; }
+        public SettingsItemType Type { get; }
 
-        public ImageSource Icon { get; set; }
+        public string Name { get; }
 
-        public ICommand TapCommand { get; set; }
+        public ImageSource Icon { get; }
+
+        #endregion
+
+        #region Constructors
+
+        public SettingsItem(SettingsItemType type, string name, ImageSource imageSource)
+        {
+            Type = type;
+            Name = name;
+            Icon = imageSource;
+        }
 
         #endregion
     }

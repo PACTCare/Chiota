@@ -74,7 +74,12 @@ namespace Chiota.ViewModels.Settings
             IsEdit = false;
 
             _originUsername = UserService.CurrentUser.Name;
-            _originImageSource = ChiotaConstants.IpfsHashGateway + UserService.CurrentUser.ImageHash;
+
+            var imagehash = UserService.CurrentUser.ImageHash;
+            if(imagehash != null)
+                _originImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + imagehash));
+            else
+                _originImageSource = ImageSource.FromFile("account.png");
 
             ProfileImageSource = _originImageSource;
             Username = _originUsername;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
@@ -6,12 +7,10 @@ using Chiota.Extensions;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
-using Chiota.Popups.PopupModels;
-using Chiota.Popups.PopupPageModels;
-using Chiota.Popups.PopupPages;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
+using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
@@ -23,6 +22,7 @@ namespace Chiota.ViewModels.Contact
         #region Attributes
 
         private List<ContactBinding> _contactList;
+        private bool _isVisible;
 
         #endregion
 
@@ -51,11 +51,34 @@ namespace Chiota.ViewModels.Contact
 
         #region Init
 
+        public override void Init(object data = null)
+        {
+            base.Init(data);
+
+            UpdateView();
+        }
+
+        #endregion
+
+        #region ViewIsAppearing
+
         protected override void ViewIsAppearing()
         {
-            UpdateView();
-
             base.ViewIsAppearing();
+
+            _isVisible = true;
+            Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
+        }
+
+        #endregion
+
+        #region ViewIsDisappearing
+
+        protected override void ViewIsDisappearing()
+        {
+            base.ViewIsDisappearing();
+
+            _isVisible = false;
         }
 
         #endregion
@@ -64,9 +87,38 @@ namespace Chiota.ViewModels.Contact
 
         #region UpdateView
 
-        private async void UpdateView()
+        private bool UpdateView()
         {
-            ContactList = await GetContactListAsync();
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                var contacts = await GetContactListAsync();
+                var changed = IsContactListChanged(contacts);
+                if (changed)
+                    ContactList = contacts;
+            });
+
+            return _isVisible;
+        }
+
+        #endregion
+
+        #region IsContactListChanged
+
+        private bool IsContactListChanged(List<ContactBinding> contacts)
+        {
+            if (ContactList == null || ContactList.Count != contacts.Count)
+                return true;
+
+            var currentPending = ContactList.FindAll(t => !t.IsApproved);
+            var currentApproved = ContactList.FindAll(t => t.IsApproved);
+
+            var pending = contacts.FindAll(t => !t.IsApproved);
+            var approved = contacts.FindAll(t => t.IsApproved);
+
+            if (currentPending.Count != pending.Count || currentApproved.Count != approved.Count)
+                return true;
+
+            return false;
         }
 
         #endregion
@@ -90,6 +142,8 @@ namespace Chiota.ViewModels.Contact
             foreach (var approved in response.ApprovedContacts)
                 tmp.Add(new ContactBinding(approved, true, TapContactCommand));
 
+            //TODO Maybe, we need to sort the contacts alphabetical.
+
             return tmp;
         }
 
@@ -98,21 +152,6 @@ namespace Chiota.ViewModels.Contact
         #endregion
 
         #region Commands
-
-        #region Refresh
-
-        public ICommand RefreshCommand
-        {
-            get
-            {
-                return new Command(() =>
-                {
-                    UpdateView();
-                });
-            }
-        }
-
-        #endregion
 
         #region TapContactRequest
 
@@ -138,9 +177,12 @@ namespace Chiota.ViewModels.Contact
         {
             get
             {
-                return new Command(() =>
+                return new Command(async (param) =>
                 {
-
+                    if (param is ContactBinding contact)
+                        await PushAsync<ChatView>(contact.Contact);
+                    else
+                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
                 });
             }
         }

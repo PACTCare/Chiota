@@ -475,6 +475,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        internal static string DlgMessage {
+            get {
+                return ResourceManager.GetString("DlgMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Most secure.
         /// </summary>
         internal static string DlgMostSecure {

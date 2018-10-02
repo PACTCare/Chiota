@@ -8,6 +8,7 @@
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance settings:SettingsViewModel}"
              Title="{extensions:Translate CmnSettings}">
@@ -25,14 +26,14 @@
                                 <StackLayout VerticalOptions="Center">
                                     <Label Style="{DynamicResource Label18}" Text="{Binding Name}" VerticalOptions="Center"/>
                                 </StackLayout>
-
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding TapCommand}" CommandParameter="{Binding .}" NumberOfTapsRequired="1"/>
-                                </StackLayout.GestureRecognizers>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+
+                <ListView.Behaviors>
+                    <behaviors:ListViewBehavior Command="{Binding TapCommand}"/>
+                </ListView.Behaviors>
             </ListView>
         </StackLayout>
     </ContentPage.Content>
