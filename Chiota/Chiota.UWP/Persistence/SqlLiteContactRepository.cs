@@ -10,14 +10,16 @@
 
   using Windows.Storage;
 
+  using Tangle.Net.Cryptography.Signing;
+
   /// <summary>
   /// The sql lite contact repository.
   /// </summary>
   public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
   {
     /// <inheritdoc />
-    public SqlLiteContactRepository(IIotaRepository iotaRepository)
-      : base(iotaRepository)
+    public SqlLiteContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
+      : base(iotaRepository, signatureValidator)
     {
     }
 

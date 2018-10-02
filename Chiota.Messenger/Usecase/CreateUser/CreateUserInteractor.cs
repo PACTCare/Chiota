@@ -6,14 +6,21 @@
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
 
   using Tangle.Net.Cryptography;
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
 
-  public class CreateUserInteractor : IUsecaseInteractor<CreateUserRequest, CreateUserResponse>
+  public class CreateUserInteractor : AbstractUserInteractor<CreateUserRequest, CreateUserResponse>
   {
-    public CreateUserInteractor(IMessenger messenger, IAddressGenerator addressGenerator, IEncryption encryption)
+    public CreateUserInteractor(
+      IMessenger messenger,
+      IAddressGenerator addressGenerator,
+      IEncryption encryption,
+      ISignatureFragmentGenerator signatureGenerator)
+      : base(signatureGenerator)
     {
       this.Messenger = messenger;
       this.AddressGenerator = addressGenerator;
@@ -27,28 +34,23 @@
     private IEncryption Encryption { get; }
 
     /// <inheritdoc />
-    /// TODO: move the contact information uploading to contact repository
-    public async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
+    public override async Task<CreateUserResponse> ExecuteAsync(CreateUserRequest request)
     {
       try
       {
-        var publicKeyAddress = this.AddressGenerator.GetAddress(request.Seed, SecurityLevel.Medium, 0);
-
-        var requestAddress = publicKeyAddress.GetChunk(0, Address.Length - 12)
-          .Concat(publicKeyAddress.GetChunk(Address.Length - 12, 12).TryteStringIncrement());
+        var publicKeyAddress = await Task.Run(() => this.AddressGenerator.GetAddress(request.Seed, Constants.MessengerSecurityLevel, 0));
+        var requestAddress = publicKeyAddress.DeriveRequestAddress();
 
         var ntruKeyPair = this.Encryption.CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);
-        var publicKeyTrytes = ntruKeyPair.PublicKey.ToBytes().EncodeBytesAsString();
+        var payload = await this.CreateSignedPublicKeyPayloadAsync(ntruKeyPair.PublicKey, requestAddress, publicKeyAddress.PrivateKey);
 
-        var requestAddressPayload = new TryteString(publicKeyTrytes + Constants.LineBreak + requestAddress.Value + Constants.End);
-
-        await this.Messenger.SendMessageAsync(new Message(requestAddressPayload, publicKeyAddress));
+        await this.Messenger.SendMessageAsync(new Message(payload, publicKeyAddress));
         return new CreateUserResponse
                  {
                    Code = ResponseCode.Success,
                    NtruKeyPair = ntruKeyPair,
                    PublicKeyAddress = publicKeyAddress,
-                   RequestAddress = new Address(requestAddress.Value)
+                   RequestAddress = requestAddress
                  };
       }
       catch (MessengerException exception)

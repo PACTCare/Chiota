@@ -11,6 +11,7 @@
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Service.Parser;
 
@@ -67,13 +68,13 @@
       }
 
       var rgx = new Regex("[^A-Z]");
-      var increment = contactAddress.GetChunk(0, 15).TryteStringIncrement();
+      var increment = contactAddress.GetChunk(0, 15).Increment();
 
       var str = increment + rgx.Replace(messages[messages.Count - 1].Message.ToUpper(), string.Empty)
-                          + rgx.Replace(messages[messages.Count - 3].Message.ToUpper(), string.Empty) + rgx.Replace(
-                            messages[messages.Count - 2].Message.ToUpper(),
-                            string.Empty);
+                          + rgx.Replace(messages[messages.Count - 3].Message.ToUpper(), string.Empty) 
+                          + rgx.Replace(messages[messages.Count - 2].Message.ToUpper(), string.Empty);
       str = str.Truncate(70);
+
       return new Address(str + contactAddress.Value.Substring(str.Length));
     }
 

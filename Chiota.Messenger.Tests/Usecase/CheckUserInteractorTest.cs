@@ -29,7 +29,8 @@
       var interactor = new CheckUserInteractor(
         new ExceptionContactRepository(new MessengerException(ResponseCode.NoContactInformationPresent)),
         new ExceptionMessenger(exception),
-        new InMemoryAddressGenerator());
+        new InMemoryAddressGenerator(),
+        new SignatureGeneratorStub());
 
       var response = await interactor.ExecuteAsync(
                        new CheckUserRequest
@@ -47,7 +48,11 @@
     public async Task TestContactInformationDoesExistShouldReturnCodeSuccess()
     {
       var messenger = new InMemoryMessenger();
-      var interactor = new CheckUserInteractor(new InMemoryContactRepository(), messenger, new InMemoryAddressGenerator());
+      var interactor = new CheckUserInteractor(
+        new InMemoryContactRepository(),
+        messenger,
+        new InMemoryAddressGenerator(),
+        new SignatureGeneratorStub());
 
       var response = await interactor.ExecuteAsync(
                        new CheckUserRequest
@@ -69,7 +74,8 @@
       var interactor = new CheckUserInteractor(
         new ExceptionContactRepository(new MessengerException(ResponseCode.NoContactInformationPresent)),
         messenger,
-        new InMemoryAddressGenerator());
+        new InMemoryAddressGenerator(),
+        new SignatureGeneratorStub());
 
       var response = await interactor.ExecuteAsync(
                        new CheckUserRequest
@@ -82,56 +88,6 @@
 
       Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.AreEqual(1, messenger.SentMessages.Count);
-    }
-
-    [TestMethod]
-    public async Task TestContactInformationIsAmbiguousShouldResendToNewPublicKeyAddress()
-    {
-      var contactRepositoryMock = new Mock<IContactRepository>();
-      contactRepositoryMock.SetupSequence(r => r.LoadContactInformationByAddressAsync(It.IsAny<Address>()))
-        .ThrowsAsync(new MessengerException(ResponseCode.AmbiguousContactInformation))
-        .ThrowsAsync(new MessengerException(ResponseCode.NoContactInformationPresent));
-
-      var messenger = new InMemoryMessenger();
-      var interactor = new CheckUserInteractor(contactRepositoryMock.Object, messenger, new InMemoryAddressGenerator());
-
-      var response = await interactor.ExecuteAsync(
-                       new CheckUserRequest
-                         {
-                           PublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey,
-                           PublicKeyAddress = new Address(Hash.Empty.Value),
-                           RequestAddress = new Address(Hash.Empty.Value),
-                           Seed = Seed.Random()
-                         });
-
-      Assert.AreEqual(ResponseCode.NewPublicKeyAddress, response.Code);
-      Assert.AreEqual(1, messenger.SentMessages.Count);
-      Assert.IsNotNull(response.PublicKeyAddress);
-    }
-
-    [TestMethod]
-    public async Task TestContactInformationIsFoundOnAnAlreadyAdjustedAddressShouldReturnCodeAndAdjustedAddress()
-    {
-      var contactRepositoryMock = new Mock<IContactRepository>();
-      contactRepositoryMock.SetupSequence(r => r.LoadContactInformationByAddressAsync(It.IsAny<Address>()))
-        .ThrowsAsync(new MessengerException(ResponseCode.AmbiguousContactInformation)).ReturnsAsync(
-          new ContactInformation { ContactAddress = new Address(Hash.Empty.Value), NtruKey = InMemoryContactRepository.NtruKeyPair.PublicKey });
-
-      var messenger = new InMemoryMessenger();
-      var interactor = new CheckUserInteractor(contactRepositoryMock.Object, messenger, new InMemoryAddressGenerator());
-
-      var response = await interactor.ExecuteAsync(
-                       new CheckUserRequest
-                         {
-                           PublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey,
-                           PublicKeyAddress = new Address(Hash.Empty.Value),
-                           RequestAddress = new Address(Hash.Empty.Value),
-                           Seed = Seed.Random()
-                         });
-
-      Assert.AreEqual(ResponseCode.NewPublicKeyAddress, response.Code);
-      Assert.AreEqual(0, messenger.SentMessages.Count);
-      Assert.IsNotNull(response.PublicKeyAddress);
     }
   }
 }

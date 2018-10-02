@@ -10,6 +10,7 @@
 
   using SQLite;
 
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Repository;
 
   /// <summary>
@@ -18,8 +19,8 @@
   public abstract class AbstractSqlLiteContactRepository : AbstractTangleContactRepository
   {
     /// <inheritdoc />
-    protected AbstractSqlLiteContactRepository(IIotaRepository iotaRepository)
-      : base(iotaRepository)
+    protected AbstractSqlLiteContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
+      : base(iotaRepository, signatureValidator)
     {
       // There needs to be a better way for this
       this.Connection?.CreateTableAsync<SqLiteContacts>();
