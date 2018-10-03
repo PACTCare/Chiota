@@ -18,12 +18,13 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  public class GetMessagesInteractor : IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>
+  public class GetMessagesInteractor : AbstractChatInteractor<GetMessagesRequest, GetMessagesResponse>
   {
-    public GetMessagesInteractor(IMessenger messenger, IEncryption encryption)
+    public GetMessagesInteractor(IMessenger messenger, IEncryption messageEncryption, IEncryption keyEncryption)
+      : base(messenger, keyEncryption)
     {
       this.Messenger = messenger;
-      this.Encryption = encryption;
+      this.Encryption = messageEncryption;
     }
 
     private IEncryption Encryption { get; }
@@ -33,7 +34,7 @@
     private Address CurrentChatAddress { get; set; }
 
     /// <inheritdoc />
-    public async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
+    public override async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
     {
       try
       {
@@ -75,34 +76,6 @@
       str = str.Truncate(70);
 
       return new Address(str + contactAddress.Value.Substring(str.Length));
-    }
-
-    private async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
-    {
-      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new MessageBundleParser());
-      var chatPasSalt = new List<string>();
-      foreach (var message in messages)
-      {
-        try
-        {
-          var pasSalt = Encoding.UTF8.GetString(NtruEncryption.Key.Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
-          if (pasSalt != string.Empty)
-          {
-            chatPasSalt.Add(pasSalt);
-          }
-        }
-        catch
-        {
-          // ignored
-        }
-      }
-
-      if (chatPasSalt.Count > 0)
-      {
-        return chatPasSalt[0];
-      }
-
-      throw new MessengerException(ResponseCode.ChatPasswordAndSaltCannotBeGenerated);
     }
 
     private async Task<List<ChatMessage>> LoadMessagesOnAddressAsync(IAsymmetricKeyPair chatKeyPair)

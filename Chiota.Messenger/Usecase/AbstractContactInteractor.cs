@@ -16,9 +16,11 @@
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <inheritdoc />
-  public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T> where T : BaseResponse
+  public abstract class AbstractContactInteractor<TIn, T> : AbstractChatInteractor<TIn, T>
+    where T : BaseResponse
   {
-    protected AbstractContactInteractor(IContactRepository repository, IMessenger messenger)
+    protected AbstractContactInteractor(IContactRepository repository, IMessenger messenger, IEncryption keyEncryption)
+      : base(messenger, keyEncryption)
     {
       this.Repository = repository;
       this.Messenger = messenger;
@@ -27,9 +29,6 @@
     protected IMessenger Messenger { get; }
 
     protected IContactRepository Repository { get; }
-
-    /// <inheritdoc />
-    public abstract Task<T> ExecuteAsync(TIn request);
 
     protected async Task ExchangeKey(Contact requesterDetails, IAsymmetricKey ntruKey, string chatPasSalt)
     {

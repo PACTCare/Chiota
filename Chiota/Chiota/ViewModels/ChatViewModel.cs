@@ -108,7 +108,7 @@ namespace Chiota.ViewModels
           new SendMessageRequest
             {
               ChatAddress = this.currentChatAddress,
-              KeyPair = this.ntruChatKeyPair,
+              ChatKeyPair = this.ntruChatKeyPair,
               Message = this.OutGoingText,
               UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });

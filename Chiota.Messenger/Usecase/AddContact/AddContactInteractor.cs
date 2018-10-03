@@ -15,7 +15,7 @@
   {
     /// <inheritdoc />
     public AddContactInteractor(IContactRepository repository, IMessenger messenger)
-      : base(repository, messenger)
+      : base(repository, messenger, null)
     {
     }
 

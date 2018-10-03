@@ -12,8 +12,10 @@
     /// <inheritdoc />
     public List<Message> ParseBundle(Bundle bundle)
     {
-      var trytes = bundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment));
-      return new List<Message> { new Message(trytes) };
+      return new List<Message>
+               {
+                 new Message(bundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)))
+               };
     }
   }
 }

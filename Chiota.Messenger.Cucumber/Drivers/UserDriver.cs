@@ -139,19 +139,22 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
-      if (sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair == null)
-      {
-        this.GetMessages(senderName, receiverName);
-      }
-
       var response = InstanceBag.SendMessageInteractor.ExecuteAsync(
         new SendMessageRequest
           {
             Message = message,
             UserPublicKeyAddress = sender.PublicKeyAddress,
-            KeyPair = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair,
-            ChatAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress
-          }).Result;
+            ChatKeyPair = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair,
+            ChatAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress,
+            ChatKeyAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyAddress,
+            UserKeyPair = sender.NtruKeyPair
+        }).Result;
+
+      if (response.Code == ResponseCode.Success)
+      {
+        receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair = response.ChatKeyPair;
+        sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair = response.ChatKeyPair;
+      }
 
       return response;
     }

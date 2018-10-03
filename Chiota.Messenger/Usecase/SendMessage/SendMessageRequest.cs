@@ -9,24 +9,25 @@
   /// </summary>
   public class SendMessageRequest
   {
-    /// <summary>
-    /// Gets or sets the chat address.
-    /// </summary>
     public Address ChatAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the key pair.
+    /// Optional. Will be generated at runtime, if necessary. ChatKeyAddress and UserKeyPair must be set, if ChatKeyPair is null
     /// </summary>
-    public IAsymmetricKeyPair KeyPair { get; set; }
+    public IAsymmetricKeyPair ChatKeyPair { get; set; }
 
     /// <summary>
-    /// Gets or sets the message.
+    /// Must be set if ChatKeyPair is null
     /// </summary>
+    public Address ChatKeyAddress { get; set; }
+
+    /// <summary>
+    /// Must be set if ChatKeyPair is null
+    /// </summary>
+    public IAsymmetricKeyPair UserKeyPair { get; set; }
+
     public string Message { get; set; }
 
-    /// <summary>
-    /// Gets or sets the user public key address.
-    /// </summary>
     public Address UserPublicKeyAddress { get; set; }
   }
 }

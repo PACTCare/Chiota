@@ -30,9 +30,9 @@
 
     public static AcceptContactInteractor AcceptContactInteractor => new AcceptContactInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
-    public static SendMessageInteractor SendMessageInteractor => new SendMessageInteractor(Messenger, NtruEncryption.Default);
+    public static SendMessageInteractor SendMessageInteractor => new SendMessageInteractor(Messenger, NtruEncryption.Default, NtruEncryption.Key);
 
-    public static GetMessagesInteractor GetMessagesInteractor => new GetMessagesInteractor(Messenger, NtruEncryption.Default);
+    public static GetMessagesInteractor GetMessagesInteractor => new GetMessagesInteractor(Messenger, NtruEncryption.Default, NtruEncryption.Key);
 
     private static IContactRepository ContactRepository => new EmptyContactRepository(Messenger, new SignatureValidator());
 
