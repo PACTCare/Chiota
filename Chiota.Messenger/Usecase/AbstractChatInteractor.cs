@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase
 {
+  using System;
   using System.Collections.Generic;
   using System.Text;
   using System.Threading.Tasks;
@@ -8,7 +9,6 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
 
   using Tangle.Net.Entity;
 
@@ -32,13 +32,14 @@
 
     protected async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
     {
-      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new MessageBundleParser());
+      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress);
       var chatPasSalt = new List<string>();
       foreach (var message in messages)
       {
         try
         {
-          var pasSalt = Encoding.UTF8.GetString(NtruEncryption.Key.Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
+          var pasSalt = Encoding.UTF8.GetString(
+            NtruEncryption.Key.Decrypt(userKeyPair, StripPayload(message.Payload).DecodeBytesFromTryteString()));
           if (pasSalt != string.Empty)
           {
             chatPasSalt.Add(pasSalt);
@@ -56,6 +57,11 @@
       }
 
       throw new MessengerException(ResponseCode.ChatPasswordAndSaltCannotBeGenerated);
+    }
+
+    private static TryteString StripPayload(TryteString payload)
+    {
+      return payload.GetChunk(0, payload.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal));
     }
   }
 }

@@ -8,7 +8,6 @@
   using Chiota.Messenger.Cache;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
-  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Usecase;
 
   using Tangle.Net.Entity;
@@ -34,19 +33,15 @@
     private ITransactionCache TransactionCache { get; }
 
     /// <inheritdoc />
-    public async Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser)
+    public async Task<List<Message>> GetMessagesByAddressAsync(Address address)
     {
-      var result = new List<Message>();
-
       var transactions = await this.LoadTransactionsAsync(address);
       var bundles = ExtractBundles(transactions);
+      var sortedBundles = SortBundles(bundles);
 
-      foreach (var bundle in SortBundles(bundles))
-      {
-        result.AddRange(bundleParser.ParseBundle(bundle));
-      }
-
-      return result;
+      return sortedBundles.Select(
+          bundle => new Message(bundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), address))
+        .ToList();
     }
 
     /// <inheritdoc />

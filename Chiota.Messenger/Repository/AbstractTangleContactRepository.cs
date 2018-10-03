@@ -9,7 +9,6 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Usecase;
 
   using Tangle.Net.Cryptography.Signing;
@@ -63,7 +62,7 @@
 
     private async Task<TryteString> LoadRawContactInformationFromTangle(Address address)
     {
-      foreach (var message in await this.Messenger.GetMessagesByAddressAsync(address, new ChatMessageBundleParser()))
+      foreach (var message in await this.Messenger.GetMessagesByAddressAsync(address))
       {
         try
         {

@@ -1,7 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.GetContacts
 {
   using System;
-  using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
 
@@ -9,7 +8,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
 
   using Newtonsoft.Json;
 
@@ -33,7 +31,7 @@
     {
       try
       {
-        var requestedContactsMessages = await this.Messenger.GetMessagesByAddressAsync(request.ContactRequestAddress, new ChatMessageBundleParser());
+        var requestedContactsMessages = await this.Messenger.GetMessagesByAddressAsync(request.ContactRequestAddress);
         var requestedContacts = requestedContactsMessages.Select(m => JsonConvert.DeserializeObject<Contact>(m.Payload.ToUtf8String())).ToList();
         var localApprovedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
 

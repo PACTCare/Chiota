@@ -10,7 +10,6 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
 
   using Newtonsoft.Json;
 
@@ -80,7 +79,7 @@
 
     private async Task<List<ChatMessage>> LoadMessagesOnAddressAsync(IAsymmetricKeyPair chatKeyPair)
     {
-      var encryptedMessages = await this.Messenger.GetMessagesByAddressAsync(this.CurrentChatAddress, new ChatMessageBundleParser());
+      var encryptedMessages = await this.Messenger.GetMessagesByAddressAsync(this.CurrentChatAddress);
       var decryptedMessages = new List<ChatMessage>();
 
       foreach (var encryptedMessage in encryptedMessages)

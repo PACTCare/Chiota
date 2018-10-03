@@ -8,7 +8,6 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
 
@@ -33,7 +32,7 @@
       try
       {
         var messenger = new Mock<IMessenger>();
-        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>(), It.IsAny<IBundleParser>())).ReturnsAsync(new List<Message>());
+        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(new List<Message>());
 
         var repository = new ContactRepositoryStub(messenger.Object, new SignatureValidatorStub());
         await repository.LoadContactInformationByAddressAsync(new Address());
@@ -57,7 +56,7 @@
         var invalidBundleTwo = CreateBundle(new TryteString("999999999999999"));
 
         var messenger = new Mock<IMessenger>();
-        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>(), It.IsAny<IBundleParser>())).ReturnsAsync(
+        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(
           new List<Message> { new Message(invalidBundleOne.Transactions[0].ToTrytes()), new Message(invalidBundleTwo.Transactions[0].ToTrytes()) });
 
         var repository = new ContactRepositoryStub(messenger.Object, new SignatureValidatorStub(false));
@@ -86,7 +85,7 @@
       var validBundle = CreateBundle(requestAdressTrytes);
 
       var messenger = new Mock<IMessenger>();
-      messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>(), It.IsAny<IBundleParser>())).ReturnsAsync(
+      messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(
         new List<Message>
           {
             new Message(invalidBundle.Transactions[0].ToTrytes()),
