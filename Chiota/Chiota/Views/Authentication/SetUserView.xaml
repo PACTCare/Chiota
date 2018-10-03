@@ -19,12 +19,29 @@
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
-                        <!-- Logo of the iota chat app-->
-                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128" Opacity="{Binding ProfileImageOpacity}">
-                            <abstractions:CircleImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ProfileImageCommand}"/>
-                            </abstractions:CircleImage.GestureRecognizers>
-                        </abstractions:CircleImage>
+                        <Grid HorizontalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="192"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="192"/>
+                            </Grid.ColumnDefinitions>
+
+                            <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Source="{Binding ProfileImageSource}" HorizontalOptions="Center" HeightRequest="192" WidthRequest="192" Opacity="{Binding ProfileImageOpacity}"/>
+                            <Grid Grid.Row="0" Grid.Column="0" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="1" Grid.Column="1" Style="{DynamicResource BaseButton}" CornerRadius="32" Image="camera.png" Command="{Binding ProfileImageCommand}"/>
+                            </Grid>
+                        </Grid>
+
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescSetUser}"/>
                     </StackLayout>
 

@@ -22,7 +22,6 @@
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="48">
-                        <!-- Logo of the iota chat app-->
                         <Grid HorizontalOptions="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="192"/>

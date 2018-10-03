@@ -19,7 +19,6 @@ namespace Chiota.ViewModels.Authentication
         #region Attributes
 
         private string name;
-        private double profileImageOpacity;
         private ImageSource profileImageSource;
         private string imagePath;
 
@@ -37,16 +36,6 @@ namespace Chiota.ViewModels.Authentication
             {
                 name = value;
                 OnPropertyChanged(nameof(Name));
-            }
-        }
-
-        public double ProfileImageOpacity
-        {
-            get => profileImageOpacity;
-            set
-            {
-                profileImageOpacity = value;
-                OnPropertyChanged(nameof(ProfileImageOpacity));
             }
         }
 
@@ -83,7 +72,6 @@ namespace Chiota.ViewModels.Authentication
             // Set the default opacity.
             imagePath = string.Empty;
             ProfileImageSource = ImageSource.FromFile("account.png");
-            ProfileImageOpacity = 0.6;
         }
 
         #endregion
@@ -126,7 +114,6 @@ namespace Chiota.ViewModels.Authentication
                             // Load the image.
                             imagePath = media.Path;
                             ProfileImageSource = ImageSource.FromFile(imagePath);
-                            ProfileImageOpacity = 1;
                         }
                         catch (Exception)
                         {
