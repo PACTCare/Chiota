@@ -104,26 +104,17 @@
 
       var approvedContactBundle = CreateBundle(contactRequestAddress, approvedContactMessage);
 
-      var iotaRepository = new InMemoryIotaRepository();
-      iotaRepository.SentBundles.Add(rejectedContactBundle);
-      iotaRepository.SentBundles.Add(approvedContactBundle);
-      iotaRepository.SentBundles.Add(
-        CreateBundle(
-          contactRequestAddress,
-          TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress, Request = true }))));
+      var requestBundle = CreateBundle(
+        contactRequestAddress,
+        TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress, Request = true, Name = "Requester" })));
 
-      var transactionCache = new InMemoryTransactionCache();
+      var messenger = new InMemoryMessenger();
 
-      var cacheItem = new TransactionCacheItem
-                        {
-                          Address = contactRequestAddress,
-                          TransactionHash = approvedContactBundle.Transactions[0].Hash,
-                          TransactionTrytes = new TransactionTrytes(approvedContactMessage.Value)
-      };
+      messenger.SentMessages.Add(new Message(rejectedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(approvedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(requestBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
 
-      transactionCache.Items.Add(cacheItem);
-
-      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepository, transactionCache));
+      var interactor = new GetContactsInteractor(contactRepository, messenger);
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
@@ -131,9 +122,9 @@
                            ContactRequestAddress = contactRequestAddress
                          });
 
+      Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.AreEqual(1, response.ApprovedContacts.Count);
       Assert.AreEqual(1, response.PendingContactRequests.Count);
-      Assert.AreEqual(3, transactionCache.Items.Count);
     }
 
     private static Bundle CreateBundle(Address contactRequestAddress, TryteString rejectedContactMessage)

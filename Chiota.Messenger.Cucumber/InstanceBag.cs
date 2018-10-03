@@ -34,7 +34,7 @@
 
     public static GetMessagesInteractor GetMessagesInteractor => new GetMessagesInteractor(Messenger, NtruEncryption.Default);
 
-    private static IContactRepository ContactRepository => new EmptyContactRepository(IotaRepository, new SignatureValidator());
+    private static IContactRepository ContactRepository => new EmptyContactRepository(Messenger, new SignatureValidator());
 
     private static IMessenger Messenger => new TangleMessenger(IotaRepository, new InMemoryTransactionCache());
 

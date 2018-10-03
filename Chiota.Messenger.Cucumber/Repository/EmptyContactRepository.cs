@@ -5,15 +5,15 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
-
+  using Chiota.Messenger.Service;
+  
   using Tangle.Net.Cryptography.Signing;
-  using Tangle.Net.Repository;
 
   public class EmptyContactRepository : AbstractTangleContactRepository
   {
     /// <inheritdoc />
-    public EmptyContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
-      : base(iotaRepository, signatureValidator)
+    public EmptyContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
+      : base(messenger, signatureValidator)
     {
     }
 
