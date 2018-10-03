@@ -41,7 +41,7 @@
               PublicKeyAddress = response.PublicKeyAddress,
               RequestAddress = response.RequestAddress,
               Name = username,
-              ChatKeyPair = NtruEncryption.Default.CreateAsymmetricKeyPair(seed.Value, seed.Value)
+              ChatKeyPair = null
             });
       }
 
@@ -73,7 +73,7 @@
               NtruKeyPair = receiver.NtruKeyPair,
               PublicKeyAddress = receiver.PublicKeyAddress,
               RequestAddress = receiver.RequestAddress,
-              Seed = receiver.Seed,
+              Seed = receiver.Seed
             });
       }
 
@@ -122,11 +122,13 @@
               PublicKeyAddress = sender.PublicKeyAddress,
               RequestAddress = sender.RequestAddress,
               Seed = sender.Seed,
-              ChatAddress = new Address(contact.ChatAddress)
-            });
+              ChatAddress = new Address(contact.ChatAddress),
+              ChatKeyAddress = new Address(contact.ChatKeyAddress)
+          });
 
         sender.Contacts.First(c => c.Name == receiver.Name).IsApproved = true;
         sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress = new Address(contact.ChatAddress);
+        sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyAddress = new Address(contact.ChatKeyAddress);
       }
 
       return acceptResponse;
@@ -137,12 +139,17 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
+      if (sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair == null)
+      {
+        this.GetMessages(senderName, receiverName);
+      }
+
       var response = InstanceBag.SendMessageInteractor.ExecuteAsync(
         new SendMessageRequest
           {
             Message = message,
             UserPublicKeyAddress = sender.PublicKeyAddress,
-            KeyPair = sender.ChatKeyPair,
+            KeyPair = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair,
             ChatAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress
           }).Result;
 
@@ -154,9 +161,26 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
-      return InstanceBag.GetMessagesInteractor.ExecuteAsync(
-          new GetMessagesRequest { ChatAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatAddress, ChatKeyPair = sender.ChatKeyPair })
-        .Result;
+      var response = InstanceBag.GetMessagesInteractor.ExecuteAsync(
+        new GetMessagesRequest
+          {
+            ChatAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatAddress,
+            ChatKeyPair = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair,
+            ChatKeyAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyAddress,
+            UserKeyPair = receiver.NtruKeyPair
+          }).Result;
+
+      // ReSharper disable once InvertIf
+      if (response.Code == ResponseCode.Success)
+      {
+        receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair = response.ChatKeyPair;
+        receiver.Contacts.First(c => c.Name == sender.Name).ChatAddress = response.CurrentChatAddress;
+
+        sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair = response.ChatKeyPair;
+        sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress = response.CurrentChatAddress;
+      }
+
+      return response;
     }
   }
 }

@@ -7,5 +7,7 @@
     public Address ChatAddress { get; set; }
 
     public bool IsApproved { get; set; }
+
+    public Address ChatKeyAddress { get; set; }
   }
 }

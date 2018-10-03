@@ -1,9 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.GetMessages
 {
-  using System;
   using System.Collections.Generic;
-  using System.Globalization;
-  using System.Linq;
   using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading.Tasks;
@@ -41,9 +38,19 @@
       try
       {
         this.CurrentChatAddress = request.ChatAddress;
+
+        if (request.ChatKeyPair == null)
+        {
+          var pasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
+          request.ChatKeyPair = this.Encryption.CreateAsymmetricKeyPair(pasSalt.Substring(0, 50), pasSalt.Substring(50, 50));
+        }
+
         var messages = await this.LoadMessagesOnAddressAsync(request.ChatKeyPair);
 
-        return new GetMessagesResponse { Code = ResponseCode.Success, Messages = messages, CurrentChatAddress = this.CurrentChatAddress };
+        return new GetMessagesResponse
+                 {
+                   Code = ResponseCode.Success, Messages = messages, CurrentChatAddress = this.CurrentChatAddress, ChatKeyPair = request.ChatKeyPair
+                 };
       }
       catch (MessengerException exception)
       {
@@ -68,6 +75,34 @@
       str = str.Truncate(70);
 
       return new Address(str + contactAddress.Value.Substring(str.Length));
+    }
+
+    private async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
+    {
+      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new MessageBundleParser());
+      var chatPasSalt = new List<string>();
+      foreach (var message in messages)
+      {
+        try
+        {
+          var pasSalt = Encoding.UTF8.GetString(NtruEncryption.Key.Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
+          if (pasSalt != string.Empty)
+          {
+            chatPasSalt.Add(pasSalt);
+          }
+        }
+        catch
+        {
+          // ignored
+        }
+      }
+
+      if (chatPasSalt.Count > 0)
+      {
+        return chatPasSalt[0];
+      }
+
+      throw new MessengerException(ResponseCode.ChatPasswordAndSaltCannotBeGenerated);
     }
 
     private async Task<List<ChatMessage>> LoadMessagesOnAddressAsync(IAsymmetricKeyPair chatKeyPair)
