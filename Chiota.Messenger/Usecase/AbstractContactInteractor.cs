@@ -3,7 +3,9 @@
   using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
 
@@ -11,13 +13,12 @@
 
   using Tangle.Net.Entity;
 
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <inheritdoc />
   public abstract class AbstractContactInteractor<TIn, T> : IUsecaseInteractor<TIn, T> where T : BaseResponse
   {
-    public AbstractContactInteractor(IContactRepository repository, IMessenger messenger)
+    protected AbstractContactInteractor(IContactRepository repository, IMessenger messenger)
     {
       this.Repository = repository;
       this.Messenger = messenger;
@@ -32,7 +33,7 @@
 
     protected async Task ExchangeKey(Contact requesterDetails, IAsymmetricKey ntruKey, string chatPasSalt)
     {
-      var encryptedChatPasSalt = new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).Encrypt(ntruKey, Encoding.UTF8.GetBytes(chatPasSalt));
+      var encryptedChatPasSalt = NtruEncryption.Key.Encrypt(ntruKey, Encoding.UTF8.GetBytes(chatPasSalt));
 
       await this.Messenger.SendMessageAsync(
         new Message(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + Constants.End), new Address(requesterDetails.ChatKeyAddress)));

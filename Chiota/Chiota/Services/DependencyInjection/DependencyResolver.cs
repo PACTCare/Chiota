@@ -6,6 +6,7 @@
   using Autofac;
   using Autofac.Core;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
@@ -14,12 +15,15 @@
   using Chiota.Messenger.Usecase.CreateUser;
   using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Messenger.Usecase.GetContacts;
+  using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
 
   using Tangle.Net.Cryptography;
+  using Tangle.Net.Cryptography.Curl;
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Repository;
 
   public static class DependencyResolver
@@ -47,20 +51,31 @@
       builder.RegisterType<UserService>().PropertiesAutowired();
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
       builder.RegisterType<AddressGenerator>().As<IAddressGenerator>();
+      builder.RegisterInstance(new SignatureFragmentGenerator(new Kerl())).As<ISignatureFragmentGenerator>();
+      builder.RegisterType<SignatureValidator>().As<ISignatureValidator>();
 
       builder.RegisterType<TangleMessenger>().As<IMessenger>().PropertiesAutowired();
 
       builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
+
       builder.RegisterType<GetContactsInteractor>().As<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>()
         .PropertiesAutowired();
-      builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>().PropertiesAutowired();
+
+      builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>()
+        .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
+
       builder.RegisterType<DeclineContactInteractor>().As<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>().PropertiesAutowired();
 
-      builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().PropertiesAutowired();
+      builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>()
+        .WithParameter("encryption", NtruEncryption.Default).PropertiesAutowired();
 
-      builder.RegisterType<CreateUserInteractor>().As<IUsecaseInteractor<CreateUserRequest, CreateUserResponse>>().PropertiesAutowired();
+      builder.RegisterType<CreateUserInteractor>().As<IUsecaseInteractor<CreateUserRequest, CreateUserResponse>>()
+        .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
 
       builder.RegisterType<CheckUserInteractor>().As<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().PropertiesAutowired();
+
+      builder.RegisterType<GetMessagesInteractor>().As<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>()
+        .WithParameter("encryption", NtruEncryption.Default).PropertiesAutowired();
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
       Container = builder.Build();

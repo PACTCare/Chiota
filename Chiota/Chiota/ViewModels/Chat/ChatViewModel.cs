@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Chiota.Messenger.Encryption;
 using Chiota.Messenger.Usecase;
+using Chiota.Messenger.Usecase.SendMessage;
 using Chiota.Models;
 using Chiota.Services.DependencyInjection;
+using Chiota.Services.Iota;
+using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
+using Tangle.Net.Entity;
+using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Chat
@@ -15,6 +21,7 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
+        private IAsymmetricKeyPair _chatKeyPair;
         private Chiota.Messenger.Entity.Contact _contact;
         private string _message;
         private List<MessageBinding> _messageList;
@@ -108,6 +115,8 @@ namespace Chiota.ViewModels.Chat
             var contact = (Chiota.Messenger.Entity.Contact) data;
 
             Contact = contact;
+
+            InitChatKeyPair();
         }
 
         #endregion
@@ -127,6 +136,23 @@ namespace Chiota.ViewModels.Chat
 
         #region Methods
 
+        #region InitChatKeyPair
+
+        /// <summary>
+        /// Initialize the chat key pair for encryption.
+        /// </summary>
+        private async void InitChatKeyPair()
+        {
+            var keyPair = NtruEncryption.Default;
+            var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, Contact.ChatKeyAddress);
+
+            var seed = pasSalt.Substring(0, 50);
+            var saltAddress = pasSalt.Substring(50, 50);
+            _chatKeyPair = keyPair.CreateAsymmetricKeyPair(seed, saltAddress);
+        }
+
+        #endregion
+
         #region GetMessages
 
         private void GetMessages()
@@ -142,48 +168,22 @@ namespace Chiota.ViewModels.Chat
             if (string.IsNullOrEmpty(message))
                 return false;
 
-            return true;
-            /*var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
+            var tmp = message;
+            Message = string.Empty;
+
+            var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
             var response = await interactor.ExecuteAsync(new SendMessageRequest
             {
-                ChatAddress = Contact.ChatAddress,
-                KeyPair = NtruEncryption.Default,
-            });*/
-
-            /*if (this.OutGoingText?.Length > 0)
-      {
-        await this.DisplayLoadingSpinnerAsync("Sending Message");
-
-        this.loadNewMessages = false;
-
-        var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
-        var response = await interactor.ExecuteAsync(
-          new SendMessageRequest
-            {
-              ChatAddress = this.currentChatAddress,
-              KeyPair = this.ntruChatKeyPair,
-              Message = this.OutGoingText,
-              UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                ChatAddress = new Address(Contact.ChatAddress),
+                KeyPair = _chatKeyPair,
+                Message = tmp,
+                UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
-        this.loadNewMessages = true;
-        await this.AddNewMessagesAsync(this.Messages);
-        this.OutGoingText = null;
+            if (response.Code == ResponseCode.Success)
+                return true;
 
-        await this.PopPopupAsync();
-
-        await SendMessagePresenter.Present(this, response);
-}*/
-
-
-
-            /*var tmp = new List<MessageBinding>(MessageList);
-            tmp.Add(new MessageBinding(message));
-
-            MessageList = tmp;
-
-            //Clear user input.
-            Message = "";*/
+            return false;
         }
 
         #endregion

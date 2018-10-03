@@ -1,4 +1,4 @@
-﻿namespace Chiota.Messenger.Service
+﻿namespace Chiota.Messenger.Encryption
 {
   using System;
   using System.Collections.Generic;
@@ -8,15 +8,15 @@
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  public class NtruKeyExchange
+  public class NtruEncryption : IEncryption
   {
     private readonly int maxEncryptionSize;
 
     private readonly int maxSize;
 
-    private readonly NTRUParameters ntruParameters; 
+    private readonly NTRUParameters ntruParameters;
 
-    public NtruKeyExchange(NTRUParamSets.NTRUParamNames ntruParams)
+    public NtruEncryption(NTRUParamSets.NTRUParamNames ntruParams)
     {
       switch (ntruParams)
       {
@@ -35,6 +35,10 @@
       }
     }
 
+    public static NtruEncryption Default => new NtruEncryption(NTRUParamSets.NTRUParamNames.E1499EP1);
+
+    public static NtruEncryption Key => new NtruEncryption(NTRUParamSets.NTRUParamNames.A2011743);
+
     /// <summary>
     /// Creates a NTRU Keypair based on your seed and one address
     /// </summary>
@@ -51,6 +55,37 @@
       var keys = keyGen.GenerateKeyPair(passphrase, salt);
 
       return keys;
+    }
+
+    /// <summary>
+    /// Decrypts a byte array
+    /// </summary>
+    /// <param name="keyPair">The correct key pair</param>
+    /// <param name="encryptedBytes">The encrypted byte array</param>
+    /// <returns>Decrypted string</returns>
+    public byte[] Decrypt(IAsymmetricKeyPair keyPair, byte[] encryptedBytes)
+    {
+      var splitArray = encryptedBytes.Select((x, i) => new { Key = i / this.maxEncryptionSize, Value = x })
+        .GroupBy(x => x.Key, x => x.Value, (k, g) => g.ToArray()).ToArray();
+      var bytesList = new List<byte[]>();
+
+      foreach (var bytes in splitArray)
+      {
+        using (var cipher = new NTRUEncrypt(this.ntruParameters))
+        {
+          try
+          {
+            cipher.Initialize(keyPair);
+            bytesList.Add(cipher.Decrypt(bytes));
+          }
+          catch
+          {
+            // ignored
+          }
+        }
+      }
+
+      return bytesList.SelectMany(a => a).ToArray();
     }
 
     /// <summary>
@@ -74,38 +109,6 @@
       return bytes.SelectMany(a => a).ToArray();
     }
 
-    /// <summary>
-    /// Decrypts a byte array
-    /// </summary>
-    /// <param name="keyPair">The correct key pair</param>
-    /// <param name="encryptedBytes">The encrypted byte array</param>
-    /// <returns>Decrypted string</returns>
-    public byte[] Decrypt(IAsymmetricKeyPair keyPair, byte[] encryptedBytes)
-    {
-      var splitArray = encryptedBytes.Select((x, i) => new { Key = i / this.maxEncryptionSize, Value = x })
-        .GroupBy(x => x.Key, x => x.Value, (k, g) => g.ToArray())
-        .ToArray();
-      var bytesList = new List<byte[]>();
-
-      foreach (var bytes in splitArray)
-      {
-        using (var cipher = new NTRUEncrypt(this.ntruParameters))
-        {
-          try
-          {
-            cipher.Initialize(keyPair);
-            bytesList.Add(cipher.Decrypt(bytes));
-          }
-          catch
-          {
-            // ignored
-          }
-        }
-      }
-
-      return bytesList.SelectMany(a => a).ToArray();
-    }
-
     private static IEnumerable<byte[]> ArraySplit(byte[] bytes, int bufferLength)
     {
       byte[] result;
@@ -118,7 +121,7 @@
         yield return result;
       }
 
-      var bufferLeft = bytes.Length - (i * bufferLength);
+      var bufferLeft = bytes.Length - i * bufferLength;
       if (bufferLeft > 0)
       {
         result = new byte[bufferLeft];

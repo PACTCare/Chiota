@@ -116,9 +116,6 @@ namespace Chiota.ViewModels.Contact
                                 case ResponseCode.MessengerException:
                                     await DisplayAlertAsync("Error", "It seems like the connection to the tangle failed. Try again later or change your node.");
                                     break;
-                                case ResponseCode.AmbiguousContactInformation:
-                                    await DisplayAlertAsync("Error", "It seems like the provided address is not a valid contact address.");
-                                    break;
                                 default:
                                     await DisplayAlertAsync("Error", "Something seems to be broken. Please try again later.");
                                     break;

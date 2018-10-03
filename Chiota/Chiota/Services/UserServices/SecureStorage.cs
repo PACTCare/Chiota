@@ -4,20 +4,17 @@
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
-  using Chiota.Messenger.Service;
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Models;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
 
   using Newtonsoft.Json;
 
   using Plugin.SecureStorage;
 
   using Tangle.Net.Entity;
-
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
   [ExcludeFromCodeCoverage]
   public static class SecureStorage
@@ -38,10 +35,7 @@
       var encryptedUser = CrossSecureStorage.Current.GetValue(CurrentUser);
 
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
-      decryptedUser.NtruKeyPair =
-        new NtruKeyExchange(NTRUParamSets.NTRUParamNames.A2011743).CreateAsymmetricKeyPair(
-          decryptedUser.Seed.ToLower(),
-          decryptedUser.PublicKeyAddress);
+      decryptedUser.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
 
       var checkUserResponse = await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
                                 new CheckUserRequest

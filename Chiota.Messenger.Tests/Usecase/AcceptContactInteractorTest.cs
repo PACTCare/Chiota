@@ -3,6 +3,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
+  using Chiota.Messenger.Tests.Encryption;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
@@ -21,7 +22,7 @@
     [TestMethod]
     public async Task TestChatPasCannotBeCreatedShouldReturnErrorCode()
     {
-      var interactor = new AcceptContactInteractor(new InMemoryContactRepository(), new InMemoryMessenger());
+      var interactor = new AcceptContactInteractor(new InMemoryContactRepository(), new InMemoryMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(new AcceptContactRequest
                                                      {
                                                        ChatKeyAddress = new Address(Hash.Empty.Value),
@@ -45,7 +46,7 @@
 
       inMemoryMessenger.SentMessages.Add(new Message(new TryteString(""), new Address(Hash.Empty.Value)));
 
-      var interactor = new AcceptContactInteractor(new InMemoryContactRepository(), inMemoryMessenger);
+      var interactor = new AcceptContactInteractor(new InMemoryContactRepository(), inMemoryMessenger, new EncryptionStub());
       var response = await interactor.ExecuteAsync(new AcceptContactRequest
                                                      {
                                                        ChatKeyAddress = new Address(Hash.Empty.Value),
