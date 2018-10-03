@@ -30,7 +30,7 @@ namespace Chiota.Models
             DateTime = dateTime;
         }
 
-        public MessageBinding(string value, bool isOwner, bool isVisible) : this(value, isOwner, isVisible, DateTime.Now)
+        public MessageBinding(string value, bool isOwner = true, bool isVisible = false) : this(value, isOwner, isVisible, DateTime.Now)
         {
         }
 

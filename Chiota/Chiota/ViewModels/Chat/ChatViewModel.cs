@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Chiota.Messenger.Usecase;
 using Chiota.Models;
+using Chiota.Services.DependencyInjection;
 using Chiota.ViewModels.Classes;
 using Xamarin.Forms;
 
@@ -12,7 +15,7 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private string _contactName;
+        private Chiota.Messenger.Entity.Contact _contact;
         private string _message;
         private List<MessageBinding> _messageList;
         private ImageSource _keyboardImageSource;
@@ -24,13 +27,13 @@ namespace Chiota.ViewModels.Chat
 
         #region Properties
 
-        public string ContactName
+        public Chiota.Messenger.Entity.Contact Contact
         {
-            get => _contactName;
+            get => _contact;
             set
             {
-                _contactName = value;
-                OnPropertyChanged(nameof(ContactName));
+                _contact = value;
+                OnPropertyChanged(nameof(Contact));
             }
         }
 
@@ -104,7 +107,7 @@ namespace Chiota.ViewModels.Chat
             if (!(data is Chiota.Messenger.Entity.Contact)) return;
             var contact = (Chiota.Messenger.Entity.Contact) data;
 
-            ContactName = contact.Name;
+            Contact = contact;
         }
 
         #endregion
@@ -134,15 +137,53 @@ namespace Chiota.ViewModels.Chat
 
         #region SendMessage
 
-        private void SendMessage(string message)
+        private async Task<bool> SendMessageAsync(string message)
         {
-            var tmp = new List<MessageBinding>(MessageList);
-            tmp.Add(new MessageBinding(message, false, true));
+            if (string.IsNullOrEmpty(message))
+                return false;
+
+            return true;
+            /*var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
+            var response = await interactor.ExecuteAsync(new SendMessageRequest
+            {
+                ChatAddress = Contact.ChatAddress,
+                KeyPair = NtruEncryption.Default,
+            });*/
+
+            /*if (this.OutGoingText?.Length > 0)
+      {
+        await this.DisplayLoadingSpinnerAsync("Sending Message");
+
+        this.loadNewMessages = false;
+
+        var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
+        var response = await interactor.ExecuteAsync(
+          new SendMessageRequest
+            {
+              ChatAddress = this.currentChatAddress,
+              KeyPair = this.ntruChatKeyPair,
+              Message = this.OutGoingText,
+              UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+            });
+
+        this.loadNewMessages = true;
+        await this.AddNewMessagesAsync(this.Messages);
+        this.OutGoingText = null;
+
+        await this.PopPopupAsync();
+
+        await SendMessagePresenter.Present(this, response);
+}*/
+
+
+
+            /*var tmp = new List<MessageBinding>(MessageList);
+            tmp.Add(new MessageBinding(message));
 
             MessageList = tmp;
 
             //Clear user input.
-            Message = "";
+            Message = "";*/
         }
 
         #endregion
@@ -193,7 +234,7 @@ namespace Chiota.ViewModels.Chat
                         return;
 
                     //Send new message;
-                    SendMessage(Message);
+                    SendMessageAsync(Message);
                 });
             }
         }
