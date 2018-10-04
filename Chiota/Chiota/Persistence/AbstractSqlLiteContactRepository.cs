@@ -6,12 +6,12 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
+  using Chiota.Messenger.Service;
   using Chiota.Models.SqLite;
 
   using SQLite;
 
   using Tangle.Net.Cryptography.Signing;
-  using Tangle.Net.Repository;
 
   /// <summary>
   /// The abstract sql lite db.
@@ -19,8 +19,8 @@
   public abstract class AbstractSqlLiteContactRepository : AbstractTangleContactRepository
   {
     /// <inheritdoc />
-    protected AbstractSqlLiteContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
-      : base(iotaRepository, signatureValidator)
+    protected AbstractSqlLiteContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
+      : base(messenger, signatureValidator)
     {
       // There needs to be a better way for this
       Connection?.CreateTableAsync<SqLiteContacts>();

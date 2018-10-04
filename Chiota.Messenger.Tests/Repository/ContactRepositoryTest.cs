@@ -1,10 +1,13 @@
 ﻿namespace Chiota.Messenger.Tests.Repository
 {
   using System.Collections.Generic;
+  using System.Linq;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
+  using Chiota.Messenger.Service;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
 
@@ -13,8 +16,6 @@
   using Moq;
 
   using Tangle.Net.Entity;
-  using Tangle.Net.Repository;
-  using Tangle.Net.Repository.DataTransfer;
 
   using Timestamp = Tangle.Net.Utils.Timestamp;
 
@@ -30,11 +31,10 @@
       var exceptionThrown = false;
       try
       {
-        var iotaRepository = new Mock<IIotaRepository>();
-        iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>()))
-          .ReturnsAsync(new TransactionHashList { Hashes = new List<Hash>() });
+        var messenger = new Mock<IMessenger>();
+        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(new List<Message>());
 
-        var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub());
+        var repository = new ContactRepositoryStub(messenger.Object, new SignatureValidatorStub());
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -55,14 +55,11 @@
         var invalidBundleOne = CreateBundle(new TryteString("999999999999999"));
         var invalidBundleTwo = CreateBundle(new TryteString("999999999999999"));
 
-        var iotaRepository = new Mock<IIotaRepository>();
-        iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>())).ReturnsAsync(
-          new TransactionHashList { Hashes = new List<Hash> { invalidBundleOne.Hash, invalidBundleTwo.Hash } });
+        var messenger = new Mock<IMessenger>();
+        messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(
+          new List<Message> { new Message(invalidBundleOne.Transactions[0].ToTrytes()), new Message(invalidBundleTwo.Transactions[0].ToTrytes()) });
 
-        iotaRepository.Setup(r => r.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(
-          new List<TransactionTrytes> { invalidBundleOne.Transactions[0].ToTrytes(), invalidBundleTwo.Transactions[0].ToTrytes() });
-
-        var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub(false));
+        var repository = new ContactRepositoryStub(messenger.Object, new SignatureValidatorStub(false));
         await repository.LoadContactInformationByAddressAsync(new Address());
       }
       catch (MessengerException exception)
@@ -87,15 +84,15 @@
       var invalidBundle = CreateBundle(new TryteString("999999999999999"));
       var validBundle = CreateBundle(requestAdressTrytes);
 
-      var iotaRepository = new Mock<IIotaRepository>();
-      iotaRepository.Setup(r => r.FindTransactionsByAddressesAsync(It.IsAny<IEnumerable<Address>>())).ReturnsAsync(
-        new TransactionHashList { Hashes = new List<Hash> { invalidBundle.Hash, validBundle.Hash } });
+      var messenger = new Mock<IMessenger>();
+      messenger.Setup(r => r.GetMessagesByAddressAsync(It.IsAny<Address>())).ReturnsAsync(
+        new List<Message>
+          {
+            new Message(invalidBundle.Transactions[0].ToTrytes()),
+            new Message(validBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)))
+          });
 
-      var transactionTrytes = invalidBundle.ToTrytes();
-      transactionTrytes.AddRange(validBundle.ToTrytes());
-      iotaRepository.Setup(r => r.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(transactionTrytes);
-
-      var repository = new ContactRepositoryStub(iotaRepository.Object, new SignatureValidatorStub());
+      var repository = new ContactRepositoryStub(messenger.Object, new SignatureValidatorStub());
       var contact = await repository.LoadContactInformationByAddressAsync(new Address());
 
       Assert.AreEqual(contactAddress.Value, contact.ContactAddress.Value);

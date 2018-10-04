@@ -1,9 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.GetMessages
 {
-  using System;
   using System.Collections.Generic;
-  using System.Globalization;
-  using System.Linq;
   using System.Text;
   using System.Text.RegularExpressions;
   using System.Threading.Tasks;
@@ -13,18 +10,20 @@
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
+
+  using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  public class GetMessagesInteractor : IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>
+  public class GetMessagesInteractor : AbstractChatInteractor<GetMessagesRequest, GetMessagesResponse>
   {
-    public GetMessagesInteractor(IMessenger messenger, IEncryption encryption)
+    public GetMessagesInteractor(IMessenger messenger, IEncryption messageEncryption, IEncryption keyEncryption)
+      : base(messenger, keyEncryption)
     {
       this.Messenger = messenger;
-      this.Encryption = encryption;
+      this.Encryption = messageEncryption;
     }
 
     private IEncryption Encryption { get; }
@@ -34,13 +33,24 @@
     private Address CurrentChatAddress { get; set; }
 
     /// <inheritdoc />
-    public async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
+    public override async Task<GetMessagesResponse> ExecuteAsync(GetMessagesRequest request)
     {
       try
       {
         this.CurrentChatAddress = request.ChatAddress;
+
+        if (request.ChatKeyPair == null)
+        {
+          var pasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
+          request.ChatKeyPair = this.Encryption.CreateAsymmetricKeyPair(pasSalt.Substring(0, 50), pasSalt.Substring(50, 50));
+        }
+
         var messages = await this.LoadMessagesOnAddressAsync(request.ChatKeyPair);
-        return new GetMessagesResponse { Code = ResponseCode.Success, Messages = messages, CurrentChatAddress = this.CurrentChatAddress };
+
+        return new GetMessagesResponse
+                 {
+                   Code = ResponseCode.Success, Messages = messages, CurrentChatAddress = this.CurrentChatAddress, ChatKeyPair = request.ChatKeyPair
+                 };
       }
       catch (MessengerException exception)
       {
@@ -48,19 +58,7 @@
       }
     }
 
-    /// <summary>
-    /// Generates a new chat address base on previous encrypted messages
-    /// </summary>
-    /// <param name="contactAddress">
-    /// Current chat address
-    /// </param>
-    /// <param name="messages">
-    /// Encrypted Messages 
-    /// </param>
-    /// <returns>
-    /// New chat address
-    /// </returns>
-    private static Address GenerateNextAddress(Address contactAddress, List<ChatMessage> messages)
+    private static Address GenerateNextAddress(Address contactAddress, List<Message> messages)
     {
       if (messages.Count <= 3)
       {
@@ -70,72 +68,32 @@
       var rgx = new Regex("[^A-Z]");
       var increment = contactAddress.GetChunk(0, 15).Increment();
 
-      var str = increment + rgx.Replace(messages[messages.Count - 1].Message.ToUpper(), string.Empty)
-                          + rgx.Replace(messages[messages.Count - 3].Message.ToUpper(), string.Empty) 
-                          + rgx.Replace(messages[messages.Count - 2].Message.ToUpper(), string.Empty);
+      var str = increment + rgx.Replace(messages[messages.Count - 1].Payload.Value.ToUpper(), string.Empty)
+                          + rgx.Replace(messages[messages.Count - 3].Payload.Value.ToUpper(), string.Empty) 
+                          + rgx.Replace(messages[messages.Count - 2].Payload.Value.ToUpper(), string.Empty);
+
       str = str.Truncate(70);
 
       return new Address(str + contactAddress.Value.Substring(str.Length));
     }
 
-    private static bool HasMessageTwoParts(IReadOnlyList<ChatMessage> sortedEncryptedMessages, int i)
-    {
-      return sortedEncryptedMessages[i].IsFirstPart != sortedEncryptedMessages[i + 1].IsFirstPart;
-    }
-
-    private static List<ChatMessage> ReadChatMessages(IEnumerable<Message> messages)
-    {
-      var parsedMessages = new List<ChatMessage>();
-      foreach (var message in messages)
-      {
-        var messagePayload = message.Payload.Value;
-        var firstBreakIndex = messagePayload.IndexOf(Constants.FirstBreak.Value, StringComparison.Ordinal);
-        var secondBreakIndex = messagePayload.IndexOf(Constants.SecondBreak.Value, StringComparison.Ordinal);
-
-        if (firstBreakIndex == -1 || secondBreakIndex == -1)
-        {
-          continue;
-        }
-
-        var dateTrytes = new TryteString(
-          messagePayload.Substring(
-            secondBreakIndex + Constants.SecondBreak.Value.Length,
-            messagePayload.Length - secondBreakIndex - Constants.SecondBreak.Value.Length - 1));
-
-        parsedMessages.Add(
-          new ChatMessage
-            {
-              Message = messagePayload.Substring(0, firstBreakIndex),
-              Date = DateTime.Parse(dateTrytes.ToUtf8String(), CultureInfo.InvariantCulture),
-              Signature = messagePayload.Substring(firstBreakIndex + Constants.FirstBreak.Value.Length, 30),
-              IsFirstPart = messagePayload[messagePayload.Length - 1] == 'A'
-            });
-      }
-
-      return parsedMessages.OrderBy(o => o.Date).ToList();
-    }
-
     private async Task<List<ChatMessage>> LoadMessagesOnAddressAsync(IAsymmetricKeyPair chatKeyPair)
     {
-      var rawMessages = await this.Messenger.GetMessagesByAddressAsync(this.CurrentChatAddress, new MessageBundleParser());
-      var parsedMessages = ReadChatMessages(rawMessages);
-
+      var encryptedMessages = await this.Messenger.GetMessagesByAddressAsync(this.CurrentChatAddress);
       var decryptedMessages = new List<ChatMessage>();
-      for (var i = 0; i < parsedMessages.Count - 1; i = i + 2)
+
+      foreach (var encryptedMessage in encryptedMessages)
       {
-        if (HasMessageTwoParts(parsedMessages, i))
+        try
         {
-          var encryptedMessage = parsedMessages[i].IsFirstPart
-                                   ? new TryteString(parsedMessages[i].Message + parsedMessages[i + 1].Message)
-                                   : new TryteString(parsedMessages[i + 1].Message + parsedMessages[i].Message);
+          var decryptedMessage = JsonConvert.DeserializeObject<ChatMessage>(
+            Encoding.UTF8.GetString(this.Encryption.Decrypt(chatKeyPair, encryptedMessage.Payload.ToBytes())));
 
-          var decryptedMessage = Encoding.UTF8.GetString(this.Encryption.Decrypt(chatKeyPair, encryptedMessage.DecodeBytesFromTryteString()));
-
-          decryptedMessages.Add(new ChatMessage { Date = parsedMessages[i].Date, Message = decryptedMessage, Signature = parsedMessages[i].Signature });
+          decryptedMessages.Add(decryptedMessage);
         }
-        else
+        catch
         {
-          i--;
+          // ignore messages that are not deserializable
         }
       }
 
@@ -144,8 +102,9 @@
         return decryptedMessages;
       }
 
-      this.CurrentChatAddress = GenerateNextAddress(this.CurrentChatAddress, decryptedMessages);
+      this.CurrentChatAddress = GenerateNextAddress(this.CurrentChatAddress, encryptedMessages);
       decryptedMessages.AddRange(await this.LoadMessagesOnAddressAsync(chatKeyPair));
+
       return decryptedMessages;
     }
   }

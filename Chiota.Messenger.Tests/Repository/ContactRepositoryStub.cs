@@ -6,14 +6,14 @@
 
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
+  using Chiota.Messenger.Service;
 
   using Tangle.Net.Cryptography.Signing;
-  using Tangle.Net.Repository;
 
   internal class ContactRepositoryStub : AbstractTangleContactRepository
   {
-    public ContactRepositoryStub(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
-      : base(iotaRepository, signatureValidator)
+    public ContactRepositoryStub(IMessenger messenger, ISignatureValidator signatureValidator)
+      : base(messenger, signatureValidator)
     {
     }
 

@@ -8,23 +8,23 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Extensions;
+  using Chiota.Messenger.Service;
   using Chiota.Messenger.Usecase;
 
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
-  using Tangle.Net.Repository;
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Encrypt.NTRU;
 
   public abstract class AbstractTangleContactRepository : IContactRepository
   {
-    public AbstractTangleContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
+    public AbstractTangleContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
     {
-      this.IotaRepository = iotaRepository;
+      this.Messenger = messenger;
       this.SignatureValidator = signatureValidator;
     }
 
-    private IIotaRepository IotaRepository { get; }
+    private IMessenger Messenger { get; }
 
     private ISignatureValidator SignatureValidator { get; }
 
@@ -34,13 +34,7 @@
     /// <inheritdoc />
     public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
     {
-      var transactionHashesOnAddress = await this.IotaRepository.FindTransactionsByAddressesAsync(new List<Address> { address });
-      if (transactionHashesOnAddress.Hashes.Count == 0)
-      {
-        throw new MessengerException(ResponseCode.NoContactInformationPresent);
-      }
-
-      var latestContactInformation = await this.LoadRawContactInformationFromTangle(transactionHashesOnAddress.Hashes, address);
+      var latestContactInformation = await this.LoadRawContactInformationFromTangle(address);
       if (latestContactInformation == null)
       {
         throw new MessengerException(ResponseCode.NoContactInformationPresent);
@@ -66,25 +60,21 @@
                };
     }
 
-    private async Task<TryteString> LoadRawContactInformationFromTangle(List<Hash> transactionHashes, Address address)
+    private async Task<TryteString> LoadRawContactInformationFromTangle(Address address)
     {
-      foreach (var bundle in await this.LoadTransactionBundlesAsync(transactionHashes))
+      foreach (var message in await this.Messenger.GetMessagesByAddressAsync(address))
       {
         try
         {
-          var bundleTrytes = bundle.Transactions.OrderBy(t => t.CurrentIndex).Aggregate(
-            new TryteString(),
-            (current, tryteString) => current.Concat(tryteString.Fragment));
-
-          if (!bundleTrytes.Value.Contains(Constants.End.Value) || !bundleTrytes.Value.Contains(Constants.LineBreak.Value))
+          if (!message.Payload.Value.Contains(Constants.End.Value) || !message.Payload.Value.Contains(Constants.LineBreak.Value))
           {
             continue;
           }
 
-          var contactPayloadEnd = bundleTrytes.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal);
-          if (await this.ValidateSignatureAsync(address, bundleTrytes, contactPayloadEnd))
+          var contactPayloadEnd = message.Payload.Value.IndexOf(Constants.End.Value, StringComparison.Ordinal);
+          if (await this.ValidateSignatureAsync(address, message.Payload, contactPayloadEnd))
           {
-            return new TryteString(bundleTrytes.Value.Substring(0, contactPayloadEnd));
+            return new TryteString(message.Payload.Value.Substring(0, contactPayloadEnd));
           }
         }
         catch
@@ -94,29 +84,6 @@
       }
 
       return null;
-    }
-
-    private async Task<List<Bundle>> LoadTransactionBundlesAsync(List<Hash> transactionHashes)
-    {
-      var transactions = (await this.IotaRepository.GetTrytesAsync(transactionHashes)).Select(t => Transaction.FromTrytes(t)).ToList();
-      var bundles = new List<Bundle>();
-
-      foreach (var transaction in transactions)
-      {
-        var bundle = bundles.FirstOrDefault(b => b.Hash.Value == transaction.BundleHash.Value);
-        if (bundle != null)
-        {
-          bundle.Transactions.Add(transaction);
-        }
-        else
-        {
-          bundle = new Bundle();
-          bundle.Transactions.Add(transaction);
-          bundles.Add(bundle);
-        }
-      }
-
-      return bundles;
     }
 
     private async Task<bool> ValidateSignatureAsync(Address address, TryteString bundleTrytes, int contactPayloadEnd)

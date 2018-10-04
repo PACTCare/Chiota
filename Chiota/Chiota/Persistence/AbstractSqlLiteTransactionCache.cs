@@ -47,7 +47,7 @@
                   {
                     Address = new Address(item.ChatAddress),
                     TransactionHash = new Hash(item.TransactionHash),
-                    TransactionTrytes = new TryteString(item.MessageTryteString)
+                    TransactionTrytes = new TransactionTrytes(item.MessageTryteString)
                   }).ToList();
     }
 

@@ -176,9 +176,21 @@
     }
 
     /// <inheritdoc />
-    public Task<List<TransactionTrytes>> GetTrytesAsync(List<Hash> hashes)
+    public async Task<List<TransactionTrytes>> GetTrytesAsync(List<Hash> hashes)
     {
-      return null;
+      var transactions = new List<Transaction>();
+      this.SentBundles.ForEach(b => transactions.AddRange(b.Transactions));
+
+      var result = new List<TransactionTrytes>();
+      foreach (var transaction in transactions)
+      {
+        if (hashes.Any(h => h.Value == transaction.Hash.Value))
+        {
+          result.Add(transaction.ToTrytes());
+        }
+      }
+
+      return result;
     }
 
     /// <inheritdoc />

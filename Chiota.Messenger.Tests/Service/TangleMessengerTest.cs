@@ -7,7 +7,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
   using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Usecase;
@@ -69,7 +68,7 @@
       var messenger = new TangleMessenger(repository, transactionCache);
 
       var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
-      var payload = TryteString.FromUtf8String("Hi. I'm a test").Concat(new TryteString(Constants.End.Value));
+      var payload = TryteString.FromUtf8String("Hi. I'm a test");
 
       var messageOne = new Message(payload, receiver);
       var bundle = new Bundle();
@@ -85,10 +84,12 @@
       await transactionCache.SaveTransactionAsync(
         new TransactionCacheItem
           {
-            Address = receiver, TransactionHash = Hash.Empty, TransactionTrytes = TryteString.FromUtf8String("Hi. I'm a test")
+            Address = receiver,
+            TransactionHash = new Hash(Seed.Random().Value),
+            TransactionTrytes = new TransactionTrytes(TryteString.FromUtf8String("Hi. I'm a test").Value)
           });
 
-      var sentMessages = await messenger.GetMessagesByAddressAsync(receiver, new MessageBundleParser());
+      var sentMessages = await messenger.GetMessagesByAddressAsync(receiver);
 
       Assert.AreEqual(2, sentMessages.Count);
       Assert.AreEqual("Hi. I'm a test", sentMessages[0].Payload.ToUtf8String());

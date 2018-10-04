@@ -58,13 +58,12 @@
       var transactionCache = new InMemoryTransactionCache();
 
       var cacheItem = new TransactionCacheItem
-                                   {
-                                     Address = contactRequestAddress,
-                                     TransactionHash = new Hash(Seed.Random().Value),
-                                     TransactionTrytes = TryteString.FromUtf8String(
-                                       JsonConvert.SerializeObject(
-                                         new Contact { ChatAddress = storedContactAddress }))
-                                   };
+                        {
+                          Address = contactRequestAddress,
+                          TransactionHash = new Hash(Seed.Random().Value),
+                          TransactionTrytes = new TransactionTrytes(
+                            TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress })).Value)
+                        };
 
       await transactionCache.SaveTransactionAsync(cacheItem);
       await contactRepository.AddContactAsync(storedContactAddress, true, pubKeyAddress);
@@ -72,6 +71,7 @@
       var iotaRepositoryMock = new Mock<IIotaRepository>();
       iotaRepositoryMock.Setup(i => i.FindTransactionsByAddressesAsync(It.IsAny<List<Address>>())).ReturnsAsync(
         new TransactionHashList { Hashes = new List<Hash> { cacheItem.TransactionHash } });
+      iotaRepositoryMock.Setup(i => i.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(new List<TransactionTrytes>());
 
       var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepositoryMock.Object, transactionCache));
       var response = await interactor.ExecuteAsync(
@@ -104,26 +104,17 @@
 
       var approvedContactBundle = CreateBundle(contactRequestAddress, approvedContactMessage);
 
-      var iotaRepository = new InMemoryIotaRepository();
-      iotaRepository.SentBundles.Add(rejectedContactBundle);
-      iotaRepository.SentBundles.Add(approvedContactBundle);
-      iotaRepository.SentBundles.Add(
-        CreateBundle(
-          contactRequestAddress,
-          TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress, Request = true }))));
+      var requestBundle = CreateBundle(
+        contactRequestAddress,
+        TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress, Request = true, Name = "Requester" })));
 
-      var transactionCache = new InMemoryTransactionCache();
+      var messenger = new InMemoryMessenger();
 
-      var cacheItem = new TransactionCacheItem
-                        {
-                          Address = contactRequestAddress,
-                          TransactionHash = approvedContactBundle.Transactions[0].Hash,
-                          TransactionTrytes = approvedContactMessage
-      };
+      messenger.SentMessages.Add(new Message(rejectedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(approvedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(requestBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
 
-      transactionCache.Items.Add(cacheItem);
-
-      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepository, transactionCache));
+      var interactor = new GetContactsInteractor(contactRepository, messenger);
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
@@ -131,15 +122,15 @@
                            ContactRequestAddress = contactRequestAddress
                          });
 
+      Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.AreEqual(1, response.ApprovedContacts.Count);
       Assert.AreEqual(1, response.PendingContactRequests.Count);
-      Assert.AreEqual(3, transactionCache.Items.Count);
     }
 
     private static Bundle CreateBundle(Address contactRequestAddress, TryteString rejectedContactMessage)
     {
-      var rejectedContactBundle = new Bundle();
-      rejectedContactBundle.AddTransfer(
+      var bundle = new Bundle();
+      bundle.AddTransfer(
         new Transfer
           {
             Address = contactRequestAddress,
@@ -148,13 +139,13 @@
             Tag = Constants.Tag
           });
 
-      rejectedContactBundle.Finalize();
-      rejectedContactBundle.Sign();
+      bundle.Finalize();
+      bundle.Sign();
 
       // calculate hashes
-      var transactions = rejectedContactBundle.Transactions;
-      rejectedContactBundle.Transactions = transactions.Select(t => Transaction.FromTrytes(t.ToTrytes())).ToList();
-      return rejectedContactBundle;
+      var transactions = bundle.Transactions;
+      bundle.Transactions = transactions.Select(t => Transaction.FromTrytes(t.ToTrytes())).ToList();
+      return bundle;
     }
 
     [TestMethod]

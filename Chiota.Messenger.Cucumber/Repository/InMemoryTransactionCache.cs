@@ -1,6 +1,5 @@
-﻿namespace Chiota.Messenger.Tests.Cache
+﻿namespace Chiota.Messenger.Cucumber.Repository
 {
-  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;

@@ -28,7 +28,7 @@
     [TestMethod]
     public async Task TestMessageIsTooLongShouldReturnErrorCode()
     {
-      var interactor = new SendMessageInteractor(new InMemoryMessenger(), new EncryptionStub());
+      var interactor = new SendMessageInteractor(new InMemoryMessenger(), new EncryptionStub(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(
                        new SendMessageRequest { Message = new string(Enumerable.Repeat('a', Constants.MessageCharacterLimit + 1).ToArray()) });
 
@@ -38,13 +38,13 @@
     [TestMethod]
     public async Task TestMessengerThrowsExceptionShouldReturnErrorCode()
     {
-      var interactor = new SendMessageInteractor(new ExceptionMessenger(), new EncryptionStub());
+      var interactor = new SendMessageInteractor(new ExceptionMessenger(), new EncryptionStub(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(
                        new SendMessageRequest
                          {
                            Message = new string(Enumerable.Repeat('a', Constants.MessageCharacterLimit).ToArray()),
                            ChatAddress = new Address(Hash.Empty.Value),
-                           KeyPair = InMemoryContactRepository.NtruKeyPair,
+                           ChatKeyPair = InMemoryContactRepository.NtruKeyPair,
                            UserPublicKeyAddress = new Address(Hash.Empty.Value)
                        });
 
