@@ -153,7 +153,7 @@ namespace Chiota.ViewModels.Chat
 
             InitChatKeyPair();
 
-            LoadMessages();
+            //LoadMessages();
         }
 
         #endregion

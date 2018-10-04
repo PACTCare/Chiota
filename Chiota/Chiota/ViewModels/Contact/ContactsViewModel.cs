@@ -22,7 +22,7 @@ namespace Chiota.ViewModels.Contact
         #region Attributes
 
         private List<ContactBinding> _contactList;
-        private bool _isVisible;
+        private bool _isUpdating;
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.ViewIsAppearing();
 
-            _isVisible = true;
+            _isUpdating = true;
             Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
         }
 
@@ -78,7 +78,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.ViewIsDisappearing();
 
-            _isVisible = false;
+            _isUpdating = false;
         }
 
         #endregion
@@ -97,7 +97,7 @@ namespace Chiota.ViewModels.Contact
                     ContactList = contacts;
             });
 
-            return _isVisible;
+            return _isUpdating;
         }
 
         #endregion
