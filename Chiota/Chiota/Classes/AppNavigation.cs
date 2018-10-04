@@ -30,7 +30,7 @@ namespace Chiota.Classes
         {
             NavigationPage container;
 
-            // ReSharper disable once ConvertIfStatementToConditionalTernaryExpression
+            //SecureStorage.DeleteUser();
             if (SecureStorage.IsUserStored)
             {
                 // User is logged in.

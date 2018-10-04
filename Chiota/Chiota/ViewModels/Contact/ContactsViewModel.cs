@@ -136,11 +136,14 @@ namespace Chiota.ViewModels.Contact
                 PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
-            foreach (var pending in response.PendingContactRequests)
-                tmp.Add(new ContactBinding(pending, false, TapContactRequestCommand));
+            if (response.Code == ResponseCode.Success)
+            {
+                foreach (var pending in response.PendingContactRequests)
+                    tmp.Add(new ContactBinding(pending, false, TapContactRequestCommand));
 
-            foreach (var approved in response.ApprovedContacts)
-                tmp.Add(new ContactBinding(approved, true, TapContactCommand));
+                foreach (var approved in response.ApprovedContacts)
+                    tmp.Add(new ContactBinding(approved, true, TapContactCommand));
+            }
 
             //TODO Maybe, we need to sort the contacts alphabetical.
 

@@ -151,9 +151,9 @@ namespace Chiota.ViewModels.Chat
 
             Contact = contact;
 
-            InitChatKeyPair();
+            //InitChatKeyPair();
 
-            LoadMessages();
+            //LoadMessages();
         }
 
         #endregion
@@ -195,12 +195,12 @@ namespace Chiota.ViewModels.Chat
         /// </summary>
         private async void InitChatKeyPair()
         {
-            var keyPair = NtruEncryption.Default;
+            /*var keyPair = NtruEncryption.Default;
             var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, Contact.ChatKeyAddress);
 
             var seed = pasSalt.Substring(0, 50);
             var saltAddress = pasSalt.Substring(50, 50);
-            _chatKeyPair = keyPair.CreateAsymmetricKeyPair(seed, saltAddress);
+            _chatKeyPair = keyPair.CreateAsymmetricKeyPair(seed, saltAddress);*/
         }
 
         #endregion
@@ -239,7 +239,7 @@ namespace Chiota.ViewModels.Chat
             if (string.IsNullOrEmpty(message))
                 return false;
 
-            var tmp = message;
+            /*var tmp = message;
             Message = string.Empty;
 
             var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
@@ -252,7 +252,7 @@ namespace Chiota.ViewModels.Chat
             });
 
             if (response.Code == ResponseCode.Success)
-                return true;
+                return true;*/
 
             return false;
         }
