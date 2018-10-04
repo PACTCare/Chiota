@@ -8,6 +8,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactsViewModel}">
 
@@ -31,14 +32,14 @@
                                     <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
                                     <Label Style="{DynamicResource Label14}" Text="{Binding Contact.ChatAddress}" VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
                                 </StackLayout>
-
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding TapCommand}" CommandParameter="{Binding .}"/>
-                                </StackLayout.GestureRecognizers>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+
+                <ListView.Behaviors>
+                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                </ListView.Behaviors>
             </ListView>
         </StackLayout>
     </ContentPage.Content>

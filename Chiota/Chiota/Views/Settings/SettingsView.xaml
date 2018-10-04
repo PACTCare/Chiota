@@ -8,7 +8,7 @@
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:Chiota.ViewModels.Settings;assembly=Chiota"
-             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance settings:SettingsViewModel}"
              Title="{extensions:Translate CmnSettings}">
@@ -32,7 +32,7 @@
                 </ListView.ItemTemplate>
 
                 <ListView.Behaviors>
-                    <behaviors:ListViewBehavior Command="{Binding TapCommand}"/>
+                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
                 </ListView.Behaviors>
             </ListView>
         </StackLayout>

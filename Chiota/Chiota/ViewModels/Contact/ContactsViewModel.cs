@@ -22,7 +22,7 @@ namespace Chiota.ViewModels.Contact
         #region Attributes
 
         private List<ContactBinding> _contactList;
-        private bool _isVisible;
+        private bool _isUpdating;
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.ViewIsAppearing();
 
-            _isVisible = true;
+            _isUpdating = true;
             Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
         }
 
@@ -78,7 +78,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.ViewIsDisappearing();
 
-            _isVisible = false;
+            _isUpdating = false;
         }
 
         #endregion
@@ -97,7 +97,7 @@ namespace Chiota.ViewModels.Contact
                     ContactList = contacts;
             });
 
-            return _isVisible;
+            return _isUpdating;
         }
 
         #endregion
@@ -156,36 +156,26 @@ namespace Chiota.ViewModels.Contact
 
         #region Commands
 
-        #region TapContactRequest
+        #region Tap
 
-        public ICommand TapContactRequestCommand
-        {
-            get
-            {
-                return new Command(async(param) =>
-                {
-                    if (param is ContactBinding contact)
-                        await PushAsync<ContactRequestView>(contact.Contact);
-                    else
-                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
-                });
-            }
-        }
-
-        #endregion
-
-        #region TapContact
-
-        public ICommand TapContactCommand
+        public ICommand TapCommand
         {
             get
             {
                 return new Command(async (param) =>
                 {
-                    if (param is ContactBinding contact)
+                    if (!(param is ContactBinding contact))
+                    {
+                        //Show an unknown exception.
+                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                        return;
+                    }
+
+                    //Show the chat view, or a dialog for a contact request acceptation.
+                    if (contact.IsApproved)
                         await PushAsync<ChatView>(contact.Contact);
                     else
-                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                        await PushAsync<ContactRequestView>(contact.Contact);
                 });
             }
         }
