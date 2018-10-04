@@ -90,42 +90,47 @@ namespace Chiota.ViewModels.Chat
 
         private async Task<List<ChatBinding>> GetChatsListAsync()
         {
-            var keyPair = NtruEncryption.Default;
-
             var result = new List<ChatBinding>();
-            var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
-            {
-                ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
-            });
 
-            foreach (var approved in response.ApprovedContacts)
+            try
             {
-                var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, approved.ChatKeyAddress);
-                var seed = pasSalt.Substring(0, 50);
-                var saltAddress = pasSalt.Substring(50, 50);
-                var chatKeyPair = keyPair.CreateAsymmetricKeyPair(seed, saltAddress);
-
-                var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(new GetMessagesRequest
+                var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
                 {
-                    ChatAddress = new Address(approved.ChatAddress),
-                    ChatKeyPair = chatKeyPair
+                    ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                    PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                 });
 
-                //If the response is successful and there is an active chat, we need to add this to the list.
-                if (messagesResponse.Code == ResponseCode.Success && messagesResponse.Messages.Count > 0)
+                if (response.Code == ResponseCode.Success)
                 {
-                    var messages = messagesResponse.Messages;
-                    result.Add(new ChatBinding(approved)
+                    foreach (var approved in response.ApprovedContacts)
                     {
-                        LastMessage = messages[messages.Count - 1].Message,
-                        LastMessageDateTime = messages[messages.Count - 1].Date
-                    });
-                }
-                    
-            }
+                        var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(new GetMessagesRequest
+                        {
+                            ChatAddress = new Address(approved.ChatAddress),
+                            ChatKeyPair = null,
+                            ChatKeyAddress = new Address(approved.ChatKeyAddress),
+                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                        });
 
-            //TODO Maybe, we need to sort the chats by the last message.
+                        //If the response is successful and there is an active chat, we need to add this to the list.
+                        if (messagesResponse.Code == ResponseCode.Success && messagesResponse.Messages.Count > 0)
+                        {
+                            var messages = messagesResponse.Messages;
+                            result.Add(new ChatBinding(approved)
+                            {
+                                LastMessage = messages[messages.Count - 1].Message,
+                                LastMessageDateTime = messages[messages.Count - 1].Date
+                            });
+                        }
+                    }
+                }
+
+                //TODO Maybe, we need to sort the chats by the last message.
+            }
+            catch (Exception ex)
+            {
+
+            }
 
             return result;
         }

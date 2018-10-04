@@ -139,10 +139,10 @@ namespace Chiota.ViewModels.Contact
             if (response.Code == ResponseCode.Success)
             {
                 foreach (var pending in response.PendingContactRequests)
-                    tmp.Add(new ContactBinding(pending, false, TapContactRequestCommand));
+                    tmp.Add(new ContactBinding(pending, false));
 
                 foreach (var approved in response.ApprovedContacts)
-                    tmp.Add(new ContactBinding(approved, true, TapContactCommand));
+                    tmp.Add(new ContactBinding(approved, true));
             }
 
             //TODO Maybe, we need to sort the contacts alphabetical.

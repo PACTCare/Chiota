@@ -1,6 +1,4 @@
-﻿using Chiota.Services.MessageServices;
-
-namespace Chiota.Services.DependencyInjection
+﻿namespace Chiota.Services.DependencyInjection
 {
   using System;
   using System.Collections.Generic;
@@ -51,7 +49,6 @@ namespace Chiota.Services.DependencyInjection
 
       builder.RegisterType<UserFactory>().As<IUserFactory>();
       builder.RegisterType<UserService>().PropertiesAutowired();
-      builder.RegisterType<MessageService>().PropertiesAutowired();
       builder.RegisterInstance(new RepositoryFactory().Create()).As<IIotaRepository>();
       builder.RegisterType<AddressGenerator>().As<IAddressGenerator>();
       builder.RegisterInstance(new SignatureFragmentGenerator(new Kerl())).As<ISignatureFragmentGenerator>();

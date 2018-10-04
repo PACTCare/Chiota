@@ -11,7 +11,6 @@ using Chiota.Messenger.Usecase.SendMessage;
 using Chiota.Models;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Iota;
-using Chiota.Services.MessageServices;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
 using Tangle.Net.Entity;
@@ -27,6 +26,8 @@ namespace Chiota.ViewModels.Chat
         private const int MessageSize = 32;
 
         private IAsymmetricKeyPair _chatKeyPair;
+        private Address _chatAddress;
+
         private Chiota.Messenger.Entity.Contact _contact;
         private string _message;
         private InfiniteScrollCollection<MessageBinding> _messageList;
@@ -114,24 +115,24 @@ namespace Chiota.ViewModels.Chat
                     IsBusy = true;
 
                     //Load more messages.
-                    var messages = MessageList.Count / MessageSize;
+                    /*var messages = MessageList.Count / MessageSize;
                     var messageService = DependencyResolver.Resolve<MessageService>();
-                    var items = await messageService.GetMessagesAsync(Contact, _chatKeyPair, messages, MessageSize);
+                    var items = await messageService.GetMessagesAsync(Contact, _chatKeyPair, messages, MessageSize);*/
 
                     IsBusy = false;
 
-                    return items;
+                    return null;
                 },
                 OnCanLoadMore = () =>
                 {
                     var result = false;
-                    var task = Task.Run(async () =>
+                    /*var task = Task.Run(async () =>
                     {
                         var messageService = DependencyResolver.Resolve<MessageService>();
                         var messagesCount = await messageService.GetMessagesCountAsync(Contact, _chatKeyPair);
                         result = MessageList.Count < messagesCount;
                     });
-                    task.Wait();
+                    task.Wait();*/
                     
                     return result;
                 }
@@ -149,11 +150,13 @@ namespace Chiota.ViewModels.Chat
             if (!(data is Chiota.Messenger.Entity.Contact)) return;
             var contact = (Chiota.Messenger.Entity.Contact) data;
 
+            //Set the chat address.
+            _chatAddress = new Address(contact.ChatAddress);
+
+            //Set the contact property.
             Contact = contact;
 
-            //InitChatKeyPair();
-
-            //LoadMessages();
+            LoadMessages();
         }
 
         #endregion
@@ -169,7 +172,7 @@ namespace Chiota.ViewModels.Chat
 
             //Start event for loading messages.
             _isLoadingMessages = true;
-            //Device.StartTimer(TimeSpan.FromSeconds(1), LoadMessages);
+            Device.StartTimer(TimeSpan.FromSeconds(1), LoadMessages);
             
         }
 
@@ -188,40 +191,40 @@ namespace Chiota.ViewModels.Chat
 
         #region Methods
 
-        #region InitChatKeyPair
-
-        /// <summary>
-        /// Initialize the chat key pair for encryption.
-        /// </summary>
-        private async void InitChatKeyPair()
-        {
-            /*var keyPair = NtruEncryption.Default;
-            var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, Contact.ChatKeyAddress);
-
-            var seed = pasSalt.Substring(0, 50);
-            var saltAddress = pasSalt.Substring(50, 50);
-            _chatKeyPair = keyPair.CreateAsymmetricKeyPair(seed, saltAddress);*/
-        }
-
-        #endregion
-
         #region LoadMessages
 
         private bool LoadMessages()
         {
             var task = Task.Run(async () =>
             {
-                var messageService = DependencyResolver.Resolve<MessageService>();
-                var index = MessageList.Count / MessageSize;
-                var messages = await messageService.GetMessagesAsync(Contact, _chatKeyPair, index, MessageSize);
+                var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                    new GetMessagesRequest
+                    {
+                        ChatAddress = _chatAddress,
+                        ChatKeyPair = _chatKeyPair,
+                        ChatKeyAddress = new Address(Contact.ChatKeyAddress),
+                        UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                    });
 
-                if (MessageList == null || MessageList.Count != messages.Count)
+                if (response.Code == ResponseCode.Success)
                 {
-                    //var tmp = new InfiniteScrollCollection<MessageBinding>(MessageList);
-                    MessageList?.AddRange(messages);
+                    _chatAddress = response.CurrentChatAddress;
+                    _chatKeyPair = response.ChatKeyPair;
 
-                    //Scroll to the current message.
-                    LastMessage = messages[messages.Count - 1];
+                    var messages = new List<MessageBinding>();
+                    foreach (var message in response.Messages)
+                    {
+                        var isOwner = message.Signature != Contact.PublicKeyAddress.Substring(0, 30);
+                        messages.Add(new MessageBinding(message.Message, isOwner));
+                    }
+
+                    if (MessageList == null || MessageList.Count != messages.Count)
+                    {
+                        MessageList?.AddRange(messages);
+
+                        //Scroll to the current message.
+                        //LastMessage = messages[messages.Count - 1];
+                    }
                 }
             });
 
@@ -239,20 +242,19 @@ namespace Chiota.ViewModels.Chat
             if (string.IsNullOrEmpty(message))
                 return false;
 
-            /*var tmp = message;
+            var tmp = message;
             Message = string.Empty;
 
-            var interactor = DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>();
-            var response = await interactor.ExecuteAsync(new SendMessageRequest
+            var response = await DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().ExecuteAsync(new SendMessageRequest
             {
                 ChatAddress = new Address(Contact.ChatAddress),
-                KeyPair = _chatKeyPair,
+                ChatKeyPair = _chatKeyPair,
                 Message = tmp,
                 UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
             if (response.Code == ResponseCode.Success)
-                return true;*/
+                return true;
 
             return false;
         }
