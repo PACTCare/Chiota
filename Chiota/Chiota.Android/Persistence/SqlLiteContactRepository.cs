@@ -3,18 +3,18 @@
   using System;
   using System.IO;
 
+  using Chiota.Messenger.Service;
   using Chiota.Persistence;
 
   using SQLite;
 
   using Tangle.Net.Cryptography.Signing;
-  using Tangle.Net.Repository;
 
   public class SqlLiteContactRepository : AbstractSqlLiteContactRepository
   {
     /// <inheritdoc />
-    public SqlLiteContactRepository(IIotaRepository iotaRepository, ISignatureValidator signatureValidator)
-      : base(iotaRepository, signatureValidator)
+    public SqlLiteContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
+      : base(messenger, signatureValidator)
     {
     }
 

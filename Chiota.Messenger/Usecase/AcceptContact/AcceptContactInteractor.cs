@@ -1,21 +1,13 @@
 ﻿namespace Chiota.Messenger.Usecase.AcceptContact
 {
   using System;
-  using System.Collections.Generic;
-  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
-  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Service.Parser;
-
-  using Tangle.Net.Entity;
-
-  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
   /// The accept contact interactor.
@@ -24,12 +16,9 @@
   {
     /// <inheritdoc />
     public AcceptContactInteractor(IContactRepository repository, IMessenger messenger, IEncryption encryption)
-      : base(repository, messenger)
+      : base(repository, messenger, encryption)
     {
-      this.Encryption = encryption;
     }
-
-    private IEncryption Encryption { get; }
 
     /// <inheritdoc />
     public override async Task<AcceptContactResponse> ExecuteAsync(AcceptContactRequest request)
@@ -67,46 +56,6 @@
       {
         return new AcceptContactResponse { Code = ResponseCode.UnkownException };
       }
-    }
-
-    /// <summary>
-    /// The get chat password salt.
-    /// </summary>
-    /// <param name="chatKeyAddress">
-    /// The chat key address.
-    /// </param>
-    /// <param name="userKeyPair">
-    /// The user key pair.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
-    private async Task<string> GetChatPasswordSalt(Address chatKeyAddress, IAsymmetricKeyPair userKeyPair)
-    {
-      var messages = await this.Messenger.GetMessagesByAddressAsync(chatKeyAddress, new MessageBundleParser());
-      var chatPasSalt = new List<string>();
-      foreach (var message in messages)
-      {
-        try
-        {
-          var pasSalt = Encoding.UTF8.GetString(this.Encryption.Decrypt(userKeyPair, message.Payload.DecodeBytesFromTryteString()));
-          if (pasSalt != string.Empty)
-          {
-            chatPasSalt.Add(pasSalt);
-          }
-        }
-        catch
-        {
-          // ignored
-        }
-      }
-
-      if (chatPasSalt.Count > 0)
-      {
-        return chatPasSalt[0];
-      }
-
-      throw new MessengerException(ResponseCode.ChatPasswordAndSaltCannotBeGenerated);
     }
   }
 }

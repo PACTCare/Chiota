@@ -21,7 +21,7 @@
     [TestMethod]
     public async Task TestMessengerThrowExceptionShouldReturnErrorCode()
     {
-      var interactor = new GetMessagesInteractor(new ExceptionMessenger(), new EncryptionStub());
+      var interactor = new GetMessagesInteractor(new ExceptionMessenger(), new EncryptionStub(), new EncryptionStub());
       var result = await interactor.ExecuteAsync(
         new GetMessagesRequest
           {
@@ -38,7 +38,7 @@
       var messenger = new InMemoryMessenger();
       messenger.SentMessages.Add(new Message(new TryteString("GHAFSGHAFSGHFASAAS"), new Address(Hash.Empty.Value)));
 
-      var interactor = new GetMessagesInteractor(messenger, new EncryptionStub());
+      var interactor = new GetMessagesInteractor(messenger, new EncryptionStub(), new EncryptionStub());
       var result = await interactor.ExecuteAsync(
                      new GetMessagesRequest
                        {
@@ -54,17 +54,17 @@
     {
       Assert.Inconclusive("TODO: Encryption Stub");
       var messenger = new InMemoryMessenger();
-      var sendMessageInteractor = new SendMessageInteractor(messenger, new EncryptionStub());
+      var sendMessageInteractor = new SendMessageInteractor(messenger, new EncryptionStub(), new EncryptionStub());
       await sendMessageInteractor.ExecuteAsync(
         new SendMessageRequest
           {
             ChatAddress = new Address(Hash.Empty.Value),
-            KeyPair = InMemoryContactRepository.NtruKeyPair,
+            ChatKeyPair = InMemoryContactRepository.NtruKeyPair,
             Message = "Hallo",
             UserPublicKeyAddress = new Address(Hash.Empty.Value)
           });
 
-      var interactor = new GetMessagesInteractor(messenger, new EncryptionStub());
+      var interactor = new GetMessagesInteractor(messenger, new EncryptionStub(), new EncryptionStub());
       var result = await interactor.ExecuteAsync(
                      new GetMessagesRequest
                        {

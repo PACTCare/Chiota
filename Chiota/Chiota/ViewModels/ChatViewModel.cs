@@ -9,14 +9,12 @@ namespace Chiota.ViewModels
   using System.Windows.Input;
 
   using Chiota.Messenger;
-  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Presenters;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Tangle.Net.Entity;
@@ -27,8 +25,6 @@ namespace Chiota.ViewModels
 
   public class ChatViewModel : BaseViewModel
   {
-    private readonly NtruEncryption ntruKex;
-
     private readonly ListView messagesListView;
 
     private readonly Contact contact;
@@ -45,7 +41,6 @@ namespace Chiota.ViewModels
 
     public ChatViewModel(ListView messagesListView, Contact contact)
     {
-      this.ntruKex = NtruEncryption.Default;
       this.contact = contact;
       this.currentChatAddress = new Address(contact.ChatAddress);
       this.messagesListView = messagesListView;
@@ -81,12 +76,6 @@ namespace Chiota.ViewModels
     {
       this.PageIsShown = true;
       this.loadNewMessages = true;
-      if (this.ntruChatKeyPair == null)
-      {
-        var pasSalt = await IotaHelper.GetChatPasSalt(UserService.CurrentUser, this.contact.ChatKeyAddress);
-        this.ntruChatKeyPair = this.ntruKex.CreateAsymmetricKeyPair(pasSalt.Substring(0, 50), pasSalt.Substring(50, 50));
-      }
-
       this.GetMessagesAsync(this.Messages);
     }
 
@@ -119,7 +108,7 @@ namespace Chiota.ViewModels
           new SendMessageRequest
             {
               ChatAddress = this.currentChatAddress,
-              KeyPair = this.ntruChatKeyPair,
+              ChatKeyPair = this.ntruChatKeyPair,
               Message = this.OutGoingText,
               UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
@@ -148,11 +137,19 @@ namespace Chiota.ViewModels
       if (this.loadNewMessages)
       {
         this.loadNewMessages = false;
-        var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
-          new GetMessagesRequest { ChatAddress = this.currentChatAddress, ChatKeyPair = this.ntruChatKeyPair });
+        var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                                 new GetMessagesRequest
+                                   {
+                                     ChatAddress = this.currentChatAddress,
+                                     ChatKeyPair = this.ntruChatKeyPair,
+                                     ChatKeyAddress = new Address(this.contact.ChatKeyAddress),
+                                     UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                                   });
 
-        this.currentChatAddress = messagesResponse.CurrentChatAddress;
-        var newMessages = GetMessagesPresenter.Present(messagesResponse, this.contact);
+        this.currentChatAddress = response.CurrentChatAddress;
+        this.ntruChatKeyPair = response.ChatKeyPair;
+
+        var newMessages = GetMessagesPresenter.Present(response, this.contact);
 
         if (newMessages.Count > 0)
         {

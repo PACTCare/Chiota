@@ -15,7 +15,7 @@
     /// <summary>
     /// Gets or sets the message tryte string.
     /// </summary>
-    public TryteString TransactionTrytes { get; set; }
+    public TransactionTrytes TransactionTrytes { get; set; }
 
     /// <summary>
     /// Gets or sets the transaction hash.

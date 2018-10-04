@@ -1,24 +1,27 @@
 ﻿namespace Chiota.Messenger.Usecase.SendMessage
 {
   using System;
-  using System.Globalization;
   using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
-  using Chiota.Messenger.Extensions;
   using Chiota.Messenger.Service;
 
-  using Tangle.Net.Entity;
+  using Newtonsoft.Json;
 
-  public class SendMessageInteractor : IUsecaseInteractor<SendMessageRequest, SendMessageResponse>
+  using Tangle.Net.Utils;
+
+  using Constants = Constants;
+
+  public class SendMessageInteractor : AbstractChatInteractor<SendMessageRequest, SendMessageResponse>
   {
-    public SendMessageInteractor(IMessenger messenger, IEncryption encryption)
+    public SendMessageInteractor(IMessenger messenger, IEncryption messageEncryption, IEncryption keyEncryption)
+      : base(messenger, keyEncryption)
     {
       this.Messenger = messenger;
-      this.Encryption = encryption;
+      this.Encryption = messageEncryption;
     }
 
     private IMessenger Messenger { get; }
@@ -26,7 +29,7 @@
     private IEncryption Encryption { get; }
 
     /// <inheritdoc />
-    public async Task<SendMessageResponse> ExecuteAsync(SendMessageRequest request)
+    public override async Task<SendMessageResponse> ExecuteAsync(SendMessageRequest request)
     {
       try
       {
@@ -35,21 +38,27 @@
           return new SendMessageResponse { Code = ResponseCode.MessageTooLong };
         }
 
-        var messageTimestamp = TryteString.FromUtf8String(DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
-        var senderId = request.UserPublicKeyAddress.GetChunk(0, 30);
+        if (request.ChatKeyPair == null)
+        {
+          var pasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
+          request.ChatKeyPair = this.Encryption.CreateAsymmetricKeyPair(pasSalt.Substring(0, 50), pasSalt.Substring(50, 50));
+        }
 
-        var encryptedMessage = await Task.Run(() => this.Encryption.Encrypt(request.KeyPair.PublicKey, Encoding.UTF8.GetBytes(request.Message)));
-        var encryptedPayload = new TryteString(encryptedMessage.EncodeBytesAsString());
-        var payloadSignature = Constants.FirstBreak.Concat(senderId).Concat(Constants.SecondBreak).Concat(messageTimestamp);
+        var chatMessage = new ChatMessage
+                            {
+                              Date = DateTime.UtcNow,
+                              Message = request.Message,
+                              Signature = request.UserPublicKeyAddress.GetChunk(0, 30).Value
+                            };
 
-        var firstMessagePartPayload = encryptedPayload.GetChunk(0, 2070).Concat(payloadSignature).Concat(new TryteString("A")).Concat(Constants.End);
-        var secondMessagePartPayload = new TryteString(encryptedPayload.Value.Substring(2070)).Concat(payloadSignature).Concat(new TryteString("B"))
-          .Concat(Constants.End);
+        var encryptedMessage = await Task.Run(
+                                 () => this.Encryption.Encrypt(
+                                   request.ChatKeyPair.PublicKey,
+                                   Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(chatMessage))));
 
-        await this.Messenger.SendMessageAsync(new Message(firstMessagePartPayload, request.ChatAddress));
-        await this.Messenger.SendMessageAsync(new Message(secondMessagePartPayload, request.ChatAddress));
+        await this.Messenger.SendMessageAsync(new Message(encryptedMessage.ToTrytes(), request.ChatAddress));
 
-        return new SendMessageResponse { Code = ResponseCode.Success };
+        return new SendMessageResponse { Code = ResponseCode.Success, ChatKeyPair = request.ChatKeyPair };
       }
       catch (MessengerException exception)
       {

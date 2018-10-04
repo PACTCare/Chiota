@@ -67,7 +67,7 @@
       builder.RegisterType<DeclineContactInteractor>().As<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>().PropertiesAutowired();
 
       builder.RegisterType<SendMessageInteractor>().As<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>()
-        .WithParameter("encryption", NtruEncryption.Default).PropertiesAutowired();
+        .WithParameter("messageEncryption", NtruEncryption.Default).WithParameter("keyEncryption", NtruEncryption.Key).PropertiesAutowired();
 
       builder.RegisterType<CreateUserInteractor>().As<IUsecaseInteractor<CreateUserRequest, CreateUserResponse>>()
         .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
@@ -75,7 +75,7 @@
       builder.RegisterType<CheckUserInteractor>().As<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().PropertiesAutowired();
 
       builder.RegisterType<GetMessagesInteractor>().As<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>()
-        .WithParameter("encryption", NtruEncryption.Default).PropertiesAutowired();
+        .WithParameter("messageEncryption", NtruEncryption.Default).WithParameter("keyEncryption", NtruEncryption.Key).PropertiesAutowired();
 
       builder.RegisterType<UserService>().As<UserService>().PropertiesAutowired();
       Container = builder.Build();

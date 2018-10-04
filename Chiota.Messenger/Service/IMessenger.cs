@@ -4,13 +4,12 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Service.Parser;
 
   using Tangle.Net.Entity;
 
   public interface IMessenger
   {
-    Task<List<Message>> GetMessagesByAddressAsync(Address address, IBundleParser bundleParser);
+    Task<List<Message>> GetMessagesByAddressAsync(Address address);
 
     Task SendMessageAsync(Message message);
   }
