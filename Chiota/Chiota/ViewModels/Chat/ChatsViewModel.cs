@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Chiota.Exceptions;
+using Chiota.Extensions;
 using Chiota.Messenger.Encryption;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
@@ -11,6 +14,8 @@ using Chiota.Services.DependencyInjection;
 using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
+using Chiota.Views.Chat;
+using Chiota.Views.Contact;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -154,6 +159,34 @@ namespace Chiota.ViewModels.Chat
             //Add all chats of the user to the ui.
             ChatList = tmp;
         }*/
+
+        #endregion
+
+        #endregion
+
+        #region Commands
+
+
+        #region Tap
+
+        public ICommand TapCommand
+        {
+            get
+            {
+                return new Command(async (param) =>
+                {
+                    if (!(param is ChatBinding chat))
+                    {
+                        //Show an unknown exception.
+                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                        return;
+                    }
+
+                    //Show the chat view.
+                    await PushAsync<ChatView>(chat.Contact);
+                });
+            }
+        }
 
         #endregion
 

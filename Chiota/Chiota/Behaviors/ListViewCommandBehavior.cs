@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Chiota.Behaviors
 {
-    public class ListViewBehavior : Behavior<ListView>
+    public class ListViewCommandBehavior : Behavior<ListView>
     {
         #region Attributes
 
@@ -23,16 +23,7 @@ namespace Chiota.Behaviors
         }
 
         public static readonly BindableProperty CommandProperty =
-            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ListViewBehavior));
-
-        public object ScrollTo
-        {
-            get => (object)GetValue(ScrollToProperty);
-            set => SetValue(ScrollToProperty, value);
-        }
-
-        public static readonly BindableProperty ScrollToProperty =
-            BindableProperty.Create(nameof(ScrollTo), typeof(object), typeof(ListViewBehavior), null, propertyChanged: OnScrollTo);
+            BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ListViewCommandBehavior));
         
         #endregion
 
@@ -81,18 +72,6 @@ namespace Chiota.Behaviors
             //Execute the command.
             var bindable = sender as ListView;
             Command.Execute(bindable?.SelectedItem);
-        }
-
-        #endregion
-
-        #region OnScrollTo
-
-        private static void OnScrollTo(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (!(bindable is ListViewBehavior listView))
-                return;
-
-            _listView.ScrollTo(newValue, ScrollToPosition.Start, false);
         }
 
         #endregion

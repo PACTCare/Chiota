@@ -22,13 +22,11 @@ namespace Chiota.Models
 
         public Color BackgroundColor { get; }
 
-        public ICommand TapCommand { get; }
-
         #endregion
 
         #region Constructors
 
-        public ContactBinding(Contact contact, bool isApproved, ICommand command)
+        public ContactBinding(Contact contact, bool isApproved)
         {
             Contact = contact;
             IsApproved = isApproved;
@@ -41,8 +39,6 @@ namespace Chiota.Models
                 ImageSource = ImageSource.FromFile("account.png");
             else
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImageHash;
-
-            TapCommand = command;
         }
 
         #endregion

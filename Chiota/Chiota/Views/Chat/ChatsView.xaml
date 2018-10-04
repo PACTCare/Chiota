@@ -9,6 +9,7 @@
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:chat="clr-namespace:Chiota.ViewModels.Chat;assembly=Chiota"
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance chat:ChatsViewModel}">
 
@@ -29,7 +30,7 @@
                                     <abstractions:CircleImage Source="{Binding ImageSource}" HeightRequest="64" WidthRequest="64"/>
                                 </StackLayout>
 
-                                <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
+                                <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="8">
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
                                         <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
                                         <StackLayout HorizontalOptions="CenterAndExpand"/>
@@ -41,6 +42,10 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+
+                <ListView.Behaviors>
+                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                </ListView.Behaviors>
             </ListView>
         </StackLayout>
     </ContentPage.Content>

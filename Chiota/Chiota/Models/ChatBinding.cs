@@ -20,6 +20,8 @@ namespace Chiota.Models
 
         public ImageSource ImageSource { get; }
 
+        public Contact Contact { get; }
+
         #endregion
 
         #region Constructors
@@ -32,6 +34,8 @@ namespace Chiota.Models
                 ImageSource = ImageSource.FromFile("account.png");
             else
                 ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + contact.ImageHash));
+
+            Contact = contact;
         }
 
         #endregion
