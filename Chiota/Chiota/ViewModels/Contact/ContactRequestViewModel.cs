@@ -7,6 +7,7 @@ using Chiota.Extensions;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.AcceptContact;
 using Chiota.Messenger.Usecase.DeclineContact;
+using Chiota.Models;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Classes;
@@ -70,7 +71,7 @@ namespace Chiota.ViewModels.Contact
             Username = _contact.Name;
 
             if(_contact.ImageHash != null)
-                ProfileImageSource = _contact.ImageHash + _contact.ContactAddress;
+                ProfileImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + _contact.ImageHash));
             else
                 ProfileImageSource = ImageSource.FromFile("account.png");
         }

@@ -18,7 +18,7 @@
             <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                 <StackLayout VerticalOptions="Center" Spacing="24">
                     <StackLayout Spacing="16">
-                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" HeightRequest="96" WidthRequest="96"/>
+                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource Label18}" Text="{Binding Username}" HorizontalOptions="Center"/>
                     </StackLayout>
 

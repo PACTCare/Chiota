@@ -8,6 +8,12 @@ namespace Chiota.Behaviors
 {
     public class ListViewBehavior : Behavior<ListView>
     {
+        #region Attributes
+
+        private static ListView _listView;
+
+        #endregion
+
         #region Properties
 
         public ICommand Command
@@ -19,14 +25,14 @@ namespace Chiota.Behaviors
         public static readonly BindableProperty CommandProperty =
             BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ListViewBehavior));
 
-        public int ScrollTo
+        public object ScrollTo
         {
-            get => (int)GetValue(ScrollToProperty);
+            get => (object)GetValue(ScrollToProperty);
             set => SetValue(ScrollToProperty, value);
         }
 
         public static readonly BindableProperty ScrollToProperty =
-            BindableProperty.Create(nameof(ScrollTo), typeof(int), typeof(ListViewBehavior), 0, propertyChanged: OnScrollTo);
+            BindableProperty.Create(nameof(ScrollTo), typeof(object), typeof(ListViewBehavior), null, propertyChanged: OnScrollTo);
         
         #endregion
 
@@ -35,6 +41,9 @@ namespace Chiota.Behaviors
         protected override void OnAttachedTo(ListView bindable)
         {
             base.OnAttachedTo(bindable);
+
+            _listView = bindable;
+
             bindable.ItemTapped += BindableTapped;
             bindable.BindingContextChanged += BindableContextChanged;
         }
@@ -46,8 +55,11 @@ namespace Chiota.Behaviors
         protected override void OnDetachingFrom(ListView bindable)
         {
             base.OnDetachingFrom(bindable);
+
             bindable.ItemTapped -= BindableTapped;
             bindable.BindingContextChanged -= BindableContextChanged;
+
+            _listView = null;
         }
 
         #endregion
@@ -80,7 +92,7 @@ namespace Chiota.Behaviors
             if (!(bindable is ListViewBehavior listView))
                 return;
 
-            //listView?.ScrollTo(new object(), ScrollToPosition.End, false);
+            _listView.ScrollTo(newValue, ScrollToPosition.Start, false);
         }
 
         #endregion

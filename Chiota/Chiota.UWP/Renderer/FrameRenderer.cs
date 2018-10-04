@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(Xamarin.Forms.Frame), typeof(Chiota.UWP.Renderer.FrameRenderer))]
+[assembly: ExportRenderer(typeof(Frame), typeof(Chiota.UWP.Renderer.FrameRenderer))]
 namespace Chiota.UWP.Renderer
 {
     public class FrameRenderer : Xamarin.Forms.Platform.UWP.FrameRenderer

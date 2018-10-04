@@ -9,6 +9,8 @@
              xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             xmlns:infiniteScrolling="clr-namespace:Chiota.Controls.InfiniteScrolling;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance chat:ChatViewModel}"
              Title="{Binding Contact.Name}">
@@ -40,11 +42,17 @@
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="4">
-                <ListView ItemsSource="{Binding MessageList}" HasUnevenRows="True" CachingStrategy="RecycleElement" SeparatorVisibility="None">
+                <ListView ItemsSource="{Binding MessageList}" HasUnevenRows="True" CachingStrategy="RecycleElement" SeparatorVisibility="None" Rotation="180">
+                    <ListView.Header>
+                        <StackLayout>
+                            <Label Text="Loading" IsVisible="{Binding IsBusy}"/>
+                        </StackLayout>
+                    </ListView.Header>
+
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell IsEnabled="False">
-                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0, 4" Spacing="8">
+                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0, 4" Spacing="8" Rotation="180">
                                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#bdbdbd" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsVisible}">
                                         <StackLayout Padding="8">
                                             <Label Style="{DynamicResource Label12}" Text="{Binding DateTime, Converter={StaticResource DateToString}}" TextColor="#424242"/>
@@ -60,16 +68,15 @@
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+
+                    <ListView.Behaviors>
+                        <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
+                    </ListView.Behaviors>
                 </ListView>
             </StackLayout>
             <StackLayout Orientation="Horizontal" Spacing="2" Padding="2, 0, 2, 2" HorizontalOptions="FillAndExpand" VerticalOptions="End">
-                <!--<Button Style="{DynamicResource ImageButton}" Image="{Binding KeyboardImageSource}" HorizontalOptions="Start" Command="{Binding KeyboardCommand}"/>-->
                 <Frame Style="{DynamicResource RoundedFrame16}" Padding="8, 0" BackgroundColor="{DynamicResource EntryColor}" HorizontalOptions="FillAndExpand">
-                    <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat">
-                        <!--<Entry.Behaviors>
-                            <behaviors:EntryBehaviors IsFocused="{Binding IsEntryFocused, Mode=TwoWay}"/>
-                        </Entry.Behaviors>-->
-                    </Entry>
+                    <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat"/>
                 </Frame>
                 <Button Style="{DynamicResource ImageButton}" Image="send.png" HorizontalOptions="End" Command="{Binding ActionCommand}"/>
             </StackLayout>
