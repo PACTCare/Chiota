@@ -1,4 +1,6 @@
-﻿namespace Chiota.Services.UserServices
+﻿using Chiota.Models.Database;
+
+namespace Chiota.Services.UserServices
 {
   using System.Diagnostics.CodeAnalysis;
   using System.Threading.Tasks;

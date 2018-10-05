@@ -1,4 +1,6 @@
-﻿namespace Chiota.Services.DependencyInjection
+﻿using Chiota.ViewModels.Base;
+
+namespace Chiota.Services.DependencyInjection
 {
   using System;
   using System.Collections.Generic;
@@ -19,8 +21,6 @@
   using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
-  using Chiota.ViewModels.Classes;
-
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;

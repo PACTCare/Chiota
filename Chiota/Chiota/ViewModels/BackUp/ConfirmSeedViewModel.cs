@@ -3,8 +3,7 @@
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Tangle.Net.Utils;
 
 using Xamarin.Forms;

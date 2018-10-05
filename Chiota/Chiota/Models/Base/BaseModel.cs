@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Chiota.Annotations;
 
-namespace Chiota.Models.Classes
+namespace Chiota.Models.Base
 {
     public abstract class BaseModel : INotifyPropertyChanged
     {

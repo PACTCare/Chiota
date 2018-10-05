@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 
 namespace Chiota.ViewModels.Settings
 {

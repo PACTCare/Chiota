@@ -1,4 +1,4 @@
-﻿namespace Chiota.Models
+﻿namespace Chiota.Helper
 {
   public static class ChiotaConstants
   {

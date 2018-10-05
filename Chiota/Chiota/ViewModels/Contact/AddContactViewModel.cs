@@ -8,7 +8,7 @@ using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.AddContact;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
 using Rg.Plugins.Popup.Extensions;
 using Tangle.Net.Entity;

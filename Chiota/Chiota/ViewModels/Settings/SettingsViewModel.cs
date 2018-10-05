@@ -6,8 +6,9 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models;
+using Chiota.Models.Binding;
 using Chiota.Services.Share;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views.Settings;
 using Xamarin.Forms;
 
@@ -17,13 +18,13 @@ namespace Chiota.ViewModels.Settings
     {
         #region Attributes
 
-        private List<SettingsItem> _settingsList;
+        private List<SettingsBinding> _settingsList;
 
         #endregion
 
         #region Properties
 
-        public List<SettingsItem> SettingsList
+        public List<SettingsBinding> SettingsList
         {
             get => _settingsList;
             set
@@ -40,7 +41,7 @@ namespace Chiota.ViewModels.Settings
         public SettingsViewModel()
         {
             //Init the settings list.
-            SettingsList = new List<SettingsItem>();
+            SettingsList = new List<SettingsBinding>();
         }
 
         #endregion
@@ -62,11 +63,11 @@ namespace Chiota.ViewModels.Settings
 
         private void InitView()
         {
-            var tmp = new List<SettingsItem>
+            var tmp = new List<SettingsBinding>
             {
-                new SettingsItem(SettingsItemType.Profile, "Profile", ImageSource.FromFile("account.png")),
-                new SettingsItem(SettingsItemType.InviteFriends, "Invite friends", ImageSource.FromFile("friends.png")),
-                new SettingsItem(SettingsItemType.About, "About", ImageSource.FromFile("help.png"))
+                new SettingsBinding(SettingsItemType.Profile, "Profile", ImageSource.FromFile("account.png")),
+                new SettingsBinding(SettingsItemType.InviteFriends, "Invite friends", ImageSource.FromFile("friends.png")),
+                new SettingsBinding(SettingsItemType.About, "About", ImageSource.FromFile("help.png"))
             };
 
             SettingsList = tmp;
@@ -86,7 +87,7 @@ namespace Chiota.ViewModels.Settings
             {
                 return new Command(async (param) =>
                 {
-                    if (!(param is SettingsItem settingsItem)) return;
+                    if (!(param is SettingsBinding settingsItem)) return;
 
                     switch (settingsItem.Type)
                     {

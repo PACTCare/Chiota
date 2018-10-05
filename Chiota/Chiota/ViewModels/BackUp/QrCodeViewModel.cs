@@ -1,7 +1,8 @@
-﻿namespace Chiota.ViewModels.BackUp
+﻿using Chiota.ViewModels.Base;
+
+namespace Chiota.ViewModels.BackUp
 {
   using System.Windows.Input;
-  using Chiota.ViewModels.Classes;
   using Xamarin.Forms;
 
   public class QrCodeViewModel : BaseViewModel

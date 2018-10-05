@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+using Chiota.Helper;
 using Chiota.Messenger.Entity;
-using Chiota.Models.Classes;
+using Chiota.Models.Base;
 using Xamarin.Forms;
 
-namespace Chiota.Models
+namespace Chiota.Models.Binding
 {
     public class ChatBinding : BaseModel
     {

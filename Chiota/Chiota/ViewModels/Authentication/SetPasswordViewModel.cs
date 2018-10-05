@@ -3,8 +3,7 @@
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication

@@ -1,14 +1,12 @@
-﻿namespace Chiota.ViewModels.Classes
+﻿using System;
+using System.Globalization;
+using System.Reflection;
+using Chiota.Services.DependencyInjection;
+using Xamarin.Forms;
+
+namespace Chiota.ViewModels.Base
 {
-  using System;
-  using System.Globalization;
-  using System.Reflection;
-
-  using Chiota.Services.DependencyInjection;
-
-  using Xamarin.Forms;
-
-  public static class ViewModelLocator
+    public static class ViewModelLocator
   {
     public static readonly BindableProperty AutoWireViewModelProperty = BindableProperty.CreateAttached(
       "AutoWireViewModel",

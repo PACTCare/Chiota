@@ -1,6 +1,4 @@
-﻿using Chiota.ViewModels.Classes;
-
-namespace Chiota.Views.Authentication
+﻿namespace Chiota.Views.Authentication
 {
     using Xamarin.Forms;
     using Xamarin.Forms.Xaml;

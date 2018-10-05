@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Chiota.Messenger.Entity;
 using Chiota.Models;
+using Chiota.Models.Database;
 using Tangle.Net.Entity;
 
 namespace Chiota.Services.UserServices

@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Helper;
 using Chiota.Models;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
@@ -11,7 +12,7 @@ using Chiota.Resources.Settings;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;

@@ -1,12 +1,12 @@
-﻿namespace Chiota.Persistence
+﻿using Chiota.Models.Database;
+
+namespace Chiota.Persistence
 {
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Cache;
-  using Chiota.Models.SqLite;
-
   using SQLite;
 
   using Tangle.Net.Entity;

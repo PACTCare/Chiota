@@ -4,19 +4,17 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using Chiota.Classes;
 using Chiota.Extensions;
 using Chiota.Popups.Classes;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
-
 using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Classes
+namespace Chiota.ViewModels.Base
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {

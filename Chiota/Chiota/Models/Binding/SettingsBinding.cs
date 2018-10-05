@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Models.Classes;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace Chiota.Models
+namespace Chiota.Models.Binding
 {
     public enum SettingsItemType
     {
@@ -14,7 +9,7 @@ namespace Chiota.Models
         About
     }
 
-    public class SettingsItem : BaseModel
+    public class SettingsBinding
     {
         #region Properties
 
@@ -28,7 +23,7 @@ namespace Chiota.Models
 
         #region Constructors
 
-        public SettingsItem(SettingsItemType type, string name, ImageSource imageSource)
+        public SettingsBinding(SettingsItemType type, string name, ImageSource imageSource)
         {
             Type = type;
             Name = name;

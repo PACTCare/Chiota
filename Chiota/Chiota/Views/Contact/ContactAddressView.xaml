@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:classes="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
              x:Class="Chiota.Views.Contact.ContactAddressView"
-             classes:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactAddressViewModel}"
              Title="{extensions:Translate CmnContactAddress}">

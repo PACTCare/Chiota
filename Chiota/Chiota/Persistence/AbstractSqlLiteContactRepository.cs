@@ -1,4 +1,6 @@
-﻿namespace Chiota.Persistence
+﻿using Chiota.Models.Database;
+
+namespace Chiota.Persistence
 {
   using System.Collections.Generic;
   using System.Linq;
@@ -7,8 +9,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
-  using Chiota.Models.SqLite;
-
   using SQLite;
 
   using Tangle.Net.Cryptography.Signing;

@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
-using Chiota.Models.Classes;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Chiota.Annotations;
+using Chiota.Models.Base;
 
-namespace Chiota.Models
+namespace Chiota.Models.Binding
 {
-    public class SeedView : BaseModel
+    public class SeedBinding : INotifyPropertyChanged
     {
         #region Attributes
 
-        private List<SeedLine> _lines;
+        private List<SeedLineBinding> _lines;
 
         #endregion
 
         #region Properties
 
-        public List<SeedLine> Lines
+        public List<SeedLineBinding> Lines
         {
             get => _lines;
             set
@@ -27,23 +30,35 @@ namespace Chiota.Models
 
         #region Constructors
 
-        public SeedView(string seed)
+        public SeedBinding(string seed)
         {
             //Init the list.
-            Lines = new List<SeedLine>();
+            Lines = new List<SeedLineBinding>();
 
             //Calculate the length of the seed for the ui.
             var length = seed.Length / 9;
             //var rest = seed.Length % length;
 
             for (var i = 0; i < length; i++)
-                Lines.Add(new SeedLine(seed.Substring(i * length, length)));
+                Lines.Add(new SeedLineBinding(seed.Substring(i * length, length)));
+        }
+
+        #endregion
+
+        #region PropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
     }
 
-    public class SeedLine : BaseModel
+    public class SeedLineBinding : BaseModel
     {
         #region Attributes
 
@@ -67,7 +82,7 @@ namespace Chiota.Models
 
         #region Constructors
 
-        public SeedLine(string line)
+        public SeedLineBinding(string line)
         {
             //Init the list.
             Items = new List<string>();

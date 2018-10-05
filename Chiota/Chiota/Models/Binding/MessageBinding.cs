@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Chiota.Models.Classes;
-using Xamarin.Forms;
+using Chiota.Models.Base;
 
-namespace Chiota.Models
+namespace Chiota.Models.Binding
 {
     public class MessageBinding : BaseModel
     {

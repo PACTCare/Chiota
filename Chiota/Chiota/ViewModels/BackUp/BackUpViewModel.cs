@@ -1,4 +1,6 @@
-﻿namespace Chiota.ViewModels.BackUp
+﻿using Chiota.ViewModels.Base;
+
+namespace Chiota.ViewModels.BackUp
 {
     using System.Windows.Input;
 
@@ -6,7 +8,6 @@
     using Chiota.Services;
     using Chiota.Services.DependencyInjection;
     using Chiota.Services.UserServices;
-    using Chiota.ViewModels.Classes;
     using Chiota.Views.BackUp;
 
     using Xamarin.Forms;

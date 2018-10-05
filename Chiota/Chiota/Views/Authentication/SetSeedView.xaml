@@ -5,10 +5,10 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
              x:Class="Chiota.Views.Authentication.SetSeedView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance authentication:SetSeedViewModel}"
              Title="{extensions:Translate CmnSetSeed}">

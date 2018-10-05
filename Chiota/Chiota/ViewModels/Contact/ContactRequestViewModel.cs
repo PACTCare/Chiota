@@ -4,13 +4,14 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Helper;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.AcceptContact;
 using Chiota.Messenger.Usecase.DeclineContact;
 using Chiota.Models;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 

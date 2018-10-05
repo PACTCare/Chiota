@@ -8,12 +8,6 @@ namespace Chiota.Behaviors
 {
     public class ListViewCommandBehavior : Behavior<ListView>
     {
-        #region Attributes
-
-        private static ListView _listView;
-
-        #endregion
-
         #region Properties
 
         public ICommand Command
@@ -33,8 +27,6 @@ namespace Chiota.Behaviors
         {
             base.OnAttachedTo(bindable);
 
-            _listView = bindable;
-
             bindable.ItemTapped += BindableTapped;
             bindable.BindingContextChanged += BindableContextChanged;
         }
@@ -49,8 +41,6 @@ namespace Chiota.Behaviors
 
             bindable.ItemTapped -= BindableTapped;
             bindable.BindingContextChanged -= BindableContextChanged;
-
-            _listView = null;
         }
 
         #endregion
@@ -70,7 +60,7 @@ namespace Chiota.Behaviors
         private void BindableTapped(object sender, EventArgs e)
         {
             //Execute the command.
-            var bindable = sender as ListView;
+            if (!(sender is ListView bindable)) return;
             Command.Execute(bindable?.SelectedItem);
         }
 

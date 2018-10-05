@@ -1,6 +1,4 @@
-﻿using Chiota.ViewModels.Classes;
-
-namespace Chiota.Views.Help
+﻿namespace Chiota.Views.Help
 {
     using Xamarin.Forms;
     using Xamarin.Forms.Xaml;

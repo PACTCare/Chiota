@@ -1,4 +1,6 @@
-﻿namespace Chiota.Resources.Settings
+﻿using Chiota.Helper;
+
+namespace Chiota.Resources.Settings
 {
   using System.Threading.Tasks;
 

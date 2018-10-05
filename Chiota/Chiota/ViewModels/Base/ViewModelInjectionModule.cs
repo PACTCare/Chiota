@@ -1,16 +1,14 @@
-﻿using Chiota.ViewModels.Chat;
+﻿using Autofac;
+using Chiota.ViewModels.Authentication;
+using Chiota.ViewModels.BackUp;
+using Chiota.ViewModels.Chat;
 using Chiota.ViewModels.Contact;
+using Chiota.ViewModels.Help;
 using Chiota.ViewModels.Messenger;
 using Chiota.ViewModels.Settings;
 
-namespace Chiota.ViewModels.Classes
+namespace Chiota.ViewModels.Base
 {
-    using Autofac;
-
-    using Chiota.ViewModels.Authentication;
-    using Chiota.ViewModels.BackUp;
-    using Chiota.ViewModels.Help;
-
     public class ViewModelInjectionModule : Module
     {
         protected override void Load(ContainerBuilder builder)

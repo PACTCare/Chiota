@@ -6,9 +6,9 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models;
+using Chiota.Models.Binding;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -26,7 +26,7 @@ namespace Chiota.ViewModels.Authentication
         private bool isSeedViewVisible;
         private bool isUpVisible;
 
-        private SeedView seed;
+        private SeedBinding seed;
         private int seedLinePointer;
 
         private Thickness seedViewPadding;
@@ -212,7 +212,7 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(() =>
                 {
-                    seed = new SeedView(Tangle.Net.Entity.Seed.Random().Value);
+                    seed = new SeedBinding(Tangle.Net.Entity.Seed.Random().Value);
 
                     // Reset view.
                     seedLinePointer = 0;

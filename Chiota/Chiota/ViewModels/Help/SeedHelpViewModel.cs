@@ -1,7 +1,5 @@
 ﻿using System.Windows.Input;
-
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Help

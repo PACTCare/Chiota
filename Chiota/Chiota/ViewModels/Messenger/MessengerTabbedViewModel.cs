@@ -6,7 +6,7 @@ using Chiota.Classes;
 using Chiota.Messenger.Cache;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
 using Chiota.Views.Contact;
 using Chiota.Views.Settings;

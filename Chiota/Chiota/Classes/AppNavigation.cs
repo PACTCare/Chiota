@@ -1,6 +1,6 @@
 ﻿using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views.Messenger;
 using Xamarin.Forms;
 

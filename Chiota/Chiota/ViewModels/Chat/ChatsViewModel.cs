@@ -10,10 +10,11 @@ using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Messenger.Usecase.GetMessages;
 using Chiota.Models;
+using Chiota.Models.Binding;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Tangle.Net.Entity;
@@ -51,6 +52,17 @@ namespace Chiota.ViewModels.Chat
             base.Init(data);
 
             UpdateView();
+        }
+
+        #endregion
+
+        #region ViewIsAppearing
+
+        protected override void ViewIsAppearing()
+        {
+            base.ViewIsAppearing();
+
+
         }
 
         #endregion

@@ -7,7 +7,7 @@ using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views;
 using Plugin.Media;
 using Xamarin.Forms;
