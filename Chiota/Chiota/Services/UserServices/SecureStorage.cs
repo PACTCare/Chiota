@@ -37,19 +37,14 @@
       var decryptedUser = JsonConvert.DeserializeObject<User>(UserDataEncryption.Decrypt(encryptedUser, password, encryptionSalt));
       decryptedUser.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(decryptedUser.Seed.ToLower(), decryptedUser.PublicKeyAddress);
 
-      var checkUserResponse = await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
-                                new CheckUserRequest
-                                  {
-                                    PublicKey = decryptedUser.NtruKeyPair.PublicKey,
-                                    PublicKeyAddress = new Address(decryptedUser.PublicKeyAddress),
-                                    RequestAddress = new Address(decryptedUser.RequestAddress),
-                                    Seed = new Seed(decryptedUser.Seed)
-                                  });
-
-      if (checkUserResponse.Code == ResponseCode.NewPublicKeyAddress)
-      {
-        decryptedUser.PublicKeyAddress = checkUserResponse.PublicKeyAddress.Value;
-      }
+      await DependencyResolver.Resolve<IUsecaseInteractor<CheckUserRequest, CheckUserResponse>>().ExecuteAsync(
+        new CheckUserRequest
+          {
+            PublicKey = decryptedUser.NtruKeyPair.PublicKey,
+            PublicKeyAddress = new Address(decryptedUser.PublicKeyAddress),
+            RequestAddress = new Address(decryptedUser.RequestAddress),
+            Seed = new Seed(decryptedUser.Seed)
+          });
 
       UserService.SetCurrentUser(decryptedUser);
     }

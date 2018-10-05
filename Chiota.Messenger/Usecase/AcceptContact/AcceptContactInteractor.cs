@@ -28,7 +28,7 @@
         var contactDetails = new Contact
                                {
                                  Name = request.UserName,
-                                 ImageHash = request.UserImageHash,
+                                 ImageHash = request.UserImagePath,
                                  ChatAddress = request.ChatAddress.Value,
                                  ChatKeyAddress = request.ChatKeyAddress.Value,
                                  ContactAddress = request.UserContactAddress.Value,

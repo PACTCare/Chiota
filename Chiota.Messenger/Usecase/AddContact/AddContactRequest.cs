@@ -17,7 +17,7 @@
     /// <summary>
     /// Gets or sets the image hash.
     /// </summary>
-    public string ImageHash { get; set; }
+    public string ImagePath { get; set; }
 
     /// <summary>
     /// Gets or sets the name.

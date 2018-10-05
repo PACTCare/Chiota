@@ -73,6 +73,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AddAndAcceptContact.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\ChangeChatAddress.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChangeChatAddress.feature</DependentUpon>
+    </Compile>
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Repository\EmptyContactRepository.cs" />
     <Compile Include="Repository\InMemoryTransactionCache.cs" />
@@ -87,7 +92,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StepDefinitions\AddAndAcceptContactSteps.cs" />
     <Compile Include="StepDefinitions\BaseSteps.cs" />
-    <Compile Include="StepDefinitions\SendAndReceiveMessageSteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -98,6 +102,10 @@
     <None Include="Features\SendAndReceiveMessage.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SendAndReceiveMessage.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\ChangeChatAddress.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ChangeChatAddress.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -35,7 +35,7 @@
                       {
                         ContactAddress = new Address(),
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(Seed.Random().Value)
                       };
@@ -56,7 +56,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(publicKeyAddress)
                       };
@@ -83,7 +83,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(Seed.Random().Value)
                       };
@@ -108,7 +108,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(requestAddress),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(publicKeyAddress)
                       };
@@ -144,7 +144,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(Seed.Random().Value)
                       };
@@ -170,7 +170,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(Seed.Random().Value)
                       };
@@ -191,7 +191,7 @@
                       {
                         ContactAddress = contactAddress,
                         RequestAddress = new Address(Seed.Random().Value),
-                        ImageHash = "kjasdjkahsda89dafhfafa",
+                        ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
                         PublicKeyAddress = new Address(Seed.Random().Value)
                       };

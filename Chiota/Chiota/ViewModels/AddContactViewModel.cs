@@ -99,7 +99,7 @@ namespace Chiota.ViewModels
                          new AddContactRequest
                            {
                              Name = UserService.CurrentUser.Name,
-                             ImageHash = UserService.CurrentUser.ImageHash,
+                             ImagePath = UserService.CurrentUser.ImageHash,
                              RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                              PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
                              ContactAddress = new Address(this.ReceiverAdress)

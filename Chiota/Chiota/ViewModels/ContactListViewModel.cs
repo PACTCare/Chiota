@@ -76,7 +76,7 @@
                        new AcceptContactRequest
                          {
                            UserName = UserService.CurrentUser.Name,
-                           UserImageHash = UserService.CurrentUser.ImageHash,
+                           UserImagePath = UserService.CurrentUser.ImageHash,
                            ChatAddress = new Address(this.Contact.ChatAddress),
                            ChatKeyAddress = new Address(this.Contact.ChatKeyAddress),
                            ContactAddress = new Address(this.Contact.ContactAddress),
@@ -111,7 +111,8 @@
       await this.DeclineContactInteractor.ExecuteAsync(
         new DeclineContactRequest
           {
-            ContactChatAddress = new Address(this.Contact.ChatAddress), UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+            ContactChatAddress = new Address(this.Contact.ChatAddress),
+            UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
           });
 
       await this.PopPopupAsync();

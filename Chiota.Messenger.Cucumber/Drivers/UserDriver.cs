@@ -4,7 +4,6 @@
   using System.Linq;
 
   using Chiota.Messenger.Cucumber.Models;
-  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.AcceptContact;
   using Chiota.Messenger.Usecase.AddContact;
@@ -24,61 +23,11 @@
       this.Users = new List<User>();
     }
 
+    public object LastRequest { get; private set; }
+
+    public BaseResponse LastResponse { get; private set; }
+
     public List<User> Users { get; set; }
-
-    public CreateUserResponse CreateUser(string username)
-    {
-      var seed = Seed.Random();
-      var response = InstanceBag.CreateUserInteractor.ExecuteAsync(new CreateUserRequest { Seed = seed }).Result;
-
-      if (response.Code == ResponseCode.Success)
-      {
-        this.Users.Add(
-          new User
-            {
-              Seed = seed,
-              NtruKeyPair = response.NtruKeyPair,
-              PublicKeyAddress = response.PublicKeyAddress,
-              RequestAddress = response.RequestAddress,
-              Name = username,
-              ChatKeyPair = null
-            });
-      }
-
-      return response;
-    }
-
-    public AddContactResponse RequestContact(string senderName, string receiverName)
-    {
-      var sender = this.Users.First(u => u.Name == senderName);
-      var receiver = this.Users.First(u => u.Name == receiverName);
-
-      var response = InstanceBag.AddContactInteractor.ExecuteAsync(
-        new AddContactRequest
-          {
-            Name = sender.Name,
-            ImageHash = string.Empty,
-            RequestAddress = sender.RequestAddress,
-            PublicKeyAddress = sender.PublicKeyAddress,
-            ContactAddress = receiver.PublicKeyAddress
-          }).Result;
-
-      if (response.Code == ResponseCode.Success)
-      {
-        sender.Contacts.Add(
-          new Contact
-            {
-              IsApproved = false,
-              Name = receiver.Name,
-              NtruKeyPair = receiver.NtruKeyPair,
-              PublicKeyAddress = receiver.PublicKeyAddress,
-              RequestAddress = receiver.RequestAddress,
-              Seed = receiver.Seed
-            });
-      }
-
-      return response;
-    }
 
     public AcceptContactResponse AcceptContact(string receiverName, string senderName)
     {
@@ -97,19 +46,21 @@
         Assert.Fail($"Given contact ({senderName}) does not exist as pending contact!");
       }
 
-      var acceptResponse = InstanceBag.AcceptContactInteractor.ExecuteAsync(
-        new AcceptContactRequest
-          {
-            UserName = receiver.Name,
-            UserImageHash = string.Empty,
-            ChatAddress = new Address(contact.ChatAddress),
-            ChatKeyAddress = new Address(contact.ChatKeyAddress),
-            ContactAddress = new Address(contact.ContactAddress),
-            ContactPublicKeyAddress = new Address(contact.PublicKeyAddress),
-            UserPublicKeyAddress = receiver.PublicKeyAddress,
-            UserKeyPair = receiver.NtruKeyPair,
-            UserContactAddress = receiver.RequestAddress
-          }).Result;
+      var request = new AcceptContactRequest
+                                   {
+                                     UserName = receiver.Name,
+                                     UserImagePath = string.Empty,
+                                     ChatAddress = new Address(contact.ChatAddress),
+                                     ChatKeyAddress = new Address(contact.ChatKeyAddress),
+                                     ContactAddress = new Address(contact.ContactAddress),
+                                     ContactPublicKeyAddress = new Address(contact.PublicKeyAddress),
+                                     UserPublicKeyAddress = receiver.PublicKeyAddress,
+                                     UserKeyPair = receiver.NtruKeyPair,
+                                     UserContactAddress = receiver.RequestAddress
+                                   };
+
+      this.LastRequest = request;
+      var acceptResponse = InstanceBag.AcceptContactInteractor.ExecuteAsync(request).Result;
 
       if (acceptResponse.Code == ResponseCode.Success)
       {
@@ -124,38 +75,56 @@
               Seed = sender.Seed,
               ChatAddress = new Address(contact.ChatAddress),
               ChatKeyAddress = new Address(contact.ChatKeyAddress)
-          });
+            });
 
         sender.Contacts.First(c => c.Name == receiver.Name).IsApproved = true;
         sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress = new Address(contact.ChatAddress);
         sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyAddress = new Address(contact.ChatKeyAddress);
       }
 
+      this.LastResponse = acceptResponse;
       return acceptResponse;
     }
 
-    public SendMessageResponse SendMessage(string senderName, string message, string receiverName)
+    public CreateUserResponse CreateUser(string username)
     {
-      var sender = this.Users.First(u => u.Name == senderName);
-      var receiver = this.Users.First(u => u.Name == receiverName);
+      var seed = Seed.Random();
+      var request = new CreateUserRequest { Seed = seed };
 
-      var response = InstanceBag.SendMessageInteractor.ExecuteAsync(
-        new SendMessageRequest
-          {
-            Message = message,
-            UserPublicKeyAddress = sender.PublicKeyAddress,
-            ChatKeyPair = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair,
-            ChatAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress,
-            ChatKeyAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyAddress,
-            UserKeyPair = sender.NtruKeyPair
-        }).Result;
+      this.LastRequest = request;
+      var response = InstanceBag.CreateUserInteractor.ExecuteAsync(request).Result;
 
       if (response.Code == ResponseCode.Success)
       {
-        receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair = response.ChatKeyPair;
-        sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair = response.ChatKeyPair;
+        this.Users.Add(
+          new User
+            {
+              Seed = seed,
+              NtruKeyPair = response.NtruKeyPair,
+              PublicKeyAddress = response.PublicKeyAddress,
+              RequestAddress = response.RequestAddress,
+              Name = username,
+              ChatKeyPair = null
+            });
       }
 
+      this.LastResponse = response;
+      return response;
+    }
+
+    public GetContactsResponse GetContacts(string userName)
+    {
+      var user = this.Users.First(u => u.Name == userName);
+      var request = new GetContactsRequest { ContactRequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true };
+
+      this.LastRequest = request;
+      var response = InstanceBag.GetContactsInteractor.ExecuteAsync(request).Result;
+      if (response.Code != ResponseCode.Success)
+      {
+        Assert.Fail($"Can not get contacts. {response.Code}");
+      }
+
+      this.LastResponse = response;
       return response;
     }
 
@@ -164,14 +133,16 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
-      var response = InstanceBag.GetMessagesInteractor.ExecuteAsync(
-        new GetMessagesRequest
-          {
-            ChatAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatAddress,
-            ChatKeyPair = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair,
-            ChatKeyAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyAddress,
-            UserKeyPair = receiver.NtruKeyPair
-          }).Result;
+      var request = new GetMessagesRequest
+                      {
+                        ChatAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatAddress,
+                        ChatKeyPair = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair,
+                        ChatKeyAddress = receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyAddress,
+                        UserKeyPair = receiver.NtruKeyPair
+                      };
+
+      this.LastRequest = request;
+      var response = InstanceBag.GetMessagesInteractor.ExecuteAsync(request).Result;
 
       // ReSharper disable once InvertIf
       if (response.Code == ResponseCode.Success)
@@ -183,20 +154,72 @@
         sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress = response.CurrentChatAddress;
       }
 
+      this.LastResponse = response;
       return response;
     }
 
-    public GetContactsResponse GetContacts(string userName)
+    public AddContactResponse RequestContact(string senderName, string receiverName)
     {
-      var user = this.Users.First(u => u.Name == userName);
+      var sender = this.Users.First(u => u.Name == senderName);
+      var receiver = this.Users.First(u => u.Name == receiverName);
 
-      var response = InstanceBag.GetContactsInteractor.ExecuteAsync(
-        new GetContactsRequest { ContactRequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true }).Result;
-      if (response.Code != ResponseCode.Success)
+      var request = new AddContactRequest
+                      {
+                        Name = sender.Name,
+                        ImagePath = string.Empty,
+                        RequestAddress = sender.RequestAddress,
+                        PublicKeyAddress = sender.PublicKeyAddress,
+                        ContactAddress = receiver.PublicKeyAddress
+                      };
+
+      this.LastRequest = request;
+      var response = InstanceBag.AddContactInteractor.ExecuteAsync(
+        request).Result;
+
+      if (response.Code == ResponseCode.Success)
       {
-        Assert.Fail($"Can not get contacts. {response.Code}");
+        sender.Contacts.Add(
+          new Contact
+            {
+              IsApproved = false,
+              Name = receiver.Name,
+              NtruKeyPair = receiver.NtruKeyPair,
+              PublicKeyAddress = receiver.PublicKeyAddress,
+              RequestAddress = receiver.RequestAddress,
+              Seed = receiver.Seed
+            });
       }
 
+      this.LastResponse = response;
+      return response;
+    }
+
+    public SendMessageResponse SendMessage(string senderName, string message, string receiverName)
+    {
+      var sender = this.Users.First(u => u.Name == senderName);
+      var receiver = this.Users.First(u => u.Name == receiverName);
+
+      var request = new SendMessageRequest
+                      {
+                        Message = message,
+                        UserPublicKeyAddress = sender.PublicKeyAddress,
+                        ChatKeyPair = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair,
+                        ChatAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress,
+                        ChatKeyAddress = sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyAddress,
+                        UserKeyPair = sender.NtruKeyPair
+                      };
+
+      this.LastRequest = request;
+      var response = InstanceBag.SendMessageInteractor.ExecuteAsync(
+        request).Result;
+
+      if (response.Code == ResponseCode.Success)
+      {
+        receiver.Contacts.First(c => c.Name == sender.Name).ChatKeyPair = response.ChatKeyPair;
+        sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair = response.ChatKeyPair;
+      }
+
+      this.LastResponse = response;
       return response;
     }
   }

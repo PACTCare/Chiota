@@ -29,7 +29,7 @@
                                    ChatAddress = Seed.Random().ToString(),
                                    ChatKeyAddress = Seed.Random().ToString(),
                                    Name = request.Name,
-                                   ImageHash = request.ImageHash,
+                                   ImageHash = request.ImagePath,
                                    ContactAddress = request.RequestAddress.Value,
                                    Request = true,
                                    Rejected = false,

@@ -19,7 +19,7 @@
 
     public Address UserContactAddress { get; set; }
 
-    public string UserImageHash { get; set; }
+    public string UserImagePath { get; set; }
 
     public IAsymmetricKeyPair UserKeyPair { get; set; }
 
