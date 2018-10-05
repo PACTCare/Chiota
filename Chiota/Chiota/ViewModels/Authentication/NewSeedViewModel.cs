@@ -9,6 +9,7 @@ using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
+using Tangle.Net.Entity;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -244,7 +245,7 @@ namespace Chiota.ViewModels.Authentication
                         return;
                     }
 
-                    await PushAsync<BackUpView>(new UserCreationProperties { Seed = new Tangle.Net.Entity.Seed(ExtractSeed()) });
+                    await PushAsync<BackUpView>(new UserCreationProperties { Seed = new Seed(ExtractSeed()) });
                 });
             }
         }

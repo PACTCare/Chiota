@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 
-namespace Chiota.Classes.Localization
+namespace Chiota.Services.Localization
 {
     public interface IMultilingual
     {

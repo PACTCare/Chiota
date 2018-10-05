@@ -1,42 +1,43 @@
-﻿namespace Chiota
+﻿using Chiota.Base;
+using Chiota.Views.Messenger;
+
+namespace Chiota
 {
-  using Chiota.Classes;
-
-  /// <summary>
-  /// The app.
-  /// </summary>
-  public partial class App
-  {
     /// <summary>
-    /// Initializes a new instance of the <see cref="App"/> class.
+    /// The app.
     /// </summary>
-    public App()
+    public partial class App
     {
-      InitializeComponent();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class.
+        /// </summary>
+        public App()
+        {
+            InitializeComponent();
 
-      AppNavigation.ShowStartUp();
-    }
+            MainPage = new SplashView();
+        }
 
-    /// <summary>
-    /// The on resume.
-    /// </summary>
-    protected override void OnResume()
-    {
-      // Handle when your app resumes
-    }
+        /// <summary>
+        /// The on resume.
+        /// </summary>
+        protected override void OnResume()
+        {
+            // Handle when your app resumes
+        }
 
-    /// <summary>
-    /// The on sleep.
-    /// </summary>
-    protected override void OnSleep()
-    {
-    }
+        /// <summary>
+        /// The on sleep.
+        /// </summary>
+        protected override void OnSleep()
+        {
+        }
 
-    /// <summary>
-    /// The on start.
-    /// </summary>
-    protected override void OnStart()
-    {
+        /// <summary>
+        /// The on start.
+        /// </summary>
+        protected override void OnStart()
+        {
+        }
     }
-  }
 }

@@ -294,4 +294,10 @@
   <data name="DlgMessage" xml:space="preserve">
     <value>Message</value>
   </data>
+  <data name="DlgSettingUpAccount" xml:space="preserve">
+    <value>Setting up your account</value>
+  </data>
+  <data name="DlgLoggingIn" xml:space="preserve">
+    <value>Logging you in</value>
+  </data>
 </root>

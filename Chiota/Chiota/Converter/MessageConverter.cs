@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Chiota.Classes.Localization;
+using Chiota.Services.Localization;
 using Xamarin.Forms;
 
 namespace Chiota.Converter

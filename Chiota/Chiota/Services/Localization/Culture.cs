@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Threading;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace Chiota.Classes.Localization
+namespace Chiota.Services.Localization
 {
     public class Culture : IMultilingual
     {

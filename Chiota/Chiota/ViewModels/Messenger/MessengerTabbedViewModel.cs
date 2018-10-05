@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using Chiota.Classes;
+using Chiota.Base;
 using Chiota.Messenger.Cache;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
@@ -71,9 +71,10 @@ namespace Chiota.ViewModels.Messenger
             {
                 return new Command(async () =>
                 {
-                    UserService.SetCurrentUser(null);
+                    var userService = DependencyResolver.Resolve<UserService>();
+                    userService.SetCurrentUser(null);
                     await DependencyResolver.Resolve<ITransactionCache>().FlushAsync();
-                    AppNavigation.ShowStartUp();
+                    await AppBase.ShowStartUpAsync();
                 });
             }
         }

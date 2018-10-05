@@ -1,14 +1,14 @@
-﻿using Chiota.Services.DependencyInjection;
-using Chiota.Services.UserServices;
+﻿using System.Threading.Tasks;
+using Chiota.Services.Database;
 using Chiota.ViewModels.Base;
+using Chiota.Views.Authentication;
 using Chiota.Views.Messenger;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace Chiota.Classes
+namespace Chiota.Base
 {
-  using Chiota.Views.Authentication;
-
-  public static class AppNavigation
+    public static class AppBase
     {
         #region Attributes
 
@@ -26,12 +26,12 @@ namespace Chiota.Classes
 
         #region ShowStartUp
 
-        public static void ShowStartUp()
+        public static async Task ShowStartUpAsync()
         {
             NavigationPage container;
 
-            //SecureStorage.DeleteUser();
-            if (SecureStorage.IsUserStored)
+            var isUserStored = await DatabaseService.DatabaseInfo.IsUserStoredAsync();
+            if (isUserStored)
             {
                 // User is logged in.
                 container = SetNavigationStyles(new NavigationPage(new LogInView()));

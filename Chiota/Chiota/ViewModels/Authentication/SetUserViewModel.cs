@@ -2,9 +2,12 @@
 using System.Windows.Input;
 
 using Chiota.Annotations;
-using Chiota.Classes;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services.Database;
+using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
@@ -23,7 +26,6 @@ namespace Chiota.ViewModels.Authentication
         private string imagePath;
 
         private static UserCreationProperties UserProperties;
-        private UserService UserService;
 
         #endregion
 
@@ -53,9 +55,8 @@ namespace Chiota.ViewModels.Authentication
 
         #region Constructors
 
-        public SetUserViewModel(UserService userService)
+        public SetUserViewModel()
         {
-            UserService = userService;
         }
 
         #endregion
@@ -139,20 +140,21 @@ namespace Chiota.ViewModels.Authentication
                             return;
                         }
 
-                        await PushLoadingSpinnerAsync("Setting up your account");
+                        await PushLoadingSpinnerAsync(AppResources.DlgSettingUpAccount);
 
                         UserProperties.Name = Name;
-                        await UserService.CreateNew(UserProperties);
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        await userService.CreateNew(UserProperties);
 
                         if (!string.IsNullOrEmpty(imagePath))
                         {
                             UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(imagePath);
-                            SecureStorage.UpdateUser(UserProperties.Password);
+                            await userService.UpdateAsync(UserProperties.Password, UserService.CurrentUser);
                         }
 
                         await PopPopupAsync();
 
-                        AppNavigation.ShowMessenger();
+                        AppBase.ShowMessenger();
                     });
             }
         }

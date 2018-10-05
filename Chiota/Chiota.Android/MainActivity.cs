@@ -28,6 +28,7 @@ namespace Chiota.Droid
         {
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -45,6 +46,7 @@ namespace Chiota.Droid
 
             // https://docs.microsoft.com/de-de/xamarin/xamarin-forms/internals/fast-renderers
             Forms.SetFlags("FastRenderers_Experimental");
+            Xamarin.Essentials.Platform.Init(this, bundle);
             Rg.Plugins.Popup.Popup.Init(this, bundle);
             Forms.Init(this, bundle);
 

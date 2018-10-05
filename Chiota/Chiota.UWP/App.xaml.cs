@@ -1,4 +1,6 @@
-﻿namespace Chiota.UWP
+﻿using Chiota.Services.Database;
+
+namespace Chiota.UWP
 {
   using System;
   using System.Collections.Generic;
@@ -63,6 +65,7 @@
                                                  typeof(CachedImageRenderer).GetTypeInfo().Assembly  
                                                };
           Rg.Plugins.Popup.Popup.Init();
+          DatabaseService.Init();
                 Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
         if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
-using Chiota.Models.Base;
+using Chiota.Models.Database.Base;
 
 namespace Chiota.Models.Binding
 {

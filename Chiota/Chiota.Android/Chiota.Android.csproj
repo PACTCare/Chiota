@@ -90,9 +90,6 @@
     <PackageReference Include="Rg.Plugins.Popup">
       <Version>1.1.4.168</Version>
     </PackageReference>
-    <PackageReference Include="sqlite-net-pcl">
-      <Version>1.4.118</Version>
-    </PackageReference>
     <PackageReference Include="Tangle.Net.Standard">
       <Version>1.0.8.2</Version>
     </PackageReference>
@@ -105,11 +102,11 @@
     <PackageReference Include="Xam.Plugin.Media">
       <Version>4.0.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Xam.Plugin.SecureStorage">
-      <Version>1.0.12</Version>
-    </PackageReference>
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle">
       <Version>3.0.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Essentials">
+      <Version>0.10.0-preview</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.FFImageLoading.Forms">
       <Version>2.4.3.840</Version>
@@ -132,8 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectionModule.cs" />
-    <Compile Include="Persistence\SqlLiteTransactionCache.cs" />
-    <Compile Include="Persistence\SqlLiteContactRepository.cs" />
     <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
@@ -144,7 +139,7 @@
     <Compile Include="Renderer\Scrollbardisabledrenderer.cs" />
     <Compile Include="Services\NotificationsTask.cs" />
     <Compile Include="Services\PeriodicJob.cs" />
-    <Compile Include="Services\ShareImplementation.cs" />
+    <Compile Include="Services\Share\ShareImplementation.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>

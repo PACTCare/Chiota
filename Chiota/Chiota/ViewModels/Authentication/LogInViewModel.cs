@@ -1,7 +1,9 @@
 ﻿using System.Windows.Input;
-using Chiota.Classes;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views;
@@ -69,12 +71,20 @@ namespace Chiota.ViewModels.Authentication
                     {
                         try
                         {
-                            await PushLoadingSpinnerAsync("Logging you in ...");
+                            await PushLoadingSpinnerAsync(AppResources.DlgLoggingIn);
 
-                            await SecureStorage.LoginUser(Password);
+                            var userService = DependencyResolver.Resolve<UserService>();
+                            var result = await userService.LogInAsync(Password);
+
                             await PopPopupAsync();
 
-                            AppNavigation.ShowMessenger();
+                            if (!result)
+                            {
+                                await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
+                                return;
+                            }
+
+                            AppBase.ShowMessenger();
                         }
                         catch (BaseException exception)
                         {
@@ -84,18 +94,6 @@ namespace Chiota.ViewModels.Authentication
                     });
             }
         }
-
-        #endregion
-
-        #region NewSeed
-
-        public ICommand NewSeedCommand => new Command(async () => { await PushAsync<NewSeedView>(); });
-
-        #endregion
-
-        #region SetSeed
-
-        public ICommand SetSeedCommand => new Command(async () => { await PushAsync<SetSeedView>(); });
 
         #endregion
 

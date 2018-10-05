@@ -1,4 +1,5 @@
-﻿using Chiota.ViewModels.Base;
+﻿using Chiota.Services.Database.Base;
+using Chiota.ViewModels.Base;
 
 namespace Chiota.Services.DependencyInjection
 {
@@ -42,6 +43,7 @@ namespace Chiota.Services.DependencyInjection
       var builder = new ContainerBuilder();
 
       builder.RegisterModule(new ViewModelInjectionModule());
+
       foreach (var module in Modules)
       {
         builder.RegisterModule(module);

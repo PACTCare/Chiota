@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
 
-namespace Chiota.Models.Base
+namespace Chiota.Models.Database.Base
 {
     public abstract class BaseModel : INotifyPropertyChanged
     {

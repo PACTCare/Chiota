@@ -202,7 +202,7 @@ namespace Chiota.ViewModels.Settings
 
                     try
                     {
-                        SecureStorage.ValidatePassword(result.ResultText);
+                        //SecureStorage.ValidatePassword(result.ResultText);
 
                         if (_mediaFile?.Path != null)
                         {
@@ -211,7 +211,7 @@ namespace Chiota.ViewModels.Settings
                         }
 
                         UserService.CurrentUser.Name = Username;
-                        SecureStorage.UpdateUser(result.ResultText);
+                        //SecureStorage.UpdateUser(result.ResultText);
 
                         var settings = ApplicationSettings.Load();
                         await settings.Save();

@@ -1,17 +1,21 @@
-﻿using SQLite;
+﻿using Chiota.Models.Database.Base;
+using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class SqLiteMessage
+    public class DbMessage : TableModel
     {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        #region Properties
 
+        [JsonProperty("transactionhash")]
         public string TransactionHash { get; set; }
 
-        [MaxLength(100)]
+        [JsonProperty("chataddress")]
         public string ChatAddress { get; set; }
 
-        public string MessageTryteString { get; set; }
+        [JsonProperty("messagetryte")]
+        public string MessageTryte { get; set; }
+
+        #endregion
     }
 }

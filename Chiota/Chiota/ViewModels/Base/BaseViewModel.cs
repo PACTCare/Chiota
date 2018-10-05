@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Chiota.Classes;
+using Chiota.Base;
 using Chiota.Extensions;
 using Chiota.Popups.Classes;
 using Chiota.Popups.PopupModels;
@@ -29,8 +29,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         public INavigation Navigation
         {
-            get => AppNavigation.NavigationInstance.Navigation;
-            set => AppNavigation.NavigationInstance.Navigation = value;
+            get => AppBase.NavigationInstance.Navigation;
+            set => AppBase.NavigationInstance.Navigation = value;
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected Page CurrentPage
         {
-            get => AppNavigation.NavigationInstance.CurrentPage;
-            set => AppNavigation.NavigationInstance.CurrentPage = value;
+            get => AppBase.NavigationInstance.CurrentPage;
+            set => AppBase.NavigationInstance.CurrentPage = value;
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected object InitObject
         {
-            get => AppNavigation.NavigationInstance.InitObject;
-            set => AppNavigation.NavigationInstance.InitObject = value;
+            get => AppBase.NavigationInstance.InitObject;
+            set => AppBase.NavigationInstance.InitObject = value;
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected Page LastPage
         {
-            get => AppNavigation.NavigationInstance.LastPage;
-            set => AppNavigation.NavigationInstance.LastPage = value;
+            get => AppBase.NavigationInstance.LastPage;
+            set => AppBase.NavigationInstance.LastPage = value;
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected object ReverseObject
         {
-            get => AppNavigation.NavigationInstance.ReverseObject;
-            set => AppNavigation.NavigationInstance.ReverseObject = value;
+            get => AppBase.NavigationInstance.ReverseObject;
+            set => AppBase.NavigationInstance.ReverseObject = value;
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected Page RootPage
         {
-            get => AppNavigation.NavigationInstance.RootPage;
-            set => AppNavigation.NavigationInstance.RootPage = value;
+            get => AppBase.NavigationInstance.RootPage;
+            set => AppBase.NavigationInstance.RootPage = value;
         }
 
         #endregion

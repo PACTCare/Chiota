@@ -1,7 +1,7 @@
 ﻿using System;
 using Chiota.Helper;
 using Chiota.Messenger.Entity;
-using Chiota.Models.Base;
+using Chiota.Models.Database.Base;
 using Xamarin.Forms;
 
 namespace Chiota.Models.Binding

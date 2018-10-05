@@ -1,5 +1,5 @@
 ﻿using System;
-using Chiota.Models.Base;
+using Chiota.Models.Database.Base;
 
 namespace Chiota.Models.Binding
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Chiota.Classes.Localization
+namespace Chiota.Services.Localization
 {
     public class Multilingual
     {

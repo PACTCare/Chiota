@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Chiota.Services.Share;
-using Chiota.UWP.Services;
+using Chiota.UWP.Services.Share;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(ShareImplementation))]
-namespace Chiota.UWP.Services
+namespace Chiota.UWP.Services.Share
 {
     /// <summary>
     /// Implementation for Share

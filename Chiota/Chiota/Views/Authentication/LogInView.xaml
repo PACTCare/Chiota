@@ -25,7 +25,7 @@
                     <StackLayout VerticalOptions="Center" Spacing="32">
                         <StackLayout Spacing="8">
                             <Frame Style="{DynamicResource RoundedFrame8}" WidthRequest="256" BackgroundColor="{DynamicResource EntryColor}">
-                              <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True"/>
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True"/>
                             </Frame>
                             <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgLogIn}" WidthRequest="256" Command="{Binding LogInCommand}"/>
                         </StackLayout>
@@ -41,13 +41,8 @@
                                 <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
                             </Label.GestureRecognizers>
                         </Label>
-          </StackLayout>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSetSeed}" WidthRequest="128" Command="{Binding SetSeedCommand}"/>
-                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgNewSeed}" WidthRequest="128" Command="{Binding NewSeedCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

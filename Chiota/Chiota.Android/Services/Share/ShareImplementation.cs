@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Content;
-using Chiota.Droid.Services;
+using Chiota.Droid.Services.Share;
 using Chiota.Services.Share;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Application = Android.App.Application;
 
 [assembly: Dependency(typeof(ShareImplementation))]
-namespace Chiota.Droid.Services
+namespace Chiota.Droid.Services.Share
 {
     /// <summary>
     /// Implementation for Feature

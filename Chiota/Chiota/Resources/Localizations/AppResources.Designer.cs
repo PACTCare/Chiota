@@ -466,6 +466,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logging you in.
+        /// </summary>
+        internal static string DlgLoggingIn {
+            get {
+                return ResourceManager.GetString("DlgLoggingIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log in.
         /// </summary>
         internal static string DlgLogIn {
@@ -579,6 +588,15 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgSetSeed {
             get {
                 return ResourceManager.GetString("DlgSetSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting up your account.
+        /// </summary>
+        internal static string DlgSettingUpAccount {
+            get {
+                return ResourceManager.GetString("DlgSettingUpAccount", resourceCulture);
             }
         }
         

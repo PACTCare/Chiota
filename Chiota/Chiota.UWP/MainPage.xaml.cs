@@ -1,4 +1,7 @@
-﻿namespace Chiota.UWP
+﻿using Chiota.Services.Database;
+using Xamarin.Essentials;
+
+namespace Chiota.UWP
 {
   using System;
   using System.Linq;
@@ -14,7 +17,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Usecase;
   using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
@@ -72,7 +74,8 @@
 
     private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-      if (!SecureStorage.IsUserStored)
+      var isUserStored = await DatabaseService.DatabaseInfo.IsUserStoredAsync();
+      if (!isUserStored)
       {
         return;
       }

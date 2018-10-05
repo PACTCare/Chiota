@@ -1,18 +1,21 @@
-﻿using SQLite;
+﻿using Chiota.Models.Database.Base;
+using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class SqLiteContacts
+    public class DbContacts : TableModel
     {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        #region Properties
 
-        [MaxLength(100)]
+        [JsonProperty("chataddress")]
         public string ChatAddress { get; set; }
 
-        // to make it unique if mulitple accounts on device
+        [JsonProperty("publickeyaddress")]
         public string PublicKeyAddress { get; set; }
 
+        [JsonProperty("accepted")]
         public bool Accepted { get; set; }
+
+        #endregion
     }
 }
