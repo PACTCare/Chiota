@@ -12,12 +12,12 @@
   [Binding]
   public class SendAndReceiveMessageSteps
   {
-    public SendAndReceiveMessageSteps(UserDriver driver)
+    public SendAndReceiveMessageSteps(UserDriver driver) 
     {
       this.Driver = driver ?? throw new ArgumentNullException(nameof(driver));
     }
 
-    private UserDriver Driver { get; }
+    private UserDriver Driver { get; set; }
 
     [Given(@"""(.*)"" and ""(.*)"" are approved contacts")]
     public void GivenAndAreApprovedContacts(string sender, string receiver)
@@ -27,13 +27,6 @@
 
       var acceptResponse = this.Driver.AcceptContact(receiver, sender);
       Assert.AreEqual(ResponseCode.Success, acceptResponse.Code);
-    }
-
-    [Given(@"There is a user ""(.*)""")]
-    public void GivenThereIsAUser(string username)
-    {
-      var response = this.Driver.CreateUser(username);
-      Assert.AreEqual(ResponseCode.Success, response.Code);
     }
 
     [Then(@"""(.*)"" should be able to read the message ""(.*)"" from ""(.*)""")]

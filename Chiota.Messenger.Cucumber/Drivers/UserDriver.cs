@@ -85,8 +85,7 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
-      var contactResponse = InstanceBag.GetContactsInteractor.ExecuteAsync(
-        new GetContactsRequest { ContactRequestAddress = receiver.RequestAddress, PublicKeyAddress = receiver.PublicKeyAddress }).Result;
+      var contactResponse = this.GetContacts(receiverName);
       if (contactResponse.Code != ResponseCode.Success)
       {
         Assert.Fail($"Can not get contacts. {contactResponse.Code}");
@@ -108,7 +107,8 @@
             ContactAddress = new Address(contact.ContactAddress),
             ContactPublicKeyAddress = new Address(contact.PublicKeyAddress),
             UserPublicKeyAddress = receiver.PublicKeyAddress,
-            UserKeyPair = receiver.NtruKeyPair
+            UserKeyPair = receiver.NtruKeyPair,
+            UserContactAddress = receiver.RequestAddress
           }).Result;
 
       if (acceptResponse.Code == ResponseCode.Success)
@@ -181,6 +181,20 @@
 
         sender.Contacts.First(c => c.Name == receiver.Name).ChatKeyPair = response.ChatKeyPair;
         sender.Contacts.First(c => c.Name == receiver.Name).ChatAddress = response.CurrentChatAddress;
+      }
+
+      return response;
+    }
+
+    public GetContactsResponse GetContacts(string userName)
+    {
+      var user = this.Users.First(u => u.Name == userName);
+
+      var response = InstanceBag.GetContactsInteractor.ExecuteAsync(
+        new GetContactsRequest { ContactRequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true }).Result;
+      if (response.Code != ResponseCode.Success)
+      {
+        Assert.Fail($"Can not get contacts. {response.Code}");
       }
 
       return response;

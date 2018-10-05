@@ -31,7 +31,7 @@
                                  ImageHash = request.UserImageHash,
                                  ChatAddress = request.ChatAddress.Value,
                                  ChatKeyAddress = request.ChatKeyAddress.Value,
-                                 ContactAddress = null,
+                                 ContactAddress = request.UserContactAddress.Value,
                                  PublicKeyAddress = request.UserPublicKeyAddress.Value,
                                  Rejected = false,
                                  Request = false,

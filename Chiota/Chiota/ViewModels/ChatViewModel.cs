@@ -110,8 +110,12 @@ namespace Chiota.ViewModels
               ChatAddress = this.currentChatAddress,
               ChatKeyPair = this.ntruChatKeyPair,
               Message = this.OutGoingText,
-              UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
-            });
+              UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+              ChatKeyAddress = new Address(this.contact.ChatKeyAddress),
+              UserKeyPair = UserService.CurrentUser.NtruKeyPair
+          });
+
+        this.ntruChatKeyPair = response.ChatKeyPair;
 
         this.loadNewMessages = true;
         await this.AddNewMessagesAsync(this.Messages);

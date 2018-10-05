@@ -82,7 +82,8 @@
                            ContactAddress = new Address(this.Contact.ContactAddress),
                            ContactPublicKeyAddress = new Address(this.Contact.PublicKeyAddress),
                            UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                           UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                           UserKeyPair = UserService.CurrentUser.NtruKeyPair,
+                           UserContactAddress = new Address(UserService.CurrentUser.RequestAddress)
                          });
 
       await this.PopPopupAsync();

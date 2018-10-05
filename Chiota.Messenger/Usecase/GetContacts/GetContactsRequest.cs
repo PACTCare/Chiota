@@ -7,14 +7,15 @@
   /// </summary>
   public class GetContactsRequest
   {
-    /// <summary>
-    /// Gets or sets the contact request address.
-    /// </summary>
     public Address ContactRequestAddress { get; set; }
 
-    /// <summary>
-    /// Gets or sets the public key address.
-    /// </summary>
     public Address PublicKeyAddress { get; set; }
+
+    /// <summary>
+    /// If set to true, checks all pending contacts to determine whether they are accepted or not.
+    /// Normally not needed since the information is stored in the IContactRepository (locally).
+    /// Useful to import a existing seed into a new device
+    /// </summary>
+    public bool DoCrossCheck { get; set; }
   }
 }
