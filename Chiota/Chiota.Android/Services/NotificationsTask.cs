@@ -22,8 +22,6 @@ namespace Chiota.Droid.Services
 
   using Java.Lang;
 
-  using Plugin.Connectivity;
-
   using Tangle.Net.Entity;
 
   using Resource = Resource;
@@ -38,7 +36,7 @@ namespace Chiota.Droid.Services
 
     private async Task<bool> LookForNewNotifications()
     {
-      if (CrossConnectivity.Current.IsConnected)
+      if (Connectivity.NetworkAccess == NetworkAccess.Internet)
       {
         // seed needs to be stored on device!!
           var isUserStored = await DatabaseService.User.IsUserStoredAsync();

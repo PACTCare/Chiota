@@ -1,4 +1,5 @@
 ﻿using Android.Runtime;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace Chiota.Droid
 {
@@ -11,8 +12,6 @@ namespace Chiota.Droid
     using Chiota;
     using Chiota.Droid.Services;
     using Chiota.Services.DependencyInjection;
-
-    using ImageCircle.Forms.Plugin.Droid;
 
     using Plugin.CurrentActivity;
     using Plugin.Permissions;
@@ -50,14 +49,11 @@ namespace Chiota.Droid
             Rg.Plugins.Popup.Popup.Init(this, bundle);
             SQLitePCL.Batteries.Init();
             Forms.Init(this, bundle);
+            ImageCircleRenderer.Init();
 
             this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);
 
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
-            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
-
-            ImageCircleRenderer.Init();
 
             this.LoadApplication(new App());
             this.WireUpLongRunningTask();

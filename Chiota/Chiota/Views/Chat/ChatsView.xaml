@@ -5,11 +5,11 @@
              base:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:chat="clr-namespace:Chiota.ViewModels.Chat;assembly=Chiota"
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance chat:ChatsViewModel}">
 
@@ -27,7 +27,7 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="8" Spacing="16" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <abstractions:CircleImage Source="{Binding ImageSource}" HeightRequest="64" WidthRequest="64"/>
+                                    <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" HeightRequest="64" WidthRequest="64"/>
                                 </StackLayout>
 
                                 <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="8">

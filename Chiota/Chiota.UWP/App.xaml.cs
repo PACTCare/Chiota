@@ -66,8 +66,9 @@ namespace Chiota.UWP
                                                };
           Rg.Plugins.Popup.Popup.Init();
                 Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+          ImageCircleRenderer.Init();
 
-        if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
         {
           //TODO: Load state from previously suspended application
         }

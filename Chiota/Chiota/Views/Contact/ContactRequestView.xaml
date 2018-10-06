@@ -6,9 +6,9 @@
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
-             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactRequestViewModel}"
              Title="{extensions:Translate CmnContactRequest}">
@@ -18,7 +18,7 @@
             <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                 <StackLayout VerticalOptions="Center" Spacing="24">
                     <StackLayout Spacing="16">
-                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" HeightRequest="128" WidthRequest="128"/>
+                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" Aspect="AspectFill" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource Label18}" Text="{Binding Username}" HorizontalOptions="Center"/>
                     </StackLayout>
 

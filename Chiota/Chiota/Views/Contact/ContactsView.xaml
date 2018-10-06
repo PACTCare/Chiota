@@ -6,9 +6,9 @@
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
-             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactsViewModel}">
 
@@ -20,7 +20,7 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" BackgroundColor="{Binding BackgroundColor}" Padding="8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <abstractions:CircleImage Source="{Binding ImageSource}" HeightRequest="48" WidthRequest="48"/>
+                                    <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" HeightRequest="48" WidthRequest="48"/>
                                 </StackLayout>
 
                                 <StackLayout VerticalOptions="Center" Spacing="2" IsVisible="{Binding IsNotApproved}">

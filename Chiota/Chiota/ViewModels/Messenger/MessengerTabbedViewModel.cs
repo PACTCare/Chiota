@@ -71,9 +71,17 @@ namespace Chiota.ViewModels.Messenger
             {
                 return new Command(async () =>
                 {
-                    var userService = DependencyResolver.Resolve<UserService>();
-                    userService.SetCurrentUser(null);
-                    await DependencyResolver.Resolve<ITransactionCache>().FlushAsync();
+                    try
+                    {
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        userService.SetCurrentUser(null);
+                        await DependencyResolver.Resolve<ITransactionCache>().FlushAsync();
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
                     await AppBase.ShowStartUpAsync();
                 });
             }
