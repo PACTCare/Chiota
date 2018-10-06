@@ -48,6 +48,7 @@ namespace Chiota.Droid
             Forms.SetFlags("FastRenderers_Experimental");
             Xamarin.Essentials.Platform.Init(this, bundle);
             Rg.Plugins.Popup.Popup.Init(this, bundle);
+            SQLitePCL.Batteries.Init();
             Forms.Init(this, bundle);
 
             this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);

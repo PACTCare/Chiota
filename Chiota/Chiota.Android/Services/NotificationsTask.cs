@@ -1,4 +1,7 @@
-﻿namespace Chiota.Droid.Services
+﻿using Chiota.Services.Database;
+using Xamarin.Essentials;
+
+namespace Chiota.Droid.Services
 {
   using System.Linq;
   using System.Threading.Tasks;
@@ -38,7 +41,8 @@
       if (CrossConnectivity.Current.IsConnected)
       {
         // seed needs to be stored on device!!
-        if (!SecureStorage.IsUserStored)
+          var isUserStored = await DatabaseService.User.IsUserStoredAsync();
+        if (!isUserStored)
         {
           return true;
         }

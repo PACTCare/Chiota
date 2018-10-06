@@ -1,4 +1,7 @@
-﻿namespace Chiota.Droid
+﻿using Chiota.Droid.Persistence;
+using Chiota.Persistence;
+
+namespace Chiota.Droid
 {
   using Autofac;
 
@@ -14,6 +17,12 @@
     protected override void Load(ContainerBuilder builder)
     {
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
-    }
+
+        builder.RegisterType<SqlLiteTransactionCache>().As<ITransactionCache>();
+        builder.RegisterType<SqlLiteTransactionCache>().As<AbstractSqlLiteTransactionCache>();
+
+        builder.RegisterType<SqlLiteContactRepository>().As<IContactRepository>().PropertiesAutowired();
+        builder.RegisterType<SqlLiteContactRepository>().As<AbstractSqlLiteContactRepository>().PropertiesAutowired();
+        }
   }
 }

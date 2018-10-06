@@ -141,7 +141,7 @@ namespace Chiota.ViewModels.Authentication
                         if (!string.IsNullOrEmpty(imagePath) && imageStream != null)
                         {
                             //Pin the image to ipfs.
-                            UserProperties.ImageHash = await new IpfsHelper().PinFile(imagePath);
+                            UserProperties.ImageHash = await new IpfsHelper().PostFileAsync(imagePath);
 
                             //Load the image local.
                             var buffer = new byte[imageStream.Length];

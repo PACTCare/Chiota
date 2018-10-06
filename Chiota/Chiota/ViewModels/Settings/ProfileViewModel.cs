@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
@@ -100,7 +102,7 @@ namespace Chiota.ViewModels.Settings
         {
             base.ViewIsDisappearing();
 
-            _mediaFile.Dispose();
+            _mediaFile?.Dispose();
         }
 
         #endregion
@@ -219,7 +221,7 @@ namespace Chiota.ViewModels.Settings
                     {
                         if (_mediaFile?.Path != null)
                         {
-                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(_mediaFile.Path);
+                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PostFileAsync(_mediaFile.Path);
                             UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(_mediaFile.Path));
                         }
 
