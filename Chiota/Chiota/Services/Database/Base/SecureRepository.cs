@@ -4,21 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Chiota.Models.Database.Base;
+using Chiota.Services.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chiota.Services.Database.Base
 {
-    public class TableRepository<T> : BaseRepository where T : BaseModel
+    public abstract class SecureRepository<T> : TableRepository<T> where T : TableModel
     {
-       #region Constructors
+        #region Attributes
 
-        /// <summary>
-        /// Base constructor of the database Repositories.
-        /// Controls the access of the different database tables.
-        /// </summary>
-        /// <param name="context">Context of the local database.</param>
-        protected TableRepository(DatabaseContext context) : base(context)
+        protected string Key { get; }
+
+        #endregion
+
+        #region Constructors
+
+        protected SecureRepository(DatabaseContext context, string key) : base(context)
         {
+            Key = key;
         }
 
         #endregion
@@ -31,11 +34,15 @@ namespace Chiota.Services.Database.Base
         /// Get all objects of the table.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public virtual List<T> GetObjects()
+        public override List<T> GetObjects()
         {
             try
             {
-                var models = DatabaseContext.Set<T>().ToList();
+                var models = base.GetObjects();
+
+                for (var i = 0; i < models.Count; i++)
+                    models[i] = Decrypt(models[i]);
+
                 return models;
             }
             catch (Exception e)
@@ -51,11 +58,15 @@ namespace Chiota.Services.Database.Base
         /// Get all objects of the table.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public virtual async Task<List<T>> GetObjectsAsync()
+        public override async Task<List<T>> GetObjectsAsync()
         {
             try
             {
-                var models = await DatabaseContext.Set<T>().ToListAsync();
+                var models = await base.GetObjectsAsync();
+
+                for (var i = 0; i < models.Count; i++)
+                    models[i] = Decrypt(models[i]);
+                
                 return models;
             }
             catch (Exception e)
@@ -76,11 +87,13 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="id">Id of the object as integer</param>
         /// <returns>Object of the table</returns>
-        public virtual T GetObjectById(int id)
+        public override T GetObjectById(int id)
         {
             try
             {
-                var model = DatabaseContext.Set<T>().Find(id);
+                var model = base.GetObjectById(id);
+                model = Decrypt(model);
+
                 return model;
             }
             catch (Exception e)
@@ -97,11 +110,13 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="id">Id of the object as integer</param>
         /// <returns>Object of the table</returns>
-        public virtual async Task<T> GetObjectByIdAsync(int id)
+        public override async Task<T> GetObjectByIdAsync(int id)
         {
             try
             {
-                var model = await DatabaseContext.Set<T>().FindAsync(id);
+                var model = await base.GetObjectByIdAsync(id);
+                model = Decrypt(model);
+
                 return model;
             }
             catch (Exception e)
@@ -122,17 +137,14 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="t">Object of the table</param>
         /// <returns>Result of successful insert as boolean</returns>
-        public virtual T AddObject(T t)
+        public override T AddObject(T t)
         {
             try
             {
-                var state = DatabaseContext.Set<T>().Add(t);
-                var result = state.State == EntityState.Added;
-                DatabaseContext.SaveChanges();
-
-                if (!result) return null;
-                var model = DatabaseContext.Set<T>().Last();
-                return model;
+                var encrypted = Encrypt(t);
+                var model = base.AddObject(encrypted);
+                var decrypted = Decrypt(model);
+                return decrypted;
             }
             catch (Exception e)
             {
@@ -148,17 +160,14 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="t">Object of the table</param>
         /// <returns>Result of successful insert as boolean</returns>
-        public virtual async Task<T> AddObjectAsync(T t)
+        public override async Task<T> AddObjectAsync(T t)
         {
             try
             {
-                var state = await DatabaseContext.Set<T>().AddAsync(t);
-                var result = state.State == EntityState.Added;
-                await DatabaseContext.SaveChangesAsync();
-
-                if (!result) return null;
-                var model = DatabaseContext.Set<T>().Last();
-                return model;
+                var encrypted = Encrypt(t);
+                var model = await base.AddObjectAsync(encrypted);
+                var decrypted = Decrypt(model);
+                return decrypted;
             }
             catch (Exception e)
             {
@@ -178,14 +187,13 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="t">Object of the table</param>
         /// <returns>Result of successful update as boolean</returns>
-        public virtual bool UpdateObject(T t)
+        public override bool UpdateObject(T t)
         {
             try
             {
-                var state = DatabaseContext.Set<T>().Update(t);
-                var result = state.State == EntityState.Modified;
-                DatabaseContext.SaveChanges();
-
+                var encrypted = Encrypt(t);
+                var result = base.UpdateObject(encrypted);
+                Decrypt(t);
                 return result;
             }
             catch (Exception e)
@@ -202,14 +210,13 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="t">Object of the table</param>
         /// <returns>Result of successful update as boolean</returns>
-        public virtual async Task<bool> UpdateObjectAsync(T t)
+        public override async Task<bool> UpdateObjectAsync(T t)
         {
             try
             {
-                var state = DatabaseContext.Set<T>().Update(t);
-                var result = state.State == EntityState.Modified;
-                await DatabaseContext.SaveChangesAsync();
-
+                var encrypted = Encrypt(t);
+                var result = await base.UpdateObjectAsync(encrypted);
+                Decrypt(t);
                 return result;
             }
             catch (Exception e)
@@ -230,16 +237,11 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="id">Id of the object</param>
         /// <returns>Result of successful delete as boolean</returns>
-        public virtual bool DeleteObject(int id)
+        public override bool DeleteObject(int id)
         {
             try
             {
-                var model = DatabaseContext.Set<T>().Find(id);
-                var state = DatabaseContext.Remove(model);
-                var result = state.State == EntityState.Deleted;
-                DatabaseContext.SaveChanges();
-
-                return result;
+                return base.DeleteObject(id);
             }
             catch (Exception e)
             {
@@ -255,16 +257,11 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="id">Id of the object</param>
         /// <returns>Result of successful delete as boolean</returns>
-        public virtual async Task<bool> DeleteObjectAsync(int id)
+        public override async Task<bool> DeleteObjectAsync(int id)
         {
             try
             {
-                var model = await DatabaseContext.Set<T>().FindAsync(id);
-                var state = DatabaseContext.Remove(model);
-                var result = state.State == EntityState.Deleted;
-                await DatabaseContext.SaveChangesAsync();
-
-                return result;
+                return await base.DeleteObjectAsync(id);
             }
             catch (Exception e)
             {
@@ -277,48 +274,58 @@ namespace Chiota.Services.Database.Base
 
         #endregion
 
-        #region QueryObject
+        #endregion
+
+        #region SecurityMethods
+
+        #region Encrypt
 
         /// <summary>
-        /// Select specific object by a given function.
+        /// Encrypt the string properties of the given object by triple des.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns>Object of the table</returns>
-        public T QueryObject(Func<T, bool> predicate)
+        /// <param name="t"></param>
+        /// <returns></returns>
+        private T Encrypt(T t)
         {
-            try
+            foreach (var property in t.GetType().GetProperties())
             {
-                var model = DatabaseContext.Set<T>().Where(predicate).First();
-                return model;
+                if (property.PropertyType == typeof(string))
+                {
+                    var value = (string)property.GetValue(t);
+                    if (string.IsNullOrEmpty(value)) continue;
+
+                    var encrypted = TripleDes.Encrypt((string)value, Key);
+                    property.SetValue(t, encrypted);
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
+
+            return t;
         }
 
         #endregion
 
-        #region QueryObjects
-
         /// <summary>
-        /// Select list of objects by a given function.
+        /// Decrypt the string properties of the given object by triple des.
         /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns>List of the table objects</returns>
-        public List<T> QueryObjects(Func<T, bool> predicate)
+        /// <param name="t"></param>
+        /// <returns></returns>
+        #region Decrypt
+
+        private T Decrypt(T t)
         {
-            try
+            foreach (var property in t.GetType().GetProperties())
             {
-                var models = DatabaseContext.Set<T>().Where(predicate).ToList();
-                return models;
+                if (property.PropertyType == typeof(string))
+                {
+                    var value = (string)property.GetValue(t);
+                    if (string.IsNullOrEmpty(value)) continue;
+
+                    var encrypted = TripleDes.Decrypt(value, Key);
+                    property.SetValue(t, encrypted);
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
+
+            return t;
         }
 
         #endregion

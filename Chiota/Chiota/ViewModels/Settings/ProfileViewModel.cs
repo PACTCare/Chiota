@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
@@ -76,9 +77,12 @@ namespace Chiota.ViewModels.Settings
 
             _originUsername = UserService.CurrentUser.Name;
 
-            var imagehash = UserService.CurrentUser.ImageHash;
-            if(imagehash != null)
-                _originImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + imagehash));
+            if (!string.IsNullOrEmpty(UserService.CurrentUser.ImageBase64))
+            {
+                //Load the profile image from the loaded buffer of the database.
+                var buffer = Convert.FromBase64String(UserService.CurrentUser.ImageBase64);
+                _originImageSource = ImageSource.FromStream(() => new MemoryStream(buffer));
+            }
             else
                 _originImageSource = ImageSource.FromFile("account.png");
 
@@ -86,6 +90,17 @@ namespace Chiota.ViewModels.Settings
             Username = _originUsername;
 
             base.Init(data);
+        }
+
+        #endregion
+
+        #region ViewIsDisappearing
+
+        protected override void ViewIsDisappearing()
+        {
+            base.ViewIsDisappearing();
+
+            _mediaFile.Dispose();
         }
 
         #endregion
@@ -189,7 +204,7 @@ namespace Chiota.ViewModels.Settings
                     //Need the password to update the user information.
                     var dialog = new DialogPopupModel()
                     {
-                        Title = "Please required to change your personal information.",
+                        Title = "Please confirm your password to change your personal information.",
                         Placeholder = AppResources.DlgPassword,
                         IsPassword = true
                     };
@@ -202,16 +217,22 @@ namespace Chiota.ViewModels.Settings
 
                     try
                     {
-                        //SecureStorage.ValidatePassword(result.ResultText);
-
                         if (_mediaFile?.Path != null)
                         {
                             UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(_mediaFile.Path);
-                            _mediaFile.Dispose();
+                            UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(_mediaFile.Path));
                         }
 
                         UserService.CurrentUser.Name = Username;
-                        //SecureStorage.UpdateUser(result.ResultText);
+
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        var isValid = await userService.UpdateAsync(result.ResultText, UserService.CurrentUser);
+                        if (!isValid)
+                        {
+                            await PopPopupAsync();
+                            await new InvalidUserInputException(new ExcInfo(), AppResources.DlgPassword).ShowAlertAsync();
+                            return;
+                        }
 
                         var settings = ApplicationSettings.Load();
                         await settings.Save();
@@ -219,7 +240,9 @@ namespace Chiota.ViewModels.Settings
                         DependencyResolver.Reload();
 
                         await PopPopupAsync();
+
                         await DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
+                        await PopAsync();
                         return;
                     }
                     catch (BaseException exception)

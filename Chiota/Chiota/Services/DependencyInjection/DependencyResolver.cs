@@ -1,4 +1,4 @@
-﻿using Chiota.Services.Database.Base;
+﻿using Chiota.Services.Database;
 using Chiota.ViewModels.Base;
 
 namespace Chiota.Services.DependencyInjection

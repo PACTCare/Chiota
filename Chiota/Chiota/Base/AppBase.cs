@@ -30,7 +30,8 @@ namespace Chiota.Base
         {
             NavigationPage container;
 
-            var isUserStored = await DatabaseService.DatabaseInfo.IsUserStoredAsync();
+            //SecureStorage.RemoveAll();
+            var isUserStored = await DatabaseService.User.IsUserStoredAsync();
             if (isUserStored)
             {
                 // User is logged in.

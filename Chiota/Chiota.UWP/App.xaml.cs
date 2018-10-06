@@ -65,7 +65,6 @@ namespace Chiota.UWP
                                                  typeof(CachedImageRenderer).GetTypeInfo().Assembly  
                                                };
           Rg.Plugins.Popup.Popup.Init();
-          DatabaseService.Init();
                 Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
         if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)

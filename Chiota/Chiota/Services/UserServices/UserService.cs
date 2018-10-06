@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Chiota.Messenger.Entity;
 using Chiota.Messenger.Usecase;
@@ -7,7 +10,12 @@ using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
+using Chiota.Services.Security;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Tangle.Net.Entity;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Chiota.Services.UserServices
 {
@@ -21,7 +29,7 @@ namespace Chiota.Services.UserServices
 
         #region Properties
 
-        public static User CurrentUser { get; private set; }
+        public static DbUser CurrentUser { get; private set; }
 
         #endregion
 
@@ -45,21 +53,39 @@ namespace Chiota.Services.UserServices
         /// <returns></returns>
         public async Task<bool> CreateNew(UserCreationProperties properties)
         {
-            var user = await _userFactory.CreateAsync(properties.Seed, properties.Name);
-            var result = await DatabaseService.User.SetObjectAsync(properties.Password, user);
-            if (!result)
+            try
+            {
+                var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImageHash, properties.ImageBase64);
+
+                //Create the entry for secure storage to safe the encryption key for the user data.
+                var key = TripleDes.GenerateKey();
+
+                //Set the encryption key for the database.
+                DatabaseService.SetEncryptionKey(key);
+
+                //Save user in the database.
+                var result = DatabaseService.User.AddObject(user);
+
+                if (result == null)
+                    return false;
+
+                var json = new JObject
+                {
+                    new JProperty("userid", result.Id),
+                    new JProperty("key", Convert.ToBase64String(Encoding.UTF8.GetBytes(key)))
+                };
+                var jsonString = JsonConvert.SerializeObject(json);
+
+                await SecureStorage.SetAsync(properties.Password, jsonString);
+
+                SetCurrentUser(result);
+
+                return true;
+            }
+            catch (Exception)
+            {
                 return false;
-
-            //Update the database info.
-            var info = await DatabaseService.DatabaseInfo.GetObjectAsync();
-            info.UserStored = true;
-            result = await DatabaseService.DatabaseInfo.SetObjectAsync(info);
-            if (!result)
-                return false;
-
-            SetCurrentUser(user);
-
-            return true;
+            }
         }
 
         #endregion
@@ -69,18 +95,26 @@ namespace Chiota.Services.UserServices
         /// <summary>
         /// Update the user in the database, if the password is correct.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="password"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateAsync(string key, User user)
+        public async Task<bool> UpdateAsync(string password, DbUser user)
         {
-            var result = await DatabaseService.User.GetObjectAsync(key);
+            var result = await SecureStorage.GetAsync(password);
             if (result == null) return false;
 
-            DatabaseService.User.RemoveObject(key);
-            await DatabaseService.User.SetObjectAsync(key, user);
+            var json = JObject.Parse(result);
+            var userid = (int)json.GetValue("userid");
 
-            SetCurrentUser(result);
+            if (CurrentUser.Id != userid)
+                return false;
+
+            //Update the user.
+            var valid = DatabaseService.User.UpdateObject(user);
+            if (!valid)
+                return false;
+
+            SetCurrentUser(user);
 
             return true;
         }
@@ -92,16 +126,52 @@ namespace Chiota.Services.UserServices
         /// <summary>
         /// Log in with a password as key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
-        public async Task<bool> LogInAsync(string key)
+        public async Task<bool> LogInAsync(string password)
         {
-            var result = await DatabaseService.User.GetObjectAsync(key);
+            try
+            {
+                var result = await SecureStorage.GetAsync(password);
+                if (result == null) return false;
+
+                var json = JObject.Parse(result);
+                var key = (string)json.GetValue("key");
+                key = Encoding.UTF8.GetString(Convert.FromBase64String(key));
+                var userid = (int)json.GetValue("userid");
+
+                //Set encryption key to the database.
+                DatabaseService.SetEncryptionKey(key);
+
+                var user = DatabaseService.User.GetObjectById(userid);
+                if (user == null) return false;
+
+                SetCurrentUser(user);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region ValidatePassword
+
+        public async Task<bool> ValidatePasswordAsync(string password)
+        {
+            var result = await SecureStorage.GetAsync(password);
             if (result == null) return false;
 
-            SetCurrentUser(result);
+            var json = JObject.Parse(result);
+            var userid = (int)json.GetValue("userid");
 
-            return true;
+            if (CurrentUser.Id == userid)
+                return true;
+
+            return false;
         }
 
         #endregion
@@ -114,7 +184,7 @@ namespace Chiota.Services.UserServices
         /// <param name="user">
         /// The user.
         /// </param>
-        public void SetCurrentUser(User user)
+        public void SetCurrentUser(DbUser user)
         {
             CurrentUser = user;
         }
@@ -132,7 +202,7 @@ namespace Chiota.Services.UserServices
         /// <returns>
         /// The <see cref="T"/>.
         /// </returns>
-        public T GetCurrentUserAs<T>() where T : User
+        public T GetCurrentUserAs<T>() where T : DbUser
         {
             return CurrentUser as T;
         }

@@ -74,13 +74,13 @@ namespace Chiota.UWP
 
     private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-      var isUserStored = await DatabaseService.DatabaseInfo.IsUserStoredAsync();
-      if (!isUserStored)
+        var isUserStored = await DatabaseService.User.IsUserStoredAsync();
+            if (!isUserStored)
       {
         return;
       }
 
-      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
+            var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {

@@ -1,4 +1,7 @@
-﻿using Chiota.Models.Database;
+﻿using System;
+using Chiota.Helper;
+using Chiota.Models.Database;
+using Xamarin.Forms;
 
 namespace Chiota.Services.UserServices
 {
@@ -21,23 +24,26 @@ namespace Chiota.Services.UserServices
         private IUsecaseInteractor<CreateUserRequest, CreateUserResponse> CreateUserInteractor { get; }
 
         /// <inheritdoc />
-        public async Task<User> CreateAsync(Seed seed, string name)
+        public async Task<DbUser> CreateAsync(Seed seed, string name, string imageHash, string imageBase64)
         {
             var response = await CreateUserInteractor.ExecuteAsync(new CreateUserRequest { Seed = seed });
 
             if (response.Code != ResponseCode.Success)
                 return null;
 
-            return new User
+            var user = new DbUser
             {
                 Name = name,
                 Seed = seed.Value,
-                ImageHash = null,
+                ImageHash = imageHash,
+                ImageBase64 = imageBase64,
                 StoreSeed = true,
                 PublicKeyAddress = response.PublicKeyAddress.Value,
                 RequestAddress = response.RequestAddress.Value,
                 NtruKeyPair = response.NtruKeyPair
             };
+
+            return user;
         }
     }
 }

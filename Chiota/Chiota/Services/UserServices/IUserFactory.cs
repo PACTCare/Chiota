@@ -23,8 +23,8 @@ namespace Chiota.Services.UserServices
     /// The name.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/>.
+    /// The <see cref="DbUser"/>.
     /// </returns>
-    Task<User> CreateAsync(Seed seed, string name);
+    Task<DbUser> CreateAsync(Seed seed, string name, string imageHash, string imageBase64);
   }
 }

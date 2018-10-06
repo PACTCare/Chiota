@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
+using Chiota.Services.Database.Base;
 using Chiota.Services.Database.Repositories;
-using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Chiota.Services.Database
 {
@@ -11,72 +11,47 @@ namespace Chiota.Services.Database
     {
         #region Properties
 
-        public static DatabaseInfoRepository DatabaseInfo { get; }
-        public static UserRepository User { get; }
+        public static UserRepository User { get; private set; }
+
+        public static string Name { get; }
+        
+        private static DatabaseContext _databaseContext;
+        private static string _key;
 
         #endregion
 
-        #region Constructor
+        #region Constructors
 
         static DatabaseService()
         {
-            DatabaseInfo = new DatabaseInfoRepository();
-            User = new UserRepository();
+            Name = (string)Application.Current.Resources["AppName"];
+
+            //Dynamic filepath of the database
+            var databasePath = DependencyService.Get<ISqlite>().GetDatabasePath();
+            _databaseContext = new DatabaseContext(databasePath);
+
+            Init();
         }
 
         #endregion
-
-        #region Methods
 
         #region Init
 
-        /// <summary>
-        /// Initialize all important database repositories.
-        /// </summary>
-        /// <returns></returns>
-        public static void Init()
+        private static void Init()
         {
-            var task = Task.Run(async () =>
-            {
-                try
-                {
-                    await DatabaseInfo.InitAsync();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            });
-            task.Wait();
+            User = new UserRepository(_databaseContext, _key);
         }
 
         #endregion
 
-        #region Delete
+        #region SetEncryptionKey
 
-        /// <summary>
-        /// Delete the database.
-        /// </summary>
-        /// <returns></returns>
-        public static bool Delete()
+        public static void SetEncryptionKey(string key)
         {
-            try
-            {
-                //Delete the database.
-                SecureStorage.RemoveAll();
+            _key = key;
 
-                //Initialize the database.
-                Init();
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            Init();
         }
-
-        #endregion
 
         #endregion
     }

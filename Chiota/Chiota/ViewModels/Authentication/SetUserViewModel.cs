@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Input;
 
 using Chiota.Annotations;
@@ -6,7 +7,6 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
-using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
@@ -24,6 +24,7 @@ namespace Chiota.ViewModels.Authentication
         private string name;
         private ImageSource profileImageSource;
         private string imagePath;
+        private Stream imageStream;
 
         private static UserCreationProperties UserProperties;
 
@@ -49,14 +50,6 @@ namespace Chiota.ViewModels.Authentication
                 profileImageSource = value;
                 OnPropertyChanged(nameof(ProfileImageSource));
             }
-        }
-
-        #endregion
-
-        #region Constructors
-
-        public SetUserViewModel()
-        {
         }
 
         #endregion
@@ -114,6 +107,7 @@ namespace Chiota.ViewModels.Authentication
                         {
                             // Load the image.
                             imagePath = media.Path;
+                            imageStream = media.GetStream();
                             ProfileImageSource = ImageSource.FromFile(imagePath);
                         }
                         catch (Exception)
@@ -143,16 +137,29 @@ namespace Chiota.ViewModels.Authentication
                         await PushLoadingSpinnerAsync(AppResources.DlgSettingUpAccount);
 
                         UserProperties.Name = Name;
-                        var userService = DependencyResolver.Resolve<UserService>();
-                        await userService.CreateNew(UserProperties);
 
-                        if (!string.IsNullOrEmpty(imagePath))
+                        if (!string.IsNullOrEmpty(imagePath) && imageStream != null)
                         {
-                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PinFile(imagePath);
-                            await userService.UpdateAsync(UserProperties.Password, UserService.CurrentUser);
+                            //Pin the image to ipfs.
+                            UserProperties.ImageHash = await new IpfsHelper().PinFile(imagePath);
+
+                            //Load the image local.
+                            var buffer = new byte[imageStream.Length];
+                            imageStream.Read(buffer, 0, buffer.Length);
+                            UserProperties.ImageBase64 = Convert.ToBase64String(buffer);
                         }
 
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        var result = await userService.CreateNew(UserProperties);
+                        
                         await PopPopupAsync();
+
+                        if (!result)
+                        {
+                            await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                            await AppBase.ShowStartUpAsync();
+                            return;
+                        }
 
                         AppBase.ShowMessenger();
                     });
