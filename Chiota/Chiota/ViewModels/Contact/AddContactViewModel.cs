@@ -6,6 +6,7 @@ using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.AddContact;
+using Chiota.Resources.Localizations;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
@@ -23,6 +24,8 @@ namespace Chiota.ViewModels.Contact
         #region Attributes
 
         private string _contactAddress;
+        private ImageSource _validationImageSource;
+        private Keyboard _keyboard;
 
         #endregion
 
@@ -38,9 +41,62 @@ namespace Chiota.ViewModels.Contact
             }
         }
 
+        public ImageSource ValidationImageSource
+        {
+            get => _validationImageSource;
+            set
+            {
+                _validationImageSource = value;
+                OnPropertyChanged(nameof(ValidationImageSource));
+            }
+        }
+
+        public Keyboard Keyboard
+        {
+            get => _keyboard;
+            set
+            {
+                _keyboard = value;
+                OnPropertyChanged(nameof(Keyboard));
+            }
+        }
+
+        #endregion
+
+        #region Init
+
+        public override void Init(object data = null)
+        {
+            base.Init(data);
+
+            Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
+        }
+
         #endregion
 
         #region Commands
+
+        #region IsValid
+
+        public ICommand IsValidCommand
+        {
+            get
+            {
+                return new Command((param) =>
+                {
+                    var isValid = (bool)param;
+
+                    if (isValid)
+                        ValidationImageSource = ImageSource.FromFile("done.png");
+                    else if (!string.IsNullOrEmpty(ContactAddress))
+                        ValidationImageSource = ImageSource.FromFile("clear.png");
+                    else
+                        ValidationImageSource = null;
+                });
+            }
+        }
+
+        #endregion
 
         #region ScanQrCode
 
@@ -91,7 +147,7 @@ namespace Chiota.ViewModels.Contact
                         if (InputValidator.IsAddress(ContactAddress) &&
                             ContactAddress != UserService.CurrentUser.PublicKeyAddress)
                         {
-                            await PushLoadingSpinnerAsync("Adding Contact");
+                            await PushLoadingSpinnerAsync(AppResources.DlgAddContact);
 
                             var addContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<AddContactRequest, AddContactResponse>>();
                             var response = await addContactInteractor.ExecuteAsync(

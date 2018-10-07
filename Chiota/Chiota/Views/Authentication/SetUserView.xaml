@@ -10,6 +10,7 @@
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication;assembly=Chiota"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance authentication:SetUserViewModel}"
              Title="{extensions:Translate CmnSetUser}">
@@ -18,7 +19,7 @@
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="16" Margin="0, 8, 0, 0">
                         <Grid HorizontalOptions="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="192"/>
@@ -47,7 +48,11 @@
 
                     <StackLayout VerticalOptions="CenterAndExpand">
                         <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="{extensions:Translate DlgName}"/>
+                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Name}" Placeholder="{extensions:Translate DlgName}">
+                                <Entry.Behaviors>
+                                    <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>
+                                </Entry.Behaviors>
+                            </Entry>
                         </Frame>
                     </StackLayout>
                 </StackLayout>

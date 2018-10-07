@@ -18,7 +18,7 @@
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescQrCode}"/>
@@ -28,12 +28,12 @@
                         <forms:ZXingBarcodeImageView
                             BarcodeFormat="QR_CODE"
                             BarcodeValue="{Binding Seed}"
-                            HeightRequest="150" 
-                            WidthRequest="150"
+                            HeightRequest="196" 
+                            WidthRequest="196"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="FillAndExpand">
                             <forms:ZXingBarcodeImageView.BarcodeOptions>
-                                <common:EncodingOptions Width="140" Height="140"  />
+                                <common:EncodingOptions Width="196" Height="196"  />
                             </forms:ZXingBarcodeImageView.BarcodeOptions>
                         </forms:ZXingBarcodeImageView>
                     </Frame>

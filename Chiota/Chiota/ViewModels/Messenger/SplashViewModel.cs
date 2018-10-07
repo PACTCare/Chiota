@@ -17,6 +17,7 @@ namespace Chiota.ViewModels.Messenger
 
             Device.BeginInvokeOnMainThread(async () =>
             {
+                AppBase.NavigationInstance.InitObject = true;
                 await AppBase.ShowStartUpAsync();
             });
         }

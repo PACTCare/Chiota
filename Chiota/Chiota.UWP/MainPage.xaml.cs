@@ -35,9 +35,7 @@ namespace Chiota.UWP
     {
       this.InitializeComponent();
 
-      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
-
-      FFImageLoading.Forms.Platform.CachedImageRenderer.Init();       
+      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();     
       
       this.LoadApplication(new Chiota.App());
 

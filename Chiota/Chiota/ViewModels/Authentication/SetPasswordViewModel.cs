@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
@@ -16,6 +18,7 @@ namespace Chiota.ViewModels.Authentication
 
         private string password;
         private string repeatPassword;
+        private bool _isEntryFocused;
 
         private static UserCreationProperties userProperties;
 
@@ -43,6 +46,16 @@ namespace Chiota.ViewModels.Authentication
             }
         }
 
+        public bool IsEntryFocused
+        {
+            get => _isEntryFocused;
+            set
+            {
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
+            }
+        }
+
         #endregion
 
         #region Init
@@ -66,6 +79,13 @@ namespace Chiota.ViewModels.Authentication
             // Clear the user inputs.
             Password = string.Empty;
             RepeatPassword = string.Empty;
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
 
         #endregion

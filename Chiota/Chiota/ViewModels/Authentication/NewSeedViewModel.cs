@@ -24,7 +24,6 @@ namespace Chiota.ViewModels.Authentication
         #region Attributes
 
         private bool isDownVisible;
-        private bool isSeedViewVisible;
         private bool isUpVisible;
 
         private SeedBinding seed;
@@ -44,16 +43,6 @@ namespace Chiota.ViewModels.Authentication
             {
                 isDownVisible = value;
                 OnPropertyChanged(nameof(IsDownVisible));
-            }
-        }
-
-        public bool IsSeedViewVisible
-        {
-            get => isSeedViewVisible;
-            set
-            {
-                isSeedViewVisible = value;
-                OnPropertyChanged(nameof(IsSeedViewVisible));
             }
         }
 
@@ -94,8 +83,18 @@ namespace Chiota.ViewModels.Authentication
         /// <inheritdoc />
         public override void Init(object data = null)
         {
-            SeedViewPadding = new Thickness(0, 36, 0, 0);
             base.Init(data);
+
+            SeedViewPadding = new Thickness(0, 36, 0, 0);
+
+            seed = new SeedBinding(Seed.Random().Value);
+
+            // Reset view.
+            seedLinePointer = 0;
+            IsUpVisible = false;
+            IsDownVisible = true;
+
+            UpdateSeedView();
         }
 
         #endregion
@@ -213,7 +212,7 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(() =>
                 {
-                    seed = new SeedBinding(Tangle.Net.Entity.Seed.Random().Value);
+                    seed = new SeedBinding(Seed.Random().Value);
 
                     // Reset view.
                     seedLinePointer = 0;
@@ -221,9 +220,6 @@ namespace Chiota.ViewModels.Authentication
                     IsDownVisible = true;
 
                     UpdateSeedView();
-
-                    // Show seed view.
-                    IsSeedViewVisible = true;
                 });
             }
         }

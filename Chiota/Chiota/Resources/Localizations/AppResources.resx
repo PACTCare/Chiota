@@ -300,4 +300,7 @@
   <data name="DlgLoggingIn" xml:space="preserve">
     <value>Logging you in</value>
   </data>
+  <data name="DlgAddContact" xml:space="preserve">
+    <value>Adding contact</value>
+  </data>
 </root>

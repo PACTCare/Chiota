@@ -90,13 +90,13 @@ namespace Chiota.ViewModels.Contact
 
         private bool UpdateView()
         {
-            /*Device.BeginInvokeOnMainThread(async () =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
                 var contacts = await GetContactListAsync();
                 var changed = IsContactListChanged(contacts);
                 if (changed)
                     ContactList = contacts;
-            });*/
+            });
 
             return _isUpdating;
         }

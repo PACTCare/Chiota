@@ -15,7 +15,7 @@
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
-                <StackLayout VerticalOptions="Center" Spacing="24">
+                <StackLayout VerticalOptions="Center" Spacing="16">
                     <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" WidthRequest="128" HeightRequest="128"/>
                     <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescWelcome}"/>
                 </StackLayout>

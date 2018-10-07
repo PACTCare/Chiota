@@ -8,8 +8,6 @@ namespace Chiota.UWP
 
   using Chiota.Services.DependencyInjection;
 
-  using FFImageLoading.Forms;
-  using FFImageLoading.Forms.Platform;
   using ImageCircle.Forms.Plugin.UWP;
 
   using Windows.ApplicationModel;
@@ -60,9 +58,7 @@ namespace Chiota.UWP
                                                    ZXingScannerViewRenderer).GetTypeInfo().Assembly,
                                                  typeof(ZXing.Net.Mobile.Forms.ZXingScannerPage)
                                                    .GetTypeInfo().Assembly,
-                                                 typeof(ImageCircleRenderer).GetTypeInfo().Assembly,
-                                                 typeof(CachedImage).GetTypeInfo().Assembly,
-                                                 typeof(CachedImageRenderer).GetTypeInfo().Assembly  
+                                                 typeof(ImageCircleRenderer).GetTypeInfo().Assembly
                                                };
           Rg.Plugins.Popup.Popup.Init();
                 Xamarin.Forms.Forms.Init(e, assembliesToInclude);

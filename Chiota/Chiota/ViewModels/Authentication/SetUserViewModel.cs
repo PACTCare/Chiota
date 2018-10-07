@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Chiota.Annotations;
@@ -22,6 +23,7 @@ namespace Chiota.ViewModels.Authentication
         #region Attributes
 
         private string name;
+        private bool _isEntryFocused;
         private ImageSource profileImageSource;
         private string imagePath;
         private Stream imageStream;
@@ -39,6 +41,16 @@ namespace Chiota.ViewModels.Authentication
             {
                 name = value;
                 OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        public bool IsEntryFocused
+        {
+            get => _isEntryFocused;
+            set
+            {
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
             }
         }
 
@@ -77,8 +89,12 @@ namespace Chiota.ViewModels.Authentication
         {
             base.ViewIsAppearing();
 
-            // Clear the user inputs.
-            Name = string.Empty;
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
 
         #endregion
