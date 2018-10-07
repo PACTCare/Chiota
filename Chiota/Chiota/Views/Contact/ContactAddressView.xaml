@@ -24,20 +24,23 @@
                         <Label Style="{DynamicResource DescriptionLabel}" Text="Tap on the Qr code to copy the address to your clipboard."/>
                     </StackLayout>
 
-                    <forms:ZXingBarcodeImageView
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#000000" HorizontalOptions="Center" VerticalOptions="Center" Padding="4">
+                        <forms:ZXingBarcodeImageView
                         BarcodeFormat="QR_CODE"
                         BarcodeValue="{Binding ContactAddress}"
                         HeightRequest="196" 
                         WidthRequest="196"
                         HorizontalOptions="FillAndExpand"
-                        VerticalOptions="FillAndExpand">
-                        <forms:ZXingBarcodeImageView.BarcodeOptions>
-                            <common:EncodingOptions Width="196" Height="196"  />
-                        </forms:ZXingBarcodeImageView.BarcodeOptions>
-                        <forms:ZXingBarcodeImageView.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding TapQrCodeCommand}"/>
-                        </forms:ZXingBarcodeImageView.GestureRecognizers>
-                    </forms:ZXingBarcodeImageView>
+                        VerticalOptions="FillAndExpand"
+                        BackgroundColor="{DynamicResource BackgroundColor}">
+                            <forms:ZXingBarcodeImageView.BarcodeOptions>
+                                <common:EncodingOptions Width="196" Height="196"  />
+                            </forms:ZXingBarcodeImageView.BarcodeOptions>
+                            <forms:ZXingBarcodeImageView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TapQrCodeCommand}"/>
+                            </forms:ZXingBarcodeImageView.GestureRecognizers>
+                        </forms:ZXingBarcodeImageView>
+                    </Frame>
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
