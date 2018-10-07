@@ -9,14 +9,19 @@ namespace Chiota.Services.Database
 {
     public static class DatabaseService
     {
+        #region Attributes
+
+        private static DatabaseContext _databaseContext;
+        private static string _key;
+        private static string _salt;
+
+        #endregion
+
         #region Properties
 
         public static UserRepository User { get; private set; }
 
         public static string Name { get; }
-        
-        private static DatabaseContext _databaseContext;
-        private static string _key;
 
         #endregion
 
@@ -39,16 +44,17 @@ namespace Chiota.Services.Database
 
         private static void Init()
         {
-            User = new UserRepository(_databaseContext, _key);
+            User = new UserRepository(_databaseContext, _key, _salt);
         }
 
         #endregion
 
         #region SetEncryptionKey
 
-        public static void SetEncryptionKey(string key)
+        public static void SetEncryptionKey(string key, string salt)
         {
             _key = key;
+            _salt = salt;
 
             Init();
         }

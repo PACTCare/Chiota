@@ -13,7 +13,7 @@ namespace Chiota.Services.Database.Repositories
     {
         #region Constructors
 
-        public UserRepository(DatabaseContext context, string key) : base(context, key)
+        public UserRepository(DatabaseContext context, string key, string salt) : base(context, key, salt)
         {
         }
 

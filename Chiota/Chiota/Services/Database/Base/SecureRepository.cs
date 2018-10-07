@@ -14,14 +14,16 @@ namespace Chiota.Services.Database.Base
         #region Attributes
 
         protected string Key { get; }
+        protected string Salt { get; }
 
         #endregion
 
         #region Constructors
 
-        protected SecureRepository(DatabaseContext context, string key) : base(context)
+        protected SecureRepository(DatabaseContext context, string key, string salt) : base(context)
         {
             Key = key;
+            Salt = salt;
         }
 
         #endregion
@@ -280,11 +282,6 @@ namespace Chiota.Services.Database.Base
 
         #region Encrypt
 
-        /// <summary>
-        /// Encrypt the string properties of the given object by triple des.
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
         private T Encrypt(T t)
         {
             foreach (var property in t.GetType().GetProperties())
@@ -294,7 +291,7 @@ namespace Chiota.Services.Database.Base
                     var value = (string)property.GetValue(t);
                     if (string.IsNullOrEmpty(value)) continue;
 
-                    var encrypted = TripleDes.Encrypt((string)value, Key);
+                    var encrypted = Rijndael.Encrypt(value, Key, Salt);
                     property.SetValue(t, encrypted);
                 }
             }
@@ -304,11 +301,6 @@ namespace Chiota.Services.Database.Base
 
         #endregion
 
-        /// <summary>
-        /// Decrypt the string properties of the given object by triple des.
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
         #region Decrypt
 
         private T Decrypt(T t)
@@ -320,7 +312,7 @@ namespace Chiota.Services.Database.Base
                     var value = (string)property.GetValue(t);
                     if (string.IsNullOrEmpty(value)) continue;
 
-                    var encrypted = TripleDes.Decrypt(value, Key);
+                    var encrypted = Rijndael.Decrypt(value, Key, Salt);
                     property.SetValue(t, encrypted);
                 }
             }

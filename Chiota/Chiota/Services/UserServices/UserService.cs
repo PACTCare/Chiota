@@ -58,10 +58,11 @@ namespace Chiota.Services.UserServices
                 var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImageHash, properties.ImageBase64);
 
                 //Create the entry for secure storage to safe the encryption key for the user data.
-                var key = TripleDes.GenerateKey();
+                var hash = Rijndael.Hash(properties.Password);
+                var salt = Seed.Random().Value;
 
                 //Set the encryption key for the database.
-                DatabaseService.SetEncryptionKey(key);
+                DatabaseService.SetEncryptionKey(hash, salt);
 
                 //Save user in the database.
                 var result = DatabaseService.User.AddObject(user);
@@ -72,7 +73,8 @@ namespace Chiota.Services.UserServices
                 var json = new JObject
                 {
                     new JProperty("userid", result.Id),
-                    new JProperty("key", Convert.ToBase64String(Encoding.UTF8.GetBytes(key)))
+                    new JProperty("key", Convert.ToBase64String(Encoding.UTF8.GetBytes(hash))),
+                    new JProperty("salt", Convert.ToBase64String(Encoding.UTF8.GetBytes(salt)))
                 };
                 var jsonString = JsonConvert.SerializeObject(json);
 
@@ -138,10 +140,12 @@ namespace Chiota.Services.UserServices
                 var json = JObject.Parse(result);
                 var key = (string)json.GetValue("key");
                 key = Encoding.UTF8.GetString(Convert.FromBase64String(key));
+                var salt = (string)json.GetValue("salt");
+                key = Encoding.UTF8.GetString(Convert.FromBase64String(salt));
                 var userid = (int)json.GetValue("userid");
 
                 //Set encryption key to the database.
-                DatabaseService.SetEncryptionKey(key);
+                DatabaseService.SetEncryptionKey(key, salt);
 
                 var user = DatabaseService.User.GetObjectById(userid);
                 if (user == null) return false;
