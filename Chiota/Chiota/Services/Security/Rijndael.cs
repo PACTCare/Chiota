@@ -10,18 +10,6 @@ namespace Chiota.Services.Security
     {
         #region Methods
 
-        #region Hash
-
-        internal static string Hash(string input)
-        {
-            using (var sha = SHA512.Create())
-            {
-                return Convert.ToBase64String(sha.ComputeHash(Encoding.UTF8.GetBytes(input)));
-            }
-        }
-
-        #endregion
-
         #region Encrypt
 
         internal static string Encrypt(string data, string encryptionKey, string salt)
