@@ -2,13 +2,16 @@
 {
   using Tangle.Net.Entity;
 
-  /// <summary>
-  /// The get approved contacts request.
-  /// </summary>
   public class GetContactsRequest
   {
-    public Address ContactRequestAddress { get; set; }
+    /// <summary>
+    /// The current user request address (See CreateUserResponse)
+    /// </summary>
+    public Address RequestAddress { get; set; }
 
+    /// <summary>
+    /// The current user public key address (See CreateUserResponse)
+    /// </summary>
     public Address PublicKeyAddress { get; set; }
 
     /// <summary>

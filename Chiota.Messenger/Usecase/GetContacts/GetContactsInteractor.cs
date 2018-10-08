@@ -34,7 +34,7 @@
     {
       try
       {
-        var requestedContacts = await this.LoadContactsOnAddressAsync(request.ContactRequestAddress);
+        var requestedContacts = await this.LoadContactsOnAddressAsync(request.RequestAddress);
         var localApprovedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
 
         var addressComparer = new ContactComparer();

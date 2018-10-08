@@ -115,7 +115,7 @@
     public GetContactsResponse GetContacts(string userName)
     {
       var user = this.Users.First(u => u.Name == userName);
-      var request = new GetContactsRequest { ContactRequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true };
+      var request = new GetContactsRequest { RequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true };
 
       this.LastRequest = request;
       var response = InstanceBag.GetContactsInteractor.ExecuteAsync(request).Result;

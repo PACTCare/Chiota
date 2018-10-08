@@ -78,7 +78,7 @@
                        new GetContactsRequest
                          {
                            PublicKeyAddress = new Address(pubKeyAddress),
-                           ContactRequestAddress = contactRequestAddress
+                           RequestAddress = contactRequestAddress
                          });
 
       Assert.AreEqual(1, response.ApprovedContacts.Count);
@@ -119,7 +119,7 @@
                        new GetContactsRequest
                          {
                            PublicKeyAddress = new Address(pubKeyAddress),
-                           ContactRequestAddress = contactRequestAddress
+                           RequestAddress = contactRequestAddress
                          });
 
       Assert.AreEqual(ResponseCode.Success, response.Code);
