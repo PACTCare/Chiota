@@ -1,5 +1,4 @@
 ﻿using Chiota.Persistence;
-using Chiota.UWP.Persistence;
 
 namespace Chiota.UWP
 {
@@ -18,11 +17,8 @@ namespace Chiota.UWP
     {
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
 
-        builder.RegisterType<SqlLiteTransactionCache>().As<ITransactionCache>();
-        builder.RegisterType<SqlLiteTransactionCache>().As<AbstractSqlLiteTransactionCache>();
-
-        builder.RegisterType<SqlLiteContactRepository>().As<IContactRepository>().PropertiesAutowired();
-        builder.RegisterType<SqlLiteContactRepository>().As<AbstractSqlLiteContactRepository>().PropertiesAutowired();
+        builder.RegisterType<MessageRepository>().As<ITransactionCache>();
+        builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
         }
   }
 }

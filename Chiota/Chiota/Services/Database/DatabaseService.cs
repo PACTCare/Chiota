@@ -20,6 +20,8 @@ namespace Chiota.Services.Database
         #region Properties
 
         public static UserRepository User { get; private set; }
+        public static ContactRepository Contact { get; private set; }
+        public static MessageRepository Message { get; private set; }
 
         public static string Name { get; }
 
@@ -45,6 +47,8 @@ namespace Chiota.Services.Database
         private static void Init()
         {
             User = new UserRepository(_databaseContext, _key, _salt);
+            Contact = new ContactRepository(_databaseContext, _key, _salt);
+            Message = new MessageRepository(_databaseContext, _key, _salt);
         }
 
         #endregion

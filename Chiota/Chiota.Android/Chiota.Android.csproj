@@ -135,8 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectionModule.cs" />
-    <Compile Include="Persistence\SqlLiteContactRepository.cs" />
-    <Compile Include="Persistence\SqlLiteTransactionCache.cs" />
     <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />

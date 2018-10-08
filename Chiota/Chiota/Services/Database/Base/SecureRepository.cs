@@ -43,7 +43,7 @@ namespace Chiota.Services.Database.Base
                 var models = base.GetObjects();
 
                 for (var i = 0; i < models.Count; i++)
-                    models[i] = Decrypt(models[i]);
+                    models[i] = DecryptModel(models[i]);
 
                 return models;
             }
@@ -67,7 +67,7 @@ namespace Chiota.Services.Database.Base
                 var models = await base.GetObjectsAsync();
 
                 for (var i = 0; i < models.Count; i++)
-                    models[i] = Decrypt(models[i]);
+                    models[i] = DecryptModel(models[i]);
                 
                 return models;
             }
@@ -94,7 +94,7 @@ namespace Chiota.Services.Database.Base
             try
             {
                 var model = base.GetObjectById(id);
-                model = Decrypt(model);
+                model = DecryptModel(model);
 
                 return model;
             }
@@ -117,7 +117,7 @@ namespace Chiota.Services.Database.Base
             try
             {
                 var model = await base.GetObjectByIdAsync(id);
-                model = Decrypt(model);
+                model = DecryptModel(model);
 
                 return model;
             }
@@ -143,9 +143,9 @@ namespace Chiota.Services.Database.Base
         {
             try
             {
-                var encrypted = Encrypt(t);
+                var encrypted = EncryptModel(t);
                 var model = base.AddObject(encrypted);
-                var decrypted = Decrypt(model);
+                var decrypted = DecryptModel(model);
                 return decrypted;
             }
             catch (Exception e)
@@ -166,9 +166,9 @@ namespace Chiota.Services.Database.Base
         {
             try
             {
-                var encrypted = Encrypt(t);
+                var encrypted = EncryptModel(t);
                 var model = await base.AddObjectAsync(encrypted);
-                var decrypted = Decrypt(model);
+                var decrypted = DecryptModel(model);
                 return decrypted;
             }
             catch (Exception e)
@@ -193,9 +193,9 @@ namespace Chiota.Services.Database.Base
         {
             try
             {
-                var encrypted = Encrypt(t);
+                var encrypted = EncryptModel(t);
                 var result = base.UpdateObject(encrypted);
-                Decrypt(t);
+                DecryptModel(t);
                 return result;
             }
             catch (Exception e)
@@ -216,54 +216,10 @@ namespace Chiota.Services.Database.Base
         {
             try
             {
-                var encrypted = Encrypt(t);
+                var encrypted = EncryptModel(t);
                 var result = await base.UpdateObjectAsync(encrypted);
-                Decrypt(t);
+                DecryptModel(t);
                 return result;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-        }
-
-        #endregion
-
-        #endregion
-
-        #region DeleteObject
-
-        /// <summary>
-        /// Remove specific object of the table.
-        /// </summary>
-        /// <param name="id">Id of the object</param>
-        /// <returns>Result of successful delete as boolean</returns>
-        public override bool DeleteObject(int id)
-        {
-            try
-            {
-                return base.DeleteObject(id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-        }
-
-        #region DeleteObjectAsync
-
-        /// <summary>
-        /// Remove specific object of the table.
-        /// </summary>
-        /// <param name="id">Id of the object</param>
-        /// <returns>Result of successful delete as boolean</returns>
-        public override async Task<bool> DeleteObjectAsync(int id)
-        {
-            try
-            {
-                return await base.DeleteObjectAsync(id);
             }
             catch (Exception e)
             {
@@ -282,7 +238,7 @@ namespace Chiota.Services.Database.Base
 
         #region Encrypt
 
-        private T Encrypt(T t)
+        protected T EncryptModel(T t)
         {
             foreach (var property in t.GetType().GetProperties())
             {
@@ -291,7 +247,7 @@ namespace Chiota.Services.Database.Base
                     var value = (string)property.GetValue(t);
                     if (string.IsNullOrEmpty(value)) continue;
 
-                    var encrypted = Rijndael.Encrypt(value, Key, Salt);
+                    var encrypted = Encrypt(value);
                     property.SetValue(t, encrypted);
                 }
             }
@@ -299,11 +255,16 @@ namespace Chiota.Services.Database.Base
             return t;
         }
 
+        protected string Encrypt(string value)
+        {
+            return Rijndael.Encrypt(value, Key, Salt);
+        }
+
         #endregion
 
         #region Decrypt
 
-        private T Decrypt(T t)
+        protected T DecryptModel(T t)
         {
             foreach (var property in t.GetType().GetProperties())
             {
@@ -312,12 +273,17 @@ namespace Chiota.Services.Database.Base
                     var value = (string)property.GetValue(t);
                     if (string.IsNullOrEmpty(value)) continue;
 
-                    var encrypted = Rijndael.Decrypt(value, Key, Salt);
+                    var encrypted = Decrypt(value);
                     property.SetValue(t, encrypted);
                 }
             }
 
             return t;
+        }
+
+        protected string Decrypt(string value)
+        {
+            return Rijndael.Decrypt(value, Key, Salt);
         }
 
         #endregion

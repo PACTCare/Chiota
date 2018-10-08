@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class DbContacts : TableModel
+    public class DbContact : TableModel
     {
         #region Properties
 

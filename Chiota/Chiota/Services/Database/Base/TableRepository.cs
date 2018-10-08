@@ -223,6 +223,57 @@ namespace Chiota.Services.Database.Base
 
         #endregion
 
+        #region DeleteObjects
+
+        /// <summary>
+        /// Remove all objects of the table.
+        /// </summary>
+        /// <returns>Result of successful delete as boolean</returns>
+        public virtual bool DeleteObjects()
+        {
+            try
+            {
+                var models = GetObjects();
+                DatabaseContext.Set<T>().RemoveRange(models);
+                DatabaseContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        #region DeleteObjectAsync
+
+        /// <summary>
+        /// Remove specific object of the table.
+        /// </summary>
+        /// <param name="id">Id of the object</param>
+        /// <returns>Result of successful delete as boolean</returns>
+        public virtual async Task<bool> DeleteObjectsAsync()
+        {
+            try
+            {
+                var models = await GetObjectsAsync();
+                DatabaseContext.Set<T>().RemoveRange(models);
+                await DatabaseContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region DeleteObject
 
         /// <summary>
@@ -235,7 +286,7 @@ namespace Chiota.Services.Database.Base
             try
             {
                 var model = DatabaseContext.Set<T>().Find(id);
-                var state = DatabaseContext.Remove(model);
+                var state = DatabaseContext.Set<T>().Remove(model);
                 var result = state.State == EntityState.Deleted;
                 DatabaseContext.SaveChanges();
 
@@ -260,7 +311,7 @@ namespace Chiota.Services.Database.Base
             try
             {
                 var model = await DatabaseContext.Set<T>().FindAsync(id);
-                var state = DatabaseContext.Remove(model);
+                var state = DatabaseContext.Set<T>().Remove(model);
                 var result = state.State == EntityState.Deleted;
                 await DatabaseContext.SaveChangesAsync();
 
@@ -284,7 +335,7 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>Object of the table</returns>
-        public T QueryObject(Func<T, bool> predicate)
+        protected T QueryObject(Func<T, bool> predicate)
         {
             try
             {
@@ -307,7 +358,7 @@ namespace Chiota.Services.Database.Base
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns>List of the table objects</returns>
-        public List<T> QueryObjects(Func<T, bool> predicate)
+        protected List<T> QueryObjects(Func<T, bool> predicate)
         {
             try
             {

@@ -105,8 +105,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
-    <Compile Include="Persistence\SqlLiteContactRepository.cs" />
-    <Compile Include="Persistence\SqlLiteTransactionCache.cs" />
     <Compile Include="Renderer\ChatViewRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />

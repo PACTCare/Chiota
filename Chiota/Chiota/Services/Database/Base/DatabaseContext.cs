@@ -17,6 +17,8 @@ namespace Chiota.Services.Database.Base
         #region Properties
 
         public DbSet<DbUser> Users { get; set; }
+        public DbSet<DbContact> Contacts { get; set; }
+        public DbSet<DbMessage> Messages { get; set; }
 
         #endregion
 
