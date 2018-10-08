@@ -15,6 +15,9 @@
     /// </summary>
     public Address CurrentChatAddress { get; set; }
 
+    /// <summary>
+    /// List of messages
+    /// </summary>
     public List<ChatMessage> Messages { get; set; }
 
     /// <summary>

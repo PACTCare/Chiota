@@ -26,8 +26,14 @@
     /// </summary>
     public IAsymmetricKeyPair UserKeyPair { get; set; }
 
+    /// <summary>
+    /// The message to send
+    /// </summary>
     public string Message { get; set; }
 
+    /// <summary>
+    /// Public key address of the current user
+    /// </summary>
     public Address UserPublicKeyAddress { get; set; }
   }
 }
