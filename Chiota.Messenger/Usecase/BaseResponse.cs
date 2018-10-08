@@ -6,7 +6,7 @@
   public abstract class BaseResponse
   {
     /// <summary>
-    /// Gets or sets the code.
+    /// Response Code used to express the success or failure of a usecase. Base of all responses
     /// </summary>
     public ResponseCode Code { get; set; }
   }

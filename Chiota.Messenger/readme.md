@@ -4,7 +4,7 @@ The Chiota Messenger represents the core component of Chiota. This document has 
 
 ## Flow
 
-Assume you have two users, "Chantal" and "Kevin" that want to communicate through a secured channel. To set up their channel the following has to be done:
+Assume you have two users, "Chantal" and "Kevin", who want to communicate through a secured channel. To set up their channel the following has to be done:
 
 1) Create User "Kevin" and "Chantal"
 2) One user has to send a contact request to the other
@@ -26,7 +26,39 @@ http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
 Usecase to initially create a user. Simply input the users seed. All necessary user information will be uploaded to the tangle and returned in the response.
 
+#### Request
+```csharp
+  public class CreateUserRequest
+  {
+    /// <summary>
+    /// The seed associated with the user. User data will be derived from the seed.
+    /// </summary>
+    public Seed Seed { get; set; }
+  }
 ```
+#### Response
+```csharp
+  public class CreateUserResponse : BaseResponse
+  {
+    /// <summary>
+    /// Address where the users' public key is stored
+    /// </summary>
+    public Address PublicKeyAddress { get; set; }
+
+    /// <summary>
+    /// Other users can add the user by using this address
+    /// </summary>
+    public Address RequestAddress { get; set; }
+
+    /// <summary>
+    /// Key pair generated from seed, used for encryption
+    /// </summary>
+    public IAsymmetricKeyPair NtruKeyPair { get; set; }
+  }
+```
+
+#### Usage
+```csharp
 var request = new CreateUserRequest { Seed = seed };
 var response = await this.CreateUserInteractor.ExecuteAsync(request);
 
@@ -44,7 +76,34 @@ return new User
 
 To handle user information erased during a snapshot you can use the CheckUserInteractor. Chiota calls it on login. The interactor itself checks whether the required user information exists on the tangle and reuploads it if necessary.
 
+#### Request
+```csharp
+  public class CheckUserRequest
+  {
+    /// <summary>
+    /// Public key of the user to check (See CreateUserResponse)
+    /// </summary>
+    public IAsymmetricKey PublicKey { get; set; }
+
+    /// <summary>
+    /// Public Key address of the user (See CreateUserResponse)
+    /// </summary>
+    public Address PublicKeyAddress { get; set; }
+
+    /// <summary>
+    /// (Contact) request address of the user (See CreateUserResponse)
+    /// </summary>
+    public Address RequestAddress { get; set; }
+
+    /// <summary>
+    /// Seed associated with the user
+    /// </summary>
+    public Seed Seed { get; set; }
+  }
 ```
+
+#### Usage
+```csharp
 var response = await this.CheckUserInteractor.ExecuteAsync(
         new CheckUserRequest
           {
@@ -59,7 +118,39 @@ var response = await this.CheckUserInteractor.ExecuteAsync(
 
 Assuming a user (Sender) wants to interact with another (Receiver), he/she may want to send a contact request. Simply input the senders information along with the receivers request address (as contact address).
 
+#### Request
+```csharp
+  public class AddContactRequest
+  {
+    /// <summary>
+    /// Request address of the contact that should be added
+    /// </summary>
+    public Address ContactAddress { get; set; }
+
+    /// <summary>
+    /// Optional: Image that will be shown to the added contact within the contact request
+    /// </summary>
+    public string ImagePath { get; set; }
+
+    /// <summary>
+    /// Current user name. Will be shown to the contact within the contact request
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Public key address of the current user
+    /// </summary>
+    public Address PublicKeyAddress { get; set; }
+
+    /// <summary>
+    /// Request address of the current user
+    /// </summary>
+    public Address RequestAddress { get; set; }
+  }
 ```
+
+#### Usage
+```csharp
 var response = await this.AddContactInteractor.ExecuteAsync(
         new AddContactRequest
         {
@@ -75,7 +166,7 @@ var response = await this.AddContactInteractor.ExecuteAsync(
 
 To accept a contact request just invoke the accept contact interactor. (If the code below is not explanation enough, please let me know how it can be improved)
 
-```
+```csharp
 var response = await this.AcceptContactInteractor.ExecuteAsync(
         new AcceptContactRequest
             {
@@ -95,7 +186,7 @@ var response = await this.AcceptContactInteractor.ExecuteAsync(
 
 Similar to accept contact, a user might want to decline a contact request. Please note, that on a different device, the contact request will (currently) be shown as pending again.
 
-```
+```csharp
 await this.DeclineContactInteractor.ExecuteAsync(
         new DeclineContactRequest
           {
@@ -106,7 +197,7 @@ await this.DeclineContactInteractor.ExecuteAsync(
 
 ### Get Contacts
 
-```
+```csharp
 var response = await interactor.ExecuteAsync(
         new GetContactsRequest
             {
@@ -115,7 +206,7 @@ var response = await interactor.ExecuteAsync(
             });
 
 ```
-```
+```csharp
 public class GetContactsResponse : BaseResponse
 {
     public List<Contact> ApprovedContacts { get; set; }
