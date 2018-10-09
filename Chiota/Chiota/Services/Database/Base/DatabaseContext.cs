@@ -36,6 +36,8 @@ namespace Chiota.Services.Database.Base
             //Database.Migrate();
 
             Database.EnsureCreated();
+
+            this.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         #endregion

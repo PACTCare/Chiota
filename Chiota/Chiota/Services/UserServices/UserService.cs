@@ -186,7 +186,7 @@ namespace Chiota.Services.UserServices
         /// </param>
         public void SetCurrentUser(DbUser user)
         {
-            CurrentUser = user;
+            CurrentUser = new DbUser(user);
         }
 
         #endregion
