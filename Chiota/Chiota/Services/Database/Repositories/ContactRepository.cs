@@ -23,7 +23,7 @@ namespace Chiota.Services.Database.Repositories
         /// Get all objects of the table by the public key address.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public List<DbContact> GetAcceptedContactByPublicKeyAddress(string publicKeyAddress)
+        public List<DbContact> GetAcceptedContactsByPublicKeyAddress(string publicKeyAddress)
         {
             try
             {

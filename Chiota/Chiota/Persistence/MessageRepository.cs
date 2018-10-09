@@ -41,7 +41,7 @@ namespace Chiota.Persistence
 
         public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
         {
-            var messages = DatabaseService.Message.GetMessageByChatAddress(address.Value);
+            var messages = DatabaseService.Message.GetMessagesByChatAddress(address.Value);
 
             var list = new List<TransactionCacheItem>();
 

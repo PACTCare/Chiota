@@ -44,7 +44,7 @@ namespace Chiota.Persistence
 
         public override async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
         {
-            var contacts = DatabaseService.Contact.GetAcceptedContactByPublicKeyAddress(publicKeyAddress);
+            var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
             var list = new List<Contact>();
 
             foreach (var item in contacts)

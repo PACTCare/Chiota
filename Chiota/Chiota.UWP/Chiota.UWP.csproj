@@ -175,6 +175,7 @@
     <Content Include="emoticon.png" />
     <Content Include="keyboard_voice.png" />
     <Content Include="keyboard.png" />
+    <Content Include="qr.png" />
     <Content Include="send.png" />
     <Content Include="help.png" />
     <Content Include="friends.png" />

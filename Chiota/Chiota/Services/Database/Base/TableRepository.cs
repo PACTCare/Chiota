@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chiota.Services.Database.Base
 {
-    public class TableRepository<T> : BaseRepository where T : BaseModel
+    public class TableRepository<T> : BaseRepository where T : TableModel
     {
        #region Constructors
 
