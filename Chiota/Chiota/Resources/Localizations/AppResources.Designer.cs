@@ -313,7 +313,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log in with your password or switch the account by setting a seed or generating a new one..
+        ///   Looks up a localized string similar to Log in with your password..
         /// </summary>
         internal static string DlgDescLogIn {
             get {
@@ -403,7 +403,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Generate new seed.
+        ///   Looks up a localized string similar to New seed.
         /// </summary>
         internal static string DlgGenerateSeed {
             get {

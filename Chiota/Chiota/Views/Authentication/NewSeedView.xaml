@@ -51,8 +51,8 @@
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGenerateSeed}" WidthRequest="192"  Command="{Binding GenerateSeedCommand}"/>
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="192" Command="{Binding ContinueCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGenerateSeed}" WidthRequest="160"  Command="{Binding GenerateSeedCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="160" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
         </StackLayout>
