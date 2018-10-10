@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Chiota.Messenger.Encryption;
 using Chiota.Messenger.Entity;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.CreateUser;
@@ -114,6 +115,8 @@ namespace Chiota.Services.UserServices
             if (!valid)
                 return false;
 
+            user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(user.Seed.ToLower(), user.PublicKeyAddress);
+
             SetCurrentUser(user);
 
             return true;
@@ -145,6 +148,8 @@ namespace Chiota.Services.UserServices
 
                 var user = DatabaseService.User.GetObjectById(userid);
                 if (user == null) return false;
+
+                user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(user.Seed.ToLower(), user.PublicKeyAddress);
 
                 SetCurrentUser(user);
 
@@ -186,7 +191,7 @@ namespace Chiota.Services.UserServices
         /// </param>
         public void SetCurrentUser(DbUser user)
         {
-            CurrentUser = new DbUser(user);
+            CurrentUser = user;
         }
 
         #endregion

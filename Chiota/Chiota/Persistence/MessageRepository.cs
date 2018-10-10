@@ -17,7 +17,7 @@ namespace Chiota.Persistence
 
         public async Task FlushAsync()
         {
-            await DatabaseService.Message.DeleteObjectsAsync();
+            DatabaseService.Message.DeleteObjects();
         }
 
         #endregion
@@ -32,7 +32,7 @@ namespace Chiota.Persistence
                 ChatAddress = item.Address.Value,
                 MessageTryte = item.TransactionTrytes.Value
             };
-            await DatabaseService.Message.AddObjectAsync(message);
+            DatabaseService.Message.AddObject(message);
         }
 
         #endregion

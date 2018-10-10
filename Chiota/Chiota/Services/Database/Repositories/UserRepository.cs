@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
-using Microsoft.EntityFrameworkCore;
+using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
@@ -13,7 +13,7 @@ namespace Chiota.Services.Database.Repositories
     {
         #region Constructors
 
-        public UserRepository(DatabaseContext context, string key, string salt) : base(context, key, salt)
+        public UserRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
         {
         }
 
@@ -23,14 +23,8 @@ namespace Chiota.Services.Database.Repositories
 
         public bool IsUserStored()
         {
-            var result = DatabaseContext.Set<DbUser>().Any();
-            return result;
-        }
-
-        public async Task<bool> IsUserStoredAsync()
-        {
-            var result = await DatabaseContext.Set<DbUser>().AnyAsync();
-            return result;
+            var result = Database.Table<DbUser>();
+            return result.Any();
         }
 
         #endregion

@@ -13,8 +13,6 @@ namespace Chiota.ViewModels.Base
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SplashViewModel>().PropertiesAutowired();
-
             builder.RegisterType<LogInViewModel>().PropertiesAutowired();
             builder.RegisterType<NewSeedViewModel>().PropertiesAutowired();
             builder.RegisterType<SetPasswordViewModel>().PropertiesAutowired();

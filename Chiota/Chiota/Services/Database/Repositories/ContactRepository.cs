@@ -4,6 +4,7 @@ using System.Text;
 using Chiota.Messenger.Repository;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
+using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
@@ -11,7 +12,7 @@ namespace Chiota.Services.Database.Repositories
     {
         #region Constructors
 
-        public ContactRepository(DatabaseContext context, string key, string salt) : base(context, key, salt)
+        public ContactRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
         {
         }
 
@@ -28,7 +29,10 @@ namespace Chiota.Services.Database.Repositories
             try
             {
                 var value = Encrypt(publicKeyAddress);
-                var models = QueryObjects(t => t.PublicKeyAddress == value && t.Accepted == true);
+                var query = (IEnumerable<DbContact>) Database.Query(TableMapping,
+                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=" +
+                    value + " AND " + nameof(DbContact.Accepted) + "=TRUE;");
+                var models = new List<DbContact>(query);
 
                 for (var i = 0; i < models.Count; i++)
                     models[i] = DecryptModel(models[i]);

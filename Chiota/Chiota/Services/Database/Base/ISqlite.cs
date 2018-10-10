@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Data.Sqlite;
 
 namespace Chiota.Services.Database.Base
 {
@@ -19,7 +19,7 @@ namespace Chiota.Services.Database.Base
         /// Delivers synchronous access to SQLite database object 
         /// </summary>
         /// <returns>The SQLiteConnection object</returns>
-        SqliteConnection GetDatabaseConnection();
+        SQLiteConnection GetDatabaseConnection();
 
         /// <summary>
         /// Determine the connection to the SQLite database object 

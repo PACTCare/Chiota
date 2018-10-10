@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
 using Newtonsoft.Json;
+using SQLite;
 
 namespace Chiota.Models.Database.Base
 {
@@ -10,7 +10,7 @@ namespace Chiota.Models.Database.Base
     {
         #region Properties
 
-        [Key]
+        [PrimaryKey, AutoIncrement]
         [JsonProperty("id")]
         public int Id { get; set; }
 

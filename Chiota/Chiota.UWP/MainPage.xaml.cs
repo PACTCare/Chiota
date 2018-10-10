@@ -72,7 +72,7 @@ namespace Chiota.UWP
 
     private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-        var isUserStored = await DatabaseService.User.IsUserStoredAsync();
+        var isUserStored = DatabaseService.User.IsUserStored();
             if (!isUserStored)
       {
         return;

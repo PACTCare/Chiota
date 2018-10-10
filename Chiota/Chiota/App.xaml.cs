@@ -15,7 +15,7 @@ namespace Chiota
         {
             InitializeComponent();
 
-            MainPage = new SplashView();
+            AppBase.ShowStartUp();
         }
 
         /// <summary>

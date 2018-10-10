@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Chiota.Models.Database;
 using Chiota.Services.Database;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
@@ -26,12 +27,12 @@ namespace Chiota.Base
 
         #region ShowStartUp
 
-        public static async Task ShowStartUpAsync()
+        public static void ShowStartUp()
         {
             NavigationPage container;
 
             //SecureStorage.RemoveAll();
-            var isUserStored = await DatabaseService.User.IsUserStoredAsync();
+            var isUserStored = DatabaseService.User.IsUserStored();
             if (isUserStored)
             {
                 // User is logged in.

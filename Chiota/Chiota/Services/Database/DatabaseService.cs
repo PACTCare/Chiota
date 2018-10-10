@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Database.Repositories;
+using SQLite;
 using Xamarin.Forms;
 
 namespace Chiota.Services.Database
@@ -11,7 +12,7 @@ namespace Chiota.Services.Database
     {
         #region Attributes
 
-        private static DatabaseContext _databaseContext;
+        private static SQLiteConnection _database;
         private static string _key;
         private static string _salt;
 
@@ -33,9 +34,8 @@ namespace Chiota.Services.Database
         {
             Name = (string)Application.Current.Resources["AppName"];
 
-            //Dynamic filepath of the database
-            var databasePath = DependencyService.Get<ISqlite>().GetDatabasePath();
-            _databaseContext = new DatabaseContext(databasePath);
+            //Dynamic connection to the database.
+            _database = DependencyService.Get<ISqlite>().GetDatabaseConnection();
 
             Init();
         }
@@ -46,9 +46,9 @@ namespace Chiota.Services.Database
 
         private static void Init()
         {
-            User = new UserRepository(_databaseContext, _key, _salt);
-            Contact = new ContactRepository(_databaseContext, _key, _salt);
-            Message = new MessageRepository(_databaseContext, _key, _salt);
+            User = new UserRepository(_database, _key, _salt);
+            Contact = new ContactRepository(_database, _key, _salt);
+            Message = new MessageRepository(_database, _key, _salt);
         }
 
         #endregion

@@ -82,7 +82,7 @@ namespace Chiota.ViewModels.Messenger
 
                     }
 
-                    await AppBase.ShowStartUpAsync();
+                    AppBase.ShowStartUp();
                 });
             }
         }

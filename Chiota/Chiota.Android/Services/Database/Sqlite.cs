@@ -13,7 +13,7 @@ using Android.Widget;
 using Chiota.Droid.Services.Database;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
-using Microsoft.Data.Sqlite;
+using SQLite;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Sqlite))]
@@ -21,7 +21,7 @@ namespace Chiota.Droid.Services.Database
 {
     public class Sqlite : ISqlite
     {
-        private SqliteConnection _connection;
+        private SQLiteConnection _connection;
 
         public string GetDatabasePath()
         {
@@ -31,10 +31,10 @@ namespace Chiota.Droid.Services.Database
             return path;
         }
 
-        public SqliteConnection GetDatabaseConnection()
+        public SQLiteConnection GetDatabaseConnection()
         {
             var databasePath = GetDatabasePath();
-            _connection = new SqliteConnection(databasePath);
+            _connection = new SQLiteConnection(databasePath);
             return _connection;
         }
 

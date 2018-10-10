@@ -173,7 +173,7 @@ namespace Chiota.ViewModels.Authentication
                         if (!result)
                         {
                             await new UnknownException(new ExcInfo()).ShowAlertAsync();
-                            await AppBase.ShowStartUpAsync();
+                            AppBase.ShowStartUp();
                             return;
                         }
 

@@ -35,7 +35,7 @@ namespace Chiota.Persistence
                 Accepted = accepted
             };
 
-            await DatabaseService.Contact.AddObjectAsync(contact);
+            DatabaseService.Contact.AddObject(contact);
         }
 
         #endregion

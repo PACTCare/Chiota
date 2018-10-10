@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.UWP.Services.Database;
-using Microsoft.Data.Sqlite;
+using SQLite;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Sqlite))]
@@ -15,7 +15,7 @@ namespace Chiota.UWP.Services.Database
 {
     public class Sqlite : ISqlite
     {
-        private SqliteConnection _connection;
+        private SQLiteConnection _connection;
 
         public string GetDatabasePath()
         {
@@ -23,10 +23,10 @@ namespace Chiota.UWP.Services.Database
             return databasePath;
         }
 
-        public SqliteConnection GetDatabaseConnection()
+        public SQLiteConnection GetDatabaseConnection()
         {
             var databasePath = GetDatabasePath();
-            _connection = new SqliteConnection(databasePath);
+            _connection = new SQLiteConnection(databasePath);
             return _connection;
         }
 

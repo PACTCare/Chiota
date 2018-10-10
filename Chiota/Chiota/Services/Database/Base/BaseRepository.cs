@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SQLite;
 
 namespace Chiota.Services.Database.Base
 {
@@ -9,7 +10,7 @@ namespace Chiota.Services.Database.Base
         #region Attributes
 
         //Database context
-        protected readonly DatabaseContext DatabaseContext;
+        protected readonly SQLiteConnection Database;
 
         #endregion
 
@@ -17,10 +18,10 @@ namespace Chiota.Services.Database.Base
         /// Base constructor of the database Repositories.
         /// Controls the access of the different database tables.
         /// </summary>
-        /// <param name="context">Context of the local database.</param>
-        protected BaseRepository(DatabaseContext context)
+        /// <param name="database">Context of the local database.</param>
+        protected BaseRepository(SQLiteConnection database)
         {
-            this.DatabaseContext = context;
+            Database = database;
         }
     }
 }

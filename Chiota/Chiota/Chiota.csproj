@@ -20,16 +20,11 @@
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Ipfs.Api" Version="0.21.0" />
     <PackageReference Include="Microsoft.Bot.Connector.DirectLine" Version="3.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.12" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
     <PackageReference Include="RestSharp" Version="106.3.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.168" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="Tangle.Net.Standard" Version="1.0.8.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.0" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.1" />
@@ -185,9 +180,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Messenger\MessengerTabbedView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Messenger\SplashView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Settings\AboutView.xaml">

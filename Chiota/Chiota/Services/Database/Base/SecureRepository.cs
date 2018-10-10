@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Chiota.Models.Database.Base;
 using Chiota.Services.Security;
-using Microsoft.EntityFrameworkCore;
+using SQLite;
 
 namespace Chiota.Services.Database.Base
 {
@@ -20,7 +20,7 @@ namespace Chiota.Services.Database.Base
 
         #region Constructors
 
-        protected SecureRepository(DatabaseContext context, string key, string salt) : base(context)
+        protected SecureRepository(SQLiteConnection database, string key, string salt) : base(database)
         {
             Key = key;
             Salt = salt;
@@ -52,33 +52,7 @@ namespace Chiota.Services.Database.Base
                 Console.WriteLine(e);
                 return null;
             }
-        }
-
-        #region GetObjectsAsync
-
-        /// <summary>
-        /// Get all objects of the table.
-        /// </summary>
-        /// <returns>List of the table objects</returns>
-        public override async Task<List<T>> GetObjectsAsync()
-        {
-            try
-            {
-                var models = await base.GetObjectsAsync();
-
-                for (var i = 0; i < models.Count; i++)
-                    models[i] = DecryptModel(models[i]);
-                
-                return models;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        #endregion
+        }        
 
         #endregion
 
@@ -105,21 +79,21 @@ namespace Chiota.Services.Database.Base
             }
         }
 
-        #region GetObjectByIdAsync
+        #endregion
+
+        #region GetLastAddedObject
 
         /// <summary>
-        /// Get specific object by id.
+        /// Get the last added object in the database.
         /// </summary>
-        /// <param name="id">Id of the object as integer</param>
-        /// <returns>Object of the table</returns>
-        public override async Task<T> GetObjectByIdAsync(int id)
+        /// <returns></returns>
+        public override T GetLastAddedObject()
         {
             try
             {
-                var model = await base.GetObjectByIdAsync(id);
-                model = DecryptModel(model);
-
-                return model;
+                var last = base.GetLastAddedObject();
+                last = DecryptModel(last);
+                return last;
             }
             catch (Exception e)
             {
@@ -127,8 +101,6 @@ namespace Chiota.Services.Database.Base
                 return null;
             }
         }
-
-        #endregion
 
         #endregion
 
@@ -145,8 +117,7 @@ namespace Chiota.Services.Database.Base
             {
                 var encrypted = EncryptModel(t);
                 var model = base.AddObject(encrypted);
-                var decrypted = DecryptModel(model);
-                return decrypted;
+                return model;
             }
             catch (Exception e)
             {
@@ -154,32 +125,7 @@ namespace Chiota.Services.Database.Base
                 return null;
             }
         }
-
-        #region AddObjectAsync
-
-        /// <summary>
-        /// Add new object to the table.
-        /// </summary>
-        /// <param name="t">Object of the table</param>
-        /// <returns>Result of successful insert as boolean</returns>
-        public override async Task<T> AddObjectAsync(T t)
-        {
-            try
-            {
-                var encrypted = EncryptModel(t);
-                var model = await base.AddObjectAsync(encrypted);
-                var decrypted = DecryptModel(model);
-                return decrypted;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        #endregion
-
+                
         #endregion
 
         #region UpdateObject
@@ -203,32 +149,7 @@ namespace Chiota.Services.Database.Base
                 Console.WriteLine(e);
                 return false;
             }
-        }
-
-        #region UpdateObjectAsync
-
-        /// <summary>
-        /// Update specific object of the table.
-        /// </summary>
-        /// <param name="t">Object of the table</param>
-        /// <returns>Result of successful update as boolean</returns>
-        public override async Task<bool> UpdateObjectAsync(T t)
-        {
-            try
-            {
-                var encrypted = EncryptModel(t);
-                var result = await base.UpdateObjectAsync(encrypted);
-                DecryptModel(t);
-                return result;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-        }
-
-        #endregion
+        }               
 
         #endregion
 

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Chiota.Models.Database.Base;
+﻿using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
+using SQLite;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
 namespace Chiota.Models.Database
@@ -28,37 +28,11 @@ namespace Chiota.Models.Database
         public bool StoreSeed { get; set; }
 
         [JsonIgnore]
-        [NotMapped]
+        [Ignore]
         public IAsymmetricKeyPair NtruKeyPair { get; set; }
 
         [JsonProperty("seed")]
         public string Seed { get; set; }
-
-        #endregion
-
-        #region ForeignKeys
-
-        #endregion
-
-        #region Constructors
-
-        public DbUser()
-        {
-
-        }
-
-        public DbUser(DbUser user)
-        {
-            Id = user.Id;
-            Name = user.Name;
-            ImageHash = user.ImageHash;
-            ImageBase64 = user.ImageBase64;
-            RequestAddress = user.RequestAddress;
-            PublicKeyAddress = user.PublicKeyAddress;
-            StoreSeed = user.StoreSeed;
-            NtruKeyPair = user.NtruKeyPair;
-            Seed = user.Seed;
-        }
 
         #endregion
     }
