@@ -23,15 +23,18 @@
   /// </summary>
   public class GetContactsInteractor : IUsecaseInteractor<GetContactsRequest, GetContactsResponse>
   {
-    public GetContactsInteractor(IContactRepository contactRepository, IMessenger messenger)
+    public GetContactsInteractor(IContactRepository contactRepository, IMessenger messenger, IEncryption encryption)
     {
       this.ContactRepository = contactRepository;
       this.Messenger = messenger;
+      this.Encryption = encryption;
     }
 
     private IContactRepository ContactRepository { get; }
 
     private IMessenger Messenger { get; }
+
+    private IEncryption Encryption { get; }
 
     /// <inheritdoc />
     public async Task<GetContactsResponse> ExecuteAsync(GetContactsRequest request)
@@ -73,8 +76,8 @@
       var pending = new List<Contact>();
       foreach (var contactRequest in pendingContactRequests)
       {
-        var contactsOnAddress = await this.LoadContactsOnAddressAsync(new Address(contactRequest.ContactAddress), keyPair);
-        if (contactsOnAddress.Any(c => c.PublicKeyAddress == publicKeyAddress.Value))
+        var requestedContactsMessages = await this.Messenger.GetMessagesByAddressAsync(new Address(contactRequest.ContactAddress));
+        if (this.TryParseNonces(keyPair, requestedContactsMessages))
         {
           await this.ContactRepository.AddContactAsync(contactRequest.ChatAddress, true, publicKeyAddress.Value);
           approvedContacts.Add(contactRequest);
@@ -88,6 +91,28 @@
       return new GetContactsResponse { ApprovedContacts = approvedContacts, PendingContactRequests = pending, Code = ResponseCode.Success };
     }
 
+    private bool TryParseNonces(IAsymmetricKeyPair keyPair, List<Message> requestedContactsMessages)
+    {
+      foreach (var message in requestedContactsMessages)
+      {
+        try
+        {
+          var encryptedNonce = new TryteString(
+            message.Payload.Value.Substring(
+              message.Payload.Value.IndexOf(Constants.LineBreak.Value, StringComparison.Ordinal) + Constants.LineBreak.TrytesLength));
+
+          var nonce = this.Encryption.Decrypt(keyPair, encryptedNonce.ToBytes());
+          return DateTime.TryParse(Encoding.UTF8.GetString(nonce), out _);
+        }
+        catch
+        {
+          // ignored
+        }
+      }
+
+      return false;
+    }
+
     private async Task<List<Contact>> LoadContactsOnAddressAsync(Address contactAddress, IAsymmetricKeyPair keyPair)
     {
       var requestedContactsMessages = await this.Messenger.GetMessagesByAddressAsync(contactAddress);
@@ -97,8 +122,8 @@
       {
         try
         {
-          var encryptedPayload = message.Payload.ToBytes();
-          var decryptedPayload = NtruEncryption.Key.Decrypt(keyPair, encryptedPayload);
+          var contactPayload = message.Payload.GetChunk(0, message.Payload.Value.IndexOf(Constants.LineBreak.Value, StringComparison.Ordinal));
+          var decryptedPayload = this.Encryption.Decrypt(keyPair, contactPayload.ToBytes());
 
           contacts.Add(JsonConvert.DeserializeObject<Contact>(Encoding.UTF8.GetString(decryptedPayload)));
         }

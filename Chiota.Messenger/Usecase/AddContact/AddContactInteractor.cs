@@ -38,8 +38,9 @@
                                  };
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
+        var contactExchange = ContactExchange.Create(requesterDetails, contactInformation.NtruKey, request.UserPublicKey);
 
-        await this.SendContactDetails(requesterDetails, contactInformation);
+        await this.SendContactDetails(contactExchange.Payload, contactInformation);
         await this.ExchangeKey(requesterDetails, contactInformation.NtruKey, GetChatPasSalt());
 
         await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);

@@ -42,7 +42,9 @@
         var chatPasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactPublicKeyAddress);
-        await this.SendContactDetails(contactDetails, contactInformation);
+        var contactExchange = ContactExchange.Create(contactDetails, contactInformation.NtruKey, request.UserKeyPair.PublicKey);
+
+        await this.SendContactDetails(contactExchange.Payload, contactInformation);
         await this.ExchangeKey(contactDetails, contactInformation.NtruKey, chatPasSalt);
 
         await this.Repository.AddContactAsync(request.ChatAddress.Value, true, contactDetails.PublicKeyAddress);

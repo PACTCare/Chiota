@@ -1,5 +1,6 @@
 ﻿namespace Chiota.Messenger.Usecase.GetMessages
 {
+  using System;
   using System.Collections.Generic;
   using System.Text;
   using System.Text.RegularExpressions;
@@ -46,6 +47,7 @@
         }
 
         var messages = await this.LoadMessagesOnAddressAsync(request.ChatKeyPair);
+        messages.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
 
         return new GetMessagesResponse
                  {

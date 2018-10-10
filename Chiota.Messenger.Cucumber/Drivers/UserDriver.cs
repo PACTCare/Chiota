@@ -175,7 +175,8 @@
                         ImagePath = string.Empty,
                         RequestAddress = sender.RequestAddress,
                         PublicKeyAddress = sender.PublicKeyAddress,
-                        ContactAddress = receiver.PublicKeyAddress
+                        ContactAddress = receiver.PublicKeyAddress,
+                        UserPublicKey = sender.NtruKeyPair.PublicKey
                       };
 
       this.LastRequest = request;
