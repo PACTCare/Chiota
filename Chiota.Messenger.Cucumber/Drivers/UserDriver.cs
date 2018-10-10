@@ -34,7 +34,7 @@
       var sender = this.Users.First(u => u.Name == senderName);
       var receiver = this.Users.First(u => u.Name == receiverName);
 
-      var contactResponse = this.GetContacts(receiverName);
+      var contactResponse = this.GetContacts(receiverName, false);
       if (contactResponse.Code != ResponseCode.Success)
       {
         Assert.Fail($"Can not get contacts. {contactResponse.Code}");
@@ -112,10 +112,16 @@
       return response;
     }
 
-    public GetContactsResponse GetContacts(string userName)
+    public GetContactsResponse GetContacts(string userName, bool doCrossCheck)
     {
       var user = this.Users.First(u => u.Name == userName);
-      var request = new GetContactsRequest { RequestAddress = user.RequestAddress, PublicKeyAddress = user.PublicKeyAddress, DoCrossCheck = true };
+      var request = new GetContactsRequest
+                      {
+                        RequestAddress = user.RequestAddress,
+                        PublicKeyAddress = user.PublicKeyAddress,
+                        DoCrossCheck = doCrossCheck,
+                        KeyPair = user.NtruKeyPair
+                      };
 
       this.LastRequest = request;
       var response = InstanceBag.GetContactsInteractor.ExecuteAsync(request).Result;

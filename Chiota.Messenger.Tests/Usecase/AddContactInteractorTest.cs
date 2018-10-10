@@ -1,8 +1,10 @@
 ﻿namespace Chiota.Messenger.Tests.Usecase
 {
   using System;
+  using System.Text;
   using System.Threading.Tasks;
 
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Repository;
@@ -120,8 +122,8 @@
       var sentMessage = messenger.SentMessages[0];
       Assert.AreEqual(contactAddress.Value, sentMessage.Receiver.Value);
 
-      var utf8String = sentMessage.Payload.ToUtf8String();
-      var sentPayload = JsonConvert.DeserializeObject<Contact>(utf8String);
+      var decryptedPayload = NtruEncryption.Key.Decrypt(InMemoryContactRepository.NtruKeyPair, sentMessage.Payload.ToBytes());
+      var sentPayload = JsonConvert.DeserializeObject<Contact>(Encoding.UTF8.GetString(decryptedPayload));
 
       Assert.AreEqual("kjasdjkahsda89dafhfafa", sentPayload.ImageHash);
       Assert.AreEqual("Chiota User", sentPayload.Name);

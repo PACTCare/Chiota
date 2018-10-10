@@ -3,9 +3,11 @@
   using System;
   using System.Collections.Generic;
   using System.Linq;
+  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Comparison;
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Repository;
   using Chiota.Messenger.Service;
@@ -13,6 +15,8 @@
   using Newtonsoft.Json;
 
   using Tangle.Net.Entity;
+
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
   /// <summary>
   ///   The get approved contacts interactor.
@@ -34,7 +38,7 @@
     {
       try
       {
-        var requestedContacts = await this.LoadContactsOnAddressAsync(request.RequestAddress);
+        var requestedContacts = await this.LoadContactsOnAddressAsync(request.RequestAddress, request.KeyPair);
         var localApprovedContacts = await this.ContactRepository.LoadContactsAsync(request.PublicKeyAddress.Value);
 
         var addressComparer = new ContactComparer();
@@ -46,7 +50,7 @@
 
         if (request.DoCrossCheck)
         {
-          return await this.CrossCheckAsync(request.PublicKeyAddress, approvedContacts, pendingContactRequests);
+          return await this.CrossCheckAsync(request.KeyPair, request.PublicKeyAddress, approvedContacts, pendingContactRequests);
         }
 
         return new GetContactsResponse
@@ -60,32 +64,51 @@
       }
     }
 
-    private async Task<GetContactsResponse> CrossCheckAsync(Address publicKeyAddress, List<Contact> approvedContacts, IEnumerable<Contact> pendingContactRequests)
+    private async Task<GetContactsResponse> CrossCheckAsync(
+      IAsymmetricKeyPair keyPair,
+      TryteString publicKeyAddress,
+      List<Contact> approvedContacts,
+      IEnumerable<Contact> pendingContactRequests)
     {
       var pending = new List<Contact>();
-      foreach (var pendingContactRequest in pendingContactRequests)
+      foreach (var contactRequest in pendingContactRequests)
       {
-        var contactsOnAddress = await this.LoadContactsOnAddressAsync(new Address(pendingContactRequest.ContactAddress));
+        var contactsOnAddress = await this.LoadContactsOnAddressAsync(new Address(contactRequest.ContactAddress), keyPair);
         if (contactsOnAddress.Any(c => c.PublicKeyAddress == publicKeyAddress.Value))
         {
-          approvedContacts.Add(pendingContactRequest);
+          await this.ContactRepository.AddContactAsync(contactRequest.ChatAddress, true, publicKeyAddress.Value);
+          approvedContacts.Add(contactRequest);
         }
         else
         {
-          pending.Add(pendingContactRequest);
+          pending.Add(contactRequest);
         }
       }
 
-      return new GetContactsResponse
-               {
-                 ApprovedContacts = approvedContacts, PendingContactRequests = pending, Code = ResponseCode.Success
-               };
+      return new GetContactsResponse { ApprovedContacts = approvedContacts, PendingContactRequests = pending, Code = ResponseCode.Success };
     }
 
-    private async Task<List<Contact>> LoadContactsOnAddressAsync(Address contactAddress)
+    private async Task<List<Contact>> LoadContactsOnAddressAsync(Address contactAddress, IAsymmetricKeyPair keyPair)
     {
       var requestedContactsMessages = await this.Messenger.GetMessagesByAddressAsync(contactAddress);
-      return requestedContactsMessages.Select(m => JsonConvert.DeserializeObject<Contact>(m.Payload.ToUtf8String())).ToList();
+
+      var contacts = new List<Contact>();
+      foreach (var message in requestedContactsMessages)
+      {
+        try
+        {
+          var encryptedPayload = message.Payload.ToBytes();
+          var decryptedPayload = NtruEncryption.Key.Decrypt(keyPair, encryptedPayload);
+
+          contacts.Add(JsonConvert.DeserializeObject<Contact>(Encoding.UTF8.GetString(decryptedPayload)));
+        }
+        catch
+        {
+          // ignored, since invalid contact requests lead us here
+        }
+      }
+
+      return contacts;
     }
   }
 }

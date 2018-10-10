@@ -1,6 +1,8 @@
 ﻿namespace Chiota.Messenger.Entity
 {
-  public class Contact : ContactInformation
+  using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+
+  public class Contact
   {
     public string Name { get; set; }
 
@@ -15,5 +17,9 @@
     public bool Request { get; set; }
 
     public bool Rejected { get; set; }
+
+    public string ContactAddress { get; set; }
+
+    public IAsymmetricKey NtruKey { get; set; }
   }
 }

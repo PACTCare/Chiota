@@ -38,9 +38,13 @@
         new Message(new TryteString(encryptedChatPasSalt.EncodeBytesAsString() + Constants.End), new Address(requesterDetails.ChatKeyAddress)));
     }
 
-    protected async Task SendContactDetails(Contact details, Address receiver)
+    protected async Task SendContactDetails(Contact details, ContactInformation receiverInformation)
     {
-      await this.Messenger.SendMessageAsync(new Message(TryteString.FromUtf8String(JsonConvert.SerializeObject(details)), receiver));
+      var encryptedContactDetails = NtruEncryption.Key.Encrypt(
+        receiverInformation.NtruKey,
+        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(details)));
+
+      await this.Messenger.SendMessageAsync(new Message(TryteString.FromBytes(encryptedContactDetails), receiverInformation.ContactAddress));
     }
   }
 }

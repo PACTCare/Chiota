@@ -50,7 +50,9 @@
       return this.PersistedContacts.Where(c => c.PublicKeyAddress == publicKeyAddress && !c.Rejected).ToList();
     }
 
+    private static IAsymmetricKeyPair ntruKeyPair;
+
     internal static IAsymmetricKeyPair NtruKeyPair =>
-      NtruEncryption.Key.CreateAsymmetricKeyPair(Seed.Random().Value.ToLower(), Seed.Random().Value.ToLower());
+      ntruKeyPair ?? (ntruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(Seed.Random().Value.ToLower(), Seed.Random().Value.ToLower()));
   }
 }

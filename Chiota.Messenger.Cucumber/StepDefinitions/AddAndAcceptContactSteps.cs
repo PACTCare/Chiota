@@ -23,7 +23,7 @@
     [Then(@"""(.*)"" should see ""(.*)"" as contact")]
     public void ThenShouldSeeAsContact(string user, string contact)
     {
-      var response = this.Driver.GetContacts(user);
+      var response = this.Driver.GetContacts(user, true);
       Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.IsTrue(response.ApprovedContacts.Any(c => c.Name == contact));
     }
@@ -31,7 +31,7 @@
     [Then(@"""(.*)"" should see ""(.*)""'s contact request as pending")]
     public void ThenShouldSeeSContactRequestAsPending(string user, string contact)
     {
-      var response = this.Driver.GetContacts(user);
+      var response = this.Driver.GetContacts(user, true);
 
       Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.IsTrue(response.PendingContactRequests.Any(c => c.Name == contact));
