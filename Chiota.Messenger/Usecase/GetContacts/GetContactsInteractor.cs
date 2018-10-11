@@ -125,7 +125,8 @@
           var contactPayload = message.Payload.GetChunk(0, message.Payload.Value.IndexOf(Constants.LineBreak.Value, StringComparison.Ordinal));
           var decryptedPayload = this.Encryption.Decrypt(keyPair, contactPayload.ToBytes());
 
-          contacts.Add(JsonConvert.DeserializeObject<Contact>(Encoding.UTF8.GetString(decryptedPayload)));
+          var value = Encoding.UTF8.GetString(decryptedPayload);
+          contacts.Add(JsonConvert.DeserializeObject<Contact>(value));
         }
         catch
         {

@@ -39,8 +39,9 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(Seed.Random().Value)
-                      };
+                        PublicKeyAddress = new Address(Seed.Random().Value),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       var response = await interactor.ExecuteAsync(request);
 
@@ -60,8 +61,9 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(publicKeyAddress)
-                      };
+                        PublicKeyAddress = new Address(publicKeyAddress),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       await interactor.ExecuteAsync(request);
 
@@ -87,8 +89,9 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(Seed.Random().Value)
-                      };
+                        PublicKeyAddress = new Address(Seed.Random().Value),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       var response = await interactor.ExecuteAsync(request);
 
@@ -112,8 +115,9 @@
                         RequestAddress = new Address(requestAddress),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(publicKeyAddress)
-                      };
+                        PublicKeyAddress = new Address(publicKeyAddress),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       await interactor.ExecuteAsync(request);
 
@@ -148,7 +152,8 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(Seed.Random().Value)
+                        PublicKeyAddress = new Address(Seed.Random().Value),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
                       };
 
       var response = await interactor.ExecuteAsync(request);
@@ -174,8 +179,9 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(Seed.Random().Value)
-                      };
+                        PublicKeyAddress = new Address(Seed.Random().Value),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       var response = await interactor.ExecuteAsync(request);
 
@@ -195,8 +201,9 @@
                         RequestAddress = new Address(Seed.Random().Value),
                         ImagePath = "kjasdjkahsda89dafhfafa",
                         Name = "Chiota User",
-                        PublicKeyAddress = new Address(Seed.Random().Value)
-                      };
+                        PublicKeyAddress = new Address(Seed.Random().Value),
+                        UserPublicKey = InMemoryContactRepository.NtruKeyPair.PublicKey
+      };
 
       var response = await interactor.ExecuteAsync(request);
 
