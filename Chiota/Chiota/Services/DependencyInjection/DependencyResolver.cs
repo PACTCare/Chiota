@@ -59,7 +59,7 @@
       builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
 
       builder.RegisterType<GetContactsInteractor>().As<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>()
-        .PropertiesAutowired();
+        .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
 
       builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>()
         .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
