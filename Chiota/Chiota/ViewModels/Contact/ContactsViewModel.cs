@@ -68,7 +68,7 @@ namespace Chiota.ViewModels.Contact
             base.ViewIsAppearing();
 
             _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
+            Device.StartTimer(TimeSpan.FromSeconds(3), UpdateView);
         }
 
         #endregion
@@ -93,6 +93,8 @@ namespace Chiota.ViewModels.Contact
             Device.BeginInvokeOnMainThread(async () =>
             {
                 var contacts = await GetContactListAsync();
+                if (contacts == null) return;
+
                 var changed = IsContactListChanged(contacts);
                 if (changed)
                     ContactList = contacts;

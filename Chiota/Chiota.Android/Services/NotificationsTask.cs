@@ -39,7 +39,7 @@ namespace Chiota.Droid.Services
       if (Connectivity.NetworkAccess == NetworkAccess.Internet)
       {
         // seed needs to be stored on device!!
-          var isUserStored = await DatabaseService.User.IsUserStoredAsync();
+          var isUserStored = DatabaseService.User.IsUserStored();
         if (!isUserStored)
         {
           return true;

@@ -141,7 +141,6 @@ namespace Chiota.Services.Database.Base
             {
                 var encrypted = EncryptModel(t);
                 var result = base.UpdateObject(encrypted);
-                DecryptModel(t);
                 return result;
             }
             catch (Exception e)
@@ -178,7 +177,8 @@ namespace Chiota.Services.Database.Base
 
         protected string Encrypt(string value)
         {
-            return Rijndael.Encrypt(value, Key, Salt);
+            var encrypted = Rijndael.Encrypt(value, Key, Salt);
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(encrypted));
         }
 
         #endregion
@@ -204,7 +204,8 @@ namespace Chiota.Services.Database.Base
 
         protected string Decrypt(string value)
         {
-            return Rijndael.Decrypt(value, Key, Salt);
+            var text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
+            return Rijndael.Decrypt(text, Key, Salt);
         }
 
         #endregion

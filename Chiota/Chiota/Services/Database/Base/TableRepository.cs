@@ -43,8 +43,8 @@ namespace Chiota.Services.Database.Base
         {
             try
             {
-                var models = (IEnumerable<T>)Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + ";");
-                return new List<T>(models);
+                var models = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + ";").Cast<T>().ToList();
+                return models;
             }
             catch (Exception e)
             {

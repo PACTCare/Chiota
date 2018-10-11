@@ -17,8 +17,8 @@
             BarTextColor="{DynamicResource BrightTextColor}">
 
     <TabbedPage.ToolbarItems>
-        <ToolbarItem Order="Primary" Icon="search.png"/>
-        <ToolbarItem Order="Primary" Icon="qr.png"/>
+        <!--<ToolbarItem Order="Primary" Icon="search.png"/>
+        <ToolbarItem Order="Primary" Icon="qr.png"/>-->
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnAddContact}" Command="{Binding AddContactCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>

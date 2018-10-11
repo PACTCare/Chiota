@@ -15,47 +15,72 @@ namespace Chiota.Persistence
 
         #region Flush
 
-        public async Task FlushAsync()
+        public Task FlushAsync()
         {
-            DatabaseService.Message.DeleteObjects();
+            var task = Task.Run(() =>
+            {
+                DatabaseService.Message.DeleteObjects();
+            });
+            task.Wait();
+
+            return task;
         }
 
         #endregion
 
         #region SaveTransaction
 
-        public async Task SaveTransactionAsync(TransactionCacheItem item)
+        public Task SaveTransactionAsync(TransactionCacheItem item)
         {
-            var message = new DbMessage()
+            var task = Task.Run(() =>
             {
-                TransactionHash = item.TransactionHash.Value,
-                ChatAddress = item.Address.Value,
-                MessageTryte = item.TransactionTrytes.Value
-            };
-            DatabaseService.Message.AddObject(message);
+                var message = new DbMessage()
+                {
+                    TransactionHash = item.TransactionHash.Value,
+                    ChatAddress = item.Address.Value,
+                    MessageTryte = item.TransactionTrytes.Value
+                };
+                DatabaseService.Message.AddObject(message);
+            });
+            task.Wait();
+
+            return task;
         }
 
         #endregion
 
         #region LoadTransactionsByAddress
 
-        public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
+        public Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
         {
-            var messages = DatabaseService.Message.GetMessagesByChatAddress(address.Value);
-
-            var list = new List<TransactionCacheItem>();
-
-            foreach (var item in messages)
+            var task = Task.Run(() =>
             {
-                list.Add(new TransactionCacheItem()
+                try
                 {
-                    Address = new Address(item.ChatAddress),
-                    TransactionHash = new Hash(item.TransactionHash),
-                    TransactionTrytes = new TransactionTrytes(item.MessageTryte)
-                });
-            }
+                    var messages = DatabaseService.Message.GetMessagesByChatAddress(address.Value);
 
-            return list;
+                    var list = new List<TransactionCacheItem>();
+
+                    foreach (var item in messages)
+                    {
+                        list.Add(new TransactionCacheItem()
+                        {
+                            Address = new Address(item.ChatAddress),
+                            TransactionHash = new Hash(item.TransactionHash),
+                            TransactionTrytes = new TransactionTrytes(item.MessageTryte)
+                        });
+                    }
+
+                    return list;
+                }
+                catch (Exception)
+                {
+                    return new List<TransactionCacheItem>();
+                }
+            });
+            task.Wait();
+
+            return task;
         }
 
         #endregion

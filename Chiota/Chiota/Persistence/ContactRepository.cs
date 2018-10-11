@@ -26,37 +26,56 @@ namespace Chiota.Persistence
 
         #region AddContact
 
-        public override async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
+        public override Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
         {
-            var contact = new DbContact()
+            var task = Task.Run(() =>
             {
-                ChatAddress = address,
-                PublicKeyAddress = publicKeyAddress,
-                Accepted = accepted
-            };
+                var contact = new DbContact()
+                {
+                    ChatAddress = address,
+                    PublicKeyAddress = publicKeyAddress,
+                    Accepted = accepted
+                };
 
-            DatabaseService.Contact.AddObject(contact);
+                DatabaseService.Contact.AddObject(contact);
+            });
+            task.Wait();
+
+            return task;
         }
 
         #endregion
 
         #region LoadContacts
 
-        public override async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
+        public override Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
         {
-            var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
-            var list = new List<Contact>();
-
-            foreach (var item in contacts)
+            var task = Task.Run(() =>
             {
-                list.Add(new Contact()
+                try
                 {
-                    ChatAddress = item.ChatAddress,
-                    Rejected = !item.Accepted
-                });
-            }
+                    var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
+                    var list = new List<Contact>();
 
-            return list;
+                    foreach (var item in contacts)
+                    {
+                        list.Add(new Contact()
+                        {
+                            ChatAddress = item.ChatAddress,
+                            Rejected = !item.Accepted
+                        });
+                    }
+
+                    return list;
+                }
+                catch (Exception)
+                {
+                    return new List<Contact>();
+                }
+            });
+            task.Wait();
+
+            return task;
         }
 
         #endregion

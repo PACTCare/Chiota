@@ -28,7 +28,6 @@ namespace Chiota.ViewModels.Authentication
 
         private string password;
         private bool _isEntryFocused;
-        private bool _started;
 
         #endregion
 
@@ -56,18 +55,6 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region Init
-
-        public override void Init(object data = null)
-        {
-            base.Init(data);
-
-            if (data == null) return;
-            _started = (bool)data;
-        }
-
-        #endregion
-
         #region ViewIsAppearing
 
         /// <inheritdoc />
@@ -78,15 +65,12 @@ namespace Chiota.ViewModels.Authentication
             // Clear the user inputs.
             Password = string.Empty;
 
-            if (_started)
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                Device.BeginInvokeOnMainThread(async () =>
-                {
-                    //Focus the entry.
-                    await Task.Delay(TimeSpan.FromMilliseconds(500));
-                    IsEntryFocused = true;
-                });
-            }
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
 
         #endregion

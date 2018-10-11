@@ -41,7 +41,7 @@
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="4">
-                <ListView ItemsSource="{Binding MessageList}" HasUnevenRows="True" CachingStrategy="RecycleElement" SeparatorVisibility="None" Rotation="180">
+                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" HasUnevenRows="True" CachingStrategy="RecycleElement" SeparatorVisibility="None" Rotation="180">
                     <ListView.Header>
                         <StackLayout>
                             <Label Text="Loading" IsVisible="{Binding IsBusy}"/>

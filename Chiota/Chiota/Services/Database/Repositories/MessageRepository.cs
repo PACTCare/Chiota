@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
@@ -28,15 +29,13 @@ namespace Chiota.Services.Database.Repositories
             try
             {
                 var value = Encrypt(chatAddress);
-                var query = (IEnumerable<DbMessage>) Database.Query(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=" +
-                    value + ";");
-                var models = new List<DbMessage>(query);
+                var query = Database.Query(TableMapping,
+                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", value).Cast<DbMessage>().ToList();
 
-                for (var i = 0; i < models.Count; i++)
-                    models[i] = DecryptModel(models[i]);
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
 
-                return models;
+                return query;
             }
             catch (Exception e)
             {
