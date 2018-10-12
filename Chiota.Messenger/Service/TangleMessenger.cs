@@ -56,7 +56,7 @@
         bundle.Finalize();
         bundle.Sign();
 
-        await this.Repository.SendTrytesAsync(bundle.Transactions);
+        await this.Repository.SendTrytesAsync(bundle.Transactions, 1);
       }
       catch (Exception exception)
       {

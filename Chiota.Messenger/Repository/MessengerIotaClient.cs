@@ -132,7 +132,7 @@
 
     private static IIotaClient CreateClient(string uri)
     {
-      return new RestIotaClient(new RestClient(uri) { Timeout = 2000 });
+      return new RestIotaClient(new RestClient(uri) { Timeout = 20000 });
     }
 
     private void HandleException(Exception exception)
