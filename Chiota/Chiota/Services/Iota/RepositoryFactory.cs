@@ -3,6 +3,7 @@
   using System.Collections.Generic;
 
   using Chiota.Messenger.Repository;
+  using Chiota.Messenger.Service;
   using Chiota.Resources.Settings;
 
   using Tangle.Net.ProofOfWork;

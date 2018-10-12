@@ -96,7 +96,7 @@
       var contact = await repository.LoadContactInformationByAddressAsync(new Address());
 
       Assert.AreEqual(contactAddress.Value, contact.ContactAddress.Value);
-      Assert.AreEqual(ntruKey.ToString(), contact.NtruKey.ToString());
+      Assert.AreEqual(ntruKey.ToString(), contact.PublicKey.ToString());
     }
 
     private static Bundle CreateBundle(TryteString requestAdressTrytes)

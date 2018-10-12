@@ -41,7 +41,7 @@
     /// <inheritdoc />
     public async Task<ContactInformation> LoadContactInformationByAddressAsync(Address address)
     {
-      return new ContactInformation { ContactAddress = address, NtruKey = NtruKeyPair.PublicKey };
+      return new ContactInformation { ContactAddress = address, PublicKey = NtruKeyPair.PublicKey };
     }
 
     /// <inheritdoc />

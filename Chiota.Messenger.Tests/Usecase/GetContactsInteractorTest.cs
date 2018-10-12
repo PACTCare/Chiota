@@ -10,7 +10,6 @@
   using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Encryption;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Tests.Service;

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Chiota\CEXEngine\CEXEngine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Documentation\" />
+  </ItemGroup>
+
 </Project>

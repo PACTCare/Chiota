@@ -10,13 +10,13 @@
   public class ContactInformation
   {
     /// <summary>
-    /// Gets or sets the address.
+    /// Contact Addredd
     /// </summary>
     public Address ContactAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the ntru key.
+    /// Public key of the contact
     /// </summary>
-    public IAsymmetricKey NtruKey { get; set; }
+    public IAsymmetricKey PublicKey { get; set; }
   }
 }

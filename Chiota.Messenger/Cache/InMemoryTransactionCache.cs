@@ -1,17 +1,11 @@
-﻿namespace Chiota.Messenger.Tests.Cache
+﻿namespace Chiota.Messenger.Cache
 {
-  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Cache;
-
   using Tangle.Net.Entity;
 
-  /// <summary>
-  /// The in memory transaction cache.
-  /// </summary>
   public class InMemoryTransactionCache : ITransactionCache
   {
     /// <summary>
@@ -22,40 +16,19 @@
       this.Items = new List<TransactionCacheItem>();
     }
 
-    /// <summary>
-    /// Gets the items.
-    /// </summary>
     public List<TransactionCacheItem> Items { get; }
 
     /// <inheritdoc />
-    public Task FlushAsync()
+    public async Task FlushAsync()
     {
-      return null;
+      this.Items.Clear();
     }
 
-    /// <summary>
-    /// The load transactions by address.
-    /// </summary>
-    /// <param name="address">
-    /// The address.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
     public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
     {
       return this.Items.Where(i => i.Address.Value == address.Value).ToList();
     }
 
-    /// <summary>
-    /// The save transaction.
-    /// </summary>
-    /// <param name="item">
-    /// The item.
-    /// </param>
-    /// <returns>
-    /// The <see cref="Task"/>.
-    /// </returns>
     public async Task SaveTransactionAsync(TransactionCacheItem item)
     {
       this.Items.Add(item);

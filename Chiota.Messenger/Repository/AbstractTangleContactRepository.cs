@@ -54,7 +54,7 @@
 
       return new ContactInformation
                {
-                 NtruKey = new NTRUPublicKey(bytesKey),
+                 PublicKey = new NTRUPublicKey(bytesKey),
                  ContactAddress = new Address(
                    latestContactInformation.Value.Substring(lineBreakIndex + Constants.LineBreak.Value.Length, Address.Length))
                };

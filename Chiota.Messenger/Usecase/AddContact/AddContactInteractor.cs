@@ -29,19 +29,19 @@
                                    ChatAddress = Seed.Random().ToString(),
                                    ChatKeyAddress = Seed.Random().ToString(),
                                    Name = request.Name,
-                                   ImageHash = request.ImagePath,
+                                   ImagePath = request.ImagePath,
                                    ContactAddress = request.RequestAddress.Value,
                                    Request = true,
                                    Rejected = false,
-                                   NtruKey = null,
+                                   PublicKey = null,
                                    PublicKeyAddress = request.PublicKeyAddress.Value
                                  };
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactAddress);
-        var contactExchange = ContactExchange.Create(requesterDetails, contactInformation.NtruKey, request.UserPublicKey);
+        var contactExchange = ContactExchange.Create(requesterDetails, contactInformation.PublicKey, request.UserPublicKey);
 
         await this.SendContactDetails(contactExchange.Payload, contactInformation);
-        await this.ExchangeKey(requesterDetails, contactInformation.NtruKey, GetChatPasSalt());
+        await this.ExchangeKey(requesterDetails, contactInformation.PublicKey, GetChatPasSalt());
 
         await this.Repository.AddContactAsync(requesterDetails.ChatAddress, true, requesterDetails.PublicKeyAddress);
 

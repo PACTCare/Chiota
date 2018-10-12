@@ -150,7 +150,7 @@
           Name = bot.BotName,
           ChatAddress = bot.BotSlogan,
           ContactAddress = bot.BotSlogan,
-          ImageHash = bot.ImageUrl,
+          ImagePath = bot.ImageUrl,
           Rejected = false
         };
 

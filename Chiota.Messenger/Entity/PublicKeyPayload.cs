@@ -8,6 +8,9 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
+  /// <summary>
+  /// Used to generate the payload, containing the users public key and request address
+  /// </summary>
   public class PublicKeyPayload : TryteString
   {
     private Hash hash;

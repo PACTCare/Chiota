@@ -7,7 +7,6 @@
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Exception;
   using Chiota.Messenger.Service;
-  using Chiota.Messenger.Tests.Cache;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Usecase;
 

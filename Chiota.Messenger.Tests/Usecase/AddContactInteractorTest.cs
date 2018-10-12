@@ -129,7 +129,7 @@
       var decryptedPayload = NtruEncryption.Key.Decrypt(InMemoryContactRepository.NtruKeyPair, sentMessage.Payload.ToBytes());
       var sentPayload = JsonConvert.DeserializeObject<Contact>(Encoding.UTF8.GetString(decryptedPayload));
 
-      Assert.AreEqual("kjasdjkahsda89dafhfafa", sentPayload.ImageHash);
+      Assert.AreEqual("kjasdjkahsda89dafhfafa", sentPayload.ImagePath);
       Assert.AreEqual("Chiota User", sentPayload.Name);
       Assert.AreEqual(publicKeyAddress, sentPayload.PublicKeyAddress);
       Assert.AreEqual(requestAddress, sentPayload.ContactAddress);
