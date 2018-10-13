@@ -1,13 +1,17 @@
 ﻿namespace Chiota.Messenger.Tests.Usecase
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
+  using System.Text;
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Cache;
+  using Chiota.Messenger.Encryption;
   using Chiota.Messenger.Entity;
   using Chiota.Messenger.Service;
   using Chiota.Messenger.Tests.Cache;
+  using Chiota.Messenger.Tests.Encryption;
   using Chiota.Messenger.Tests.Repository;
   using Chiota.Messenger.Tests.Service;
   using Chiota.Messenger.Usecase;
@@ -41,7 +45,7 @@
     [TestMethod]
     public async Task TestNoContactsExistShouldReturnEmptyList()
     {
-      var interactor = new GetContactsInteractor(new InMemoryContactRepository(), new InMemoryMessenger());
+      var interactor = new GetContactsInteractor(new InMemoryContactRepository(), new InMemoryMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(new GetContactsRequest { PublicKeyAddress = new Address(Hash.Empty.Value) });
 
       Assert.AreEqual(0, response.ApprovedContacts.Count);
@@ -53,33 +57,37 @@
       var pubKeyAddress = Seed.Random().Value;
       var contactRequestAddress = new Address(Seed.Random().Value);
       var storedContactAddress = Seed.Random().Value;
+      var keyPair = InMemoryContactRepository.NtruKeyPair;
 
       var contactRepository = new InMemoryContactRepository();
       var transactionCache = new InMemoryTransactionCache();
 
-      var cacheItem = new TransactionCacheItem
-                        {
-                          Address = contactRequestAddress,
-                          TransactionHash = new Hash(Seed.Random().Value),
-                          TransactionTrytes = new TransactionTrytes(
-                            TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress })).Value)
-                        };
+      var bundle = CreateBundle(
+        contactRequestAddress,
+        ContactExchange.Create(new Contact { ChatAddress = storedContactAddress, Rejected = true }, keyPair.PublicKey, keyPair.PublicKey).Payload);
 
-      await transactionCache.SaveTransactionAsync(cacheItem);
+      bundle.Transactions.ForEach(async t => await transactionCache.SaveTransactionAsync(new TransactionCacheItem
+                                                                                     {
+                                                                                       Address = contactRequestAddress,
+                                                                                       TransactionHash = t.Hash,
+                                                                                       TransactionTrytes = t.ToTrytes()
+                                                                                     }));
+
       await contactRepository.AddContactAsync(storedContactAddress, true, pubKeyAddress);
 
       var iotaRepositoryMock = new Mock<IIotaRepository>();
       iotaRepositoryMock.Setup(i => i.FindTransactionsByAddressesAsync(It.IsAny<List<Address>>())).ReturnsAsync(
-        new TransactionHashList { Hashes = new List<Hash> { cacheItem.TransactionHash } });
+        new TransactionHashList { Hashes = new List<Hash>(bundle.Transactions.Select(t => t.Hash)) });
       iotaRepositoryMock.Setup(i => i.GetTrytesAsync(It.IsAny<List<Hash>>())).ReturnsAsync(new List<TransactionTrytes>());
 
-      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepositoryMock.Object, transactionCache));
+      var interactor = new GetContactsInteractor(contactRepository, new TangleMessenger(iotaRepositoryMock.Object, transactionCache), NtruEncryption.Key);
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
                            PublicKeyAddress = new Address(pubKeyAddress),
-                           ContactRequestAddress = contactRequestAddress
-                         });
+                           RequestAddress = contactRequestAddress,
+                           KeyPair = keyPair
+                       });
 
       Assert.AreEqual(1, response.ApprovedContacts.Count);
     }
@@ -91,50 +99,55 @@
       var contactRequestAddress = new Address(Seed.Random().Value);
       var rejectedContactAddress = Seed.Random().Value;
       var storedContactAddress = Seed.Random().Value;
+      var keyPair = InMemoryContactRepository.NtruKeyPair;
 
       var contactRepository = new InMemoryContactRepository();
       await contactRepository.AddContactAsync(storedContactAddress, true, pubKeyAddress);
       await contactRepository.AddContactAsync(rejectedContactAddress, false, pubKeyAddress);
 
-      var approvedContactMessage = TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress }));
-
       var rejectedContactBundle = CreateBundle(
         contactRequestAddress,
-        TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = rejectedContactAddress, Rejected = true })));
+        ContactExchange.Create(new Contact { ChatAddress = rejectedContactAddress, Rejected = true }, keyPair.PublicKey, keyPair.PublicKey).Payload);
 
-      var approvedContactBundle = CreateBundle(contactRequestAddress, approvedContactMessage);
+      var approvedContactBundle = CreateBundle(
+        contactRequestAddress,
+        ContactExchange.Create(new Contact { ChatAddress = storedContactAddress }, keyPair.PublicKey, keyPair.PublicKey).Payload);
 
       var requestBundle = CreateBundle(
         contactRequestAddress,
-        TryteString.FromUtf8String(JsonConvert.SerializeObject(new Contact { ChatAddress = storedContactAddress, Request = true, Name = "Requester" })));
+        ContactExchange.Create(
+          new Contact { ChatAddress = storedContactAddress, Request = true, Name = "Requester" },
+          keyPair.PublicKey,
+          keyPair.PublicKey).Payload);
 
       var messenger = new InMemoryMessenger();
 
-      messenger.SentMessages.Add(new Message(rejectedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
-      messenger.SentMessages.Add(new Message(approvedContactBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
-      messenger.SentMessages.Add(new Message(requestBundle.Transactions.Aggregate(new TryteString(), (current, tryteString) => current.Concat(tryteString.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(rejectedContactBundle.Transactions.Aggregate(new TryteString(), (current, transaction) => current.Concat(transaction.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(approvedContactBundle.Transactions.Aggregate(new TryteString(), (current, transaction) => current.Concat(transaction.Fragment)), contactRequestAddress));
+      messenger.SentMessages.Add(new Message(requestBundle.Transactions.Aggregate(new TryteString(), (current, transaction) => current.Concat(transaction.Fragment)), contactRequestAddress));
 
-      var interactor = new GetContactsInteractor(contactRepository, messenger);
+      var interactor = new GetContactsInteractor(contactRepository, messenger, NtruEncryption.Key);
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
                            PublicKeyAddress = new Address(pubKeyAddress),
-                           ContactRequestAddress = contactRequestAddress
-                         });
+                           RequestAddress = contactRequestAddress,
+                           KeyPair = keyPair
+                       });
 
       Assert.AreEqual(ResponseCode.Success, response.Code);
       Assert.AreEqual(1, response.ApprovedContacts.Count);
       Assert.AreEqual(1, response.PendingContactRequests.Count);
     }
 
-    private static Bundle CreateBundle(Address contactRequestAddress, TryteString rejectedContactMessage)
+    private static Bundle CreateBundle(Address address, TryteString message)
     {
       var bundle = new Bundle();
       bundle.AddTransfer(
         new Transfer
           {
-            Address = contactRequestAddress,
-            Message = rejectedContactMessage,
+            Address = address,
+            Message = message,
             Timestamp = Timestamp.UnixSecondsTimestamp,
             Tag = Constants.Tag
           });
@@ -151,7 +164,7 @@
     [TestMethod]
     public async Task TestExceptionGetsThrownShouldReturnErrorCode()
     {
-      var interactor = new GetContactsInteractor(new ExceptionContactRepository(), new InMemoryMessenger());
+      var interactor = new GetContactsInteractor(new ExceptionContactRepository(), new InMemoryMessenger(), new EncryptionStub());
       var response = await interactor.ExecuteAsync(new GetContactsRequest { PublicKeyAddress = new Address(Hash.Empty.Value) });
 
       Assert.AreEqual(ResponseCode.ContactsUnavailable, response.Code);

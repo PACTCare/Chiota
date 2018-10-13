@@ -1,16 +1,18 @@
 ﻿namespace Chiota.Tests.Repository
 {
+  using Chiota.Messenger.Service;
   using Chiota.Persistence;
 
   using SQLite;
 
+  using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Repository;
 
   public class SqlLiteContactRepositoryStub : AbstractSqlLiteContactRepository
     {
       /// <inheritdoc />
-      public SqlLiteContactRepositoryStub(IIotaRepository iotaRepository)
-        : base(iotaRepository)
+      public SqlLiteContactRepositoryStub(IMessenger messenger)
+        : base(messenger, new SignatureValidator())
       {
       }
 

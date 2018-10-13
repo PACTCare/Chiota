@@ -2,18 +2,15 @@
 {
   using Tangle.Net.Entity;
 
-  /// <summary>
-  /// The decline contact request.
-  /// </summary>
   public class DeclineContactRequest
   {
     /// <summary>
-    /// Gets or sets the contact chat address.
+    /// Chat address included in the contacts request
     /// </summary>
     public Address ContactChatAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the user public key address.
+    /// Public key address of the current user
     /// </summary>
     public Address UserPublicKeyAddress { get; set; }
   }

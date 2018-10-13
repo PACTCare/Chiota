@@ -4,34 +4,36 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  /// <summary>
-  /// The add contact request.
-  /// </summary>
   public class AddContactRequest
   {
     /// <summary>
-    /// Gets or sets the contact.
+    /// Request address of the contact that should be added
     /// </summary>
     public Address ContactAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the image hash.
+    /// Optional: Image that will be shown to the added contact within the contact request
     /// </summary>
-    public string ImageHash { get; set; }
+    public string ImagePath { get; set; }
 
     /// <summary>
-    /// Gets or sets the name.
+    /// Current user name. Will be shown to the contact within the contact request
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets the public key address.
+    /// Public key address of the current user
     /// </summary>
     public Address PublicKeyAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the request address.
+    /// Request address of the current user
     /// </summary>
     public Address RequestAddress { get; set; }
+
+    /// <summary>
+    /// Current user public key. Used to encrypt the nonce of the answer to the contact request
+    /// </summary>
+    public IAsymmetricKey UserPublicKey { get; set; }
   }
 }

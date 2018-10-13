@@ -4,48 +4,50 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
-  /// <summary>
-  /// The accept contact request.
-  /// </summary>
   public class AcceptContactRequest
   {
     /// <summary>
-    /// Gets or sets the chat address.
+    /// The chat address that was passed along with the request. (See Contact from GetContactsUsecase)
     /// </summary>
     public Address ChatAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the chat key address.
+    /// The chat key address that was passed along with the request. (See Contact from GetContactsUsecase)
     /// </summary>
     public Address ChatKeyAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the contact address.
+    /// The contact address that was passed along with the request. (See Contact from GetContactsUsecase)
     /// </summary>
     public Address ContactAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the public key address.
+    /// The contact public key address that was passed along with the request. (See Contact from GetContactsUsecase)
     /// </summary>
     public Address ContactPublicKeyAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the user image hash.
+    /// The contact address of the current user. 
     /// </summary>
-    public string UserImageHash { get; set; }
+    public Address UserContactAddress { get; set; }
 
     /// <summary>
-    /// Gets or sets the user key pair.
+    /// Image path of the users avatar or similar
+    /// </summary>
+    public string UserImagePath { get; set; }
+
+    /// <summary>
+    /// The key pair of the current user. Used for chat encryption
     /// </summary>
     public IAsymmetricKeyPair UserKeyPair { get; set; }
 
     /// <summary>
-    /// Gets or sets the user name.
+    /// Current user name
     /// </summary>
     public string UserName { get; set; }
 
     /// <summary>
-    /// Gets or sets the user public key address.
+    /// The users public key address
     /// </summary>
     public Address UserPublicKeyAddress { get; set; }
   }

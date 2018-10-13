@@ -10,12 +10,12 @@
   public class GetContactsResponse : BaseResponse
   {
     /// <summary>
-    /// Gets or sets the contacts.
+    /// All contacts that have been accepted. See Entities for more information about the Contact class
     /// </summary>
     public List<Contact> ApprovedContacts { get; set; }
 
     /// <summary>
-    /// Gets or sets the pending contact requests.
+    /// All contacts that have a open request. See Entities for more information about the Contact class
     /// </summary>
     public List<Contact> PendingContactRequests { get; set; }
   }

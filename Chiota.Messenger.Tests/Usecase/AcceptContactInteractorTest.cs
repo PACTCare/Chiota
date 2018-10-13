@@ -29,10 +29,11 @@
                                                        ChatAddress = new Address(Hash.Empty.Value),
                                                        ContactPublicKeyAddress = new Address(Hash.Empty.Value),
                                                        ContactAddress = new Address(Hash.Empty.Value),
-                                                       UserImageHash = string.Empty,
+                                                       UserImagePath = string.Empty,
                                                        UserPublicKeyAddress = new Address(Hash.Empty.Value),
                                                        UserName = string.Empty,
-                                                       UserKeyPair = InMemoryContactRepository.NtruKeyPair
+                                                       UserKeyPair = InMemoryContactRepository.NtruKeyPair,
+                                                       UserContactAddress = new Address(Hash.Empty.Value)
       });
 
       Assert.AreEqual(ResponseCode.ChatPasswordAndSaltCannotBeGenerated, response.Code);
@@ -53,7 +54,7 @@
                                                        ChatAddress = new Address(Hash.Empty.Value),
                                                        ContactPublicKeyAddress = new Address(Hash.Empty.Value),
                                                        ContactAddress = new Address(Hash.Empty.Value),
-                                                       UserImageHash = string.Empty,
+                                                       UserImagePath = string.Empty,
                                                        UserPublicKeyAddress = new Address(Hash.Empty.Value),
                                                        UserName = string.Empty,
                                                        UserKeyPair = InMemoryContactRepository.NtruKeyPair

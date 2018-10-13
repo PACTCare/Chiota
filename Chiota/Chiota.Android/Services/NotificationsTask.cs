@@ -47,7 +47,7 @@
         var response = await interactor.ExecuteAsync(
                          new GetContactsRequest
                            {
-                             ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                             RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                              PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                            });
 

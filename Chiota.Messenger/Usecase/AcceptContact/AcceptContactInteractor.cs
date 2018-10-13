@@ -28,10 +28,10 @@
         var contactDetails = new Contact
                                {
                                  Name = request.UserName,
-                                 ImageHash = request.UserImageHash,
+                                 ImageHash = request.UserImagePath,
                                  ChatAddress = request.ChatAddress.Value,
                                  ChatKeyAddress = request.ChatKeyAddress.Value,
-                                 ContactAddress = null,
+                                 ContactAddress = request.UserContactAddress.Value,
                                  PublicKeyAddress = request.UserPublicKeyAddress.Value,
                                  Rejected = false,
                                  Request = false,
@@ -42,7 +42,9 @@
         var chatPasSalt = await this.GetChatPasswordSalt(request.ChatKeyAddress, request.UserKeyPair);
 
         var contactInformation = await this.Repository.LoadContactInformationByAddressAsync(request.ContactPublicKeyAddress);
-        await this.SendContactDetails(contactDetails, request.ContactAddress);
+        var contactExchange = ContactExchange.Create(contactDetails, contactInformation.NtruKey, request.UserKeyPair.PublicKey);
+
+        await this.SendContactDetails(contactExchange.Payload, contactInformation);
         await this.ExchangeKey(contactDetails, contactInformation.NtruKey, chatPasSalt);
 
         await this.Repository.AddContactAsync(request.ChatAddress.Value, true, contactDetails.PublicKeyAddress);

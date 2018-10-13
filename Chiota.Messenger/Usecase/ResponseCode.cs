@@ -6,11 +6,6 @@
   public enum ResponseCode
   {
     /// <summary>
-    /// Code returned when the public key address had to be adjusted
-    /// </summary>
-    NewPublicKeyAddress = 2,
-
-    /// <summary>
     /// Returned if the use case is executed successfully
     /// </summary>
     Success = 1,
@@ -26,7 +21,7 @@
     MessengerException = -2,
 
     /// <summary>
-    /// The unkown exception.
+    /// Returned if no clear source of an error can be determined. Look at stacktrace for more details
     /// </summary>
     UnkownException = -3,
 
@@ -41,7 +36,7 @@
     ContactsUnavailable = -5,
 
     /// <summary>
-    /// Error code that is returned when the password salt for the chat can not be generated
+    /// Error code that is returned when the password and salt for the chat can not be generated. This may be related to incorrect information published to the chat key address
     /// </summary>
     ChatPasswordAndSaltCannotBeGenerated = -6,
 

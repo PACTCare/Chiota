@@ -6,6 +6,9 @@
 
   public class GetMessagesRequest
   {
+    /// <summary>
+    /// The current address of the chat 
+    /// </summary>
     public Address ChatAddress { get; set; }
 
     /// <summary>

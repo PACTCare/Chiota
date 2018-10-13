@@ -26,7 +26,7 @@
 
     public static AddContactInteractor AddContactInteractor => new AddContactInteractor(ContactRepository, Messenger);
 
-    public static GetContactsInteractor GetContactsInteractor => new GetContactsInteractor(ContactRepository, Messenger);
+    public static GetContactsInteractor GetContactsInteractor => new GetContactsInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
     public static AcceptContactInteractor AcceptContactInteractor => new AcceptContactInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
@@ -63,7 +63,7 @@
               "https://node.iota-tangle.io:14265",
               "https://pow4.iota.community:443",
               "https://dyn.tangle-nodes.com:443",
-              "https://pow5.iota.community:443"
+              "https://pow5.iota.community:443",
             }),
         new PoWSrvService());
   }

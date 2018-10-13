@@ -116,8 +116,9 @@
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {
-                           ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                           RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                           PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                           KeyPair = UserService.CurrentUser.NtruKeyPair
                          });
 
       var contactViewModels = GetContactsPresenter.Present(response, this.viewCellObject, searchText);
