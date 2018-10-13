@@ -24,19 +24,21 @@
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescQrCode}"/>
                     </StackLayout>
 
-                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#321d4999" HorizontalOptions="Center" VerticalOptions="Center" Padding="16">
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#000000" HorizontalOptions="Center" VerticalOptions="Center" Padding="4">
                         <forms:ZXingBarcodeImageView
                             BarcodeFormat="QR_CODE"
                             BarcodeValue="{Binding Seed}"
                             HeightRequest="196" 
                             WidthRequest="196"
                             HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand">
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="{DynamicResource BackgroundColor}">
                             <forms:ZXingBarcodeImageView.BarcodeOptions>
                                 <common:EncodingOptions Width="196" Height="196"  />
                             </forms:ZXingBarcodeImageView.BarcodeOptions>
                         </forms:ZXingBarcodeImageView>
                     </Frame>
+
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">

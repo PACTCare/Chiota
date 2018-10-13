@@ -1,4 +1,6 @@
-﻿using Chiota.Helper;
+﻿using System;
+using System.IO;
+using Chiota.Helper;
 using Chiota.Messenger.Entity;
 using Chiota.Models.Database.Base;
 using Xamarin.Forms;
@@ -13,7 +15,7 @@ namespace Chiota.Models.Binding
 
         public bool IsApproved { get; }
 
-        public bool IsNotApproved { get; }
+        public string ImageBase64 { get; }
 
         public ImageSource ImageSource { get;}
 
@@ -23,19 +25,21 @@ namespace Chiota.Models.Binding
 
         #region Constructors
 
-        public ContactBinding(Contact contact, bool isApproved)
+        public ContactBinding(Contact contact, bool isApproved, string imageBase64 = null)
         {
             Contact = contact;
+            ImageBase64 = imageBase64;
             IsApproved = isApproved;
-            IsNotApproved = !isApproved;
 
             if (!IsApproved)
                 BackgroundColor = Color.FromHex("#321565c0");
 
-            if(string.IsNullOrEmpty(contact.ImageHash))
-                ImageSource = ImageSource.FromFile("account.png");
-            else
+            if(!string.IsNullOrEmpty(ImageBase64))
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(ImageBase64)));
+            else if (!string.IsNullOrEmpty(Contact.ImageHash))
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImageHash;
+            else
+                ImageSource = ImageSource.FromFile("account.png");
         }
 
         #endregion

@@ -4,8 +4,8 @@ using Chiota.ViewModels.BackUp;
 using Chiota.ViewModels.Chat;
 using Chiota.ViewModels.Contact;
 using Chiota.ViewModels.Help;
-using Chiota.ViewModels.Messenger;
 using Chiota.ViewModels.Settings;
+using Chiota.ViewModels.Tabbed;
 
 namespace Chiota.ViewModels.Base
 {
@@ -28,7 +28,7 @@ namespace Chiota.ViewModels.Base
 
             builder.RegisterType<SeedHelpViewModel>().PropertiesAutowired();
 
-            builder.RegisterType<MessengerTabbedViewModel>().PropertiesAutowired();
+            builder.RegisterType<TabbedNavigationViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
             builder.RegisterType<ChatViewModel>().PropertiesAutowired();

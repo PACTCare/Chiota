@@ -205,6 +205,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string CmnSearch {
+            get {
+                return ResourceManager.GetString("CmnSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New password.
         /// </summary>
         internal static string CmnSetPassword {

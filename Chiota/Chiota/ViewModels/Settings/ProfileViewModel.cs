@@ -12,6 +12,7 @@ using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
 using Chiota.Resources.Localizations;
 using Chiota.Resources.Settings;
+using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
@@ -30,7 +31,7 @@ namespace Chiota.ViewModels.Settings
         private string _username;
         private bool _isEdit;
 
-        private MediaFile _mediaFile;
+        private byte[] imageBuffer;
 
         private ImageSource _originImageSource;
         private string _originUsername;
@@ -96,17 +97,6 @@ namespace Chiota.ViewModels.Settings
 
         #endregion
 
-        #region ViewIsDisappearing
-
-        protected override void ViewIsDisappearing()
-        {
-            base.ViewIsDisappearing();
-
-            _mediaFile?.Dispose();
-        }
-
-        #endregion
-
         #region Methods
 
         #region IsChanged
@@ -160,15 +150,21 @@ namespace Chiota.ViewModels.Settings
                     if (!CrossMedia.Current.IsPickPhotoSupported)
                         return;
 
-                    _mediaFile = await CrossMedia.Current.PickPhotoAsync();
-                    if (_mediaFile?.Path == null)
+                    var media = await CrossMedia.Current.PickPhotoAsync();
+                    if (media?.Path == null)
                         return;
+
+                    //Resize the image.
+                    var stream = media.GetStream();
+                    var buffer = new byte[stream.Length];
+                    stream.Read(buffer, 0, buffer.Length);
+
+                    imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
 
                     try
                     {
                         // Load the image.
-                        var path = _mediaFile.Path;
-                        ProfileImageSource = ImageSource.FromFile(path);
+                        ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(imageBuffer));
                     }
                     catch (Exception)
                     {
@@ -219,10 +215,10 @@ namespace Chiota.ViewModels.Settings
 
                     try
                     {
-                        if (_mediaFile?.Path != null)
+                        if (imageBuffer != null)
                         {
-                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PostFileAsync(_mediaFile.Path);
-                            UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(_mediaFile.Path));
+                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(imageBuffer));
+                            UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(Convert.ToBase64String(imageBuffer)));
                         }
 
                         UserService.CurrentUser.Name = Username;

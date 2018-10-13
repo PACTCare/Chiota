@@ -303,4 +303,7 @@
   <data name="DlgAddContact" xml:space="preserve">
     <value>Adding contact</value>
   </data>
+  <data name="CmnSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

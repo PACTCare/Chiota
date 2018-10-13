@@ -20,6 +20,7 @@ namespace Chiota.Services.Database
 
         #region Properties
 
+        public static TransactionCacheRepository TransactionCache { get; private set; }
         public static UserRepository User { get; private set; }
         public static ContactRepository Contact { get; private set; }
         public static MessageRepository Message { get; private set; }
@@ -46,6 +47,7 @@ namespace Chiota.Services.Database
 
         private static void Init()
         {
+            TransactionCache = new TransactionCacheRepository(_database, _key, _salt);
             User = new UserRepository(_database, _key, _salt);
             Contact = new ContactRepository(_database, _key, _salt);
             Message = new MessageRepository(_database, _key, _salt);

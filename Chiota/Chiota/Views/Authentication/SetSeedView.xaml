@@ -26,7 +26,7 @@
                     <StackLayout HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="32, 0, 0, 0">
                         <StackLayout Orientation="Horizontal" Spacing="8">
                             <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}" WidthRequest="256" Keyboard="{Binding Keyboard}">
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}" WidthRequest="256" Keyboard="{Binding Keyboard}" ReturnCommand="{Binding ContinueCommand}">
                                     <Entry.Behaviors>
                                         <validation:SeedValidationBehavior Command="{Binding IsValidCommand}"/>
                                         <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>

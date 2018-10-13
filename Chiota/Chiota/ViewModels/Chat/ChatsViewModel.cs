@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Messenger.Cache;
 using Chiota.Messenger.Encryption;
 using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
@@ -17,6 +19,7 @@ using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
+using Chiota.Views.Settings;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -182,7 +185,6 @@ namespace Chiota.ViewModels.Chat
         #endregion
 
         #region Commands
-
 
         #region Tap
 

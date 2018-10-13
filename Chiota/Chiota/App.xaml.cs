@@ -1,5 +1,4 @@
 ﻿using Chiota.Base;
-using Chiota.Views.Messenger;
 
 namespace Chiota
 {

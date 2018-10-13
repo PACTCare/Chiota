@@ -40,8 +40,8 @@
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgWriteSeedDown}" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
                         <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Print paper copy" FontAttributes="Bold" Command="{Binding PrintPaperCommand}"/>-->
-                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>
+                        <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>-->
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Copy to Clipboard" FontAttributes="Bold" Command="{Binding CopyToClipboardCommand}"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>

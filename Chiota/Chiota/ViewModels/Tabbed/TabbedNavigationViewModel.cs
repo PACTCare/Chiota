@@ -3,20 +3,37 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Chiota.Base;
+using Chiota.Exceptions;
+using Chiota.Extensions;
 using Chiota.Messenger.Cache;
+using Chiota.Models.Binding;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
-using Chiota.Views.Authentication;
+using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Chiota.Views.Settings;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Messenger
+namespace Chiota.ViewModels.Tabbed
 {
-    public class MessengerTabbedViewModel : BaseViewModel
+    public class TabbedNavigationViewModel : BaseViewModel
     {
         #region Commands
+
+        #region Search
+
+        public ICommand SearchCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                });
+            }
+        }
+
+        #endregion
 
         #region ContactAddress
 
@@ -27,21 +44,6 @@ namespace Chiota.ViewModels.Messenger
                 return new Command(async () =>
                 {
                     await PushAsync<ContactAddressView>();
-                });
-            }
-        }
-
-        #endregion
-
-        #region AddContact
-
-        public ICommand AddContactCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync<AddContactView>();
                 });
             }
         }

@@ -28,23 +28,19 @@
                         <forms:ZXingBarcodeImageView
                         BarcodeFormat="QR_CODE"
                         BarcodeValue="{Binding ContactAddress}"
-                        HeightRequest="196" 
-                        WidthRequest="196"
+                        HeightRequest="256" 
+                        WidthRequest="256"
                         HorizontalOptions="FillAndExpand"
                         VerticalOptions="FillAndExpand"
                         BackgroundColor="{DynamicResource BackgroundColor}">
                             <forms:ZXingBarcodeImageView.BarcodeOptions>
-                                <common:EncodingOptions Width="196" Height="196"  />
+                                <common:EncodingOptions Width="256" Height="256"  />
                             </forms:ZXingBarcodeImageView.BarcodeOptions>
                             <forms:ZXingBarcodeImageView.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding TapQrCodeCommand}"/>
                             </forms:ZXingBarcodeImageView.GestureRecognizers>
                         </forms:ZXingBarcodeImageView>
                     </Frame>
-                </StackLayout>
-
-                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGotIt}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

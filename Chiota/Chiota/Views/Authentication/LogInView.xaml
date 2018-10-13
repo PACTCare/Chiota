@@ -26,7 +26,7 @@
                     <StackLayout VerticalOptions="Center" Spacing="32">
                         <StackLayout Spacing="8">
                             <Frame Style="{DynamicResource RoundedFrame8}" WidthRequest="256" BackgroundColor="{DynamicResource EntryColor}">
-                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True">
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True" ReturnCommand="{Binding LogInCommand}">
                                     <Entry.Behaviors>
                                         <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>
                                     </Entry.Behaviors>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Chiota.Resources.Localizations;
 using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
@@ -37,9 +38,9 @@ namespace Chiota.ViewModels.Contact
         /// <inheritdoc />
         public override void Init(object data = null)
         {
-            ContactAddress = UserService.CurrentUser.PublicKeyAddress;
-
             base.Init(data);
+
+            ContactAddress = UserService.CurrentUser.PublicKeyAddress;
         }
 
         #endregion
@@ -56,21 +57,6 @@ namespace Chiota.ViewModels.Contact
                 {
                     DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(ContactAddress);
                     await DisplayAlertAsync("Address copied", "The address has been copied to your clipboard");
-                });
-            }
-        }
-
-        #endregion
-
-        #region Continue
-
-        public ICommand ContinueCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PopAsync();
                 });
             }
         }

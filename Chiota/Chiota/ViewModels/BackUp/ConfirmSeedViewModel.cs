@@ -4,13 +4,17 @@ using System.Windows.Input;
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Services;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
+using Plugin.Media;
 using Tangle.Net.Utils;
 
 using Xamarin.Forms;
-
+using ZXing;
+using ZXing.Common;
 using ZXing.Net.Mobile.Forms;
+using ZXing.QrCode;
 
 namespace Chiota.ViewModels.BackUp
 {
@@ -130,28 +134,32 @@ namespace Chiota.ViewModels.BackUp
 
         #endregion
 
-        #region ScanQrCode
+        #region OpenQrCode
 
-        public ICommand ScanQrCodeCommand
+        public ICommand OpenQrCodeCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    // Scan a qr code and insert the result into the entry.
-                    var scanPage = new ZXingScannerPage();
-                    scanPage.OnScanResult += (result) =>
-                    {
-                        scanPage.IsScanning = false;
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            Navigation.PopAsync();
-                            Seed = result.Text;
+                    // Open the file explorer of the device and the user choose a image.
+                    await CrossMedia.Current.Initialize();
 
-                        });
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                        return;
 
-                    };
-                    await CurrentPage.Navigation.PushAsync(scanPage);
+                    //Take an image.
+                    var media = await CrossMedia.Current.PickPhotoAsync();
+
+                    if (media?.Path == null)
+                        return;
+
+                    //Resize the image.
+                    var stream = media.GetStream();
+                    var buffer = new byte[stream.Length];
+                    stream.Read(buffer, 0, buffer.Length);
+
+                    Seed = await DependencyService.Get<IImageQrCodeReader>().ReadAsync(buffer);
                 });
             }
         }
@@ -180,7 +188,7 @@ namespace Chiota.ViewModels.BackUp
                             return;
                         }
 
-                        await PushAsync<SetPasswordView>(UserProperties);
+                        await PushAsync<SetUserView>(UserProperties);
                         return;
                     }
 

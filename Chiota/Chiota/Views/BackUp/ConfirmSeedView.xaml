@@ -36,7 +36,7 @@
                             </Frame>
                             <Image HeightRequest="24" WidthRequest="24" Source="{Binding ValidationImageSource}"/>
                         </StackLayout>
-                        <Button Style="{DynamicResource RoundedButton16}" Margin="0, 0, 32, 0" FontAttributes="Bold" Text="{extensions:Translate DlgScanQrCode}" Command="{Binding ScanQrCodeCommand}"/>
+                        <!--<Button Style="{DynamicResource RoundedButton16}" Margin="0, 0, 32, 0" FontAttributes="Bold" Text="Open qr code" Command="{Binding OpenQrCodeCommand}"/>-->
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

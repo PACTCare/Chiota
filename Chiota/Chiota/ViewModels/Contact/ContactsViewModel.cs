@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
@@ -8,12 +9,14 @@ using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
 using Chiota.Models.Binding;
+using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Tangle.Net.Entity;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Contact
@@ -56,7 +59,8 @@ namespace Chiota.ViewModels.Contact
         {
             base.Init(data);
 
-            UpdateView();
+            //Load all contacts.
+            ContactList = LoadContactListByDb();
         }
 
         #endregion
@@ -88,16 +92,27 @@ namespace Chiota.ViewModels.Contact
 
         #region UpdateView
 
+        /// <summary>
+        /// Update the view with all contacts.
+        /// </summary>
+        /// <returns></returns>
         private bool UpdateView()
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                var contacts = await GetContactListAsync();
-                if (contacts == null) return;
+                if (Connectivity.NetworkAccess != NetworkAccess.Internet) return;
 
-                var changed = IsContactListChanged(contacts);
-                if (changed)
-                    ContactList = contacts;
+                //var dbContacts = LoadContactListByDb();
+                var requestContacts = await RequestContactListAsync();
+
+                //Return, if there are no contacts available.
+                if (requestContacts == null || requestContacts.Count == 0) return;
+
+                //Get the combined contact list of the request and local database.
+                //(Means update the database, if necessary and return the updated contact list.)
+                var combinedContacts = GetCombinedContactList(requestContacts);
+                if (combinedContacts != null)
+                    ContactList = combinedContacts;
             });
 
             return _isUpdating;
@@ -105,11 +120,18 @@ namespace Chiota.ViewModels.Contact
 
         #endregion
 
-        #region IsContactListChanged
+        #region GetContacts
 
-        private bool IsContactListChanged(List<ContactBinding> contacts)
+        #region GetCombinedContactList
+
+        private List<ContactBinding> GetCombinedContactList(List<ContactBinding> contacts)
         {
-            if (ContactList == null || ContactList.Count != contacts.Count)
+            var combined = new List<ContactBinding>();
+
+            //Load the contacts of the database.
+            var dbContacts = LoadContactListByDb();
+
+            /*if (ContactList == null || ContactList.Count != contacts.Count)
                 return true;
 
             var currentPending = ContactList.FindAll(t => !t.IsApproved);
@@ -121,14 +143,65 @@ namespace Chiota.ViewModels.Contact
             if (currentPending.Count != pending.Count || currentApproved.Count != approved.Count)
                 return true;
 
-            return false;
+            return false;*/
+
+            //Return the contact list, if the update is successfully, otherwise return null.
+            if (combined.Count > 0)
+                return combined;
+
+            return null;
         }
 
         #endregion
 
-        #region GetContactList
+        #region LoadContactListByDb
 
-        private async Task<List<ContactBinding>> GetContactListAsync()
+        /// <summary>
+        /// Load the contact list from the local database.
+        /// </summary>
+        /// <returns></returns>
+        private List<ContactBinding> LoadContactListByDb()
+        {
+            var list = new List<ContactBinding>();
+
+            try
+            {
+                var contacts = DatabaseService.Contact.GetContactsOrderByAcceptedDesc();
+                foreach (var item in contacts)
+                {
+                    var exist = list.Any(t => t.Contact.ChatAddress == item.ChatAddress);
+                    if (!exist)
+                    {
+                        var contact = new Messenger.Entity.Contact()
+                        {
+                            ChatAddress = item.ChatAddress,
+                            Name = item.Name,
+                            ImageHash = item.ImageHash,
+                            ChatKeyAddress = item.ChatKeyAddress,
+                            PublicKeyAddress = item.PublicKeyAddress,
+                            Rejected = !item.Accepted
+                        };
+                        list.Add(new ContactBinding(contact, item.Accepted, item.ImageBase64));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return list;
+        }
+
+        #endregion
+
+        #region RequestContactList
+
+        /// <summary>
+        /// Request the contact list of the user by using iota.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<ContactBinding>> RequestContactListAsync()
         {
             var tmp = new List<ContactBinding>();
 
@@ -139,7 +212,7 @@ namespace Chiota.ViewModels.Contact
                 PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
-            if (response.Code == ResponseCode.Success)
+            if (response.Code == ResponseCode.Success && (response.PendingContactRequests.Count > 0 || response.ApprovedContacts.Count > 0))
             {
                 foreach (var pending in response.PendingContactRequests)
                     tmp.Add(new ContactBinding(pending, false));
@@ -148,8 +221,6 @@ namespace Chiota.ViewModels.Contact
                     tmp.Add(new ContactBinding(approved, true));
             }
 
-            //TODO Maybe, we need to sort the contacts alphabetical.
-
             return tmp;
         }
 
@@ -157,7 +228,26 @@ namespace Chiota.ViewModels.Contact
 
         #endregion
 
+
+
+        #endregion
+
         #region Commands
+
+        #region TapAddContact
+
+        public ICommand TapAddContactCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await PushAsync<AddContactView>();
+                });
+            }
+        }
+
+        #endregion
 
         #region Tap
 

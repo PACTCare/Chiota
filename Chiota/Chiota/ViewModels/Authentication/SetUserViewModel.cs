@@ -8,12 +8,15 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
+using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views;
+using Chiota.Views.Authentication;
 using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -25,8 +28,7 @@ namespace Chiota.ViewModels.Authentication
         private string name;
         private bool _isEntryFocused;
         private ImageSource profileImageSource;
-        private string imagePath;
-        private Stream imageStream;
+        private byte[] imageBuffer;
 
         private static UserCreationProperties UserProperties;
 
@@ -76,7 +78,6 @@ namespace Chiota.ViewModels.Authentication
             UserProperties = data as UserCreationProperties;
 
             // Set the default opacity.
-            imagePath = string.Empty;
             ProfileImageSource = ImageSource.FromFile("account.png");
         }
 
@@ -115,16 +116,23 @@ namespace Chiota.ViewModels.Authentication
                         if (!CrossMedia.Current.IsPickPhotoSupported)
                             return;
 
+                        //Take an image.
                         var media = await CrossMedia.Current.PickPhotoAsync();
+
                         if (media?.Path == null)
                             return;
+
+                        //Resize the image.
+                        var stream = media.GetStream();
+                        var buffer = new byte[stream.Length];
+                        stream.Read(buffer, 0, buffer.Length);
+
+                        imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
 
                         try
                         {
                             // Load the image.
-                            imagePath = media.Path;
-                            imageStream = media.GetStream();
-                            ProfileImageSource = ImageSource.FromFile(imagePath);
+                            ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(imageBuffer));
                         }
                         catch (Exception)
                         {
@@ -150,34 +158,12 @@ namespace Chiota.ViewModels.Authentication
                             return;
                         }
 
-                        await PushLoadingSpinnerAsync(AppResources.DlgSettingUpAccount);
-
                         UserProperties.Name = Name;
 
-                        if (!string.IsNullOrEmpty(imagePath) && imageStream != null)
-                        {
-                            //Pin the image to ipfs.
-                            UserProperties.ImageHash = await new IpfsHelper().PostFileAsync(imagePath);
+                        if(imageBuffer != null)
+                            UserProperties.ImageBase64 = Convert.ToBase64String(imageBuffer);
 
-                            //Load the image local.
-                            var buffer = new byte[imageStream.Length];
-                            imageStream.Read(buffer, 0, buffer.Length);
-                            UserProperties.ImageBase64 = Convert.ToBase64String(buffer);
-                        }
-
-                        var userService = DependencyResolver.Resolve<UserService>();
-                        var result = await userService.CreateNew(UserProperties);
-                        
-                        await PopPopupAsync();
-
-                        if (!result)
-                        {
-                            await new UnknownException(new ExcInfo()).ShowAlertAsync();
-                            AppBase.ShowStartUp();
-                            return;
-                        }
-
-                        AppBase.ShowMessenger();
+                        await PushAsync<SetPasswordView>(UserProperties);
                     });
             }
         }

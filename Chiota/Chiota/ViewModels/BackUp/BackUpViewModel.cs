@@ -53,7 +53,7 @@ namespace Chiota.ViewModels.BackUp
             }
 
             // Disable the continue button.
-            IsContinueVisible = true;
+            IsContinueVisible = false;
         }
 
         #endregion
@@ -98,6 +98,7 @@ namespace Chiota.ViewModels.BackUp
             {
                 DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserProperties.Seed.Value);
                 await DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
+                IsContinueVisible = true;
             });
 
         #endregion

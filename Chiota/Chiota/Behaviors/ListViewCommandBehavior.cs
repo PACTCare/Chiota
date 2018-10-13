@@ -60,8 +60,8 @@ namespace Chiota.Behaviors
         private void BindableTapped(object sender, EventArgs e)
         {
             //Execute the command.
-            if (!(sender is ListView bindable)) return;
-            Command.Execute(bindable?.SelectedItem);
+            if (!(e is ItemTappedEventArgs item)) return;
+            Command.Execute(item.Item);
         }
 
         #endregion

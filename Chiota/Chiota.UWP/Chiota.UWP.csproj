@@ -114,6 +114,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Database\Sqlite.cs" />
+    <Compile Include="Converter\Converter.cs" />
+    <Compile Include="Services\ImageQrCodeReader.cs" />
+    <Compile Include="Services\ImageResizer.cs" />
+    <Compile Include="Services\Screenshot.cs" />
     <Compile Include="Services\Share\ShareImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +176,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="account.png" />
+    <Content Include="addgroup.png" />
+    <Content Include="addperson.png" />
+    <Content Include="search.png" />
     <Content Include="emoticon.png" />
     <Content Include="keyboard_voice.png" />
     <Content Include="keyboard.png" />
@@ -182,7 +189,6 @@
     <Content Include="edit.png" />
     <Content Include="camera.png" />
     <Content Include="loading.png" />
-    <Content Include="search.png" />
     <Content Include="clear.png" />
     <Content Include="done.png" />
     <Content Include="chiota.png" />
@@ -204,6 +210,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\TabbedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

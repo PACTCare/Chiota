@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services.DependencyInjection;
+using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
@@ -112,7 +115,26 @@ namespace Chiota.ViewModels.Authentication
                         }
 
                         userProperties.Password = Password;
-                        await PushAsync<SetUserView>(userProperties);
+
+                        await PushLoadingSpinnerAsync(AppResources.DlgSettingUpAccount);
+
+                        //Send the image to ipfs by base64 string.
+                        if(userProperties.ImageBase64 != null)
+                            userProperties.ImageHash = await new IpfsHelper().PostStringAsync(userProperties.ImageBase64);
+
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        var result = await userService.CreateNew(userProperties);
+
+                        await PopPopupAsync();
+
+                        if (!result)
+                        {
+                            await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                            AppBase.ShowStartUp();
+                            return;
+                        }
+
+                        AppBase.ShowMessenger();
                     });
             }
         }

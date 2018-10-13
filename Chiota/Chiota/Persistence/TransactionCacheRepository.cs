@@ -9,7 +9,7 @@ using Tangle.Net.Entity;
 
 namespace Chiota.Persistence
 {
-    public class MessageRepository : ITransactionCache
+    public class TransactionCacheRepository : ITransactionCache
     {
         #region Methods
 
@@ -19,7 +19,7 @@ namespace Chiota.Persistence
         {
             var task = Task.Run(() =>
             {
-                DatabaseService.Message.DeleteObjects();
+                DatabaseService.TransactionCache.DeleteObjects();
             });
             task.Wait();
 
@@ -34,13 +34,13 @@ namespace Chiota.Persistence
         {
             var task = Task.Run(() =>
             {
-                var message = new DbMessage()
+                var transactionCache = new DbTransactionCache()
                 {
                     TransactionHash = item.TransactionHash.Value,
                     ChatAddress = item.Address.Value,
                     MessageTryte = item.TransactionTrytes.Value
                 };
-                DatabaseService.Message.AddObject(message);
+                DatabaseService.TransactionCache.AddObject(transactionCache);
             });
             task.Wait();
 
@@ -57,11 +57,11 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var messages = DatabaseService.Message.GetMessagesByChatAddress(address.Value);
+                    var transactionCache = DatabaseService.TransactionCache.GetTransactionCacheByChatAddress(address.Value);
 
                     var list = new List<TransactionCacheItem>();
 
-                    foreach (var item in messages)
+                    foreach (var item in transactionCache)
                     {
                         list.Add(new TransactionCacheItem()
                         {

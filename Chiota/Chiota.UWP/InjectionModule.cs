@@ -17,7 +17,7 @@ namespace Chiota.UWP
     {
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
 
-        builder.RegisterType<MessageRepository>().As<ITransactionCache>();
+        builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
         builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
         }
   }

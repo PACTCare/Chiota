@@ -3,7 +3,8 @@ using Chiota.Models.Database;
 using Chiota.Services.Database;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
-using Chiota.Views.Messenger;
+using Chiota.Views.Chat;
+using Chiota.Views.Tabbed;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -55,7 +56,7 @@ namespace Chiota.Base
         public static void ShowMessenger()
         {
             // Show the page.
-            var container = SetNavigationStyles(new NavigationPage(new MessengerTabbedView()));
+            var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));
             Application.Current.MainPage = container;
         }
 

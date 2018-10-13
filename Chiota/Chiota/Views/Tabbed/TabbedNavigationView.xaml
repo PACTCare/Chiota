@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.Tabbed.TabbedNavigationView"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:tabbed="clr-namespace:Chiota.ViewModels.Tabbed;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             xmlns:contact="clr-namespace:Chiota.Views.Contact;assembly=Chiota"
+             xmlns:chat="clr-namespace:Chiota.Views.Chat;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance tabbed:TabbedNavigationViewModel}"
+             Title="{DynamicResource AppName}"
+             BarBackgroundColor="{DynamicResource AccentDarkColor}"
+             BarTextColor="{DynamicResource BrightTextColor}">
+
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Order="Primary" Icon="search.png" Text="{extensions:Translate CmnSearch}" Command="{Binding SearchCommand}"/>
+        <ToolbarItem Order="Primary" Icon="qr.png" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnLogOut}" Command="{Binding LogOutCommand}"/>
+    </TabbedPage.ToolbarItems>
+
+    <!-- Children of the tabbedpage -->
+    <chat:ChatsView Title="{extensions:Translate CmnChats}"/>
+    <contact:ContactsView Title="{extensions:Translate CmnContacts}"/>
+    <!--<ContentPage Title="Status"/>-->
+
+</TabbedPage>
