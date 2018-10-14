@@ -111,7 +111,7 @@ namespace Chiota.ViewModels.Contact
                 //Get the combined contact list of the request and local database.
                 //(Means update the database, if necessary and return the updated contact list.)
                 var combinedContacts = GetCombinedContactList(requestContacts);
-                if (combinedContacts != null)
+                if (combinedContacts != null && combinedContacts.Count > 0)
                     ContactList = combinedContacts;
             });
 
@@ -187,7 +187,8 @@ namespace Chiota.ViewModels.Contact
             }
             catch (Exception)
             {
-
+                //By error return an empty list.
+                list = new List<ContactBinding>();
             }
 
             return list;
@@ -203,25 +204,33 @@ namespace Chiota.ViewModels.Contact
         /// <returns></returns>
         private async Task<List<ContactBinding>> RequestContactListAsync()
         {
-            var tmp = new List<ContactBinding>();
+            var list = new List<ContactBinding>();
 
-            var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
-            var response = await interactor.ExecuteAsync(new GetContactsRequest()
+            try
             {
-                ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
-            });
+                var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
+                var response = await interactor.ExecuteAsync(new GetContactsRequest()
+                {
+                    ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                    PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                });
 
-            if (response.Code == ResponseCode.Success && (response.PendingContactRequests.Count > 0 || response.ApprovedContacts.Count > 0))
+                if (response.Code == ResponseCode.Success && (response.PendingContactRequests.Count > 0 || response.ApprovedContacts.Count > 0))
+                {
+                    foreach (var pending in response.PendingContactRequests)
+                        list.Add(new ContactBinding(pending, false));
+
+                    foreach (var approved in response.ApprovedContacts)
+                        list.Add(new ContactBinding(approved, true));
+                }
+            }
+            catch (Exception)
             {
-                foreach (var pending in response.PendingContactRequests)
-                    tmp.Add(new ContactBinding(pending, false));
-
-                foreach (var approved in response.ApprovedContacts)
-                    tmp.Add(new ContactBinding(approved, true));
+                //By error return an empty list.
+                list = new List<ContactBinding>();
             }
 
-            return tmp;
+            return list;
         }
 
         #endregion
