@@ -10,7 +10,7 @@
   public class ContactInformation
   {
     /// <summary>
-    /// Contact Addredd
+    /// The contacts iota address
     /// </summary>
     public Address ContactAddress { get; set; }
 

@@ -59,7 +59,7 @@
       var keyPair = InMemoryContactRepository.NtruKeyPair;
 
       var contactRepository = new InMemoryContactRepository();
-      var transactionCache = new InMemoryTransactionCache();
+      var transactionCache = new MemoryTransactionCache();
 
       var bundle = CreateBundle(
         contactRequestAddress,
@@ -106,16 +106,22 @@
 
       var rejectedContactBundle = CreateBundle(
         contactRequestAddress,
-        ContactExchange.Create(new Contact { ChatAddress = rejectedContactAddress, Rejected = true }, keyPair.PublicKey, keyPair.PublicKey).Payload);
+        ContactExchange.Create(
+          new Contact { ChatAddress = rejectedContactAddress, PublicKeyAddress = rejectedContactAddress, Rejected = true },
+          keyPair.PublicKey,
+          keyPair.PublicKey).Payload);
 
       var approvedContactBundle = CreateBundle(
         contactRequestAddress,
-        ContactExchange.Create(new Contact { ChatAddress = storedContactAddress }, keyPair.PublicKey, keyPair.PublicKey).Payload);
+        ContactExchange.Create(
+          new Contact { ChatAddress = storedContactAddress, PublicKeyAddress = storedContactAddress },
+          keyPair.PublicKey,
+          keyPair.PublicKey).Payload);
 
       var requestBundle = CreateBundle(
         contactRequestAddress,
         ContactExchange.Create(
-          new Contact { ChatAddress = storedContactAddress, Request = true, Name = "Requester" },
+          new Contact { ChatAddress = storedContactAddress, PublicKeyAddress = storedContactAddress, Request = true, Name = "Requester" },
           keyPair.PublicKey,
           keyPair.PublicKey).Payload);
 

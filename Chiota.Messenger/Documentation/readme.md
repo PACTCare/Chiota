@@ -2,6 +2,9 @@
 
 The Chiota Messenger represents the core component of Chiota. This document has the objective to give you an overview of how to use the Messenger in your applications.
 
+### Nuget
+https://www.nuget.org/packages/Chiota.Messenger/
+
 # Flow
 
 Assume you have two users, "Chantal" and "Kevin", who want to communicate through a secured channel. To set up their channel the following has to be done:
@@ -31,6 +34,10 @@ http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html
 - [Send Message](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger/Documentation/Usecases/sendmessage.md)
 - [Get Messages](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger/Documentation/Usecases/getmessages.md)
 
+# Response Codes
+
+Each response of a usecase inherits from a base response that does contain a response code. You can use the response code to display error messages to your users if needed. For further details see the ResponseCode enumeration.
+
 # Entities
 
 While interactors are in place to orchestrate behaviour, entities are supposed to hold it. For details, just take a look at the Entity folder. 
@@ -41,7 +48,7 @@ You may notice that there currently is not so much business logic in them. That 
 
 For most modern applications it is not possible to be completely clean of outer dependencies. To handle those, repositories have been put in place, to inverse those dependencies.
 
-The messenger module defines two repositories you have to implement yourself (You could start off with the in memory implementations for testing, but they will not get you far)
+The messenger module defines two repositories you have to implement yourself (You could start off with the memory implementations for testing, but they will not get you far)
 
 1) IContactRepository
     

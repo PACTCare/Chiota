@@ -27,7 +27,7 @@
 
       try
       {
-        var messenger = new TangleMessenger(new ExceptionIotaRepository(), new InMemoryTransactionCache());
+        var messenger = new TangleMessenger(new ExceptionIotaRepository(), new MemoryTransactionCache());
         await messenger.SendMessageAsync(new Message(new TryteString(), new Address()));
       }
       catch (Exception exception)
@@ -46,7 +46,7 @@
     {
       var repository = new InMemoryIotaRepository();
 
-      var messenger = new TangleMessenger(repository, new InMemoryTransactionCache());
+      var messenger = new TangleMessenger(repository, new MemoryTransactionCache());
       var receiver = new Address("GUEOJUOWOWYEXYLZXNQUYMLMETF9OOGASSKUZZWUJNMSHLFLYIDIVKXKLTLZPMNNJCYVSRZABFKCAVVIW");
       var payload = new TryteString("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
       await messenger.SendMessageAsync(new Message(payload, receiver));
@@ -62,7 +62,7 @@
     public async Task TestTransactionIsCachedShouldMergeWithMessagesFromTangle()
     {
       var repository = new InMemoryIotaRepository();
-      var transactionCache = new InMemoryTransactionCache();
+      var transactionCache = new MemoryTransactionCache();
 
       var messenger = new TangleMessenger(repository, transactionCache);
 

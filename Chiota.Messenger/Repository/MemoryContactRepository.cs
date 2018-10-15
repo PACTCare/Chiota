@@ -11,9 +11,9 @@
   using Tangle.Net.Cryptography.Signing;
 
   [ExcludeFromCodeCoverage]
-  public class InMemoryContactRepository : AbstractTangleContactRepository
+  public class MemoryContactRepository : AbstractTangleContactRepository
   {
-    public InMemoryContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
+    public MemoryContactRepository(IMessenger messenger, ISignatureValidator signatureValidator)
       : base(messenger, signatureValidator)
     {
       this.PersistedContacts = new List<Contact>();

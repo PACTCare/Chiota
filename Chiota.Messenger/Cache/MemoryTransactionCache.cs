@@ -6,12 +6,12 @@
 
   using Tangle.Net.Entity;
 
-  public class InMemoryTransactionCache : ITransactionCache
+  public class MemoryTransactionCache : ITransactionCache
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="InMemoryTransactionCache"/> class.
+    /// Initializes a new instance of the <see cref="MemoryTransactionCache"/> class.
     /// </summary>
-    public InMemoryTransactionCache()
+    public MemoryTransactionCache()
     {
       this.Items = new List<TransactionCacheItem>();
     }

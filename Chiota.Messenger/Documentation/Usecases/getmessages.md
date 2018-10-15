@@ -1,5 +1,11 @@
 ## Get Messages
 
+Loads all messages from the ChatAddress on. The behaviour is similar to MAM, where the chat address from GetContacts is the first one. For any six messages a new chat address is generated automatically and returned in the response.
+
+Chiota just sets the current chat address to the one included in the response. 
+
+That way only messages from that chat address on are fetched.
+
 ### Request
 ```csharp
 public class GetMessagesRequest

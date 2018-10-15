@@ -1,9 +1,14 @@
 ## Send Message
 
+As chat address you should always input the current chat address, which can be obtained by calling the GetMessages usecase.
+
 ### Request
 ```csharp
 public class SendMessageRequest
 {
+    /// <summary>
+    /// Current address of the chat (obtained from GetMessagesResponse)
+    /// </summary>
     public Address ChatAddress { get; set; }
 
     /// <summary>

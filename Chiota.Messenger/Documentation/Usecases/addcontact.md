@@ -30,6 +30,11 @@ public class AddContactRequest
     /// Request address of the current user
     /// </summary>
     public Address RequestAddress { get; set; }
+
+    /// <summary>
+    /// Current user public key. Used to encrypt the nonce of the answer to the contact request
+    /// </summary>
+    public IAsymmetricKey UserPublicKey { get; set; }
 }
 ```
 

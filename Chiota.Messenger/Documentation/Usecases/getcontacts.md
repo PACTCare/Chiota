@@ -1,5 +1,7 @@
 ## Get Contacts
 
+Loads all accepted contacts along with new pending contact request. Optionally you can cross check all contacts with the tangle information, if you have no information stored locally. Normally this is only useful if the user has a new device where that data needs to be imported.
+
 ### Request
 ```csharp
 public class GetContactsRequest
@@ -15,9 +17,14 @@ public class GetContactsRequest
     public Address PublicKeyAddress { get; set; }
 
     /// <summary>
+    /// The current user key pair. Used to decrypt contact requests
+    /// </summary>
+    public IAsymmetricKeyPair KeyPair { get; set; }
+
+    /// <summary>
     /// If set to true, checks all pending contacts to determine whether they are accepted or not.
     /// Normally not needed since the information is stored in the IContactRepository (locally).
-    /// Useful to import a existing seed into a new device
+    /// Useful to import user data on a new device
     /// </summary>
     public bool DoCrossCheck { get; set; }
 }
