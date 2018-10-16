@@ -2,6 +2,7 @@
 {
   using System;
   using System.Linq;
+  using System.Threading;
 
   using Chiota.Messenger.Cucumber.Drivers;
   using Chiota.Messenger.Usecase;
@@ -53,6 +54,8 @@
     {
       for (var i = 0; i < messageCount; i++)
       {
+        // Pass node restrictions
+        Thread.Sleep(2000);
         var response = this.Driver.SendMessage(sender, Seed.Random().Value, receiver);
         Assert.AreEqual(ResponseCode.Success, response.Code);
       }

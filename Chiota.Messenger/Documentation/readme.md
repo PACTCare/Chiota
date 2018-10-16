@@ -2,9 +2,6 @@
 
 The Chiota Messenger represents the core component of Chiota. This document has the objective to give you an overview of how to use the Messenger in your applications.
 
-### Nuget
-https://www.nuget.org/packages/Chiota.Messenger/
-
 # Flow
 
 Assume you have two users, "Chantal" and "Kevin", who want to communicate through a secured channel. To set up their channel the following has to be done:
@@ -14,7 +11,7 @@ Assume you have two users, "Chantal" and "Kevin", who want to communicate throug
 3) The contact request has to be accepted
 4) They can now chat within their own secure channel
 
-You can have a look at the [cucumber](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Cucumber/Features) tests to see how things are set up codewise or read the usecase descriptions below.
+You can have a look at the [cucumber](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Cucumber/Features) tests, the [example](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Example) or read the usecase descriptions to see how things are set up codewise.
 
 # Usecases
 

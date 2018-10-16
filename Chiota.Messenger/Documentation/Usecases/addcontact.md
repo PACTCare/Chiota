@@ -7,7 +7,7 @@ Assuming a user (Sender) wants to interact with another (Receiver), he/she may w
 public class AddContactRequest
 {
     /// <summary>
-    /// Request address of the contact that should be added
+    /// Public key address of the contact that should be added
     /// </summary>
     public Address ContactAddress { get; set; }
 

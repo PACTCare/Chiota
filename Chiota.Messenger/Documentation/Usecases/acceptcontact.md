@@ -1,6 +1,6 @@
 ## Accept Contact
 
-To accept a contact request just invoke the accept contact interactor. 
+After a user was sent a contact request, he can accept it. The parameters needed for that are described below. 
 
 ### Request
 ```csharp
