@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.5.0.0</Version>
+    <Authors>PACT Care BV</Authors>
+    <Company>PACT Care BV</Company>
+    <Description>Core component of the IOTA messenger Chiota</Description>
+    <Copyright>2018 PACT Care BV</Copyright>
+    <PackageLicenseUrl>https://github.com/PACTCare/Chiota/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/PACTCare/Chiota</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PACTCare/Chiota</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>IOTA Chat Chiota</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,6 +25,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chiota\CEXEngine\CEXEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Documentation\" />
   </ItemGroup>
 
 </Project>

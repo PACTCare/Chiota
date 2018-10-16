@@ -17,7 +17,7 @@
                  Text = m.Message,
                  MessagDateTime = m.Date.ToLocalTime(),
                  IsIncoming = m.Signature == contact.PublicKeyAddress.Substring(0, 30),
-                 ProfileImage = contact.ImageHash
+                 ProfileImage = contact.ImagePath
                }).ToList();
     }
   }

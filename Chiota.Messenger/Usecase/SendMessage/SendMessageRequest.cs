@@ -9,6 +9,9 @@
   /// </summary>
   public class SendMessageRequest
   {
+    /// <summary>
+    /// Current address of the chat (obtained from GetMessagesResponse)
+    /// </summary>
     public Address ChatAddress { get; set; }
 
     /// <summary>

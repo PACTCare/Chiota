@@ -11,6 +11,11 @@
 
   using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
+  /// <summary>
+  /// Contact exchange data. Contains two parts
+  /// 1) The contact request part, encrypted with the receivers public key
+  /// 2) The nonce, encrypted with the senders public key, used to identify it by the sender later on if needed
+  /// </summary>
   public class ContactExchange
   {
     private ContactExchange()

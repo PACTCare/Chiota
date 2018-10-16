@@ -3,6 +3,7 @@
   using System.Threading.Tasks;
 
   using Chiota.Messenger.Repository;
+  using Chiota.Messenger.Service;
   using Chiota.Models;
 
   using Xamarin.Forms;

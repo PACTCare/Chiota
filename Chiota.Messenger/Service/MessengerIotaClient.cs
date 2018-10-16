@@ -1,4 +1,4 @@
-﻿namespace Chiota.Messenger.Repository
+﻿namespace Chiota.Messenger.Service
 {
   using System;
   using System.Collections.Generic;
