@@ -90,7 +90,12 @@
             UserKeyPair = kevin.NtruKeyPair
           }).Result;
 
-      response.Messages.ForEach(m => Console.WriteLine(m.Message));
+      // 7) Print messages. The signature are the first 30 chars of the senders public key address. This lets you identify the sender
+      response.Messages.ForEach(m =>
+        {
+          var sender = m.Signature == chantal.PublicKeyAddress.Value.Substring(0, 30) ? "Chantal" : "Kevin";
+          Console.WriteLine($"{sender}: {m.Message}");
+        });
     }
   }
 }
