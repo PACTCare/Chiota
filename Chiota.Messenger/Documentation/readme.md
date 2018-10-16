@@ -11,7 +11,7 @@ Assume you have two users, "Chantal" and "Kevin", who want to communicate throug
 3) The contact request has to be accepted
 4) They can now chat within their own secure channel
 
-You can have a look at the [cucumber](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Cucumber/Features) tests, the [example](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Example) or read the usecase descriptions to see how things are set up codewise.
+You can have a look at the [cucumber](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Cucumber/Features) tests, the [example](https://github.com/PACTCare/Chiota/tree/master/Chiota.Messenger.Examples) or read the usecase descriptions to see how things are set up codewise.
 
 # Usecases
 
