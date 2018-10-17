@@ -18,6 +18,7 @@
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.ProofOfWork.Service;
   using Tangle.Net.Repository;
+  using Tangle.Net.Repository.Client;
 
   public static class InstanceBag
   {
@@ -40,7 +41,7 @@
 
     private static IIotaRepository IotaRepository =>
       new RestIotaRepository(
-        new MessengerIotaClient(
+        new FallbackIotaClient(
           new List<string>
             {
               "https://field.deviota.com:443",
@@ -64,7 +65,8 @@
               "https://pow4.iota.community:443",
               "https://dyn.tangle-nodes.com:443",
               "https://pow5.iota.community:443",
-            }),
+            },
+          5000),
         new PoWSrvService());
   }
 }

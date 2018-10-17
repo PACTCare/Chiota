@@ -92,11 +92,10 @@
       var signature = bundleTrytes.GetChunk(contactPayloadEnd + Constants.End.TrytesLength, signatureLength);
       var publicKeyPayload = new PublicKeyPayload(bundleTrytes.GetChunk(0, contactPayloadEnd + Constants.End.TrytesLength).Value);
 
-      return await Task.Run(
-               () => this.SignatureValidator.ValidateFragments(
-                 signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
-                 publicKeyPayload.Hash,
-                 address));
+      return await this.SignatureValidator.ValidateFragmentsAsync(
+               signature.GetChunks(Fragment.Length).Select(c => new Fragment(c.Value)).ToList(),
+               publicKeyPayload.Hash,
+               address);
     }
   }
 }

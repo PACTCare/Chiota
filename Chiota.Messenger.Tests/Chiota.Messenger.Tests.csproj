@@ -16,7 +16,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8.2" />
+    <PackageReference Include="Tangle.Net.Standard" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

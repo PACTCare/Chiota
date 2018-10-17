@@ -38,7 +38,7 @@
     {
       try
       {
-        var publicKeyAddress = await Task.Run(() => this.AddressGenerator.GetAddress(request.Seed, Constants.MessengerSecurityLevel, 0));
+        var publicKeyAddress = await this.AddressGenerator.GetAddressAsync(request.Seed, Constants.MessengerSecurityLevel, 0);
         var requestAddress = publicKeyAddress.DeriveRequestAddress();
 
         var ntruKeyPair = this.Encryption.CreateAsymmetricKeyPair(request.Seed.Value.ToLower(), publicKeyAddress.Value);

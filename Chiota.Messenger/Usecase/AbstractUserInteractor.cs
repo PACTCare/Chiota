@@ -25,7 +25,7 @@
     protected async Task<TryteString> CreateSignedPublicKeyPayloadAsync(IAsymmetricKey publicKey, TryteString requestAddress, AbstractPrivateKey addressPrivateKey)
     {
       var payload = new PublicKeyPayload(publicKey, requestAddress);
-      var signature = await Task.Run(() => this.SignatureGenerator.Generate(addressPrivateKey, payload.Hash));
+      var signature = await this.SignatureGenerator.GenerateAsync(addressPrivateKey, payload.Hash);
 
       var signedPayload = (TryteString)payload;
       foreach (var fragment in signature)

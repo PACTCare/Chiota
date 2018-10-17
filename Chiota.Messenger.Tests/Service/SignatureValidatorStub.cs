@@ -1,6 +1,7 @@
 ﻿namespace Chiota.Messenger.Tests.Service
 {
   using System.Collections.Generic;
+  using System.Threading.Tasks;
 
   using Tangle.Net.Cryptography.Signing;
   using Tangle.Net.Entity;
@@ -16,6 +17,12 @@
 
     /// <inheritdoc />
     public bool ValidateFragments(List<Fragment> fragments, Hash hash, TryteString publicKey)
+    {
+      return this.Result;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> ValidateFragmentsAsync(List<Fragment> fragments, Hash hash, TryteString publicKey)
     {
       return this.Result;
     }
