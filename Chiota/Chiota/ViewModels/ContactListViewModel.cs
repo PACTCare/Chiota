@@ -4,13 +4,14 @@
   using System.Windows.Input;
 
   using Chiota.Annotations;
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.AcceptContact;
-  using Chiota.Messenger.Usecase.DeclineContact;
   using Chiota.Models;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels.Classes;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.AcceptContact;
+  using Pact.Palantir.Usecase.DeclineContact;
 
   using Tangle.Net.Entity;
 

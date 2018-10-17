@@ -44,8 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj" />
-    <ProjectReference Include="..\CEXEngine\CEXEngine.csproj" />
+    <ProjectReference Include="..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj" />
   </ItemGroup>
 
   <ItemGroup>

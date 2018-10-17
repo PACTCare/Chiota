@@ -1,7 +1,8 @@
 ﻿namespace Chiota.Tests.Repository
 {
-  using Chiota.Messenger.Service;
   using Chiota.Persistence;
+
+  using Pact.Palantir.Service;
 
   using SQLite;
 

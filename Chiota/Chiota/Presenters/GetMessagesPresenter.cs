@@ -3,9 +3,10 @@
   using System.Collections.Generic;
   using System.Linq;
 
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase.GetMessages;
   using Chiota.ViewModels;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase.GetMessages;
 
   public static class GetMessagesPresenter
   {

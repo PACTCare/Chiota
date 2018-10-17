@@ -1,14 +1,10 @@
 ﻿namespace Chiota.ViewModels
 {
-  using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Linq;
   using System.Threading.Tasks;
 
   using Chiota.Chatbot;
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Presenters;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
@@ -16,6 +12,10 @@
   using Chiota.Views;
 
   using Models;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.GetContacts;
 
   using Tangle.Net.Entity;
 

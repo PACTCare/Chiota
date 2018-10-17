@@ -2,7 +2,6 @@
 {
   using System.IO;
 
-  using Chiota.Messenger.Service;
   using Chiota.Persistence;
 
   using SQLite;
@@ -10,6 +9,8 @@
   using Tangle.Net.Cryptography.Signing;
 
   using Windows.Storage;
+
+  using Pact.Palantir.Service;
 
   /// <summary>
   /// The sql lite contact repository.

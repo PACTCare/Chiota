@@ -4,10 +4,11 @@
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Repository;
-  using Chiota.Messenger.Service;
   using Chiota.Models.SqLite;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Repository;
+  using Pact.Palantir.Service;
 
   using SQLite;
 

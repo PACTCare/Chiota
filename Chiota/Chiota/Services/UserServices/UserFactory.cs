@@ -2,9 +2,10 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.CreateUser;
   using Chiota.Models;
+
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.CreateUser;
 
   using Tangle.Net.Entity;
 
