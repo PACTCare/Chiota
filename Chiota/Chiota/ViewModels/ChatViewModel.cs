@@ -8,14 +8,15 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.Messenger;
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetMessages;
-  using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Presenters;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
+
+  using Pact.Palantir;
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.GetMessages;
+  using Pact.Palantir.Usecase.SendMessage;
 
   using Tangle.Net.Entity;
 

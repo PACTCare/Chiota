@@ -2,12 +2,13 @@
 {
   using Autofac;
 
-  using Chiota.Messenger.Cache;
-  using Chiota.Messenger.Repository;
   using Chiota.Persistence;
   using Chiota.Services;
   using Chiota.UWP.Persistence;
   using Chiota.UWP.Services;
+
+  using Pact.Palantir.Cache;
+  using Pact.Palantir.Repository;
 
   /// <inheritdoc />
   public class InjectionModule : Module

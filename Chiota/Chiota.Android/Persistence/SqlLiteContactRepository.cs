@@ -3,8 +3,9 @@
   using System;
   using System.IO;
 
-  using Chiota.Messenger.Service;
   using Chiota.Persistence;
+
+  using Pact.Palantir.Service;
 
   using SQLite;
 

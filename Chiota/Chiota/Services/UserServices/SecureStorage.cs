@@ -4,13 +4,14 @@
   using System.Threading.Tasks;
 
   using Chiota.Exceptions;
-  using Chiota.Messenger.Encryption;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.CheckUser;
   using Chiota.Models;
   using Chiota.Services.DependencyInjection;
 
   using Newtonsoft.Json;
+
+  using Pact.Palantir.Encryption;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.CheckUser;
 
   using Plugin.SecureStorage;
 

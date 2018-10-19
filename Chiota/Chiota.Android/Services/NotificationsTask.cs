@@ -9,15 +9,14 @@
   using Android.OS;
   using Android.Support.V4.App;
 
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Models;
   using Chiota.Services.DependencyInjection;
-  using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
 
   using Java.Lang;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.GetContacts;
 
   using Plugin.Connectivity;
 

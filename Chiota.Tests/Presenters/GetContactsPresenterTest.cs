@@ -2,15 +2,16 @@
 {
   using System.Collections.Generic;
 
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Models;
   using Chiota.Presenters;
   using Chiota.Services.DependencyInjection;
   using Chiota.Tests.DependencyInjection;
 
   using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.GetContacts;
 
   using Tangle.Net.Entity;
 

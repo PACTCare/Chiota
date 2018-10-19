@@ -3,14 +3,14 @@
   using System.Collections.Generic;
   using System.Linq;
 
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.AcceptContact;
-  using Chiota.Messenger.Usecase.DeclineContact;
-  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Models;
-  using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.ViewModels;
+
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.AcceptContact;
+  using Pact.Palantir.Usecase.DeclineContact;
+  using Pact.Palantir.Usecase.GetContacts;
 
   /// <summary>
   /// The get contacts presenter.

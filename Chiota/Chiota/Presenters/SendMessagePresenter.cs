@@ -2,10 +2,11 @@
 {
   using System.Threading.Tasks;
 
-  using Chiota.Messenger;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.ViewModels.Classes;
+
+  using Pact.Palantir;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.SendMessage;
 
   /// <summary>
   /// The send message presenter.

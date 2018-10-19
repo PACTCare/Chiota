@@ -5,16 +5,13 @@ namespace Chiota.ViewModels
   using System.Threading.Tasks;
   using System.Windows.Input;
 
-  using Chiota.Extensions;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Popups.PopupModels;
-  using Chiota.Popups.PopupPageModels;
-  using Chiota.Popups.PopupPages;
   using Chiota.Presenters;
   using Chiota.Services;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
+
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.AddContact;
 
   using Rg.Plugins.Popup.Extensions;
 

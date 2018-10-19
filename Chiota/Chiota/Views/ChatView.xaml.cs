@@ -2,8 +2,9 @@
 {
   using System;
 
-  using Chiota.Messenger.Entity;
   using Chiota.ViewModels;
+
+  using Pact.Palantir.Entity;
 
   using Xamarin.Forms;
   using Xamarin.Forms.Xaml;

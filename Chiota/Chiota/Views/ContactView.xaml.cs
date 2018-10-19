@@ -2,8 +2,6 @@
 {
   using System;
 
-  using Chiota.Messenger.Cache;
-  using Chiota.Services.DependencyInjection;
   using Chiota.Services.UserServices;
   using Chiota.ViewModels;
   using Chiota.Views.Authentication;

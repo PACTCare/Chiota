@@ -4,8 +4,9 @@
   using System.Linq;
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Cache;
   using Chiota.Models.SqLite;
+
+  using Pact.Palantir.Cache;
 
   using SQLite;
 

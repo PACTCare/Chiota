@@ -250,9 +250,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj">
-      <Project>{851c12aa-eb37-4242-bc35-4c4430584e96}</Project>
-      <Name>Chiota.Messenger</Name>
+    <ProjectReference Include="..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj">
+      <Project>{ACE81A6D-2E28-48E9-BB03-3483A0E11D1E}</Project>
+      <Name>Pact.Palantir</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UWPRuntimeComponent\UWPRuntimeComponent.csproj">
       <Project>{a7fca39f-0fee-4213-b0d8-ea6b7b228e50}</Project>

@@ -10,14 +10,14 @@
   using Windows.ApplicationModel.Background;
   using Windows.UI.Notifications;
 
-  using Chiota.Messenger.Comparison;
-  using Chiota.Messenger.Entity;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.GetContacts;
   using Chiota.Persistence;
   using Chiota.Services.DependencyInjection;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
+
+  using Pact.Palantir.Entity;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.GetContacts;
 
   using Tangle.Net.Entity;
 
