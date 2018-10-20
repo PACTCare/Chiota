@@ -30,7 +30,7 @@
     <PackageReference Include="RestSharp" Version="106.3.1" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.4.168" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
-    <PackageReference Include="Tangle.Net.Standard" Version="1.0.8.2" />
+    <PackageReference Include="Tangle.Net.Standard" Version="2.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.0" />
     <PackageReference Include="Xam.Plugin.Media" Version="4.0.1.1" />
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle" Version="3.0.0.5" />
@@ -41,13 +41,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Chiota.Messenger\Chiota.Messenger.csproj" />
-    <ProjectReference Include="..\CEXEngine\CEXEngine.csproj" />
+    <ProjectReference Include="..\..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Mono.Android">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v8.0\Mono.Android.dll</HintPath>
+    <Reference Include="CEXEngine">
+      <HintPath>..\..\Palantir\CEXEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
 

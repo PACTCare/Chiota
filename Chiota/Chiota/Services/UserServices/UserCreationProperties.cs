@@ -12,7 +12,7 @@
 
         public Seed Seed { get; set; }
 
-        public string ImageHash { get; set; }
+        public string ImagePath { get; set; }
 
         public string ImageBase64 { get; set; }
 

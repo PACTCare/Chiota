@@ -9,19 +9,20 @@ namespace Chiota.Services.DependencyInjection
   using Autofac;
   using Autofac.Core;
 
-  using Chiota.Messenger.Encryption;
-  using Chiota.Messenger.Service;
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.AcceptContact;
-  using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Messenger.Usecase.CheckUser;
-  using Chiota.Messenger.Usecase.CreateUser;
-  using Chiota.Messenger.Usecase.DeclineContact;
-  using Chiota.Messenger.Usecase.GetContacts;
-  using Chiota.Messenger.Usecase.GetMessages;
-  using Chiota.Messenger.Usecase.SendMessage;
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
+
+  using Pact.Palantir.Encryption;
+  using Pact.Palantir.Service;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.AcceptContact;
+  using Pact.Palantir.Usecase.AddContact;
+  using Pact.Palantir.Usecase.CheckUser;
+  using Pact.Palantir.Usecase.CreateUser;
+  using Pact.Palantir.Usecase.DeclineContact;
+  using Pact.Palantir.Usecase.GetContacts;
+  using Pact.Palantir.Usecase.GetMessages;
+  using Pact.Palantir.Usecase.SendMessage;
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
@@ -61,7 +62,7 @@ namespace Chiota.Services.DependencyInjection
       builder.RegisterType<AddContactInteractor>().As<IUsecaseInteractor<AddContactRequest, AddContactResponse>>().PropertiesAutowired();
 
       builder.RegisterType<GetContactsInteractor>().As<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>()
-        .PropertiesAutowired();
+        .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();
 
       builder.RegisterType<AcceptContactInteractor>().As<IUsecaseInteractor<AcceptContactRequest, AcceptContactResponse>>()
         .WithParameter("encryption", NtruEncryption.Key).PropertiesAutowired();

@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Messenger.Cache;
-using Chiota.Messenger.Encryption;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.GetContacts;
-using Chiota.Messenger.Usecase.GetMessages;
-using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
-using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
-using Chiota.Views.Settings;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.GetContacts;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -92,6 +83,18 @@ namespace Chiota.ViewModels.Chat
         /// </summary>
         private bool UpdateView()
         {
+            /*Device.BeginInvokeOnMainThread(async() =>
+            {
+                var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
+                var response = await interactor.ExecuteAsync(
+                    new GetContactsRequest
+                    {
+                        RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                        PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                        KeyPair = UserService.CurrentUser.NtruKeyPair
+                    });
+            });*/
+
             var chats = new List<ChatBinding>();
 
             //Load all accepted contacts.
@@ -103,10 +106,10 @@ namespace Chiota.ViewModels.Chat
                 //If there is a message, load the chat of the contact.
                 if (lastMessage != null)
                 {
-                    var contact = new Messenger.Entity.Contact()
+                    var contact = new Pact.Palantir.Entity.Contact()
                     {
                         Name = item.Name,
-                        ImageHash = item.ImageHash,
+                        ImagePath = item.ImagePath,
                         ChatAddress = item.ChatAddress,
                         ChatKeyAddress = item.ChatKeyAddress,
                         PublicKeyAddress = item.PublicKeyAddress,

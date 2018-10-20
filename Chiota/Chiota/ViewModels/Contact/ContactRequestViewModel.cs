@@ -5,13 +5,12 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Helper;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.AcceptContact;
-using Chiota.Messenger.Usecase.DeclineContact;
-using Chiota.Models;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.AcceptContact;
+using Pact.Palantir.Usecase.DeclineContact;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -24,7 +23,7 @@ namespace Chiota.ViewModels.Contact
         private string _username;
         private ImageSource _profileImageSource;
 
-        private Chiota.Messenger.Entity.Contact _contact;
+        private Pact.Palantir.Entity.Contact _contact;
 
         #endregion
 
@@ -58,7 +57,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.Init(data);
 
-            _contact = data as Chiota.Messenger.Entity.Contact;
+            _contact = data as Pact.Palantir.Entity.Contact;
             if(_contact == null)
             {
                 Device.BeginInvokeOnMainThread(async () =>
@@ -71,8 +70,8 @@ namespace Chiota.ViewModels.Contact
 
             Username = _contact.Name;
 
-            if(_contact.ImageHash != null)
-                ProfileImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + _contact.ImageHash));
+            if(_contact.ImagePath != null)
+                ProfileImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + _contact.ImagePath));
             else
                 ProfileImageSource = ImageSource.FromFile("account.png");
         }
@@ -95,7 +94,7 @@ namespace Chiota.ViewModels.Contact
 
                     var response = await acceptContactInteractor.ExecuteAsync(new AcceptContactRequest{
                         UserName = UserService.CurrentUser.Name,
-                        UserImageHash = UserService.CurrentUser.ImageHash,
+                        UserImagePath = UserService.CurrentUser.ImagePath,
                         ChatAddress = new Address(_contact.ChatAddress),
                         ChatKeyAddress = new Address(_contact.ChatKeyAddress),
                         ContactAddress = new Address(_contact.ContactAddress),

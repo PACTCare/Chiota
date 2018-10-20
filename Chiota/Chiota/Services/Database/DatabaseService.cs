@@ -45,7 +45,7 @@ namespace Chiota.Services.Database
 
         #region Init
 
-        private static void Init()
+        public static void Init()
         {
             TransactionCache = new TransactionCacheRepository(_database, _key, _salt);
             User = new UserRepository(_database, _key, _salt);

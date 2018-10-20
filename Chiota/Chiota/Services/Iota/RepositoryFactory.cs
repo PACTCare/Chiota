@@ -2,12 +2,12 @@
 {
   using System.Collections.Generic;
 
-  using Chiota.Messenger.Repository;
   using Chiota.Resources.Settings;
 
   using Tangle.Net.ProofOfWork;
   using Tangle.Net.ProofOfWork.Service;
   using Tangle.Net.Repository;
+  using Tangle.Net.Repository.Client;
 
   /// <summary>
   /// The repository factory.
@@ -48,7 +48,7 @@
       var appSettings = ApplicationSettings.Load();
       nodeUriList.Insert(0, appSettings.IotaNodeUri);
 
-      var iotaClient = new MessengerIotaClient(nodeUriList);
+      var iotaClient = new FallbackIotaClient(this.nodeUriList, 5000);
 
       return appSettings.DoRemotePoW
                ? new RestIotaRepository(iotaClient, new PoWSrvService())

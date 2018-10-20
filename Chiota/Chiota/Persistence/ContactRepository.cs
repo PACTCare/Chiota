@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.Messenger.Entity;
-using Chiota.Messenger.Repository;
-using Chiota.Messenger.Service;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
+using Pact.Palantir.Entity;
+using Pact.Palantir.Repository;
+using Pact.Palantir.Service;
 using Tangle.Net.Cryptography.Signing;
 
 namespace Chiota.Persistence

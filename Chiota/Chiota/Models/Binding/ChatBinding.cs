@@ -1,7 +1,7 @@
 ﻿using System;
 using Chiota.Helper;
-using Chiota.Messenger.Entity;
 using Chiota.Models.Database.Base;
+using Pact.Palantir.Entity;
 using Xamarin.Forms;
 
 namespace Chiota.Models.Binding
@@ -28,10 +28,10 @@ namespace Chiota.Models.Binding
         {
             Name = contact.Name;
 
-            if (string.IsNullOrEmpty(contact.ImageHash))
+            if (string.IsNullOrEmpty(contact.ImagePath))
                 ImageSource = ImageSource.FromFile("account.png");
             else
-                ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + contact.ImageHash));
+                ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + contact.ImagePath));
 
             Contact = contact;
         }

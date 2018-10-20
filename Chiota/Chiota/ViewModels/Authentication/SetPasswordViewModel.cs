@@ -120,7 +120,7 @@ namespace Chiota.ViewModels.Authentication
 
                         //Send the image to ipfs by base64 string.
                         if(userProperties.ImageBase64 != null)
-                            userProperties.ImageHash = await new IpfsHelper().PostStringAsync(userProperties.ImageBase64);
+                            userProperties.ImagePath = await new IpfsHelper().PostStringAsync(userProperties.ImageBase64);
 
                         var userService = DependencyResolver.Resolve<UserService>();
                         var result = await userService.CreateNew(userProperties);

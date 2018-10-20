@@ -4,7 +4,6 @@ namespace Chiota.Resources.Settings
 {
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Repository;
   using Chiota.Models;
 
   using Xamarin.Forms;
@@ -26,7 +25,7 @@ namespace Chiota.Resources.Settings
     {
       var node = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsNodeKey)
                    ? Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string
-                   : MessengerIotaClient.DefaultNodeUri;
+                   : "https://field.deviota.com:443";
 
       var remotePoW = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey)
                         ? Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?

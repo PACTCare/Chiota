@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using Chiota.Helper;
-using Chiota.Messenger.Entity;
 using Chiota.Models.Database.Base;
+using Pact.Palantir.Entity;
 using Xamarin.Forms;
 
 namespace Chiota.Models.Binding
@@ -36,8 +36,8 @@ namespace Chiota.Models.Binding
 
             if(!string.IsNullOrEmpty(ImageBase64))
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(ImageBase64)));
-            else if (!string.IsNullOrEmpty(Contact.ImageHash))
-                ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImageHash;
+            else if (!string.IsNullOrEmpty(Contact.ImagePath))
+                ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
             else
                 ImageSource = ImageSource.FromFile("account.png");
         }

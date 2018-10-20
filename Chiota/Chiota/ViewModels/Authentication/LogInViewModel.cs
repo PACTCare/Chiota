@@ -3,15 +3,14 @@ using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.GetContacts;
-using Chiota.Messenger.Usecase.GetMessages;
 using Chiota.Resources.Localizations;
 using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.GetContacts;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
@@ -92,7 +91,7 @@ namespace Chiota.ViewModels.Authentication
             //Load all accepted contacts.
             var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
             {
-                ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                 PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
             });
 
@@ -108,11 +107,10 @@ namespace Chiota.ViewModels.Authentication
                     {
                         exist.Name = approved.Name;
                         exist.ChatKeyAddress = approved.ChatKeyAddress;
-                        exist.ContactAddress = approved.ContactAddress;
-                        exist.ImageHash = approved.ImageHash;
+                        exist.ImagePath = approved.ImagePath;
 
                         //Load the image, if the hash is not empty.
-                        if (!string.IsNullOrEmpty(exist.ImageHash))
+                        if (!string.IsNullOrEmpty(exist.ImagePath))
                         {
                             //exist.ImageBase64
                         }

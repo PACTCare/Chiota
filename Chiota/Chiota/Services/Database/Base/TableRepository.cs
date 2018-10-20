@@ -25,7 +25,7 @@ namespace Chiota.Services.Database.Base
         /// <param name="database"></param>
         protected TableRepository(SQLiteConnection database) : base(database)
         {
-            database.CreateTable<T>();
+            database?.CreateTable<T>();
             TableMapping = new TableMapping(typeof(T));
         }
 

@@ -217,7 +217,7 @@ namespace Chiota.ViewModels.Settings
                     {
                         if (imageBuffer != null)
                         {
-                            UserService.CurrentUser.ImageHash = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(imageBuffer));
+                            UserService.CurrentUser.ImagePath = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(imageBuffer));
                             UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(Convert.ToBase64String(imageBuffer)));
                         }
 

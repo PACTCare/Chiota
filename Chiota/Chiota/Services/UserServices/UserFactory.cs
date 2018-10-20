@@ -6,12 +6,12 @@ using Xamarin.Forms;
 namespace Chiota.Services.UserServices
 {
     using System.Threading.Tasks;
+  using Chiota.Models;
 
-    using Chiota.Messenger.Usecase;
-    using Chiota.Messenger.Usecase.CreateUser;
-    using Chiota.Models;
+  using Pact.Palantir.Usecase;
+  using Pact.Palantir.Usecase.CreateUser;
 
-    using Tangle.Net.Entity;
+  using Tangle.Net.Entity;
 
     /// <inheritdoc />
     public class UserFactory : IUserFactory
@@ -24,7 +24,7 @@ namespace Chiota.Services.UserServices
         private IUsecaseInteractor<CreateUserRequest, CreateUserResponse> CreateUserInteractor { get; }
 
         /// <inheritdoc />
-        public async Task<DbUser> CreateAsync(Seed seed, string name, string imageHash, string imageBase64)
+        public async Task<DbUser> CreateAsync(Seed seed, string name, string imagePath, string imageBase64)
         {
             var response = await CreateUserInteractor.ExecuteAsync(new CreateUserRequest { Seed = seed });
 
@@ -35,7 +35,7 @@ namespace Chiota.Services.UserServices
             {
                 Name = name,
                 Seed = seed.Value,
-                ImageHash = imageHash,
+                ImagePath = imagePath,
                 ImageBase64 = imageBase64,
                 StoreSeed = true,
                 PublicKeyAddress = response.PublicKeyAddress.Value,

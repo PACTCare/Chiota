@@ -3,11 +3,9 @@
   using System;
   using System.Threading.Tasks;
 
-  using Chiota.Messenger.Usecase;
-  using Chiota.Messenger.Usecase.AddContact;
-  using Chiota.Presenters;
-
   using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+  using Pact.Palantir.Usecase;
 
   [TestClass]
     public class AddContactPresenterTest

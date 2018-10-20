@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.Messenger.Encryption;
-using Chiota.Messenger.Entity;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.CreateUser;
 using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
@@ -14,6 +10,9 @@ using Chiota.Services.DependencyInjection;
 using Chiota.Services.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pact.Palantir.Encryption;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.CreateUser;
 using Tangle.Net.Entity;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -56,7 +55,7 @@ namespace Chiota.Services.UserServices
         {
             try
             {
-                var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImageHash, properties.ImageBase64);
+                var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImagePath, properties.ImageBase64);
 
                 //Create the entry for secure storage to safe the encryption key for the user data.
                 var salt = Seed.Random().Value;

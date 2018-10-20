@@ -61,7 +61,6 @@ namespace Chiota.UWP
 
                 ImageCircleRenderer.Init();
                 ((Style)this.Resources["TabbedPageStyle"]).Setters[0] = ((Style)this.Resources["TabbedPageStyle2"]).Setters[0];
-                
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

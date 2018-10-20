@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using Chiota.Base;
-using Chiota.Exceptions;
-using Chiota.Extensions;
-using Chiota.Messenger.Cache;
-using Chiota.Models.Binding;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
-using Chiota.Views.Chat;
-using Chiota.Views.Contact;
 using Chiota.Views.Settings;
+using Pact.Palantir.Cache;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Tabbed

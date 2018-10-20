@@ -4,13 +4,13 @@ using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.AddContact;
 using Chiota.Resources.Localizations;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.AddContact;
 using Rg.Plugins.Popup.Extensions;
 using Tangle.Net.Entity;
 using Tangle.Net.Utils;
@@ -154,10 +154,11 @@ namespace Chiota.ViewModels.Contact
                                 new AddContactRequest
                                 {
                                     Name = UserService.CurrentUser.Name,
-                                    ImageHash = UserService.CurrentUser.ImageHash,
+                                    ImagePath = UserService.CurrentUser.ImagePath,
                                     RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                                     PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                                    ContactAddress = new Address(ContactAddress)
+                                    ContactAddress = new Address(ContactAddress),
+                                    UserPublicKey = UserService.CurrentUser.NtruKeyPair.PublicKey
                                 });
 
                             await PopPopupAsync();

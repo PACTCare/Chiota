@@ -12,8 +12,8 @@ namespace Chiota.Models.Database
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("imagehash")]
-        public string ImageHash { get; set; }
+        [JsonProperty("ImagePath")]
+        public string ImagePath { get; set; }
 
         [JsonProperty("imagebase64")]
         public string ImageBase64 { get; set; }

@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Resources.Localizations;
@@ -130,11 +128,11 @@ namespace Chiota.ViewModels.Contact
                     var exist = list.Any(t => t.Contact.ChatAddress == item.ChatAddress);
                     if (!exist)
                     {
-                        var contact = new Messenger.Entity.Contact()
+                        var contact = new Pact.Palantir.Entity.Contact()
                         {
                             ChatAddress = item.ChatAddress,
                             Name = item.Name,
-                            ImageHash = item.ImageHash,
+                            ImagePath = item.ImagePath,
                             ChatKeyAddress = item.ChatKeyAddress,
                             PublicKeyAddress = item.PublicKeyAddress,
                             Rejected = !item.Accepted

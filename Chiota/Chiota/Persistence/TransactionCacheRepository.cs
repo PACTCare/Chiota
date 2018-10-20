@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.Messenger.Cache;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
+using Pact.Palantir.Cache;
 using Tangle.Net.Entity;
 
 namespace Chiota.Persistence

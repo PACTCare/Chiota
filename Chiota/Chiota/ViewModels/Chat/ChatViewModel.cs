@@ -4,16 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Controls.InfiniteScrolling;
-using Chiota.Messenger.Encryption;
-using Chiota.Messenger.Usecase;
-using Chiota.Messenger.Usecase.GetMessages;
-using Chiota.Messenger.Usecase.SendMessage;
-using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Services.DependencyInjection;
-using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.GetMessages;
+using Pact.Palantir.Usecase.SendMessage;
 using Tangle.Net.Entity;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
@@ -29,7 +26,7 @@ namespace Chiota.ViewModels.Chat
         private IAsymmetricKeyPair _chatKeyPair;
         private Address _chatAddress;
 
-        private Chiota.Messenger.Entity.Contact _contact;
+        private Pact.Palantir.Entity.Contact _contact;
         private string _message;
         private InfiniteScrollCollection<MessageBinding> _messageList;
         private MessageBinding _lastMessage;
@@ -43,7 +40,7 @@ namespace Chiota.ViewModels.Chat
 
         #region Properties
 
-        public Chiota.Messenger.Entity.Contact Contact
+        public Pact.Palantir.Entity.Contact Contact
         {
             get => _contact;
             set
@@ -148,7 +145,7 @@ namespace Chiota.ViewModels.Chat
         {
             base.Init(data);
 
-            var contact = (Messenger.Entity.Contact) data;
+            var contact = (Pact.Palantir.Entity.Contact) data;
 
             //Set the chat address.
             _chatAddress = new Address(contact.ChatAddress);

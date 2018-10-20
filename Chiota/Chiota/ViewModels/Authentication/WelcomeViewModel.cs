@@ -1,7 +1,4 @@
 ﻿using System.Windows.Input;
-using Chiota.Messenger.Service;
-using Chiota.Services.DependencyInjection;
-using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
