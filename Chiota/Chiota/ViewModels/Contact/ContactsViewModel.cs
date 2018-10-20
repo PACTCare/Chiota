@@ -9,6 +9,7 @@ using Chiota.Messenger.Usecase;
 using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Models;
 using Chiota.Models.Binding;
+using Chiota.Resources.Localizations;
 using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
@@ -25,12 +26,24 @@ namespace Chiota.ViewModels.Contact
     {
         #region Attributes
 
+        private List<ActionBinding> _actionList;
         private List<ContactBinding> _contactList;
-        private bool _isUpdating;
+
+        private int _actionListHeight;
 
         #endregion
 
         #region Properties
+
+        public List<ActionBinding> ActionList
+        {
+            get => _actionList;
+            set
+            {
+                _actionList = value;
+                OnPropertyChanged(nameof(ActionList));
+            }
+        }
 
         public List<ContactBinding> ContactList
         {
@@ -42,12 +55,23 @@ namespace Chiota.ViewModels.Contact
             }
         }
 
+        public int ActionListHeight
+        {
+            get => _actionListHeight;
+            set
+            {
+                _actionListHeight = value;
+                OnPropertyChanged(nameof(ActionListHeight));
+            }
+        }
+
         #endregion
 
         #region Constructors
 
         public ContactsViewModel()
         {
+            _actionList = new List<ActionBinding>();
             _contactList = new List<ContactBinding>();
         }
 
@@ -59,97 +83,31 @@ namespace Chiota.ViewModels.Contact
         {
             base.Init(data);
 
-            //Load all contacts.
-            ContactList = LoadContactListByDb();
-        }
-
-        #endregion
-
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromSeconds(3), UpdateView);
-        }
-
-        #endregion
-
-        #region ViewIsDisappearing
-
-        protected override void ViewIsDisappearing()
-        {
-            base.ViewIsDisappearing();
-
-            _isUpdating = false;
+            InitView();
         }
 
         #endregion
 
         #region Methods
 
-        #region UpdateView
+        #region InitView
 
         /// <summary>
-        /// Update the view with all contacts.
+        /// Init the view with all actions and the contact list.
         /// </summary>
-        /// <returns></returns>
-        private bool UpdateView()
+        private void InitView()
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            //Create the action list.
+            var actionList = new List<ActionBinding>
             {
-                if (Connectivity.NetworkAccess != NetworkAccess.Internet) return;
+                new ActionBinding() { Name = AppResources.CmnNewContact, ImageSource = ImageSource.FromFile("addperson.png") },
+            };
 
-                //var dbContacts = LoadContactListByDb();
-                var requestContacts = await RequestContactListAsync();
+            ActionList = actionList;
+            ActionListHeight = ActionList.Count * 48;
 
-                //Return, if there are no contacts available.
-                if (requestContacts == null || requestContacts.Count == 0) return;
-
-                //Get the combined contact list of the request and local database.
-                //(Means update the database, if necessary and return the updated contact list.)
-                var combinedContacts = GetCombinedContactList(requestContacts);
-                if (combinedContacts != null && combinedContacts.Count > 0)
-                    ContactList = combinedContacts;
-            });
-
-            return _isUpdating;
-        }
-
-        #endregion
-
-        #region GetContacts
-
-        #region GetCombinedContactList
-
-        private List<ContactBinding> GetCombinedContactList(List<ContactBinding> contacts)
-        {
-            var combined = new List<ContactBinding>();
-
-            //Load the contacts of the database.
-            var dbContacts = LoadContactListByDb();
-
-            /*if (ContactList == null || ContactList.Count != contacts.Count)
-                return true;
-
-            var currentPending = ContactList.FindAll(t => !t.IsApproved);
-            var currentApproved = ContactList.FindAll(t => t.IsApproved);
-
-            var pending = contacts.FindAll(t => !t.IsApproved);
-            var approved = contacts.FindAll(t => t.IsApproved);
-
-            if (currentPending.Count != pending.Count || currentApproved.Count != approved.Count)
-                return true;
-
-            return false;*/
-
-            //Return the contact list, if the update is successfully, otherwise return null.
-            if (combined.Count > 0)
-                return combined;
-
-            return null;
+            //Load all contacts.
+            ContactList = LoadContactListByDb();
         }
 
         #endregion
@@ -196,62 +154,19 @@ namespace Chiota.ViewModels.Contact
 
         #endregion
 
-        #region RequestContactList
-
-        /// <summary>
-        /// Request the contact list of the user by using iota.
-        /// </summary>
-        /// <returns></returns>
-        private async Task<List<ContactBinding>> RequestContactListAsync()
-        {
-            var list = new List<ContactBinding>();
-
-            try
-            {
-                var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
-                var response = await interactor.ExecuteAsync(new GetContactsRequest()
-                {
-                    ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                    PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
-                });
-
-                if (response.Code == ResponseCode.Success && (response.PendingContactRequests.Count > 0 || response.ApprovedContacts.Count > 0))
-                {
-                    foreach (var pending in response.PendingContactRequests)
-                        list.Add(new ContactBinding(pending, false));
-
-                    foreach (var approved in response.ApprovedContacts)
-                        list.Add(new ContactBinding(approved, true));
-                }
-            }
-            catch (Exception)
-            {
-                //By error return an empty list.
-                list = new List<ContactBinding>();
-            }
-
-            return list;
-        }
-
-        #endregion
-
-        #endregion
-
-
-
         #endregion
 
         #region Commands
 
-        #region TapAddContact
+        #region ContactAddress
 
-        public ICommand TapAddContactCommand
+        public ICommand ContactAddressCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    await PushAsync<AddContactView>();
+                    await PushAsync<ContactAddressView>();
                 });
             }
         }
@@ -260,24 +175,33 @@ namespace Chiota.ViewModels.Contact
 
         #region Tap
 
+        /// <summary>
+        /// Tap command on a contact or action item.
+        /// </summary>
         public ICommand TapCommand
         {
             get
             {
                 return new Command(async (param) =>
                 {
-                    if (!(param is ContactBinding contact))
+                    if (param is ContactBinding contact)
+                    {
+                        //Show the chat view, or a dialog for a contact request acceptation.
+                        if (contact.IsApproved)
+                            await PushAsync<ChatView>(contact.Contact);
+                        else
+                            await PushAsync<ContactRequestView>(contact.Contact);
+                    }
+                    else if (param is ActionBinding action)
+                    {
+                        if(action.Name == AppResources.CmnNewContact)
+                            await PushAsync<AddContactView>();
+                    }
+                    else
                     {
                         //Show an unknown exception.
                         await new UnknownException(new ExcInfo()).ShowAlertAsync();
-                        return;
                     }
-
-                    //Show the chat view, or a dialog for a contact request acceptation.
-                    if (contact.IsApproved)
-                        await PushAsync<ChatView>(contact.Contact);
-                    else
-                        await PushAsync<ContactRequestView>(contact.Contact);
                 });
             }
         }

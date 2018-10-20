@@ -306,4 +306,7 @@
   <data name="CmnSearch" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="CmnNewContact" xml:space="preserve">
+    <value>New Contact</value>
+  </data>
 </root>

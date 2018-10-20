@@ -148,8 +148,7 @@ namespace Chiota.ViewModels.Chat
         {
             base.Init(data);
 
-            if (!(data is Chiota.Messenger.Entity.Contact)) return;
-            var contact = (Chiota.Messenger.Entity.Contact) data;
+            var contact = (Messenger.Entity.Contact) data;
 
             //Set the chat address.
             _chatAddress = new Address(contact.ChatAddress);
@@ -157,7 +156,7 @@ namespace Chiota.ViewModels.Chat
             //Set the contact property.
             Contact = contact;
 
-            LoadMessages();
+            //LoadMessages();
         }
 
         #endregion

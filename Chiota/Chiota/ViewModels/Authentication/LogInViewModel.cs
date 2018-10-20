@@ -3,12 +3,16 @@ using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Messenger.Usecase;
+using Chiota.Messenger.Usecase.GetContacts;
+using Chiota.Messenger.Usecase.GetMessages;
 using Chiota.Resources.Localizations;
+using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views;
-
+using Tangle.Net.Entity;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -75,6 +79,69 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
+        #region Methods
+
+        #region LoadUserData
+
+        /// <summary>
+        /// Load all user data.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadUserDataAsync()
+        {
+            //Load all accepted contacts.
+            var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
+            {
+                ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+            });
+
+            if (response.Code == ResponseCode.Success && response.ApprovedContacts.Count > 0)
+            {
+                //Check, if all the contacts saved in the database and update them, if necessary.
+                foreach (var approved in response.ApprovedContacts)
+                {
+                    var exist = DatabaseService.Contact.GetAcceptedContactByChatAddress(approved.ChatAddress);
+
+                    //Update the contact in the database.
+                    if (exist != null)
+                    {
+                        exist.Name = approved.Name;
+                        exist.ChatKeyAddress = approved.ChatKeyAddress;
+                        exist.ContactAddress = approved.ContactAddress;
+                        exist.ImageHash = approved.ImageHash;
+
+                        //Load the image, if the hash is not empty.
+                        if (!string.IsNullOrEmpty(exist.ImageHash))
+                        {
+                            //exist.ImageBase64
+                        }
+                            
+                        //Update the contact in the database.
+                        DatabaseService.Contact.UpdateObject(exist);
+                    }
+                }
+
+
+                //Load new messages from of the user.
+                /*foreach (var approved in response.ApprovedContacts)
+                {
+                    var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                        new GetMessagesRequest
+                        {
+                            ChatAddress = new Address(approved.ChatAddress),
+                            ChatKeyPair = null,
+                            ChatKeyAddress = new Address(approved.ChatKeyAddress),
+                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                        });
+                }*/
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region Commands
 
         #region LogIn
@@ -94,6 +161,10 @@ namespace Chiota.ViewModels.Authentication
 
                             var userService = DependencyResolver.Resolve<UserService>();
                             var result = await userService.LogInAsync(Password);
+
+                            //Update database, if the log in is successfully.
+                            if (result)
+                                await LoadUserDataAsync();
 
                             await PopPopupAsync();
 
@@ -116,15 +187,15 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region SeedHelp
+        #region Privacy
 
-        public ICommand SeedHelpCommand => new Command(async () => { await PushAsync<SeedHelpView>(); });
+        public ICommand PrivacyCommand => new Command(() =>
+        {
+            Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
+        });
 
-    #endregion
+        #endregion
 
-      [UsedImplicitly]
-      public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
-
-    #endregion
-  }
+        #endregion
+    }
 }

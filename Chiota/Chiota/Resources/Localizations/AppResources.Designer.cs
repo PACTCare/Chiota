@@ -160,6 +160,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Contact.
+        /// </summary>
+        internal static string CmnNewContact {
+            get {
+                return ResourceManager.GetString("CmnNewContact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New seed.
         /// </summary>
         internal static string CmnNewSeed {

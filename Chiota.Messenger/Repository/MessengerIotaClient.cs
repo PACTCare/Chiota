@@ -12,9 +12,9 @@
   [ExcludeFromCodeCoverage]
   public class MessengerIotaClient : IIotaClient
   {
-    public const string DefaultNodeUri = "https://field.deviota.com:443";
+      public const string DefaultNodeUri = "https://field.deviota.com:443";//"https://field.deviota.com:443";//https://potato.iotasalad.org:14265
 
-    public MessengerIotaClient(List<string> nodeUris)
+        public MessengerIotaClient(List<string> nodeUris)
     {
       if (nodeUris.Count == 0)
       {

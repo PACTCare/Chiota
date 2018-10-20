@@ -13,6 +13,7 @@ using Chiota.Messenger.Usecase.GetContacts;
 using Chiota.Messenger.Usecase.GetMessages;
 using Chiota.Models;
 using Chiota.Models.Binding;
+using Chiota.Services.Database;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
@@ -65,7 +66,19 @@ namespace Chiota.ViewModels.Chat
         {
             base.ViewIsAppearing();
 
+            _isUpdating = true;
+            Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
+        }
 
+        #endregion
+
+        #region ViewIsDisappearing
+
+        protected override void ViewIsDisappearing()
+        {
+            base.ViewIsDisappearing();
+
+            _isUpdating = false;
         }
 
         #endregion
@@ -74,15 +87,39 @@ namespace Chiota.ViewModels.Chat
 
         #region UpdateView
 
+        /// <summary>
+        /// Init the view with the user data of the database.
+        /// </summary>
         private bool UpdateView()
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            var chats = new List<ChatBinding>();
+
+            //Load all accepted contacts.
+            var contacts = DatabaseService.Contact.GetAcceptedContacts();
+            foreach (var item in contacts)
             {
-                var chats = await GetChatsListAsync();
-                var changed = IsChatListChanged(chats);
-                if (changed)
-                    ChatList = chats;
-            });
+                var lastMessage = DatabaseService.Message.GetObjectById(0);
+
+                //If there is a message, load the chat of the contact.
+                if (lastMessage != null)
+                {
+                    var contact = new Messenger.Entity.Contact()
+                    {
+                        Name = item.Name,
+                        ImageHash = item.ImageHash,
+                        ChatAddress = item.ChatAddress,
+                        ChatKeyAddress = item.ChatKeyAddress,
+                        PublicKeyAddress = item.PublicKeyAddress,
+                        Rejected = !item.Accepted
+                    };
+                    chats.Add(new ChatBinding(contact));
+                }
+            }
+
+            //Update the chat list.
+            var changed = IsChatListChanged(chats);
+            if (changed)
+                ChatList = chats;
 
             return _isUpdating;
         }
@@ -101,90 +138,24 @@ namespace Chiota.ViewModels.Chat
 
         #endregion
 
-        #region GetChatsList
-
-        private async Task<List<ChatBinding>> GetChatsListAsync()
-        {
-            var result = new List<ChatBinding>();
-
-            try
-            {
-                var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
-                {
-                    ContactRequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                    PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
-                });
-
-                if (response.Code == ResponseCode.Success)
-                {
-                    foreach (var approved in response.ApprovedContacts)
-                    {
-                        var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(new GetMessagesRequest
-                        {
-                            ChatAddress = new Address(approved.ChatAddress),
-                            ChatKeyPair = null,
-                            ChatKeyAddress = new Address(approved.ChatKeyAddress),
-                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
-                        });
-
-                        //If the response is successful and there is an active chat, we need to add this to the list.
-                        if (messagesResponse.Code == ResponseCode.Success && messagesResponse.Messages.Count > 0)
-                        {
-                            var messages = messagesResponse.Messages;
-                            result.Add(new ChatBinding(approved)
-                            {
-                                LastMessage = messages[messages.Count - 1].Message,
-                                LastMessageDateTime = messages[messages.Count - 1].Date
-                            });
-                        }
-                    }
-                }
-
-                //TODO Maybe, we need to sort the chats by the last message.
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return result;
-        }
-
-        #endregion
-
-        #region UpdateView
-
-        /*private async void UpdateView()
-        {
-            //var test = await IotaHelper.GetNewMessages();
-
-            var tmp = new List<Models.Chat>
-            {
-                new Models.Chat()
-                {
-                    Name = "David",
-                    LastMessage = "Hi",
-                    LastMessageTime = DateTime.Now.ToString("d", CultureInfo.CurrentCulture),
-                    ImageSource = ImageSource.FromFile("account.png")
-                },
-                new Models.Chat()
-                {
-                    Name = "Sebastian",
-                    LastMessage = "Great",
-                    LastMessageTime = DateTime.Now.ToString("d", CultureInfo.CurrentCulture),
-                    ImageSource = ImageSource.FromFile("account.png")
-                }
-            };
-
-            //Add all chats of the user to the ui.
-            ChatList = tmp;
-        }*/
-
-        #endregion
-
         #endregion
 
         #region Commands
+
+        #region Contacts
+
+        public ICommand ContactsCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await PushAsync<ContactsView>();
+                });
+            }
+        }
+
+        #endregion
 
         #region Tap
 

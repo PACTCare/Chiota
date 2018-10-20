@@ -262,6 +262,9 @@
     <AndroidResource Include="Resources\drawable\qr.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable\add.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable\addgroup.png" />
     <AndroidResource Include="Resources\drawable\addperson.png" />
   </ItemGroup>

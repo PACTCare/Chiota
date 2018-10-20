@@ -52,20 +52,14 @@ namespace Chiota.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                var assembliesToInclude = new List<Assembly>
-                {
-                    typeof(ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer).GetTypeInfo().Assembly,
-                    typeof(ZXing.Net.Mobile.Forms.ZXingScannerPage).GetTypeInfo().Assembly,
-                    typeof(ImageCircleRenderer).GetTypeInfo().Assembly
-
-                };
-
-                //Init popups.
+                //Init nuget packages.
+                ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
                 Rg.Plugins.Popup.Popup.Init();
 
                 //Init Xamarin.Forms
-                Xamarin.Forms.Forms.Init(e, assembliesToInclude);
+                Xamarin.Forms.Forms.Init(e);
 
+                ImageCircleRenderer.Init();
                 ((Style)this.Resources["TabbedPageStyle"]).Setters[0] = ((Style)this.Resources["TabbedPageStyle2"]).Setters[0];
                 
 

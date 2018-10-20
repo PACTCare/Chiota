@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Views\Chat\ChatView.xaml.cs.new" />
+    <None Remove="Views\Chat\ChatView.xaml.new" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Ipfs.Api" Version="0.21.0" />
     <PackageReference Include="Microsoft.Bot.Connector.DirectLine" Version="3.0.2" />
@@ -130,9 +135,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\BackUp\WriteSeedView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Chat\ChatView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Contact\AddContactView.xaml">

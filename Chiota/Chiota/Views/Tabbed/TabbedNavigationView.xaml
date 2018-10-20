@@ -13,19 +13,17 @@
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance tabbed:TabbedNavigationViewModel}"
              Title="{DynamicResource AppName}"
-             BarBackgroundColor="{DynamicResource AccentDarkColor}"
+             BarBackgroundColor="{DynamicResource TabbedbarColor}"
              BarTextColor="{DynamicResource BrightTextColor}">
 
     <TabbedPage.ToolbarItems>
-        <ToolbarItem Order="Primary" Icon="search.png" Text="{extensions:Translate CmnSearch}" Command="{Binding SearchCommand}"/>
-        <ToolbarItem Order="Primary" Icon="qr.png" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
+        <!--<ToolbarItem Order="Primary" Icon="search.png" Text="{extensions:Translate CmnSearch}" Command="{Binding SearchCommand}"/>-->
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnSettings}" Command="{Binding SettingsCommand}"/>
         <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnLogOut}" Command="{Binding LogOutCommand}"/>
     </TabbedPage.ToolbarItems>
 
     <!-- Children of the tabbedpage -->
     <chat:ChatsView Title="{extensions:Translate CmnChats}"/>
-    <contact:ContactsView Title="{extensions:Translate CmnContacts}"/>
     <!--<ContentPage Title="Status"/>-->
 
 </TabbedPage>

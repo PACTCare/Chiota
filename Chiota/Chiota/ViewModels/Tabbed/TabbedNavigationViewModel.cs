@@ -35,21 +35,6 @@ namespace Chiota.ViewModels.Tabbed
 
         #endregion
 
-        #region ContactAddress
-
-        public ICommand ContactAddressCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync<ContactAddressView>();
-                });
-            }
-        }
-
-        #endregion
-
         #region Settings
 
         public ICommand SettingsCommand

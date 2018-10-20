@@ -14,7 +14,7 @@ namespace Chiota.Views.Chat
 	{
 		public ChatView ()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
 	}
 }

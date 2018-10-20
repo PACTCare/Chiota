@@ -21,32 +21,55 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <ListView ItemsSource="{Binding ChatList, Mode=TwoWay}" HasUnevenRows="True" SelectionMode="None">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="8" Spacing="16" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" HeightRequest="64" WidthRequest="64"/>
-                                </StackLayout>
-
-                                <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="8">
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                                        <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
-                                        <StackLayout HorizontalOptions="CenterAndExpand"/>
-                                        <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <ListView ItemsSource="{Binding ChatList, Mode=TwoWay}" HasUnevenRows="True" SelectionMode="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal" Padding="8" Spacing="16" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                        <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" HeightRequest="64" WidthRequest="64"/>
                                     </StackLayout>
-                                    <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
-                                </StackLayout>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
 
-                <ListView.Behaviors>
-                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
-                </ListView.Behaviors>
-            </ListView>
+                                    <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="8">
+                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                                            <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                            <StackLayout HorizontalOptions="CenterAndExpand"/>
+                                            <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
+                                        </StackLayout>
+                                        <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                    <ListView.Behaviors>
+                        <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                    </ListView.Behaviors>
+                </ListView>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="8"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="8"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Frame Grid.Row="1" Grid.Column="1" Style="{DynamicResource RoundedFrame32}" Padding="16" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="{DynamicResource ButtonColor}">
+                        <Image Source="add.png" HeightRequest="32" WidthRequest="32"/>
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ContactsCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </Grid>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

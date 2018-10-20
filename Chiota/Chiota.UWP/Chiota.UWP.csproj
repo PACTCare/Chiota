@@ -176,6 +176,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="account.png" />
+    <Content Include="add.png" />
     <Content Include="addgroup.png" />
     <Content Include="addperson.png" />
     <Content Include="search.png" />

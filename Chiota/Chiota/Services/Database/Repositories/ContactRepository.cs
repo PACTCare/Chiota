@@ -19,7 +19,34 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
-        #region GetAcceptedContactByPublicKeyAddress
+        #region GetAcceptedContactByChatAddress
+
+        /// <summary>
+        /// Get first object of the table by the public key address.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public List<DbContact> GetAcceptedContacts()
+        {
+            try
+            {
+                var query = Database.Query(TableMapping,
+                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=1;").Cast<DbContact>().ToList();
+
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region GetAcceptedContactsByPublicKeyAddress
 
         /// <summary>
         /// Get all objects of the table by the public key address.
@@ -35,6 +62,33 @@ namespace Chiota.Services.Database.Repositories
 
                 for (var i = 0; i < query.Count; i++)
                     query[i] = DecryptModel(query[i]);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region GetAcceptedContactByChatAddress
+
+        /// <summary>
+        /// Get first object of the table by the public key address.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public DbContact GetAcceptedContactByChatAddress(string chatAddress)
+        {
+            try
+            {
+                var value = Encrypt(chatAddress);
+                var query = Database.FindWithQuery(TableMapping,
+                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", value) as DbContact;
+
+                DecryptModel(query);
 
                 return query;
             }

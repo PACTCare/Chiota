@@ -6,71 +6,75 @@
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
-             xmlns:behaviors="clr-namespace:Chiota.Behaviors"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              mc:Ignorable="design"
-             design:DataContext="{design:DesignInstance contact:ContactsViewModel}">
+             design:DataContext="{design:DesignInstance contact:ContactsViewModel}"
+             Title="{extensions:Translate CmnContacts}">
 
-    <ContentPage.Resources>
-
-        <Style x:Key="BoxViewSeperator" TargetType="BoxView">
-            <Setter Property="BackgroundColor" Value="#96000000"/>
-            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
-            <Setter Property="HeightRequest" Value="1"/>
-        </Style>
-
-    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary" Icon="qr.png" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout Spacing="0">
-                <StackLayout Orientation="Horizontal" Padding="16" Spacing="16" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                        <Frame Style="{DynamicResource RoundedFrame32}" BackgroundColor="{DynamicResource AccentDarkColor}" Padding="8">
-                            <Image Source="addperson.png" HeightRequest="28" WidthRequest="28"/>
-                        </Frame>
+            <ScrollView>
+                <StackLayout Spacing="0">
+
+                    <!-- Actions -->
+                    <ListView ItemsSource="{Binding ActionList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ActionListHeight}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="12" Spacing="24" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image Source="{Binding ImageSource}" Opacity="0.6" HeightRequest="24" WidthRequest="24"/>
+                                        </StackLayout>
+
+                                        <StackLayout VerticalOptions="Center" Spacing="2">
+                                            <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.Behaviors>
+                            <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                        </ListView.Behaviors>
+                    </ListView>
+
+                    <StackLayout BackgroundColor="#16000000" Padding="16, 8">
+                        <Label Text="Contacts" TextColor="#616161"/>
                     </StackLayout>
 
-                    <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand" Spacing="2">
-                        <Label Style="{DynamicResource Label16}" Text="New contact" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="StartAndExpand"/>
-                    </StackLayout>
+                    <ListView ItemsSource="{Binding ContactList}" HasUnevenRows="True" SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" BackgroundColor="{Binding BackgroundColor}" Padding="12, 8" Spacing="12" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                            <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" Opacity="0.6" HeightRequest="52" WidthRequest="52"/>
+                                        </StackLayout>
 
-                    <StackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding TapAddContactCommand}"/>
-                    </StackLayout.GestureRecognizers>
+                                        <StackLayout VerticalOptions="Center" Spacing="2">
+                                            <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" FontAttributes="Bold" VerticalOptions="Center"/>
+                                            <Label Style="{DynamicResource Label14}" Text="{Binding Contact.ChatAddress}" VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.Behaviors>
+                            <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                        </ListView.Behaviors>
+                    </ListView>
+
                 </StackLayout>
-            </StackLayout>
-
-            <BoxView Style="{DynamicResource BoxViewSeperator}"/>
-
-            <ListView ItemsSource="{Binding ContactList}" HasUnevenRows="True" SelectionMode="None">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" BackgroundColor="{Binding BackgroundColor}" Padding="12, 8" Spacing="12" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <abstractions:CircleImage Source="{Binding ImageSource}" Aspect="AspectFill" HeightRequest="52" WidthRequest="52"/>
-                                </StackLayout>
-
-                                <StackLayout VerticalOptions="Center" Spacing="2" IsVisible="{Binding IsNotApproved}">
-                                    <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" FontAttributes="Bold" VerticalOptions="Center"/>
-                                    <Label Style="{DynamicResource Label14}" Text="Tap to answer the contact request." VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
-                                </StackLayout>
-
-                                <StackLayout VerticalOptions="Center" Spacing="2" IsVisible="{Binding IsApproved}">
-                                    <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" FontAttributes="Bold" VerticalOptions="Center"/>
-                                    <Label Style="{DynamicResource Label14}" Text="{Binding Contact.ChatAddress}" VerticalOptions="Center" LineBreakMode="TailTruncation"  Opacity="0.6"/>
-                                </StackLayout>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-
-                <ListView.Behaviors>
-                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
-                </ListView.Behaviors>
-            </ListView>
+            </ScrollView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
