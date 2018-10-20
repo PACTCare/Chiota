@@ -153,7 +153,7 @@ namespace Chiota.ViewModels.Chat
             //Set the contact property.
             Contact = contact;
 
-            //LoadMessages();
+            LoadMessages();
         }
 
         #endregion

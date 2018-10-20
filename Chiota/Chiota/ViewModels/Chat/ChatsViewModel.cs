@@ -12,7 +12,9 @@ using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.GetContacts;
+using Pact.Palantir.Usecase.GetMessages;
 using Tangle.Net.Entity;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Chat
@@ -21,12 +23,28 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
+        private static List<ContactBinding> _requestList;
         private static List<ChatBinding> _chatList;
+
+        private int _requestListHeight;
+        private int _chatListHeight;
+
+        private bool _isRequestExist;
         private bool _isUpdating;
 
         #endregion
 
         #region Properties
+
+        public List<ContactBinding> RequestList
+        {
+            get => _requestList;
+            set
+            {
+                _requestList = value;
+                OnPropertyChanged(nameof(RequestList));
+            }
+        }
 
         public List<ChatBinding> ChatList
         {
@@ -36,6 +54,46 @@ namespace Chiota.ViewModels.Chat
                 _chatList = value;
                 OnPropertyChanged(nameof(ChatList));
             }
+        }
+
+        public int RequestListHeight
+        {
+            get => _requestListHeight;
+            set
+            {
+                _requestListHeight = value;
+                OnPropertyChanged(nameof(RequestListHeight));
+            }
+        }
+
+        public int ChatListHeight
+        {
+            get => _chatListHeight;
+            set
+            {
+                _chatListHeight = value;
+                OnPropertyChanged(nameof(ChatListHeight));
+            }
+        }
+
+        public bool IsRequestExist
+        {
+            get => _isRequestExist;
+            set
+            {
+                _isRequestExist = value;
+                OnPropertyChanged(nameof(IsRequestExist));
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public ChatsViewModel()
+        {
+            _requestList = new List<ContactBinding>();
+            _chatList = new List<ChatBinding>();
         }
 
         #endregion
@@ -79,50 +137,104 @@ namespace Chiota.ViewModels.Chat
         #region UpdateView
 
         /// <summary>
-        /// Init the view with the user data of the database.
+        /// Init the view with the user data of the database and the contact requests by valid connection.
         /// </summary>
         private bool UpdateView()
         {
-            /*Device.BeginInvokeOnMainThread(async() =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
-                var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
-                var response = await interactor.ExecuteAsync(
-                    new GetContactsRequest
-                    {
-                        RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                        PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                        KeyPair = UserService.CurrentUser.NtruKeyPair
-                    });
-            });*/
+                var chats = new List<ChatBinding>();
 
-            var chats = new List<ChatBinding>();
-
-            //Load all accepted contacts.
-            var contacts = DatabaseService.Contact.GetAcceptedContacts();
-            foreach (var item in contacts)
-            {
-                var lastMessage = DatabaseService.Message.GetObjectById(0);
-
-                //If there is a message, load the chat of the contact.
-                if (lastMessage != null)
+                //Load all accepted contacts.
+                var contacts = DatabaseService.Contact.GetAcceptedContacts();
+                foreach (var item in contacts)
                 {
-                    var contact = new Pact.Palantir.Entity.Contact()
-                    {
-                        Name = item.Name,
-                        ImagePath = item.ImagePath,
-                        ChatAddress = item.ChatAddress,
-                        ChatKeyAddress = item.ChatKeyAddress,
-                        PublicKeyAddress = item.PublicKeyAddress,
-                        Rejected = !item.Accepted
-                    };
-                    chats.Add(new ChatBinding(contact));
-                }
-            }
 
-            //Update the chat list.
-            var changed = IsChatListChanged(chats);
-            if (changed)
-                ChatList = chats;
+                    var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                        new GetMessagesRequest
+                        {
+                            ChatAddress = new Address(item.ChatAddress),
+                            ChatKeyAddress = new Address(item.ChatKeyAddress),
+                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                        });
+
+                    //If there is a message, load the chat of the contact.
+                    if (response.Code == ResponseCode.Success && response.Messages.Count > 0)
+                    {
+                        var contact = new Pact.Palantir.Entity.Contact()
+                        {
+                            Name = item.Name,
+                            ImagePath = item.ImagePath,
+                            ChatAddress = item.ChatAddress,
+                            ChatKeyAddress = item.ChatKeyAddress,
+                            PublicKeyAddress = item.PublicKeyAddress,
+                            Rejected = !item.Accepted
+                        };
+                        chats.Add(new ChatBinding(contact));
+                    }
+
+
+                    /*var lastMessage = DatabaseService.Message.GetObjectById(0);
+
+                    //If there is a message, load the chat of the contact.
+                    if (lastMessage != null)
+                    {
+                        var contact = new Pact.Palantir.Entity.Contact()
+                        {
+                            Name = item.Name,
+                            ImagePath = item.ImagePath,
+                            ChatAddress = item.ChatAddress,
+                            ChatKeyAddress = item.ChatKeyAddress,
+                            PublicKeyAddress = item.PublicKeyAddress,
+                            Rejected = !item.Accepted
+                        };
+                        chats.Add(new ChatBinding(contact));
+                    }*/
+                }
+
+                //Update the chat list.
+                var changed = IsChatListChanged(chats);
+                if (changed)
+                    ChatList = chats;
+
+            });
+
+            //If there is an internet connection, try to get the contact requests of the user.
+            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(
+                        new GetContactsRequest
+                        {
+                            RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                            PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                            KeyPair = UserService.CurrentUser.NtruKeyPair
+                        });
+
+                    if (response.Code == ResponseCode.Success && response.PendingContactRequests.Count > 0)
+                    {
+                        var requests = new List<ContactBinding>();
+
+                        foreach (var item in response.PendingContactRequests)
+                            requests.Add(new ContactBinding(item, false));
+
+                        //Update the request list.
+                        if (RequestList.Count != requests.Count)
+                        {
+                            RequestList = requests;
+                            RequestListHeight = requests.Count * 64;
+                            IsRequestExist = requests.Count > 0;
+                        }
+                        return;
+                    }
+
+                    //Reset the request list.
+                    RequestList = new List<ContactBinding>();
+                    IsRequestExist = false;
+                    RequestListHeight = 0;
+                });
+            }
 
             return _isUpdating;
         }
@@ -168,15 +280,24 @@ namespace Chiota.ViewModels.Chat
             {
                 return new Command(async (param) =>
                 {
-                    if (!(param is ChatBinding chat))
+                    if (param is ChatBinding chat)
                     {
-                        //Show an unknown exception.
-                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                        //Show the chat view.
+                        await PushAsync<ChatView>(chat.Contact);
                         return;
                     }
+                    else if (param is ContactBinding contact)
+                    {
+                        //Show the chat view, or a dialog for a contact request acceptation.
+                        if (!contact.IsApproved)
+                        {
+                            await PushAsync<ContactRequestView>(contact.Contact);
+                            return;
+                        }
+                    }
 
-                    //Show the chat view.
-                    await PushAsync<ChatView>(chat.Contact);
+                    //Show an unknown exception.
+                    await new UnknownException(new ExcInfo()).ShowAlertAsync();
                 });
             }
         }

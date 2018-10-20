@@ -186,20 +186,22 @@ namespace Chiota.ViewModels.Contact
                     {
                         //Show the chat view, or a dialog for a contact request acceptation.
                         if (contact.IsApproved)
+                        {
                             await PushAsync<ChatView>(contact.Contact);
-                        else
-                            await PushAsync<ContactRequestView>(contact.Contact);
+                            return;
+                        }
                     }
                     else if (param is ActionBinding action)
                     {
-                        if(action.Name == AppResources.CmnNewContact)
+                        if (action.Name == AppResources.CmnNewContact)
+                        {
                             await PushAsync<AddContactView>();
+                            return;
+                        }
                     }
-                    else
-                    {
-                        //Show an unknown exception.
-                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
-                    }
+
+                    //Show an unknown exception.
+                    await new UnknownException(new ExcInfo()).ShowAlertAsync();
                 });
             }
         }

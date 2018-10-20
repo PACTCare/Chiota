@@ -100,7 +100,8 @@ namespace Chiota.ViewModels.Contact
                         ContactAddress = new Address(_contact.ContactAddress),
                         ContactPublicKeyAddress = new Address(_contact.PublicKeyAddress),
                         UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                        UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                        UserKeyPair = UserService.CurrentUser.NtruKeyPair,
+                        UserContactAddress = new Address(UserService.CurrentUser.RequestAddress)
                     });
 
                     await PopPopupAsync();

@@ -92,7 +92,8 @@ namespace Chiota.ViewModels.Authentication
             var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
             {
                 RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                KeyPair = UserService.CurrentUser.NtruKeyPair
             });
 
             if (response.Code == ResponseCode.Success && response.ApprovedContacts.Count > 0)
