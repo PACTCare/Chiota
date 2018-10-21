@@ -41,12 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="CEXEngine">
-      <HintPath>..\..\Externals\CEXEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="Pact.Palantir">
-      <HintPath>..\..\Externals\Pact.Palantir.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Palantir\CEXEngine\CEXEngine.csproj" />
+    <ProjectReference Include="..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj" />
   </ItemGroup>
 
   <ItemGroup>
