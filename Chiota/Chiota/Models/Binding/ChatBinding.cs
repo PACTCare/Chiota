@@ -24,12 +24,14 @@ namespace Chiota.Models.Binding
 
         #region Constructors
 
-        public ChatBinding(Contact contact)
+        public ChatBinding(Contact contact, string lastMessage, DateTime lastMessageDateTime)
         {
             Name = contact.Name;
+            LastMessage = lastMessage;
+            LastMessageDateTime = lastMessageDateTime;
 
             if (string.IsNullOrEmpty(contact.ImagePath))
-                ImageSource = ImageSource.FromFile("account.png");
+                ImageSource = null;
             else
                 ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + contact.ImagePath));
 

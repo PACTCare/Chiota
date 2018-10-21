@@ -24,10 +24,14 @@ namespace Chiota.ViewModels.Contact
     {
         #region Attributes
 
+        private const int ActionItemHeight = 48;
+        private const int ContactItemHeight = 68;
+
         private List<ActionBinding> _actionList;
         private List<ContactBinding> _contactList;
 
         private int _actionListHeight;
+        private int _contactListHeight;
 
         #endregion
 
@@ -60,6 +64,16 @@ namespace Chiota.ViewModels.Contact
             {
                 _actionListHeight = value;
                 OnPropertyChanged(nameof(ActionListHeight));
+            }
+        }
+
+        public int ContactListHeight
+        {
+            get => _contactListHeight;
+            set
+            {
+                _contactListHeight = value;
+                OnPropertyChanged(nameof(ContactListHeight));
             }
         }
 
@@ -102,10 +116,11 @@ namespace Chiota.ViewModels.Contact
             };
 
             ActionList = actionList;
-            ActionListHeight = ActionList.Count * 48;
+            ActionListHeight = ActionList.Count * ActionItemHeight;
 
             //Load all contacts.
             ContactList = LoadContactListByDb();
+            ContactListHeight = ContactList.Count * ContactItemHeight;
         }
 
         #endregion

@@ -23,6 +23,9 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
+        private const int RequestItemHeight = 64;
+        private const int ChatItemHeight = 72;
+
         private static List<ContactBinding> _requestList;
         private static List<ChatBinding> _chatList;
 
@@ -161,6 +164,7 @@ namespace Chiota.ViewModels.Chat
                     //If there is a message, load the chat of the contact.
                     if (response.Code == ResponseCode.Success && response.Messages.Count > 0)
                     {
+                        var lastMessage = response.Messages[response.Messages.Count - 1];
                         var contact = new Pact.Palantir.Entity.Contact()
                         {
                             Name = item.Name,
@@ -170,7 +174,7 @@ namespace Chiota.ViewModels.Chat
                             PublicKeyAddress = item.PublicKeyAddress,
                             Rejected = !item.Accepted
                         };
-                        chats.Add(new ChatBinding(contact));
+                        chats.Add(new ChatBinding(contact, lastMessage.Message, lastMessage.Date));
                     }
 
 
@@ -195,8 +199,10 @@ namespace Chiota.ViewModels.Chat
                 //Update the chat list.
                 var changed = IsChatListChanged(chats);
                 if (changed)
+                {
                     ChatList = chats;
-
+                    ChatListHeight = chats.Count * ChatItemHeight;
+                }
             });
 
             //If there is an internet connection, try to get the contact requests of the user.
@@ -223,7 +229,7 @@ namespace Chiota.ViewModels.Chat
                         if (RequestList.Count != requests.Count)
                         {
                             RequestList = requests;
-                            RequestListHeight = requests.Count * 64;
+                            RequestListHeight = requests.Count * RequestItemHeight;
                             IsRequestExist = requests.Count > 0;
                         }
                         return;

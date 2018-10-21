@@ -76,9 +76,6 @@ namespace Chiota.ViewModels.Authentication
             base.Init(data);
 
             UserProperties = data as UserCreationProperties;
-
-            // Set the default opacity.
-            ProfileImageSource = ImageSource.FromFile("account.png");
         }
 
         #endregion

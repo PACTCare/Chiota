@@ -39,7 +39,7 @@ namespace Chiota.Models.Binding
             else if (!string.IsNullOrEmpty(Contact.ImagePath))
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
             else
-                ImageSource = ImageSource.FromFile("account.png");
+                ImageSource = null;
         }
 
         #endregion
