@@ -108,6 +108,7 @@
     <Compile Include="Renderer\ChatViewRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />
+    <Compile Include="Services\BackgroundTask.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -117,6 +118,7 @@
     <Compile Include="Converter\Converter.cs" />
     <Compile Include="Services\ImageQrCodeReader.cs" />
     <Compile Include="Services\ImageResizer.cs" />
+    <Compile Include="Services\Notification.cs" />
     <Compile Include="Services\Screenshot.cs" />
     <Compile Include="Services\Share\ShareImplementation.cs" />
   </ItemGroup>
@@ -262,13 +264,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UWPRuntimeComponent\UWPRuntimeComponent.csproj">
-      <Project>{a7fca39f-0fee-4213-b0d8-ea6b7b228e50}</Project>
-      <Name>UWPRuntimeComponent</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Chiota\Chiota.csproj">
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RuntimeComponent.UWP\RuntimeComponent.UWP.csproj">
+      <Project>{64edbc7f-b72b-480b-ae2d-d93b2c19d827}</Project>
+      <Name>RuntimeComponent.UWP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
