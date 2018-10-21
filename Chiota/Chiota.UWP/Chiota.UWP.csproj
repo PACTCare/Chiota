@@ -264,6 +264,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj">
+      <Project>{1b8dabd4-a737-41a4-aabb-5a5d0ecde486}</Project>
+      <Name>Pact.Palantir</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Chiota\Chiota.csproj">
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>
@@ -272,12 +276,6 @@
       <Project>{64edbc7f-b72b-480b-ae2d-d93b2c19d827}</Project>
       <Name>RuntimeComponent.UWP</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Pact.Palantir, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Externals\Pact.Palantir.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
