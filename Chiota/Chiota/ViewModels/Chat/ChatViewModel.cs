@@ -21,16 +21,17 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private const int MessageSize = 32;
+        private const int MessageSize = 64;
 
         private IAsymmetricKeyPair _chatKeyPair;
-        private Address _chatAddress;
-
         private Pact.Palantir.Entity.Contact _contact;
+        private Address _chatAddress;
         private string _message;
         private InfiniteScrollCollection<MessageBinding> _messageList;
         private MessageBinding _lastMessage;
         private ImageSource _keyboardImageSource;
+
+        private int _messageListHeight;
 
         private bool _isBusy;
         private bool _isKeyboardDefault;
@@ -90,6 +91,16 @@ namespace Chiota.ViewModels.Chat
             }
         }
 
+        public int MessageListHeight
+        {
+            get => _messageListHeight;
+            set
+            {
+                _messageListHeight = value;
+                OnPropertyChanged(nameof(MessageListHeight));
+            }
+        }
+
         public bool IsBusy
         {
             get => _isBusy;
@@ -106,6 +117,8 @@ namespace Chiota.ViewModels.Chat
 
         public ChatViewModel()
         {
+            _messageList = new InfiniteScrollCollection<MessageBinding>();
+
             MessageList = new InfiniteScrollCollection<MessageBinding>
             {
                 OnLoadMore = async () =>
@@ -145,14 +158,13 @@ namespace Chiota.ViewModels.Chat
         {
             base.Init(data);
 
-            var contact = (Pact.Palantir.Entity.Contact) data;
-
-            //Set the chat address.
-            _chatAddress = new Address(contact.ChatAddress);
+            if (!(data is Pact.Palantir.Entity.Contact)) return;
 
             //Set the contact property.
-            Contact = contact;
+            Contact = (Pact.Palantir.Entity.Contact)data;
+            _chatAddress = new Address(Contact.ChatAddress);
 
+            //Load the first package of message from the database.
             LoadMessages();
         }
 
@@ -215,12 +227,16 @@ namespace Chiota.ViewModels.Chat
                         messages.Add(new MessageBinding(message.Message, isOwner));
                     }
 
-                    if (MessageList == null || MessageList.Count != messages.Count)
+                    if (MessageList.Count != messages.Count)
                     {
-                        MessageList?.AddRange(messages);
+                        var newMessages = new List<MessageBinding>();
+                        for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
+                        {
+                            newMessages.Add(messages[i]);
+                        }
 
-                        //Scroll to the current message.
-                        //LastMessage = messages[messages.Count - 1];
+                        MessageList.AddRange(newMessages);
+                        MessageListHeight = MessageList.Count * 43;
                     }
                 }
             });

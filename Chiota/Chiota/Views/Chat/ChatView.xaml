@@ -22,13 +22,6 @@
             <converter:MessageDateTimeToDateStringConverter x:Key="DateToString"/>
             <converter:MessageDateTimeToTimeStringConverter x:Key="TimeToString"/>
 
-            <Style x:Key="ImageButton" TargetType="Button">
-                <Setter Property="CornerRadius" Value="16"/>
-                <Setter Property="BackgroundColor" Value="{DynamicResource ButtonColor}"/>
-                <Setter Property="HeightRequest" Value="48"/>
-                <Setter Property="WidthRequest" Value="48"/>
-            </Style>
-
             <Style x:Key="MessageEntry" TargetType="Entry">
                 <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -40,8 +33,8 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="4">
-                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" HasUnevenRows="True" CachingStrategy="RecycleElement" SeparatorVisibility="None" Rotation="180">
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="4">
+                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" HasUnevenRows="True" CachingStrategy="RecycleElement" VerticalOptions="StartAndExpand" HeightRequest="{Binding MessageListHeight}" SeparatorVisibility="None" Rotation="180">
                     <ListView.Header>
                         <StackLayout>
                             <Label Text="Loading" IsVisible="{Binding IsBusy}"/>
@@ -73,11 +66,16 @@
                     </ListView.Behaviors>
                 </ListView>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Spacing="2" Padding="2, 0, 2, 2" HorizontalOptions="FillAndExpand" VerticalOptions="End">
-                <Frame Style="{DynamicResource RoundedFrame16}" Padding="8, 0" BackgroundColor="{DynamicResource EntryColor}" HorizontalOptions="FillAndExpand">
+            <StackLayout Orientation="Horizontal" Spacing="2" Padding="2, 0, 2, 4" HorizontalOptions="FillAndExpand" VerticalOptions="End">
+                <Frame Style="{DynamicResource RoundedFrame32}" Padding="8, 0" BackgroundColor="#24000000" HorizontalOptions="FillAndExpand">
                     <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat"/>
                 </Frame>
-                <Button Style="{DynamicResource ImageButton}" Image="send.png" HorizontalOptions="End" Command="{Binding ActionCommand}"/>
+                <Frame Style="{DynamicResource RoundedFrame32}" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="End" HeightRequest="48" WidthRequest="48">
+                    <Image Source="send.png" HeightRequest="20" WidthRequest="20" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ActionCommand}"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
