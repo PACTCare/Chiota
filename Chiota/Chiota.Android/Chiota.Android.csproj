@@ -63,6 +63,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
+    <Reference Include="Pact.Palantir, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Externals\Pact.Palantir.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -187,10 +191,6 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\image_splash_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj">
-      <Project>{145bec83-c563-4778-b745-cd81094db1da}</Project>
-      <Name>Pact.Palantir</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Chiota\Chiota.csproj">
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>

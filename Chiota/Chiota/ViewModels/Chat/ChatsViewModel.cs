@@ -120,7 +120,7 @@ namespace Chiota.ViewModels.Chat
             base.ViewIsAppearing();
 
             _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
+            Device.StartTimer(TimeSpan.FromSeconds(10), UpdateView);
         }
 
         #endregion
