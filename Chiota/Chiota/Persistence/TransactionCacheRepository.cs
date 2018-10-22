@@ -15,24 +15,21 @@ namespace Chiota.Persistence
 
         #region Flush
 
-        public Task FlushAsync()
+        public async Task FlushAsync()
         {
-            var task = Task.Run(() =>
+            await Task.Run(() =>
             {
                 DatabaseService.TransactionCache.DeleteObjects();
             });
-            task.Wait();
-
-            return task;
         }
 
         #endregion
 
         #region SaveTransaction
 
-        public Task SaveTransactionAsync(TransactionCacheItem item)
+        public async Task SaveTransactionAsync(TransactionCacheItem item)
         {
-            var task = Task.Run(() =>
+            await Task.Run(() =>
             {
                 var transactionCache = new DbTransactionCache()
                 {
@@ -42,18 +39,15 @@ namespace Chiota.Persistence
                 };
                 DatabaseService.TransactionCache.AddObject(transactionCache);
             });
-            task.Wait();
-
-            return task;
         }
 
         #endregion
 
         #region LoadTransactionsByAddress
 
-        public Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
+        public async Task<List<TransactionCacheItem>> LoadTransactionsByAddressAsync(Address address)
         {
-            var task = Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -78,9 +72,6 @@ namespace Chiota.Persistence
                     return new List<TransactionCacheItem>();
                 }
             });
-            task.Wait();
-
-            return task;
         }
 
         #endregion

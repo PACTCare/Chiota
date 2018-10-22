@@ -26,9 +26,9 @@ namespace Chiota.Persistence
 
         #region AddContact
 
-        public override Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
+        public override async Task AddContactAsync(string address, bool accepted, string publicKeyAddress)
         {
-            var task = Task.Run(() =>
+            await Task.Run(() =>
             {
                 var contact = new DbContact()
                 {
@@ -39,18 +39,15 @@ namespace Chiota.Persistence
 
                 DatabaseService.Contact.AddObject(contact);
             });
-            task.Wait();
-
-            return task;
         }
 
         #endregion
 
         #region LoadContacts
 
-        public override Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
+        public override async Task<List<Contact>> LoadContactsAsync(string publicKeyAddress)
         {
-            var task = Task.Run(() =>
+            return await Task.Run(() =>
             {
                 try
                 {
@@ -73,9 +70,6 @@ namespace Chiota.Persistence
                     return new List<Contact>();
                 }
             });
-            task.Wait();
-
-            return task;
         }
 
         #endregion
