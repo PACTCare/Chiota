@@ -1,4 +1,7 @@
-﻿namespace Chiota.Droid
+﻿using Android.Runtime;
+using ImageCircle.Forms.Plugin.Droid;
+
+namespace Chiota.Droid
 {
     using Android.App;
     using Android.App.Job;
@@ -10,14 +13,12 @@
     using Chiota.Droid.Services;
     using Chiota.Services.DependencyInjection;
 
-    using ImageCircle.Forms.Plugin.Droid;
-
     using Plugin.CurrentActivity;
     using Plugin.Permissions;
 
     using Xamarin.Forms;
 
-    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private JobScheduler jobScheduler;
@@ -26,6 +27,9 @@
         {
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -41,16 +45,14 @@
 
             // https://docs.microsoft.com/de-de/xamarin/xamarin-forms/internals/fast-renderers
             Forms.SetFlags("FastRenderers_Experimental");
+            Xamarin.Essentials.Platform.Init(this, bundle);
             Rg.Plugins.Popup.Popup.Init(this, bundle);
             Forms.Init(this, bundle);
+            ImageCircleRenderer.Init();
 
             this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);
 
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
-            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(true);
-
-            ImageCircleRenderer.Init();
 
             this.LoadApplication(new App());
             this.WireUpLongRunningTask();

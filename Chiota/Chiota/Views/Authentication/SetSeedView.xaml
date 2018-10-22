@@ -3,32 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
-             xmlns:validations="clr-namespace:Chiota.Controls.Validations;assembly=Chiota"
              x:Class="Chiota.Views.Authentication.SetSeedView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:validation="clr-namespace:Chiota.Behaviors.Validation;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance authentication:SetSeedViewModel}"
              Title="{extensions:Translate CmnSetSeed}">
-
-    <ContentPage.BindingContext>
-      <authentication:SetSeedViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescSetSeed}"/>
                     </StackLayout>
-
-                    <StackLayout VerticalOptions="CenterAndExpand">
-                        <!--<Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
-                            <Entry Style="{DynamicResource Entry16}" />
-                        </Frame>-->
-                        <validations:SeedValidationEntry Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgScanQrCode}" WidthRequest="256" Command="{Binding ScanQrCodeCommand}"/>
+                    <StackLayout HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="32, 0, 0, 0">
+                        <StackLayout Orientation="Horizontal" Spacing="8">
+                            <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}">
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Seed}" Placeholder="{extensions:Translate DlgSeed}" WidthRequest="256" Keyboard="{Binding Keyboard}" ReturnCommand="{Binding ContinueCommand}">
+                                    <Entry.Behaviors>
+                                        <validation:SeedValidationBehavior Command="{Binding IsValidCommand}"/>
+                                        <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </Frame>
+                            <Image HeightRequest="24" WidthRequest="24" Source="{Binding ValidationImageSource}"/>
+                        </StackLayout>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgScanQrCode}" WidthRequest="256" Command="{Binding ScanQrCodeCommand}" Margin="0, 0, 32, 0"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

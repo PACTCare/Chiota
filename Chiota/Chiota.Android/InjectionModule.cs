@@ -1,10 +1,10 @@
-﻿namespace Chiota.Droid
+﻿using Chiota.Persistence;
+
+namespace Chiota.Droid
 {
   using Autofac;
 
-  using Chiota.Droid.Persistence;
   using Chiota.Droid.Services;
-  using Chiota.Persistence;
   using Chiota.Services;
 
   using Pact.Palantir.Cache;
@@ -18,13 +18,8 @@
     {
       builder.RegisterType<ClipboardService>().As<IClipboardService>();
 
-      // This lines will be merged soon
-      builder.RegisterType<SqlLiteTransactionCache>().As<ITransactionCache>();
-      builder.RegisterType<SqlLiteTransactionCache>().As<AbstractSqlLiteTransactionCache>();
-
-      // This lines will be merged soon
-      builder.RegisterType<SqlLiteContactRepository>().As<IContactRepository>().PropertiesAutowired();
-      builder.RegisterType<SqlLiteContactRepository>().As<AbstractSqlLiteContactRepository>().PropertiesAutowired();
-    }
+        builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
+        builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
+        }
   }
 }

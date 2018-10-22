@@ -1,29 +1,36 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Chiota.Annotations;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services;
+using Chiota.Services.DependencyInjection;
+using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views;
-
-using Plugin.FilePicker;
-
+using Chiota.Views.Authentication;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
 {
-  public class SetUserViewModel : BaseViewModel
+    public class SetUserViewModel : BaseViewModel
     {
         #region Attributes
 
         private string name;
-        private double profileImageOpacity;
+        private bool _isEntryFocused;
         private ImageSource profileImageSource;
+        private byte[] imageBuffer;
 
-        private UserCreationProperties UserProperties;
-        private UserService UserService;
+        private static UserCreationProperties UserProperties;
 
         #endregion
 
@@ -31,41 +38,32 @@ namespace Chiota.ViewModels.Authentication
 
         public string Name
         {
-            get => this.name;
+            get => name;
             set
             {
-                this.name = value;
-                this.OnPropertyChanged(nameof(this.Name));
+                name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
-        
-        public double ProfileImageOpacity
+
+        public bool IsEntryFocused
         {
-            get => this.profileImageOpacity;
+            get => _isEntryFocused;
             set
             {
-                this.profileImageOpacity = value;
-                this.OnPropertyChanged(nameof(this.ProfileImageOpacity));
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
             }
         }
 
         public ImageSource ProfileImageSource
         {
-            get => this.profileImageSource;
+            get => profileImageSource;
             set
             {
-                this.profileImageSource = value;
-                this.OnPropertyChanged(nameof(this.ProfileImageSource));
+                profileImageSource = value;
+                OnPropertyChanged(nameof(ProfileImageSource));
             }
-        }
-
-        #endregion
-
-        #region Constructors
-
-        public SetUserViewModel(UserService userService)
-        {
-            this.UserService = userService;
         }
 
         #endregion
@@ -77,11 +75,7 @@ namespace Chiota.ViewModels.Authentication
         {
             base.Init(data);
 
-            this.UserProperties = data as UserCreationProperties;
-
-            // Set the default opacity.
-            this.ProfileImageSource = ImageSource.FromFile("account.png");
-            this.ProfileImageOpacity = 0.6;
+            UserProperties = data as UserCreationProperties;
         }
 
         #endregion
@@ -93,8 +87,12 @@ namespace Chiota.ViewModels.Authentication
         {
             base.ViewIsAppearing();
 
-            // Clear the user inputs.
-            this.Name = string.Empty;
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
 
         #endregion
@@ -110,17 +108,28 @@ namespace Chiota.ViewModels.Authentication
                 return new Command(async () =>
                     {
                         // Open the file explorer of the device and the user choose a image.
-                        var fileData = await CrossFilePicker.Current.PickFile();
-                        if (fileData == null)
-                        {
+                        await CrossMedia.Current.Initialize();
+
+                        if (!CrossMedia.Current.IsPickPhotoSupported)
                             return;
-                        }
+
+                        //Take an image.
+                        var media = await CrossMedia.Current.PickPhotoAsync();
+
+                        if (media?.Path == null)
+                            return;
+
+                        //Resize the image.
+                        var stream = media.GetStream();
+                        var buffer = new byte[stream.Length];
+                        stream.Read(buffer, 0, buffer.Length);
+
+                        imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
 
                         try
                         {
                             // Load the image.
-                            this.ProfileImageSource = ImageSource.FromStream(() => fileData.GetStream());
-                            this.ProfileImageOpacity = 1;
+                            ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(imageBuffer));
                         }
                         catch (Exception)
                         {
@@ -140,18 +149,18 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                     {
-                        if (string.IsNullOrEmpty(this.Name))
+                        if (string.IsNullOrEmpty(Name))
                         {
                             await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
                             return;
                         }
 
-                        await this.DisplayLoadingSpinnerAsync("Setting up your account");
-                        this.UserProperties.Name = this.Name;
-                        await this.UserService.CreateNew(this.UserProperties);
-                        await this.PopPopupAsync();
+                        UserProperties.Name = Name;
 
-                        Application.Current.MainPage = new NavigationPage(new ContactView());
+                        if(imageBuffer != null)
+                            UserProperties.ImageBase64 = Convert.ToBase64String(imageBuffer);
+
+                        await PushAsync<SetPasswordView>(UserProperties);
                     });
             }
         }

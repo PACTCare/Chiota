@@ -1,4 +1,7 @@
-﻿namespace Chiota.Droid.Services
+﻿using Chiota.Services.Database;
+using Xamarin.Essentials;
+
+namespace Chiota.Droid.Services
 {
   using System.Linq;
   using System.Threading.Tasks;
@@ -18,8 +21,6 @@
   using Pact.Palantir.Usecase;
   using Pact.Palantir.Usecase.GetContacts;
 
-  using Plugin.Connectivity;
-
   using Tangle.Net.Entity;
 
   using Resource = Resource;
@@ -34,10 +35,11 @@
 
     private async Task<bool> LookForNewNotifications()
     {
-      if (CrossConnectivity.Current.IsConnected)
+      if (Connectivity.NetworkAccess == NetworkAccess.Internet)
       {
         // seed needs to be stored on device!!
-        if (!SecureStorage.IsUserStored)
+          var isUserStored = DatabaseService.User.IsUserStored();
+        if (!isUserStored)
         {
           return true;
         }

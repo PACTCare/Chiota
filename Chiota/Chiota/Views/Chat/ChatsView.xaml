@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.Chat.ChatsView"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:chat="clr-namespace:Chiota.ViewModels.Chat;assembly=Chiota"
+             xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance chat:ChatsViewModel}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:MessageDateTimeToDateStringConverter x:Key="DateToString"/>
+            <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>
+            <converter:ProfileImageSourceOpacityConverter x:Key="ProfileImageSourceToOpacity"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <ScrollView>
+                    <StackLayout Spacing="0" VerticalOptions="StartAndExpand">
+
+                        <StackLayout BackgroundColor="#16000000" Padding="16, 8" IsVisible="{Binding IsRequestExist}">
+                            <Label Text="Requests" TextColor="#616161"/>
+                        </StackLayout>
+
+                        <!-- Requests -->
+                        <ListView ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding RequestListHeight}" IsVisible="{Binding IsRequestExist}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                                <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                                            </StackLayout>
+
+                                            <StackLayout VerticalOptions="Center" Spacing="2">
+                                                <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
+                                                <Label Style="{DynamicResource Label12}" Text="Tap to answer the contact request." VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                            <ListView.Behaviors>
+                                <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                            </ListView.Behaviors>
+                        </ListView>
+
+                        <StackLayout BackgroundColor="#16000000" Padding="16, 8" IsVisible="{Binding IsRequestExist}">
+                            <Label Text="Chats" TextColor="#616161"/>
+                        </StackLayout>
+
+                        <ListView ItemsSource="{Binding ChatList, Mode=TwoWay}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ChatListHeight}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                                <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
+                                            </StackLayout>
+
+                                            <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
+                                                <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                                                    <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                                    <StackLayout HorizontalOptions="CenterAndExpand"/>
+                                                    <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
+                                                </StackLayout>
+                                                <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                            <ListView.Behaviors>
+                                <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                            </ListView.Behaviors>
+                        </ListView>
+
+                    </StackLayout>
+                </ScrollView>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="64"/>
+                        <RowDefinition Height="8"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="8"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Frame Grid.Row="1" Grid.Column="1" Style="{DynamicResource RoundedFrame32}" Padding="16" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="{DynamicResource ButtonColor}">
+                        <Image Source="add.png" HeightRequest="32" WidthRequest="32"/>
+
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ContactsCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </Grid>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

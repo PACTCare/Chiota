@@ -1,4 +1,7 @@
-﻿namespace Chiota.UWP
+﻿using Chiota.Services.Database;
+using Xamarin.Essentials;
+
+namespace Chiota.UWP
 {
   using System;
   using System.Linq;
@@ -20,11 +23,12 @@
   using Pact.Palantir.Usecase.GetContacts;
 
   using Tangle.Net.Entity;
+    using Contact = Pact.Palantir.Entity.Contact;
 
-  /// <summary>
-  /// The main page.
-  /// </summary>
-  public sealed partial class MainPage
+    /// <summary>
+    /// The main page.
+    /// </summary>
+    public sealed partial class MainPage
   {
     private const string BackgroundTaskName = "UWPNotifications";
 
@@ -32,9 +36,7 @@
     {
       this.InitializeComponent();
 
-      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();
-
-      FFImageLoading.Forms.Platform.CachedImageRenderer.Init();       
+      ZXing.Net.Mobile.Forms.WindowsUniversal.ZXingScannerViewRenderer.Init();     
       
       this.LoadApplication(new Chiota.App());
 
@@ -71,12 +73,13 @@
 
     private async void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
     {
-      if (!SecureStorage.IsUserStored)
+        var isUserStored = DatabaseService.User.IsUserStored();
+            if (!isUserStored)
       {
         return;
       }
 
-      var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
+            var interactor = DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>();
       var response = await interactor.ExecuteAsync(
                        new GetContactsRequest
                          {

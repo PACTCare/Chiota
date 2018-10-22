@@ -120,17 +120,32 @@
   <data name="CmnBackUp" xml:space="preserve">
     <value>Back up</value>
   </data>
+  <data name="CmnChats" xml:space="preserve">
+    <value>Chats</value>
+  </data>
   <data name="CmnConfirmSeed" xml:space="preserve">
     <value>Confirm seed</value>
   </data>
+  <data name="CmnContacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
   <data name="CmnHelp" xml:space="preserve">
     <value>Help</value>
+  </data>
+  <data name="CmnLogOut" xml:space="preserve">
+    <value>Log out</value>
   </data>
   <data name="CmnNewSeed" xml:space="preserve">
     <value>New seed</value>
   </data>
   <data name="CmnPrintPaperCopy" xml:space="preserve">
     <value>Print paper copy</value>
+  </data>
+  <data name="CmnPrivacyPolicy" xml:space="preserve">
+    <value>Open Privacy Policy</value>
+  </data>
+  <data name="CmnProfile" xml:space="preserve">
+    <value>Profile</value>
   </data>
   <data name="CmnQrCode" xml:space="preserve">
     <value>QR code</value>
@@ -140,6 +155,9 @@
   </data>
   <data name="CmnSetSeed" xml:space="preserve">
     <value>Set seed</value>
+  </data>
+  <data name="CmnSettings" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="CmnSetUser" xml:space="preserve">
     <value>Set user</value>
@@ -160,7 +178,7 @@
     <value>Please confirm your seed.</value>
   </data>
   <data name="DlgDescLogIn" xml:space="preserve">
-    <value>Log in with your password or switch the account by setting a seed or generating a new one.</value>
+    <value>Log in with your password.</value>
   </data>
   <data name="DlgDescNewSeed" xml:space="preserve">
     <value>Press the button to generate a new seed. Click single characters of the seed to change them individually.</value>
@@ -190,7 +208,7 @@
     <value>Please write your seed down and keep it safe.</value>
   </data>
   <data name="DlgGenerateSeed" xml:space="preserve">
-    <value>Generate new seed</value>
+    <value>New seed</value>
   </data>
   <data name="DlgGotIt" xml:space="preserve">
     <value>Got it</value>
@@ -245,5 +263,50 @@
   </data>
   <data name="DlgWriteSeedDown" xml:space="preserve">
     <value>Write seed down</value>
+  </data>
+  <data name="CmnAddContact" xml:space="preserve">
+    <value>Add contact</value>
+  </data>
+  <data name="CmnContactAddress" xml:space="preserve">
+    <value>Contact address</value>
+  </data>
+  <data name="DlgHelpContactAddress" xml:space="preserve">
+    <value>What is a contact address?</value>
+  </data>
+  <data name="DlgSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="CmnEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="CmnAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="DlgAccept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="DlgDecline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="CmnContactRequest" xml:space="preserve">
+    <value>Contact request</value>
+  </data>
+  <data name="DlgMessage" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="DlgSettingUpAccount" xml:space="preserve">
+    <value>Setting up your account</value>
+  </data>
+  <data name="DlgLoggingIn" xml:space="preserve">
+    <value>Logging you in</value>
+  </data>
+  <data name="DlgAddContact" xml:space="preserve">
+    <value>Adding contact</value>
+  </data>
+  <data name="CmnSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="CmnNewContact" xml:space="preserve">
+    <value>New Contact</value>
   </data>
 </root>

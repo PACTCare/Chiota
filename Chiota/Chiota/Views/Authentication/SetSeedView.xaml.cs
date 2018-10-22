@@ -1,14 +1,14 @@
 ﻿namespace Chiota.Views.Authentication
 {
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class SetSeedView : ContentPage
-  {
-    public SetSeedView()
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SetSeedView : ContentPage
     {
-      this.InitializeComponent();
+        public SetSeedView()
+        {
+            InitializeComponent();
+        }
     }
-  }
 }

@@ -1,10 +1,14 @@
-﻿using System.Windows.Input;
-
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services.DependencyInjection;
+using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -17,8 +21,9 @@ namespace Chiota.ViewModels.Authentication
 
         private string password;
         private string repeatPassword;
+        private bool _isEntryFocused;
 
-        private UserCreationProperties UserProperties;
+        private static UserCreationProperties userProperties;
 
         #endregion
 
@@ -26,21 +31,31 @@ namespace Chiota.ViewModels.Authentication
 
         public string Password
         {
-            get => this.password;
+            get => password;
             set
             {
-                this.password = value;
-                this.OnPropertyChanged(nameof(this.Password));
+                password = value;
+                OnPropertyChanged(nameof(Password));
             }
         }
 
         public string RepeatPassword
         {
-            get => this.repeatPassword;
+            get => repeatPassword;
             set
             {
-                this.repeatPassword = value;
-                this.OnPropertyChanged(nameof(this.RepeatPassword));
+                repeatPassword = value;
+                OnPropertyChanged(nameof(RepeatPassword));
+            }
+        }
+
+        public bool IsEntryFocused
+        {
+            get => _isEntryFocused;
+            set
+            {
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
             }
         }
 
@@ -52,7 +67,7 @@ namespace Chiota.ViewModels.Authentication
         public override void Init(object data = null)
         {
             base.Init(data);
-            this.UserProperties = data as UserCreationProperties;
+            userProperties = data as UserCreationProperties;
         }
 
         #endregion
@@ -65,8 +80,15 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Password = string.Empty;
-            this.RepeatPassword = string.Empty;
+            Password = string.Empty;
+            RepeatPassword = string.Empty;
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
 
         #endregion
@@ -82,18 +104,37 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                     {
-                        if (string.IsNullOrEmpty(this.Password) || string.IsNullOrEmpty(this.RepeatPassword))
+                        if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword))
                         {
                             await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputPasswordRepeat).ShowAlertAsync();
                         }
-                        else if (this.Password != this.RepeatPassword)
+                        else if (Password != RepeatPassword)
                         {
                             await new AuthFailedPasswordConfirmationException(new ExcInfo()).ShowAlertAsync();
                             return;
                         }
 
-                        this.UserProperties.Password = this.Password;
-                        await this.PushAsync(new SetUserView(), this.UserProperties);
+                        userProperties.Password = Password;
+
+                        await PushLoadingSpinnerAsync(AppResources.DlgSettingUpAccount);
+
+                        //Send the image to ipfs by base64 string.
+                        if(userProperties.ImageBase64 != null)
+                            userProperties.ImagePath = await new IpfsHelper().PostStringAsync(userProperties.ImageBase64);
+
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        var result = await userService.CreateNew(userProperties);
+
+                        await PopPopupAsync();
+
+                        if (!result)
+                        {
+                            await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                            AppBase.ShowStartUp();
+                            return;
+                        }
+
+                        AppBase.ShowMessenger();
                     });
             }
         }

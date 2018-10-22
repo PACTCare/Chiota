@@ -1,4 +1,7 @@
-﻿namespace Chiota.Services.DependencyInjection
+﻿using Chiota.Services.Database;
+using Chiota.ViewModels.Base;
+
+namespace Chiota.Services.DependencyInjection
 {
   using System;
   using System.Collections.Generic;
@@ -8,7 +11,6 @@
 
   using Chiota.Services.Iota;
   using Chiota.Services.UserServices;
-  using Chiota.ViewModels.Classes;
 
   using Pact.Palantir.Encryption;
   using Pact.Palantir.Service;
@@ -21,7 +23,6 @@
   using Pact.Palantir.Usecase.GetContacts;
   using Pact.Palantir.Usecase.GetMessages;
   using Pact.Palantir.Usecase.SendMessage;
-
   using Tangle.Net.Cryptography;
   using Tangle.Net.Cryptography.Curl;
   using Tangle.Net.Cryptography.Signing;
@@ -43,6 +44,7 @@
       var builder = new ContainerBuilder();
 
       builder.RegisterModule(new ViewModelInjectionModule());
+
       foreach (var module in Modules)
       {
         builder.RegisterModule(module);

@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-
-using Chiota.Models.BackUp;
-using Chiota.ViewModels.Classes;
-
+using Chiota.Models;
+using Chiota.Models.Binding;
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.BackUp
@@ -16,7 +15,7 @@ namespace Chiota.ViewModels.BackUp
         private bool isSeedViewVisible;
         private bool isUpVisible;
 
-        private Seed seed;
+        private SeedBinding seed;
         private int seedLinePointer;
         private Thickness seedViewPadding;
         private ObservableCollection<View> visibleSeedLines;
@@ -27,51 +26,51 @@ namespace Chiota.ViewModels.BackUp
 
         public bool IsDownVisible
         {
-            get => this.isDownVisible;
+            get => isDownVisible;
             set
             {
-                this.isDownVisible = value;
-                this.OnPropertyChanged(nameof(this.IsDownVisible));
+                isDownVisible = value;
+                OnPropertyChanged(nameof(IsDownVisible));
             }
         }
 
         public bool IsSeedViewVisible
         {
-            get => this.isSeedViewVisible;
+            get => isSeedViewVisible;
             set
             {
-                this.isSeedViewVisible = value;
-                this.OnPropertyChanged(nameof(this.IsSeedViewVisible));
+                isSeedViewVisible = value;
+                OnPropertyChanged(nameof(IsSeedViewVisible));
             }
         }
 
         public bool IsUpVisible
         {
-            get => this.isUpVisible;
+            get => isUpVisible;
             set
             {
-                this.isUpVisible = value;
-                this.OnPropertyChanged(nameof(this.IsUpVisible));
+                isUpVisible = value;
+                OnPropertyChanged(nameof(IsUpVisible));
             }
         }
 
         public Thickness SeedViewPadding
         {
-            get => this.seedViewPadding;
+            get => seedViewPadding;
             set
             {
-                this.seedViewPadding = value;
-                this.OnPropertyChanged(nameof(this.SeedViewPadding));
+                seedViewPadding = value;
+                OnPropertyChanged(nameof(SeedViewPadding));
             }
         }
 
         public ObservableCollection<View> VisibleSeedLines
         {
-            get => this.visibleSeedLines;
+            get => visibleSeedLines;
             set
             {
-                this.visibleSeedLines = value;
-                this.OnPropertyChanged(nameof(this.VisibleSeedLines));
+                visibleSeedLines = value;
+                OnPropertyChanged(nameof(VisibleSeedLines));
             }
         }
 
@@ -81,17 +80,17 @@ namespace Chiota.ViewModels.BackUp
 
         public override void Init(object data = null)
         {
-            this.SeedViewPadding = new Thickness(0, 36, 0, 0);
+            SeedViewPadding = new Thickness(0, 36, 0, 0);
 
             // Reset view.
-            this.seedLinePointer = 0;
-            this.IsUpVisible = false;
-            this.IsDownVisible = true;
+            seedLinePointer = 0;
+            IsUpVisible = false;
+            IsDownVisible = true;
 
             // Set a new generated seed.
-            this.seed = new Seed(data as string);
-            this.UpdateSeedView();
-            this.IsSeedViewVisible = true;
+            seed = new SeedBinding(data as string);
+            UpdateSeedView();
+            IsSeedViewVisible = true;
 
             base.Init(data);
         }
@@ -108,25 +107,25 @@ namespace Chiota.ViewModels.BackUp
             {
                 return new Command(() =>
                     {
-                        if (this.seedLinePointer > 8)
+                        if (seedLinePointer > 8)
                         {
                             return;
                         }
 
-                        this.seedLinePointer++;
-                        this.IsUpVisible = true;
+                        seedLinePointer++;
+                        IsUpVisible = true;
 
-                        if (this.seedLinePointer == 8)
+                        if (seedLinePointer == 8)
                         {
-                            this.IsDownVisible = false;
-                            this.SeedViewPadding = new Thickness(0, 0, 0, 36);
+                            IsDownVisible = false;
+                            SeedViewPadding = new Thickness(0, 0, 0, 36);
                         }
                         else
                         {
-                            this.SeedViewPadding = new Thickness(0);
+                            SeedViewPadding = new Thickness(0);
                         }
 
-                        this.UpdateSeedView();
+                        UpdateSeedView();
                     });
             }
         }
@@ -141,24 +140,24 @@ namespace Chiota.ViewModels.BackUp
             {
                 return new Command(() =>
                     {
-                        if (this.seedLinePointer < 0)
+                        if (seedLinePointer < 0)
                         {
                             return;
                         }
 
-                        this.seedLinePointer--;
-                        this.IsDownVisible = true;
-                        if (this.seedLinePointer == 0)
+                        seedLinePointer--;
+                        IsDownVisible = true;
+                        if (seedLinePointer == 0)
                         {
-                            this.IsUpVisible = false;
-                            this.SeedViewPadding = new Thickness(0, 36, 0, 0);
+                            IsUpVisible = false;
+                            SeedViewPadding = new Thickness(0, 36, 0, 0);
                         }
                         else
                         {
-                            this.SeedViewPadding = new Thickness(0);
+                            SeedViewPadding = new Thickness(0);
                         }
 
-                        this.UpdateSeedView();
+                        UpdateSeedView();
                     });
             }
         }
@@ -167,7 +166,7 @@ namespace Chiota.ViewModels.BackUp
 
         #region Continue
 
-        public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
+        public ICommand ContinueCommand => new Command(async () => { await PopAsync(); });
 
         #endregion
 
@@ -184,26 +183,26 @@ namespace Chiota.ViewModels.BackUp
         private void UpdateSeedView()
         {
             var enabledPointer = 1;
-            if (this.seedLinePointer == 0)
+            if (seedLinePointer == 0)
             {
                 enabledPointer = 0;
             }
-            else if (this.seedLinePointer == 8)
+            else if (seedLinePointer == 8)
             {
                 enabledPointer = 2;
             }
 
             var visibleIndex = 0;
-            if (this.seedLinePointer > 1 && this.seedLinePointer <= 6)
+            if (seedLinePointer > 1 && seedLinePointer <= 6)
             {
-                visibleIndex = this.seedLinePointer - 1;
+                visibleIndex = seedLinePointer - 1;
             }
-            else if (this.seedLinePointer > 6)
+            else if (seedLinePointer > 6)
             {
                 visibleIndex = 6;
             }
 
-            var seedLines = this.seed.Lines.GetRange(visibleIndex, 3);
+            var seedLines = seed.Lines.GetRange(visibleIndex, 3);
             var tmp = new ObservableCollection<View>();
 
             for (var i = 0; i < seedLines.Count; i++)
@@ -254,7 +253,7 @@ namespace Chiota.ViewModels.BackUp
             }
 
             // Set the new one.
-            this.VisibleSeedLines = tmp;
+            VisibleSeedLines = tmp;
         }
 
         #endregion

@@ -6,37 +6,39 @@
              xmlns:common="clr-namespace:ZXing.Common;assembly=zxing.portable"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.BackUp.QrCodeView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance backUp:QrCodeViewModel}"
              Title="{extensions:Translate CmnQrCode}">
-
-    <ContentPage.BindingContext>
-      <backUp:QrCodeViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescQrCode}"/>
                     </StackLayout>
 
-                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#321d4999" HorizontalOptions="Center" VerticalOptions="Center" Padding="16">
+                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#000000" HorizontalOptions="Center" VerticalOptions="Center" Padding="4">
                         <forms:ZXingBarcodeImageView
                             BarcodeFormat="QR_CODE"
                             BarcodeValue="{Binding Seed}"
-                            HeightRequest="150" 
-                            WidthRequest="150"
+                            HeightRequest="196" 
+                            WidthRequest="196"
                             HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand">
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="{DynamicResource BackgroundColor}">
                             <forms:ZXingBarcodeImageView.BarcodeOptions>
-                                <common:EncodingOptions Width="140" Height="140"  />
+                                <common:EncodingOptions Width="196" Height="196"  />
                             </forms:ZXingBarcodeImageView.BarcodeOptions>
                         </forms:ZXingBarcodeImageView>
                     </Frame>
+
                 </StackLayout>
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">

@@ -28,7 +28,7 @@ namespace Chiota.Droid.Renderer
 
             if (Control == null) return;
 
-            OnColor = e.NewElement.OnColor.ToAndroid();
+            //OnColor = e.NewElement.OnColor.ToAndroid();
 
             if (Control.Checked)
                 Control.ThumbDrawable.SetColorFilter(OnColor, PorterDuff.Mode.SrcAtop);

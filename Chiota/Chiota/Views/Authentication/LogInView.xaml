@@ -3,20 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
              x:Class="Chiota.Views.Authentication.LogInView"
-             NavigationPage.HasNavigationBar="False">
-
-    <ContentPage.BindingContext>
-      <authentication:LogInViewModel/>
-    </ContentPage.BindingContext>
+             NavigationPage.HasNavigationBar="False"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance authentication:LogInViewModel}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescLogIn}"/>
@@ -25,31 +26,22 @@
                     <StackLayout VerticalOptions="Center" Spacing="32">
                         <StackLayout Spacing="8">
                             <Frame Style="{DynamicResource RoundedFrame8}" WidthRequest="256" BackgroundColor="{DynamicResource EntryColor}">
-                              <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True"/>
+                                <Entry Style="{DynamicResource Entry16}" Text="{Binding Password}" Placeholder="{extensions:Translate DlgPassword}" IsPassword="True" ReturnCommand="{Binding LogInCommand}">
+                                    <Entry.Behaviors>
+                                        <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>
+                                    </Entry.Behaviors>
+                                </Entry>
                             </Frame>
                             <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgLogIn}" WidthRequest="256" Command="{Binding LogInCommand}"/>
                         </StackLayout>
 
-                        <Label Text="Open Privacy Policy" 
-                               Style="{DynamicResource Label14}"
-                               HorizontalOptions="Center">
-                          <Label.GestureRecognizers>
-                          <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
-                        </Label.GestureRecognizers>
-                        </Label>
-
-                        <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgHelpSeed}" HorizontalOptions="Center" Opacity="0.6">
+                        <Label Text="{extensions:Translate CmnPrivacyPolicy}" Style="{DynamicResource Label14}" HorizontalOptions="Center">
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SeedHelpCommand}"/>
+                                <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
-          </StackLayout>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSetSeed}" WidthRequest="128" Command="{Binding SetSeedCommand}"/>
-                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgNewSeed}" WidthRequest="128" Command="{Binding NewSeedCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -38,7 +38,7 @@
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Frame Style="{DynamicResource PopupFrame}">
                 <StackLayout Style="{DynamicResource PopupLayout}">
-                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource PopupLabel16}" HorizontalOptions="Center"/>
+                    <Label Text="{Binding PopupModel.Title}" Style="{DynamicResource PopupLabel16}" WidthRequest="256" HorizontalTextAlignment="Center" HorizontalOptions="Center" LineBreakMode="WordWrap"/>
                     <Frame Style="{DynamicResource PopupEntryFrame}">
                         <Entry Style="{DynamicResource Entry16}" Placeholder="{Binding PopupModel.Placeholder}" IsPassword="{Binding PopupModel.IsPassword}" Text="{Binding PopupModel.ResultText}"/>
                     </Frame>

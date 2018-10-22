@@ -46,7 +46,7 @@
     public RestIotaRepository Create(int roundNumber = 0)
     {
       var appSettings = ApplicationSettings.Load();
-      this.nodeUriList.Insert(0, appSettings.IotaNodeUri);
+      nodeUriList.Insert(0, appSettings.IotaNodeUri);
 
       var iotaClient = new FallbackIotaClient(this.nodeUriList, 5000);
 

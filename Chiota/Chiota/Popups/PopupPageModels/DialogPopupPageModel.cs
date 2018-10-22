@@ -1,77 +1,72 @@
 ﻿namespace Chiota.Popups.PopupPageModels
 {
-  using System.Windows.Input;
+    using System.Windows.Input;
 
-  using Chiota.Popups.Classes;
-  using Chiota.Popups.PopupModels;
+    using Chiota.Popups.Classes;
+    using Chiota.Popups.PopupModels;
 
-  using Xamarin.Forms;
+    using Xamarin.Forms;
 
-  public class DialogPopupPageModel : BasePopupPageModel<DialogPopupModel>
-  {
-    public DialogPopupPageModel()
-      : base()
+    public class DialogPopupPageModel : BasePopupPageModel<DialogPopupModel>
     {
-    }
+        public DialogPopupPageModel()
+          : base()
+        {
+        }
 
-    public DialogPopupPageModel(DialogPopupModel popupModel)
-      : base(popupModel)
-    {
-      if (this.PopupModel.IsNegButtonDefault)
-      {
-        this.NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
-        this.PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
-        return;
-      }
-
-      this.NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
-      this.PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
-    }
-
-    public Color NegButtonColor { get; set; }
-
-    /// <summary>
-    /// Cancel method of the popup
-    /// </summary>
-    public ICommand NegCommand
-    {
-      get
-      {
-        return new Command(
-          async () =>
+        public DialogPopupPageModel(DialogPopupModel popupModel)
+          : base(popupModel)
+        {
+            if (PopupModel.IsNegButtonDefault)
             {
-              this.PopupModel.Result = false;
-              this.PopupModel.ResultText = string.Empty;
+                NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+                PosButtonColor = (Color)Application.Current.Resources["FadedColor"];
+                return;
+            }
 
-              this.Finish = true;
-              await this.PopPopupAsync();
-            });
-      }
-    }
+            NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
+            PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
+        }
 
-    public Color PosButtonColor { get; set; }
+        public Color NegButtonColor { get; set; }
 
-    /// <summary>
-    /// Ok method of the popup.
-    /// </summary>
-    public ICommand PosCommand
-    {
-      get
-      {
-        return new Command(
-          async () =>
+        /// <summary>
+        /// Cancel method of the popup
+        /// </summary>
+        public ICommand NegCommand
+        {
+            get
             {
-              this.PopupModel.Result = true;
-              await this.PopPopupAsync();
+                return new Command(
+                  async () =>
+                    {
+                        PopupModel.Result = false;
+                        PopupModel.ResultText = string.Empty;
 
-              if (this.PopupModel.OkCallback != null)
-              {
-                await this.PopupModel.OkCallback(this.PopupModel.ResultText);
-              }
+                        Finish = true;
+                        await PopPopupAsync();
+                    });
+            }
+        }
 
-              this.Finish = true;
-            });
-      }
+        public Color PosButtonColor { get; set; }
+
+        /// <summary>
+        /// Ok method of the popup.
+        /// </summary>
+        public ICommand PosCommand
+        {
+            get
+            {
+                return new Command(
+                  async () =>
+                    {
+                        PopupModel.Result = true;
+
+                        Finish = true;
+                        await PopPopupAsync();
+                    });
+            }
+        }
     }
-  }
 }

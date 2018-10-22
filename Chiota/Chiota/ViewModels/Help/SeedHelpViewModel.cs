@@ -1,7 +1,5 @@
 ﻿using System.Windows.Input;
-
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Help
@@ -12,7 +10,7 @@ namespace Chiota.ViewModels.Help
 
         #region Continue
 
-        public ICommand ContinueCommand => new Command(async () => { await this.PopAsync(); });
+        public ICommand ContinueCommand => new Command(async () => { await PopAsync(); });
 
         #endregion
 

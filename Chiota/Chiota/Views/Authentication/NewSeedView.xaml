@@ -4,14 +4,14 @@
              xmlns:authentication="clr-namespace:Chiota.ViewModels.Authentication;assembly=Chiota"
              xmlns:bindable="clr-namespace:Chiota.Controls.Bindable;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
              x:Class="Chiota.Views.Authentication.NewSeedView"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance authentication:NewSeedViewModel}"
              Title="{extensions:Translate CmnNewSeed}">
-
-    <ContentPage.BindingContext>
-      <authentication:NewSeedViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -26,15 +26,15 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
+            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand" Spacing="8">
                 <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="16">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescNewSeed}"/>
                     </StackLayout>
 
-                    <StackLayout VerticalOptions="CenterAndExpand" IsVisible="{Binding IsSeedViewVisible}">
+                    <StackLayout VerticalOptions="CenterAndExpand">
                         <StackLayout VerticalOptions="Center" Spacing="16">
                             <StackLayout Spacing="4" Padding="{Binding SeedViewPadding}">
                                 <Button Style="{DynamicResource ArrowButton}" Image="arrow_up.png" HorizontalOptions="Center" VerticalOptions="Start" IsVisible="{Binding IsUpVisible}" Command="{Binding UpCommand}"/>
@@ -50,9 +50,9 @@
                     </StackLayout>
                 </StackLayout>
 
-                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGenerateSeed}" WidthRequest="256"  Command="{Binding GenerateSeedCommand}"/>
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="256" Command="{Binding ContinueCommand}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgGenerateSeed}" WidthRequest="160"  Command="{Binding GenerateSeedCommand}"/>
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgContinue}" WidthRequest="160" Command="{Binding ContinueCommand}"/>
                 </StackLayout>
             </StackLayout>
         </StackLayout>

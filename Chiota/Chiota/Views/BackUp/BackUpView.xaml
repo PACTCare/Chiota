@@ -4,14 +4,14 @@
              xmlns:backUp="clr-namespace:Chiota.ViewModels.BackUp;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.BackUp.BackUpView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance backUp:BackUpViewModel}"
              NavigationPage.HasBackButton="False"
              Title="{extensions:Translate CmnBackUp}">
-
-    <ContentPage.BindingContext>
-      <backUp:BackUpViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Resources>
 
@@ -27,8 +27,8 @@
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="24">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="16">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="8" Margin="0, 8, 0, 0">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgDescBackUp}"/>
@@ -40,8 +40,8 @@
                         <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgWriteSeedDown}" FontAttributes="Bold" Command="{Binding WriteSeedCommand}"/>
                         <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Print paper copy" FontAttributes="Bold" Command="{Binding PrintPaperCommand}"/>-->
-                        <BoxView Style="{DynamicResource BoxViewSeperator}"/>
-                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>
+                        <!--<BoxView Style="{DynamicResource BoxViewSeperator}"/>
+                        <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSaveQrCode}" FontAttributes="Bold" Command="{Binding QrCodeCommand}"/>-->
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>
                         <Button Style="{DynamicResource RoundedButton16}" Text="Copy to Clipboard" FontAttributes="Bold" Command="{Binding CopyToClipboardCommand}"/>
                         <BoxView Style="{DynamicResource BoxViewSeperator}"/>

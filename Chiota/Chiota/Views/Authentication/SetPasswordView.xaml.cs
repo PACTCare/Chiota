@@ -1,14 +1,14 @@
 ﻿namespace Chiota.Views.Authentication
 {
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class SetPasswordView : ContentPage
-  {
-    public SetPasswordView()
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SetPasswordView : ContentPage
     {
-      this.InitializeComponent();
+        public SetPasswordView()
+        {
+            InitializeComponent();
+        }
     }
-  }
 }

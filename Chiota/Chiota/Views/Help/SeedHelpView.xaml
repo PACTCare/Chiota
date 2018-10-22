@@ -4,13 +4,13 @@
              xmlns:help="clr-namespace:Chiota.ViewModels.Help"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              x:Class="Chiota.Views.Help.SeedHelpView"
-             xmlns:viewModelBase="clr-namespace:Chiota.ViewModels.Classes;assembly=Chiota"
-             viewModelBase:ViewModelLocator.AutoWireViewModel="true"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance help:SeedHelpViewModel}"
              Title="{extensions:Translate CmnHelp}">
-
-    <ContentPage.BindingContext>
-      <help:SeedHelpViewModel/>
-    </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

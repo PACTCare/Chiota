@@ -1,11 +1,17 @@
-﻿using System.Windows.Input;
-
+﻿using System.Threading.Tasks;
+using System.Windows.Input;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
+using Chiota.Resources.Localizations;
+using Chiota.Services.Database;
+using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
+using Chiota.ViewModels.Base;
 using Chiota.Views;
-
+using Pact.Palantir.Usecase;
+using Pact.Palantir.Usecase.GetContacts;
+using Tangle.Net.Entity;
 using Xamarin.Forms;
 
 namespace Chiota.ViewModels.Authentication
@@ -24,6 +30,7 @@ namespace Chiota.ViewModels.Authentication
         #region Attributes
 
         private string password;
+        private bool _isEntryFocused;
 
         #endregion
 
@@ -31,11 +38,21 @@ namespace Chiota.ViewModels.Authentication
 
         public string Password
         {
-            get => this.password;
+            get => password;
             set
             {
-                this.password = value;
-                this.OnPropertyChanged(nameof(this.Password));
+                password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+
+        public bool IsEntryFocused
+        {
+            get => _isEntryFocused;
+            set
+            {
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
             }
         }
 
@@ -49,8 +66,78 @@ namespace Chiota.ViewModels.Authentication
             base.ViewIsAppearing();
 
             // Clear the user inputs.
-            this.Password = string.Empty;
+            Password = string.Empty;
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
         }
+
+        #endregion
+
+        #region Methods
+
+        #region LoadUserData
+
+        /// <summary>
+        /// Load all user data.
+        /// </summary>
+        /// <returns></returns>
+        private async Task LoadUserDataAsync()
+        {
+            //Load all accepted contacts.
+            var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
+            {
+                RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                KeyPair = UserService.CurrentUser.NtruKeyPair
+            });
+
+            if (response.Code == ResponseCode.Success && response.ApprovedContacts.Count > 0)
+            {
+                //Check, if all the contacts saved in the database and update them, if necessary.
+                foreach (var approved in response.ApprovedContacts)
+                {
+                    var exist = DatabaseService.Contact.GetAcceptedContactByChatAddress(approved.ChatAddress);
+
+                    //Update the contact in the database.
+                    if (exist != null)
+                    {
+                        exist.Name = approved.Name;
+                        exist.ChatKeyAddress = approved.ChatKeyAddress;
+                        exist.ImagePath = approved.ImagePath;
+
+                        //Load the image, if the hash is not empty.
+                        if (!string.IsNullOrEmpty(exist.ImagePath))
+                        {
+                            //exist.ImageBase64
+                        }
+                            
+                        //Update the contact in the database.
+                        DatabaseService.Contact.UpdateObject(exist);
+                    }
+                }
+
+
+                //Load new messages from of the user.
+                /*foreach (var approved in response.ApprovedContacts)
+                {
+                    var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                        new GetMessagesRequest
+                        {
+                            ChatAddress = new Address(approved.ChatAddress),
+                            ChatKeyPair = null,
+                            ChatKeyAddress = new Address(approved.ChatKeyAddress),
+                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
+                        });
+                }*/
+            }
+        }
+
+        #endregion
 
         #endregion
 
@@ -69,16 +156,28 @@ namespace Chiota.ViewModels.Authentication
                     {
                         try
                         {
-                            await this.DisplayLoadingSpinnerAsync("Logging you in ...");
+                            await PushLoadingSpinnerAsync(AppResources.DlgLoggingIn);
 
-                            await SecureStorage.LoginUser(this.Password);
-                            Application.Current.MainPage = new NavigationPage(new ContactView());
+                            var userService = DependencyResolver.Resolve<UserService>();
+                            var result = await userService.LogInAsync(Password);
 
-                            await this.PopPopupAsync();
+                            //Update database, if the log in is successfully.
+                            if (result)
+                                await LoadUserDataAsync();
+
+                            await PopPopupAsync();
+
+                            if (!result)
+                            {
+                                await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
+                                return;
+                            }
+
+                            AppBase.ShowMessenger();
                         }
                         catch (BaseException exception)
                         {
-                            await this.PopPopupAsync();
+                            await PopPopupAsync();
                             await exception.ShowAlertAsync();
                         }
                     });
@@ -87,27 +186,15 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region NewSeed
+        #region Privacy
 
-        public ICommand NewSeedCommand => new Command(async () => { await this.PushAsync(new NewSeedView()); });
-
-        #endregion
-
-        #region SetSeed
-
-        public ICommand SetSeedCommand => new Command(async () => { await this.PushAsync(new SetSeedView()); });
+        public ICommand PrivacyCommand => new Command(() =>
+        {
+            Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md"));
+        });
 
         #endregion
 
-        #region SeedHelp
-
-        public ICommand SeedHelpCommand => new Command(async () => { await this.PushAsync(new SeedHelpView()); });
-
-    #endregion
-
-      [UsedImplicitly]
-      public ICommand PrivacyCommand => new Command(() => { Device.OpenUri(new Uri("https://github.com/Noc2/Chiota/blob/master/PrivacyPolicy.md")); });
-
-    #endregion
-  }
+        #endregion
+    }
 }

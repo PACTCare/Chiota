@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Resources;
-using Chiota.Classes.Localization;
+using Chiota.Services.Localization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

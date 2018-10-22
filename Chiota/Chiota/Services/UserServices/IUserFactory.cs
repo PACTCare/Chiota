@@ -1,4 +1,6 @@
-﻿namespace Chiota.Services.UserServices
+﻿using Chiota.Models.Database;
+
+namespace Chiota.Services.UserServices
 {
   using System.Threading.Tasks;
 
@@ -21,8 +23,8 @@
     /// The name.
     /// </param>
     /// <returns>
-    /// The <see cref="User"/>.
+    /// The <see cref="DbUser"/>.
     /// </returns>
-    Task<User> CreateAsync(Seed seed, string name);
+    Task<DbUser> CreateAsync(Seed seed, string name, string ImagePath, string imageBase64);
   }
 }

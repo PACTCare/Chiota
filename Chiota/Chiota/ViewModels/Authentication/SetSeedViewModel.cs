@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.UserServices;
-using Chiota.ViewModels.Classes;
-
+using Chiota.ViewModels.Base;
 using Tangle.Net.Entity;
 using Tangle.Net.Utils;
 
@@ -21,6 +23,9 @@ namespace Chiota.ViewModels.Authentication
         #region Attributes
 
         private string seed;
+        private bool _isEntryFocused;
+        private ImageSource _validationImageSource;
+        private Keyboard _keyboard;
 
         #endregion
 
@@ -28,30 +33,96 @@ namespace Chiota.ViewModels.Authentication
 
         public string Seed
         {
-            get => this.seed;
+            get => seed;
             set
             {
-                this.seed = value;
-                this.OnPropertyChanged(nameof(this.Seed));
+                seed = value;
+                OnPropertyChanged(nameof(Seed));
+            }
+        }
+
+        public bool IsEntryFocused
+        {
+            get => _isEntryFocused;
+            set
+            {
+                _isEntryFocused = value;
+                OnPropertyChanged(nameof(IsEntryFocused));
+            }
+        }
+
+        public ImageSource ValidationImageSource
+        {
+            get => _validationImageSource;
+            set
+            {
+                _validationImageSource = value;
+                OnPropertyChanged(nameof(ValidationImageSource));
+            }
+        }
+
+        public Keyboard Keyboard
+        {
+            get => _keyboard;
+            set
+            {
+                _keyboard = value;
+                OnPropertyChanged(nameof(Keyboard));
             }
         }
 
         #endregion
 
-        #region ViewAppearing
+        #region Commands
 
-        /// <inheritdoc />
-        protected override void ViewIsAppearing()
+        #region Init
+
+        public override void Init(object data = null)
         {
-            base.ViewIsAppearing();
+            base.Init(data);
 
-            // Clear the user inputs.
-            this.Seed = string.Empty;
+            Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeCharacter);
         }
 
         #endregion
 
-        #region Commands
+        #region ViewIsAppearing
+
+        protected override void ViewIsAppearing()
+        {
+            base.ViewIsAppearing();
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsEntryFocused = true;
+            });
+        }
+
+        #endregion
+
+        #region IsValid
+
+        public ICommand IsValidCommand
+        {
+            get
+            {
+                return new Command((param) =>
+                {
+                    var isValid = (bool) param;
+
+                    if(isValid)
+                        ValidationImageSource = ImageSource.FromFile("done.png");
+                    else if(!string.IsNullOrEmpty(Seed))
+                        ValidationImageSource = ImageSource.FromFile("clear.png");
+                    else
+                        ValidationImageSource = null;
+                });
+            }
+        }
+
+        #endregion
 
         #region ScanQrCode
 
@@ -69,12 +140,12 @@ namespace Chiota.ViewModels.Authentication
 
                             Device.BeginInvokeOnMainThread(() =>
                                 {
-                                    this.Navigation.PopAsync();
-                                    this.Seed = result.Text;
+                                    Navigation.PopAsync();
+                                    Seed = result.Text;
                                 });
                         };
 
-                        await this.PushAsync(scanPage);
+                        await CurrentPage.Navigation.PushAsync(scanPage);
                     });
             }
         }
@@ -90,15 +161,15 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command(async () =>
                     {
-                        if (!string.IsNullOrEmpty(this.Seed))
+                        if (!string.IsNullOrEmpty(Seed))
                         {
-                            if (!InputValidator.IsTrytes(this.Seed))
+                            if (!InputValidator.IsTrytes(Seed))
                             {
                                 await new InvalidUserInputException(new ExcInfo(), Details.BackUpInvalidUserInputSeed).ShowAlertAsync();
                                 return;
                             }
 
-                            await this.PushAsync(new SetPasswordView(), new UserCreationProperties { Seed = new Seed(this.Seed) });
+                            await PushAsync<SetPasswordView>(new UserCreationProperties { Seed = new Seed(Seed) });
                             return;
                         }
 

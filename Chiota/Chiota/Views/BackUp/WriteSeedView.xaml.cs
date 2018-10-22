@@ -1,14 +1,14 @@
 ﻿namespace Chiota.Views.BackUp
 {
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class WriteSeedView : ContentPage
-  {
-    public WriteSeedView()
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class WriteSeedView : ContentPage
     {
-      this.InitializeComponent();
+        public WriteSeedView()
+        {
+            InitializeComponent();
+        }
     }
-  }
 }

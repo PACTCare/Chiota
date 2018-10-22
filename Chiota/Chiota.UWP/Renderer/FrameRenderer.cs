@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(Xamarin.Forms.Frame), typeof(Chiota.UWP.Renderer.FrameRenderer))]
+[assembly: ExportRenderer(typeof(Frame), typeof(Chiota.UWP.Renderer.FrameRenderer))]
 namespace Chiota.UWP.Renderer
 {
     public class FrameRenderer : Xamarin.Forms.Platform.UWP.FrameRenderer
@@ -26,7 +26,7 @@ namespace Chiota.UWP.Renderer
                 (byte)(frame.BackgroundColor.G * 255),
                 (byte)(frame.BackgroundColor.B * 255));
 
-            Control.CornerRadius = new CornerRadius(frame.CornerRadius);
+            Control.CornerRadius = new Windows.UI.Xaml.CornerRadius(frame.CornerRadius);
 
             Control.Background = new SolidColorBrush(frameBrush);
             frame.BackgroundColor = Color.Transparent;

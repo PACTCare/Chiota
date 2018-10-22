@@ -1,14 +1,14 @@
 ﻿namespace Chiota.Views.BackUp
 {
-  using Xamarin.Forms;
-  using Xamarin.Forms.Xaml;
+    using Xamarin.Forms;
+    using Xamarin.Forms.Xaml;
 
-  [XamlCompilation(XamlCompilationOptions.Compile)]
-  public partial class PaperCopyView : ContentPage
-  {
-    public PaperCopyView()
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class PaperCopyView : ContentPage
     {
-      this.InitializeComponent();
+        public PaperCopyView()
+        {
+            InitializeComponent();
+        }
     }
-  }
 }
