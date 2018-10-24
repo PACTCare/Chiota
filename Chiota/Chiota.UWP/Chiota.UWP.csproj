@@ -108,7 +108,9 @@
     <Compile Include="Renderer\ChatViewRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />
-    <Compile Include="Services\BackgroundTask.cs" />
+    <Compile Include="Services\BackgroundTask\BaseBackgroundTask.cs" />
+    <Compile Include="Services\BackgroundTask\ChatMessageBackgroundTask.cs" />
+    <Compile Include="Services\BackgroundTask\ContactRequestsBackgroundTask.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -277,6 +279,7 @@
       <Name>RuntimeComponent.UWP</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

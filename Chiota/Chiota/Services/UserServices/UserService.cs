@@ -191,6 +191,10 @@ namespace Chiota.Services.UserServices
         public void SetCurrentUser(DbUser user)
         {
             CurrentUser = user;
+
+            //Start the background service for receiving notifications of the tangle,
+            //to update the user outside of the app.
+            DependencyService.Get<IBackgroundService>().Start();
         }
 
         #endregion

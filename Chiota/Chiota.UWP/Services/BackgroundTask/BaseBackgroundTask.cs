@@ -5,17 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Chiota.Services;
-using Chiota.UWP.Services;
-using Xamarin.Forms;
 
-[assembly: Dependency(typeof(BackgroundService))]
-namespace Chiota.UWP.Services
+namespace Chiota.UWP.Services.BackgroundTask
 {
-    public class BackgroundService : IBackgroundService
+    public abstract class BaseBackgroundTask : IBackgroundService
     {
         #region Attributes
 
-        private const string Name = "BackgroundTask";
+        private const string Name = "Chiota.BackgroundTask";
+        private ApplicationTrigger _trigger;
 
         #endregion
 
@@ -55,13 +53,22 @@ namespace Chiota.UWP.Services
 
             if (requestAccessStatus == BackgroundAccessStatus.AlwaysAllowed || requestAccessStatus == BackgroundAccessStatus.AllowedSubjectToSystemPolicy)
             {
-                builder.SetTrigger(new TimeTrigger(1, false));
+                _trigger = new ApplicationTrigger();
+                builder.SetTrigger(_trigger);
 
                 //Register the new task.
                 var task = builder.Register();
                 task.Completed += TaskCompleted;
+
+                await _trigger.RequestAsync();
             }
         }
+
+        #endregion
+
+        #region TaskCompleted
+
+        protected abstract void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args);
 
         #endregion
 
@@ -88,25 +95,6 @@ namespace Chiota.UWP.Services
                     return true;
 
             return false;
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Events
-
-        #region TaskCompleted
-
-        private void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
-        {
-            var test = new Notification("Test", "Hi");
-            test.Show();
-            //var settings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            //var message = settings.Values[Name].ToString();
-
-            // Run your background task code here
-            //MessagingCenter.Send<object, string>(this, "UpdateLabel", message);
         }
 
         #endregion

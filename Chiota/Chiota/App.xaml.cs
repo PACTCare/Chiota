@@ -39,9 +39,6 @@ namespace Chiota
         /// </summary>
         protected override void OnStart()
         {
-            //Start the background service for receiving notifications of the tangle,
-            //to update the user outside of the app.
-            DependencyService.Get<IBackgroundService>().Start();
         }
     }
 }

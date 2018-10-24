@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Notifications;
 
-namespace Chiota.UWP.Services
+namespace RuntimeComponent.UWP
 {
-    public class Notification
+    public sealed class Notification
     {
         #region Attributes
 
