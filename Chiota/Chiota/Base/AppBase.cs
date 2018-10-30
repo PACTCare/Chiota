@@ -55,6 +55,10 @@ namespace Chiota.Base
 
         public static void ShowMessenger()
         {
+            //Start the background service for receiving notifications of the tangle,
+            //to update the user outside of the app.
+            //DependencyService.Get<IBackgroundService>().Start();
+
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));
             Application.Current.MainPage = container;

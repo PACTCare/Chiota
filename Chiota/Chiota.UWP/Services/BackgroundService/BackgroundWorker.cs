@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
-using Chiota.Services;
+using Chiota.Services.BackgroundServices.Base;
+using Chiota.UWP.Services.BackgroundService;
+using Xamarin.Forms;
 
-namespace Chiota.UWP.Services.BackgroundTask
+[assembly: Dependency(typeof(BackgroundWorker))]
+namespace Chiota.UWP.Services.BackgroundService
 {
-    public abstract class BaseBackgroundTask : IBackgroundService
+    public class BackgroundWorker : IBackgroundWorker
     {
         #region Attributes
 
