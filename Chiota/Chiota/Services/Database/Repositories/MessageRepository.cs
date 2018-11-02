@@ -8,11 +8,11 @@ using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class MessageRepository : SecureRepository<DbMessage>
+    public class MessageRepository : TableRepository<DbMessage>
     {
         #region Constructors
 
-        public MessageRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
+        public MessageRepository(SQLiteConnection database) : base(database)
         {
         }
 

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Chiota.Services.Security
 {
-    public static class Rijndael
+    public static class Encryption
     {
         #region Methods
 

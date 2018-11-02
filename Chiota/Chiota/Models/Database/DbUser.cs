@@ -1,6 +1,7 @@
 ﻿using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
 using SQLite;
+using System.ComponentModel.DataAnnotations.Schema;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
 namespace Chiota.Models.Database
@@ -33,6 +34,10 @@ namespace Chiota.Models.Database
 
         [JsonProperty("seed")]
         public string Seed { get; set; }
+
+        [JsonProperty("encryptionkey")]
+        [Ignore]
+        public EncryptionKey EncryptionKey { get; set; }
 
         #endregion
     }

@@ -25,6 +25,6 @@ namespace Chiota.Services.UserServices
     /// <returns>
     /// The <see cref="DbUser"/>.
     /// </returns>
-    Task<DbUser> CreateAsync(Seed seed, string name, string ImagePath, string imageBase64);
+    Task<DbUser> CreateAsync(Seed seed, string name, string ImagePath, string imageBase64, EncryptionKey encryptionKey);
   }
 }

@@ -8,11 +8,11 @@ using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class TransactionCacheRepository : SecureRepository<DbTransactionCache>
+    public class TransactionCacheRepository : TableRepository<DbTransactionCache>
     {
         #region Constructors
 
-        public TransactionCacheRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
+        public TransactionCacheRepository(SQLiteConnection database) : base(database)
         {
         }
 
@@ -28,13 +28,7 @@ namespace Chiota.Services.Database.Repositories
         {
             try
             {
-                var value = Encrypt(chatAddress);
-                var query = Database.Query(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", value).Cast<DbTransactionCache>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", chatAddress).Cast<DbTransactionCache>().ToList();
                 return query;
             }
             catch (Exception e)

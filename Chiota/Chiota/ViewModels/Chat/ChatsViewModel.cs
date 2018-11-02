@@ -108,7 +108,7 @@ namespace Chiota.ViewModels.Chat
         {
             base.Init(data);
 
-            UpdateView();
+            //UpdateView();
         }
 
         #endregion
@@ -118,9 +118,9 @@ namespace Chiota.ViewModels.Chat
         protected override void ViewIsAppearing()
         {
             base.ViewIsAppearing();
-
+        
             _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromSeconds(10), UpdateView);
+            //Device.StartTimer(TimeSpan.FromMinutes(1), UpdateView);
         }
 
         #endregion
@@ -155,7 +155,7 @@ namespace Chiota.ViewModels.Chat
                     var contacts = DatabaseService.Contact.GetAcceptedContacts();
                     foreach (var item in contacts)
                     {
-                        var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
+                        /*var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
                             new GetMessagesRequest
                             {
                                 ChatAddress = new Address(item.ChatAddress),
@@ -177,7 +177,7 @@ namespace Chiota.ViewModels.Chat
                                 Rejected = !item.Accepted
                             };
                             chats.Add(new ChatBinding(contact, lastMessage.Message, lastMessage.Date));
-                        }
+                        }*/
 
 
                         /*var lastMessage = DatabaseService.Message.GetObjectById(0);
@@ -198,7 +198,7 @@ namespace Chiota.ViewModels.Chat
                         }*/
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }
@@ -220,7 +220,7 @@ namespace Chiota.ViewModels.Chat
             {
                 Device.BeginInvokeOnMainThread(async () =>
                 {
-                    var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(
+                    /*var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(
                         new GetContactsRequest
                         {
                             RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
@@ -243,7 +243,7 @@ namespace Chiota.ViewModels.Chat
                             IsRequestExist = requests.Count > 0;
                         }
                         return;
-                    }
+                    }*/
 
                     //Reset the request list.
                     RequestList = null;

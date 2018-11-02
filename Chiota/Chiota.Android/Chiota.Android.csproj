@@ -130,6 +130,7 @@
     <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundWorker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

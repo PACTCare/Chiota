@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Chiota.Extensions;
 using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
@@ -55,16 +56,14 @@ namespace Chiota.Services.UserServices
         {
             try
             {
-                var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImagePath, properties.ImageBase64);
-
                 //Create the entry for secure storage to safe the encryption key for the user data.
                 var salt = Seed.Random().Value;
+                var encryptionKey = new EncryptionKey(properties.Password, salt);
 
-                //Set the encryption key for the database.
-                DatabaseService.SetEncryptionKey(properties.Password, salt);
+                var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImagePath, properties.ImageBase64, encryptionKey);
 
                 //Save user in the database.
-                var result = DatabaseService.User.AddObject(user);
+                var result = DatabaseService.User.AddObject(user.EncryptObject(encryptionKey));
 
                 if (result == null)
                     return false;
@@ -78,7 +77,7 @@ namespace Chiota.Services.UserServices
 
                 await SecureStorage.SetAsync(properties.Password, jsonString);
 
-                SetCurrentUser(result);
+                SetCurrentUser(result.DecryptObject(encryptionKey));
 
                 return true;
             }
@@ -110,10 +109,11 @@ namespace Chiota.Services.UserServices
                 return false;
 
             //Update the user.
-            var valid = DatabaseService.User.UpdateObject(user);
+            var valid = DatabaseService.User.UpdateObject(user.EncryptObject(user.EncryptionKey));
             if (!valid)
                 return false;
 
+            user.DecryptObject(user.EncryptionKey);
             user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(user.Seed.ToLower(), user.PublicKeyAddress);
 
             SetCurrentUser(user);
@@ -142,12 +142,13 @@ namespace Chiota.Services.UserServices
                 salt = Encoding.UTF8.GetString(Convert.FromBase64String(salt));
                 var userid = (int)json.GetValue("userid");
 
-                //Set encryption key to the database.
-                DatabaseService.SetEncryptionKey(password, salt);
+                //Set the encryption key of the user.
+                var encryptionKey = new EncryptionKey(password, salt);
 
-                var user = DatabaseService.User.GetObjectById(userid);
+                var user = DatabaseService.User.GetObjectById(userid).DecryptObject(encryptionKey);
                 if (user == null) return false;
 
+                user.EncryptionKey = encryptionKey;
                 user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(user.Seed.ToLower(), user.PublicKeyAddress);
 
                 SetCurrentUser(user);

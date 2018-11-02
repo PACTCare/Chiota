@@ -9,11 +9,11 @@ using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class UserRepository : SecureRepository<DbUser>
+    public class UserRepository : TableRepository<DbUser>
     {
         #region Constructors
 
-        public UserRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
+        public UserRepository(SQLiteConnection database) : base(database)
         {
         }
 

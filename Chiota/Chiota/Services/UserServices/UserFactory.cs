@@ -24,7 +24,7 @@ namespace Chiota.Services.UserServices
         private IUsecaseInteractor<CreateUserRequest, CreateUserResponse> CreateUserInteractor { get; }
 
         /// <inheritdoc />
-        public async Task<DbUser> CreateAsync(Seed seed, string name, string imagePath, string imageBase64)
+        public async Task<DbUser> CreateAsync(Seed seed, string name, string imagePath, string imageBase64, EncryptionKey encryptionKey)
         {
             var response = await CreateUserInteractor.ExecuteAsync(new CreateUserRequest { Seed = seed });
 
@@ -40,7 +40,8 @@ namespace Chiota.Services.UserServices
                 StoreSeed = true,
                 PublicKeyAddress = response.PublicKeyAddress.Value,
                 RequestAddress = response.RequestAddress.Value,
-                NtruKeyPair = response.NtruKeyPair
+                NtruKeyPair = response.NtruKeyPair,
+                EncryptionKey = encryptionKey
             };
 
             return user;

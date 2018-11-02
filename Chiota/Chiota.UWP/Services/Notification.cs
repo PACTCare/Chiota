@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Notifications;
+﻿using Windows.UI.Notifications;
+using Chiota.Services;
+using Xamarin.Forms;
 
-namespace RuntimeComponent.UWP
+[assembly: Dependency(typeof(Chiota.UWP.Services.Notification))]
+namespace Chiota.UWP.Services
 {
-    public sealed class Notification
+    public sealed class Notification : INotification
     {
-        #region Attributes
+        #region Methods
 
-        private readonly ToastNotifier notifier;
-        private readonly ToastNotification toast;
+        #region Show
 
-        #endregion
-
-        #region Constructors
-
-        public Notification(string header, string text)
+        public void Show(string header, string text)
         {
             //Setup the notifier.
-            notifier = ToastNotificationManager.CreateToastNotifier();
+            var notifier = ToastNotificationManager.CreateToastNotifier();
 
             //Setup the toast content.
             var toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
@@ -34,17 +27,7 @@ namespace RuntimeComponent.UWP
             audio.SetAttribute("src", "ms-winsoundevent:Notification.SMS");
 
             //Create the toast.
-            toast = new ToastNotification(toastXml);
-        }
-
-        #endregion
-
-        #region Methods
-
-        #region Show
-
-        public void Show()
-        {
+            var toast = new ToastNotification(toastXml);
             notifier.Show(toast);
         }
 

@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Chiota.Models.Database;
+using Chiota.Services.BackgroundServices;
+using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
+using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
 using Chiota.Views.Chat;
@@ -57,7 +60,7 @@ namespace Chiota.Base
         {
             //Start the background service for receiving notifications of the tangle,
             //to update the user outside of the app.
-            //DependencyService.Get<IBackgroundService>().Start();
+            DependencyService.Get<IBackgroundWorker>().Start<ContactRequestBackgroundService>(UserService.CurrentUser);
 
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));

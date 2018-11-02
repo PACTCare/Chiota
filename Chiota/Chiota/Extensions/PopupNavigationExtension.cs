@@ -9,11 +9,11 @@ using Xamarin.Forms;
 
 namespace Chiota.Extensions
 {
-  using Chiota.Popups.PopupModels;
-  using Chiota.Popups.PopupPageModels;
-  using Chiota.Popups.PopupPages;
+    using Chiota.Popups.PopupModels;
+    using Chiota.Popups.PopupPageModels;
+    using Chiota.Popups.PopupPages;
 
-  public static class PopupNavigationExtension
+    public static class PopupNavigationExtension
     {
         #region Methods
 
@@ -57,7 +57,7 @@ namespace Chiota.Extensions
             return popupPageModel.PopupModel;
         }
 
-      #endregion
+        #endregion
 
         #endregion
     }

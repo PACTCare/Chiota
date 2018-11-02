@@ -7,32 +7,49 @@ using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class ContactRepository : SecureRepository<DbContact>
+    public class ContactRepository : TableRepository<DbContact>
     {
         #region Constructors
 
-        public ContactRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
+        public ContactRepository(SQLiteConnection database) : base(database)
         {
         }
 
         #endregion
 
-        #region GetAcceptedContactByChatAddress
+        #region GetPendingContactsAddress
 
         /// <summary>
-        /// Get first object of the table by the public key address.
+        /// Get all pending contacts of the user.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public List<DbContact> GetPendingContacts()
+        {
+            try
+            {
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=0;").Cast<DbContact>().ToList();
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region GetAcceptedContacts
+
+        /// <summary>
+        /// Get all accepted contacts of the user.
         /// </summary>
         /// <returns>List of the table objects</returns>
         public List<DbContact> GetAcceptedContacts()
         {
             try
             {
-                var query = Database.Query(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=1;").Cast<DbContact>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=1;").Cast<DbContact>().ToList();
                 return query;
             }
             catch (Exception e)
@@ -54,13 +71,7 @@ namespace Chiota.Services.Database.Repositories
         {
             try
             {
-                var value = Encrypt(publicKeyAddress);
-                var query = Database.Query(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", value).Cast<DbContact>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", publicKeyAddress).Cast<DbContact>().ToList();
                 return query;
             }
             catch (Exception e)
@@ -82,12 +93,7 @@ namespace Chiota.Services.Database.Repositories
         {
             try
             {
-                var value = Encrypt(chatAddress);
-                var query = Database.FindWithQuery(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", value) as DbContact;
-
-                DecryptModel(query);
-
+                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", chatAddress) as DbContact;
                 return query;
             }
             catch (Exception e)
@@ -109,12 +115,7 @@ namespace Chiota.Services.Database.Repositories
         {
             try
             {
-                var query = Database.Query(TableMapping,
-                    "SELECT * FROM " + TableMapping.TableName + " ORDER BY " + nameof(DbContact.Accepted) + " DESC;").Cast<DbContact>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " ORDER BY " + nameof(DbContact.Accepted) + " DESC;").Cast<DbContact>().ToList();
                 return query;
             }
             catch (Exception e)
