@@ -1,50 +1,186 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
+using Android.App.Job;
 using Android.Content;
 using Android.OS;
 using Chiota.Droid.Services.BackgroundService;
 using Chiota.Services.BackgroundServices.Base;
+using Newtonsoft.Json;
 using Xamarin.Forms;
-using TimeTrigger = Chiota.Services.BackgroundServices.Trigger.TimeTrigger;
 
 [assembly: Dependency(typeof(BackgroundWorker))]
 namespace Chiota.Droid.Services.BackgroundService
 {
-    [Service]
-    public class BackgroundWorker : Service, IBackgroundWorker
+    public class BackgroundWorker : IBackgroundWorker
     {
         #region Attributes
 
-        private BaseBackgroundService _backgroundService;
+        private static Context _context;
+        private static JobScheduler _jobScheduler;
+
+        private static List<BaseBackgroundJob> _backgroundJobs;
+        private bool _isDisposed;
+
+        #endregion
+
+        #region Constructors
+
+        public BackgroundWorker()
+        {
+            _backgroundJobs = new List<BaseBackgroundJob>();
+        }
 
         #endregion
 
         #region Methods
 
-        #region Start
+        #region Init
 
-        //Start a background service with the background worker.
-        public void Start<T>(params object[] objects) where T : BaseBackgroundService
+        /// <summary>
+        /// Init the background service.
+        /// </summary>
+        public void Init(Context context, JobScheduler jobScheduler)
         {
-            //Create an instance of the background service.
-            _backgroundService = (T)Activator.CreateInstance(typeof(T));
+            _isDisposed = false;
+            _context = context;
+            _jobScheduler = jobScheduler;
+        }
 
-            //Init the background service.
-            _backgroundService.Init(objects);
-            _backgroundService.PostInit();
+        #endregion
+
+        #region Dispose
+
+        public void Disposed()
+        {
+            _isDisposed = true;
+
+            /*//Dispose all the jobs.
+            foreach (var item in _backgroundJobs)
+                item?.Dispose();
+
+            _backgroundJobs?.Clear();*/
+        }
+
+        #endregion
+
+        #region Add
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        public void Add<T>(string jobId) where T : BaseBackgroundJob
+        {
+            var jobParameters = new PersistableBundle();
+            jobParameters.PutString("id", jobId);
+            jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
+            jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
+
+            var javaClass = Java.Lang.Class.FromType(typeof(BackgroundService));
+            var component = new ComponentName(_context, javaClass);
+            var jobInfo = new JobInfo.Builder(_backgroundJobs.Count + 1, component)
+                .SetMinimumLatency(1000)
+                .SetExtras(jobParameters)
+                .Build();
+            var result = _jobScheduler.Schedule(jobInfo);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// <param name="refreshTime"></param>
+        public void Add<T>(string jobId, TimeSpan refreshTime) where T : BaseBackgroundJob
+        {
+            var jobParameters = new PersistableBundle();
+            jobParameters.PutString("id", jobId);
+            jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
+            jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
+            jobParameters.PutDouble("refreshtime", refreshTime.TotalMilliseconds);
+
+            var javaClass = Java.Lang.Class.FromType(typeof(BackgroundService));
+            var component = new ComponentName(_context, javaClass);
+            var jobInfo = new JobInfo.Builder(_backgroundJobs.Count + 1, component)
+                .SetMinimumLatency(1000)
+                .SetExtras(jobParameters)
+                .Build();
+            var result = _jobScheduler.Schedule(jobInfo);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// <param name="data"></param>
+        public void Add<T>(string jobId, object data) where T : BaseBackgroundJob
+        {
+            var jobParameters = new PersistableBundle();
+            jobParameters.PutString("id", jobId);
+            jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
+            jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
+            jobParameters.PutString("data", JsonConvert.SerializeObject(data));
+
+            var javaClass = Java.Lang.Class.FromType(typeof(BackgroundService));
+            var component = new ComponentName(_context, javaClass);
+            var jobInfo = new JobInfo.Builder(_backgroundJobs.Count + 1, component)
+                .SetMinimumLatency(1000)
+                .SetExtras(jobParameters)
+                .Build();
+            var result = _jobScheduler.Schedule(jobInfo);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// /// <param name="data"></param>
+        /// <param name="refreshTime"></param>
+        public void Add<T>(string jobId, object data, TimeSpan refreshTime) where T : BaseBackgroundJob
+        {
+            var jobParameters = new PersistableBundle();
+            jobParameters.PutString("id", jobId);
+            jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
+            jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
+            jobParameters.PutString("data", JsonConvert.SerializeObject(data));
+            jobParameters.PutDouble("refreshtime", refreshTime.TotalMilliseconds);
+
+            var javaClass = Java.Lang.Class.FromType(typeof(BackgroundService));
+            var component = new ComponentName(_context, javaClass);
+            var jobInfo = new JobInfo.Builder(_backgroundJobs.Count + 1, component)
+                .SetMinimumLatency(1000)
+                .SetExtras(jobParameters)
+                .Build();
+            var result = _jobScheduler.Schedule(jobInfo);
+        }
+
+        #endregion
+
+        #region Remove
+
+        /// <summary>
+        /// Remove a background job by his id.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        public void Remove<T>(string jobId) where T : BaseBackgroundJob
+        {
+            /*var exist = _backgroundJobs.First(t => t.Id == jobId);
+            if (exist != null)
+            {
+                exist.Dispose();
+                _backgroundJobs.Remove(exist);
+            }*/
         }
 
         #endregion
 
         #endregion
-
-        public override IBinder OnBind(Intent intent)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

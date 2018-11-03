@@ -1,7 +1,17 @@
-﻿namespace Chiota.Services.BackgroundServices.Base
+﻿using System;
+
+namespace Chiota.Services.BackgroundServices.Base
 {
     public interface IBackgroundWorker
     {
-        void Start<T>(params object[] objects) where T : BaseBackgroundService;
+        void Disposed();
+
+        void Add<T>(string jobId) where T : BaseBackgroundJob;
+        void Add<T>(string jobId, TimeSpan refreshTime) where T : BaseBackgroundJob;
+
+        void Add<T>(string jobId, object data) where T : BaseBackgroundJob;
+        void Add<T>(string jobId, object data, TimeSpan refreshTime) where T : BaseBackgroundJob;
+
+        void Remove<T>(string jobId) where T : BaseBackgroundJob;
     }
 }

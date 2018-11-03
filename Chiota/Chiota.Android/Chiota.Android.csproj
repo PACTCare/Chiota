@@ -130,6 +130,7 @@
     <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundService.cs" />
     <Compile Include="Services\BackgroundService\BackgroundWorker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />
@@ -139,8 +140,7 @@
     <Compile Include="Services\Database\Sqlite.cs" />
     <Compile Include="Services\ImageQrCodeReader.cs" />
     <Compile Include="Services\ImageResizer.cs" />
-    <Compile Include="Services\NotificationsTask.cs" />
-    <Compile Include="Services\PeriodicJob.cs" />
+    <Compile Include="Services\Notification.cs" />
     <Compile Include="Services\Screenshot.cs" />
     <Compile Include="Services\Share\ShareImplementation.cs" />
     <Compile Include="SplashActivity.cs" />

@@ -1,4 +1,6 @@
 ﻿using Android.Runtime;
+using Chiota.Droid.Services.BackgroundService;
+using Chiota.Services.BackgroundServices.Base;
 using ImageCircle.Forms.Plugin.Droid;
 
 namespace Chiota.Droid
@@ -21,8 +23,6 @@ namespace Chiota.Droid
     [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        private JobScheduler jobScheduler;
-
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -50,23 +50,12 @@ namespace Chiota.Droid
             Forms.Init(this, bundle);
             ImageCircleRenderer.Init();
 
-            this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);
-
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
-            this.LoadApplication(new App());
-            this.WireUpLongRunningTask();
-        }
+            //Init the background services.
+            DependencyService.Get<BackgroundWorker>().Init(this, (JobScheduler)GetSystemService(JobSchedulerService));
 
-        private void WireUpLongRunningTask()
-        {
-            // https://stackoverflow.com/questions/38344220/job-scheduler-not-running-on-android-n
-            var javaClass = Java.Lang.Class.FromType(typeof(PeriodicJob));
-            var compName = new ComponentName(this, javaClass);
-            var jobInfo = new JobInfo.Builder(1, compName)
-              .SetRequiredNetworkType(NetworkType.Any)
-              .SetPeriodic(1000 * 60 * 15).Build();
-            var result = this.jobScheduler.Schedule(jobInfo);
+            this.LoadApplication(new App());
         }
     }
 }

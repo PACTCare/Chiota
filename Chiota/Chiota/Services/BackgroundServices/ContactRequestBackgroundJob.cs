@@ -6,11 +6,11 @@ using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Persistence;
 using Chiota.Services.BackgroundServices.Base;
-using Chiota.Services.BackgroundServices.Trigger;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
+using Newtonsoft.Json;
 using Pact.Palantir.Cache;
 using Pact.Palantir.Encryption;
 using Pact.Palantir.Repository;
@@ -27,7 +27,7 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ContactRequestBackgroundService : BaseBackgroundService
+    public class ContactRequestBackgroundJob : BaseBackgroundJob
     {
         #region Attributes
 
@@ -43,13 +43,12 @@ namespace Chiota.Services.BackgroundServices
 
         #region Constructors
 
-        public ContactRequestBackgroundService()
+        public ContactRequestBackgroundJob(string id) : base(id)
         {
-            Name = "Chiota.ContactRequest";
+        }
 
-            //Set the triggers and conditions.
-            Triggers.Add(new TimeTrigger(TimeSpan.FromMinutes(3)));
-            Conditions.Add(ConditionType.InternetAvailable);
+        public ContactRequestBackgroundJob(string id, TimeSpan refreshTime) : base(id, refreshTime)
+        {
         }
 
         #endregion
@@ -58,15 +57,16 @@ namespace Chiota.Services.BackgroundServices
 
         #region Init
 
-        public override void Init(params object[] objects)
+        public override void Init(string data = null)
         {
-            base.Init(objects);
+            base.Init(data);
 
             //Get the sqlite database connection.
             _connection = DependencyService.Get<ISqlite>().GetDatabaseConnection();
 
-            if (objects[0] is DbUser user)
-                User = user;
+            if (string.IsNullOrEmpty(data)) return;
+            User = JsonConvert.DeserializeObject<DbUser>(data);
+            User.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(User.Seed.ToLower(), User.PublicKeyAddress);
         }
 
         #endregion
@@ -87,12 +87,13 @@ namespace Chiota.Services.BackgroundServices
                     });
 
                 if (response.PendingContactRequests.Count <= 0) return;
-
-                var pendingContacts = DatabaseService.Contact.GetPendingContacts().DecryptObjectList(User.EncryptionKey);
+                
                 foreach (var item in response.PendingContactRequests)
                 {
-                    var existInDatabase = pendingContacts.Find(t => t.PublicKeyAddress == item.PublicKeyAddress);
-                    if (existInDatabase == null)
+                    if (item.Rejected) continue;
+
+                    var contact = DatabaseService.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress.EncryptValue(User.EncryptionKey));
+                    if (contact == null)
                     {
                         //Add the new contact request to the database and show a notification.
                         var request = new DbContact()
@@ -102,7 +103,7 @@ namespace Chiota.Services.BackgroundServices
                             ChatKeyAddress = item.ChatKeyAddress,
                             ChatAddress = item.ChatAddress,
                             PublicKeyAddress = item.PublicKeyAddress,
-                            Accepted = !item.Rejected
+                            Accepted = false
                         };
 
                         DependencyService.Get<INotification>().Show("New contact request", request.Name);

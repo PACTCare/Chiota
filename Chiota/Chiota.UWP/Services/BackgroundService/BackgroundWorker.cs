@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.UWP.Services.BackgroundService;
+using Newtonsoft.Json;
 using Xamarin.Forms;
-using TimeTrigger = Chiota.Services.BackgroundServices.Trigger.TimeTrigger;
 
 [assembly: Dependency(typeof(BackgroundWorker))]
 namespace Chiota.UWP.Services.BackgroundService
@@ -16,31 +16,145 @@ namespace Chiota.UWP.Services.BackgroundService
     {
         #region Attributes
 
-        private BaseBackgroundService _backgroundService;
-        private List<IBackgroundTrigger> _trigger;
-        private List<IBackgroundCondition> _conditions;
+        private const string Name = "chiotaapp.chiotaapp.BackgroundService";
+
+        private static List<BaseBackgroundJob> _backgroundJobs;
+        private ApplicationTrigger _trigger;
+
+        private bool _isDisposed;
+
+        #endregion
+
+        #region Constructors
+
+        public BackgroundWorker()
+        {
+            _backgroundJobs = new List<BaseBackgroundJob>();
+        }
 
         #endregion
 
         #region Methods
 
-        #region Start
+        #region Init
 
-        //Start a background service with the background worker.
-        public void Start<T>(params object[] objects) where T : BaseBackgroundService
+        /// <summary>
+        /// Init the background service.
+        /// </summary>
+        public void Init()
         {
-            //Create an instance of the background service.
-            _backgroundService = (T)Activator.CreateInstance(typeof(T));
-
-            //Init the background service.
-            _backgroundService.Init(objects);
-            _backgroundService.PostInit();
+            _isDisposed = false;
 
             //Register the background service.
             if (IsRegistered())
                 Unregister();
 
             Task.Run(async () => await Register());
+        }
+
+        #endregion
+
+        #region Disposed
+
+        /// <summary>
+        /// Dispose the background service.
+        /// </summary>
+        public void Disposed()
+        {
+            _isDisposed = true;
+
+            //Unregister the background service.
+            if (IsRegistered())
+                Unregister();
+
+            //Dispose all the jobs.
+            foreach (var item in _backgroundJobs)
+                item?.Dispose();
+
+            _backgroundJobs?.Clear();
+        }
+
+        #endregion
+
+        #region Add
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        public void Add<T>(string jobId) where T : BaseBackgroundJob
+        {
+            //Create an instance of the background job.
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), jobId);
+            backgroundJob.Init();
+
+            _backgroundJobs.Add(backgroundJob);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// <param name="refreshTime"></param>
+        public void Add<T>(string jobId, TimeSpan refreshTime) where T : BaseBackgroundJob
+        {
+            //Create an instance of the background job.
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), jobId, refreshTime);
+            backgroundJob.Init();
+
+            _backgroundJobs.Add(backgroundJob);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// <param name="data"></param>
+        public void Add<T>(string jobId, object data) where T : BaseBackgroundJob
+        {
+            //Create an instance of the background job.
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), jobId);
+            backgroundJob.Init(JsonConvert.SerializeObject(data));
+
+            _backgroundJobs.Add(backgroundJob);
+        }
+
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        /// /// <param name="data"></param>
+        /// <param name="refreshTime"></param>
+        public void Add<T>(string jobId, object data, TimeSpan refreshTime) where T : BaseBackgroundJob
+        {
+            //Create an instance of the background job.
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), jobId, refreshTime);
+            backgroundJob.Init(JsonConvert.SerializeObject(data));
+
+            _backgroundJobs.Add(backgroundJob);
+        }
+
+        #endregion
+
+        #region Remove
+
+        /// <summary>
+        /// Remove a background job by his id.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jobId"></param>
+        public void Remove<T>(string jobId) where T : BaseBackgroundJob
+        {
+            var exist = _backgroundJobs.First(t => t.Id == jobId);
+            if (exist != null)
+            {
+                exist.Dispose();
+                _backgroundJobs.Remove(exist);
+            }
         }
 
         #endregion
@@ -60,33 +174,22 @@ namespace Chiota.UWP.Services.BackgroundService
             //Create new background task.
             var builder = new BackgroundTaskBuilder
             {
-                Name = _backgroundService.Name,
+                Name = Name,
                 TaskEntryPoint = "RuntimeComponent.UWP.BackgroundTask"
             };
 
             if (requestAccessStatus == BackgroundAccessStatus.AlwaysAllowed || requestAccessStatus == BackgroundAccessStatus.AllowedSubjectToSystemPolicy)
             {
-                _trigger = GetTrigger(_backgroundService);
-                _conditions = GetConditions(_backgroundService);
+                _trigger = new ApplicationTrigger();
 
                 //Set the triggers.
-                foreach (var item in _trigger)
-                    builder.SetTrigger(item);
-
-                //Set the conditions.
-                foreach (var item in _conditions)
-                    builder.AddCondition(item);
+                builder.SetTrigger(_trigger);
 
                 //Register the new task.
                 var task = builder.Register();
                 task.Completed += TaskCompleted;
 
-                //If there is a time trigger in the list, just wait the time, then raise the service.
-                for (var i = 0; i < _trigger.Count; i++)
-                {
-                    if (_trigger[i] is ApplicationTrigger)
-                        await ((ApplicationTrigger)_trigger[i]).RequestAsync();
-                }
+                await _trigger.RequestAsync();
             }
         }
 
@@ -101,82 +204,52 @@ namespace Chiota.UWP.Services.BackgroundService
         /// <param name="args"></param>
         protected void TaskCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-            //Run the service asynchronous.
+            //Just return it, if the background service is disposed.
+            if (_isDisposed) return;
+
+            //Check, if there exist a background service.
+            if (_backgroundJobs.Count == 0)
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(default(TimeSpan));
+                    await _trigger.RequestAsync();
+                });
+                return;
+            }
+
+            for(var i = 0; i < _backgroundJobs.Count; i++)
+            {
+                var job = _backgroundJobs[i];
+                if (job.IsRunning) continue;
+
+                Task.Run(async () =>
+                {
+                    job.IsRunning = true;
+                    await job.RunAsync();
+
+                    //Remove the current job from the list and add it to the end of the que, if the job is repeatable.
+                    //Otherwise, dispose the job.
+                    _backgroundJobs.Remove(job);
+
+                    job.IsRunning = false;
+                    if (job.IsDisposed) return;
+
+                    if (job.IsRepeatable)
+                    {
+                        await Task.Delay(job.RefreshTime);
+                        _backgroundJobs.Add(job);
+                    }
+                    else
+                        job.Dispose();
+                });
+            }
+
+            //Repeat it
             Task.Run(async () =>
             {
-                await _backgroundService.RunAsync();
+                await _trigger.RequestAsync();
             });
-
-            //Repeat it, if necessary.
-            if (_backgroundService.IsRepeatable)
-            {
-                var task = Task.Run(async () =>
-                {
-                    //If there is a time trigger in the list, just wait the time, then raise the service.
-                    for (var i = 0; i < _trigger.Count; i++)
-                    {
-                        if (_trigger[i] is ApplicationTrigger)
-                        {
-                            var time = ((TimeTrigger)_backgroundService.Triggers[i]).Time;
-                            await Task.Delay(time);
-                            await((ApplicationTrigger)_trigger[i]).RequestAsync();
-                        }
-                    }
-                });
-                task.Wait();
-            }
-        }
-
-        #endregion
-
-        #region GetTrigger
-
-        /// <summary>
-        /// Get the background service triggers.
-        /// </summary>
-        /// <param name="backgroundService"></param>
-        /// <returns></returns>
-        private List<IBackgroundTrigger> GetTrigger(BaseBackgroundService backgroundService)
-        {
-            var list = new List<IBackgroundTrigger>();
-
-            foreach (var item in backgroundService.Triggers)
-            {
-                switch (item)
-                {
-                    case TimeTrigger timeTrigger:
-                        list.Add(new ApplicationTrigger());
-                        break;
-                }
-            }
-
-            return list;
-        }
-
-        #endregion
-
-        #region GetConditions
-
-        /// <summary>
-        /// Get the background service conditions.
-        /// </summary>
-        /// <param name="backgroundService"></param>
-        /// <returns></returns>
-        private List<IBackgroundCondition> GetConditions(BaseBackgroundService backgroundService)
-        {
-            var list = new List<IBackgroundCondition>();
-
-            foreach (var item in backgroundService.Conditions)
-            {
-                switch (item)
-                {
-                    case ConditionType.InternetAvailable:
-                        list.Add(new SystemCondition(SystemConditionType.InternetAvailable));
-                        break;
-                }
-            }
-
-            return list;
         }
 
         #endregion
@@ -189,7 +262,7 @@ namespace Chiota.UWP.Services.BackgroundService
         private void Unregister()
         {
             foreach (var task in BackgroundTaskRegistration.AllTasks)
-                if (task.Value.Name == _backgroundService.Name)
+                if (task.Value.Name == Name)
                     task.Value.Unregister(true);
         }
 
@@ -203,7 +276,7 @@ namespace Chiota.UWP.Services.BackgroundService
         /// <returns></returns>
         private bool IsRegistered()
         {
-            return BackgroundTaskRegistration.AllTasks.Any(task => task.Value.Name == _backgroundService.Name);
+            return BackgroundTaskRegistration.AllTasks.Any(task => task.Value.Name == Name);
         }
 
         #endregion

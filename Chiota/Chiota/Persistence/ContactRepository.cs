@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
+using Chiota.Services.UserServices;
 using Pact.Palantir.Entity;
 using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
@@ -37,7 +39,7 @@ namespace Chiota.Persistence
                     Accepted = accepted
                 };
 
-                DatabaseService.Contact.AddObject(contact);
+                DatabaseService.Contact.AddObject(contact.EncryptObject(UserService.CurrentUser.EncryptionKey));
             });
             task.Wait();
 
@@ -54,7 +56,8 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
+                    var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress.EncryptValue(UserService.CurrentUser.EncryptionKey));
+                    contacts = contacts.DecryptObjectList(UserService.CurrentUser.EncryptionKey);
                     var list = new List<Contact>();
 
                     foreach (var item in contacts)

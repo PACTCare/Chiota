@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Chiota.Models.Database;
+using Chiota.Services;
 using Chiota.Services.BackgroundServices;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
@@ -58,9 +60,7 @@ namespace Chiota.Base
 
         public static void ShowMessenger()
         {
-            //Start the background service for receiving notifications of the tangle,
-            //to update the user outside of the app.
-            DependencyService.Get<IBackgroundWorker>().Start<ContactRequestBackgroundService>(UserService.CurrentUser);
+            StartBackgroundServices();
 
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));
@@ -77,6 +77,27 @@ namespace Chiota.Base
             page.BarTextColor = (Color)Application.Current.Resources["BrightTextColor"];
 
             return page;
+        }
+
+        #endregion
+
+        #region StartBackgroundServices
+
+        //Start all needed background services for the application.
+        private static void StartBackgroundServices()
+        {
+            //DependencyService.Get<INotification>().Show("Test", "Test");
+
+            //Start the background service for receiving notifications of the tangle,
+            //to update the user outside of the app.
+            try
+            {
+                DependencyService.Get<IBackgroundWorker>().Add<ContactRequestBackgroundJob>("ContactRequest", UserService.CurrentUser, TimeSpan.FromMinutes(1));
+            }
+            catch (Exception ex)
+            {
+                //Ignore
+            }
         }
 
         #endregion

@@ -17,17 +17,17 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
-        #region GetPendingContactsAddress
+        #region GetContactByPublicKeyAddress
 
         /// <summary>
-        /// Get all pending contacts of the user.
+        /// Get an contact by his public key address of the user.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public List<DbContact> GetPendingContacts()
+        public DbContact GetContactByPublicKeyAddress(string publicKeyAddress)
         {
             try
             {
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=0;").Cast<DbContact>().ToList();
+                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", publicKeyAddress) as DbContact;
                 return query;
             }
             catch (Exception e)
