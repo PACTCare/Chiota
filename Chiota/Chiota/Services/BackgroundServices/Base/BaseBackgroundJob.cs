@@ -69,7 +69,7 @@ namespace Chiota.Services.BackgroundServices.Base
         /// <summary>
         /// Run the background job.
         /// </summary>
-        public abstract Task RunAsync();
+        public abstract Task<bool> RunAsync();
 
         #endregion
 

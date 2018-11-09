@@ -2,41 +2,57 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Android.App;
 using Android.App.Job;
 using Android.Content;
+using Android.Gms.Gcm;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Chiota.Services.BackgroundServices.Base;
+using Task = System.Threading.Tasks.Task;
 
 namespace Chiota.Droid.Services.BackgroundService
 {
-    [Service(Name = "chiotaapp.chiotaapp.BackgroundService", Permission = "android.permission.BIND_JOB_SERVICE")]
-    public class BackgroundService : JobService
+    [Service(Exported = true, Permission = "com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE")]
+    [IntentFilter(new[] { "com.google.android.gms.gcm.ACTION_TASK_READY" })]
+    public class BackgroundService : GcmTaskService
     {
-        #region OnStartJob
+        #region Attributes
 
-        public override bool OnStartJob(JobParameters jobParameters)
+        private IBinder binder;
+
+        #endregion
+
+        #region OnRunTask
+
+        public override int OnRunTask(TaskParams jobParameters)
         {
+            System.Threading.Tasks.Task.Run(async () => {
+                var test = new Notification();
+                test.Show("Test", "Test");
+                // TODO: Perform background refresh logic here.
+                Log.Debug("Background Service", "Background Task Succeeded");
+            });
+
+            /*var test = new Notification();
+            test.Show("Test", "Test");
+
+            var id = jobParameters.Extras.GetString("id");
+            var job = jobParameters.Extras.GetString("job");
+            var assembly = jobParameters.Extras.GetString("assembly");
+            var data = jobParameters.Extras.GetString("data");
+            var refreshTime = (int)jobParameters.Extras.GetDouble("refreshtime");
+
+            //Create a new instance of the background job.
+            var jobType = Type.GetType(job + ", " + assembly);
+            if (string.IsNullOrEmpty(id) || jobType == null)
+                return GcmNetworkManager.ResultFailure;
+
             Task.Run(async () =>
             {
-                var id = jobParameters.Extras.GetString("id");
-                var job = jobParameters.Extras.GetString("job");
-                var assembly = jobParameters.Extras.GetString("assembly");
-                var data = jobParameters.Extras.GetString("data");
-                var refreshTime = (int)jobParameters.Extras.GetDouble("refreshtime");
-
-                //Create a new instance of the background job.
-                var jobType = Type.GetType(job + ", " + assembly);
-                if (string.IsNullOrEmpty(id) || jobType == null)
-                {
-                    JobFinished(jobParameters, false);
-                    return;
-                }
-
                 BaseBackgroundJob backgroundJob = null;
                 if (refreshTime == 0)
                     backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, id);
@@ -48,29 +64,35 @@ namespace Chiota.Droid.Services.BackgroundService
                 else
                     backgroundJob.Init();
 
-                await backgroundJob.RunAsync();
+                var repeat = await backgroundJob.RunAsync();
 
                 if (backgroundJob.IsRepeatable)
                 {
                     await Task.Delay(backgroundJob.RefreshTime);
-                    JobFinished(jobParameters, true);
-                    return;
+                    //return GcmNetworkManager.ResultSuccess;
                 }
 
                 backgroundJob.Dispose();
-                JobFinished(jobParameters, false);
-            });
+                //return GcmNetworkManager.ResultReschedule;
+            });*/
 
-            return true;
+            /*if (isrepeatable)
+                return GcmNetworkManager.ResultReschedule;
+            else
+                return GcmNetworkManager.ResultSuccess;*/
+
+            return GcmNetworkManager.ResultSuccess;
         }
 
         #endregion
 
-        #region OnStopJob
+        #region OnBind
 
-        public override bool OnStopJob(JobParameters jobParameters)
+        public override IBinder OnBind(Intent intent)
         {
-            return false;
+            binder = new BackgroundServiceBinder(this);
+
+            return binder;
         }
 
         #endregion

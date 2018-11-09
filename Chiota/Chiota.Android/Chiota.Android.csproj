@@ -118,6 +118,9 @@
     <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.GooglePlayServices.Gcm">
+      <Version>60.1142.1</Version>
+    </PackageReference>
     <PackageReference Include="ZXing.Net.Mobile">
       <Version>2.4.1</Version>
     </PackageReference>
@@ -131,6 +134,7 @@
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
     <Compile Include="Services\BackgroundService\BackgroundService.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundServiceBinder.cs" />
     <Compile Include="Services\BackgroundService\BackgroundWorker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />
@@ -264,6 +268,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\addgroup.png" />
     <AndroidResource Include="Resources\drawable\addperson.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

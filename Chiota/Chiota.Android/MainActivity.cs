@@ -53,7 +53,7 @@ namespace Chiota.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
             //Init the background services.
-            DependencyService.Get<BackgroundWorker>().Init(this, (JobScheduler)GetSystemService(JobSchedulerService));
+            DependencyService.Get<BackgroundWorker>().Init(this);
 
             this.LoadApplication(new App());
         }

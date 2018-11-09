@@ -27,7 +27,7 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ContactRequestBackgroundJob : BaseBackgroundJob
+    public class ChatMessageBackgroundJob : BaseBackgroundJob
     {
         #region Attributes
 
@@ -43,11 +43,11 @@ namespace Chiota.Services.BackgroundServices
 
         #region Constructors
 
-        public ContactRequestBackgroundJob(string id) : base(id)
+        public ChatMessageBackgroundJob(string id) : base(id)
         {
         }
 
-        public ContactRequestBackgroundJob(string id, TimeSpan refreshTime) : base(id, refreshTime)
+        public ChatMessageBackgroundJob(string id, TimeSpan refreshTime) : base(id, refreshTime)
         {
         }
 
@@ -77,42 +77,6 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                DependencyService.Get<INotification>().Show("Test", "Test");
-
-                //Execute a contacts request for the user.
-                var response = await Interactor.ExecuteAsync(
-                    new GetContactsRequest
-                    {
-                        RequestAddress = new Address(User.RequestAddress),
-                        PublicKeyAddress = new Address(User.PublicKeyAddress),
-                        KeyPair = User.NtruKeyPair
-                    });
-
-                if (response.PendingContactRequests.Count <= 0) return true;
-                
-                foreach (var item in response.PendingContactRequests)
-                {
-                    if (item.Rejected) continue;
-
-                    var contact = DatabaseService.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress.EncryptValue(User.EncryptionKey));
-                    if (contact == null)
-                    {
-                        //Add the new contact request to the database and show a notification.
-                        var request = new DbContact()
-                        {
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                            ChatKeyAddress = item.ChatKeyAddress,
-                            ChatAddress = item.ChatAddress,
-                            PublicKeyAddress = item.PublicKeyAddress,
-                            Accepted = false
-                        };
-
-                        DependencyService.Get<INotification>().Show("New contact request", request.Name);
-                        DatabaseService.Contact.AddObject(request.EncryptObject(User.EncryptionKey));
-                    }
-                }
-
                 return true;
             }
             catch (Exception)
