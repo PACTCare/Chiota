@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
 
@@ -6,13 +7,6 @@ namespace Chiota.Services.BackgroundServices.Base
 {
     public abstract class BaseBackgroundJob
     {
-        #region Attributes
-
-        protected ISqlite Sqlite;
-        protected INotification Notification;
-
-        #endregion
-
         #region Properties
 
         public int Id { get; }
@@ -21,17 +15,21 @@ namespace Chiota.Services.BackgroundServices.Base
 
         public bool IsDisposed { get; private set; }
 
+        public DatabaseService Database { get; }
+
+        public INotification Notification { get; }
+
         #endregion
 
         #region Constructors
 
-        protected BaseBackgroundJob(int id, ISqlite sqlite, INotification notification)
+        protected BaseBackgroundJob(int id, DatabaseService database, INotification notification)
         {
             IsRunning = false;
             IsDisposed = false;
 
             Id = id;
-            Sqlite = sqlite;
+            Database = database;
             Notification = notification;
         }
 

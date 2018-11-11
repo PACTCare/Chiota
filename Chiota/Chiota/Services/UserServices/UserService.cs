@@ -8,6 +8,7 @@ using Chiota.Extensions;
 using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
+using Chiota.Services.Database.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Security;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using Pact.Palantir.Encryption;
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.CreateUser;
+using SQLite;
 using Tangle.Net.Entity;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -63,8 +65,11 @@ namespace Chiota.Services.UserServices
 
                 var user = await _userFactory.CreateAsync(properties.Seed, properties.Name, properties.ImagePath, properties.ImageBase64, encryptionKey);
 
+                //Set the database service for usage.
+                AppBase.Database = new DatabaseService(DependencyService.Get<ISqlite>(), encryptionKey);
+
                 //Save user in the database.
-                var result = AppBase.GetDatabaseInstance().User.AddObject(user);
+                var result = AppBase.Database.User.AddObject(user);
 
                 if (result == null)
                     return false;
@@ -110,7 +115,7 @@ namespace Chiota.Services.UserServices
                 return false;
 
             //Update the user.
-            var valid = AppBase.GetDatabaseInstance().User.UpdateObject(user);
+            var valid = AppBase.Database.User.UpdateObject(user);
             if (!valid)
                 return false;
 
@@ -145,7 +150,10 @@ namespace Chiota.Services.UserServices
                 //Set the encryption key of the user.
                 var encryptionKey = new EncryptionKey(password, salt);
 
-                var user = AppBase.GetDatabaseInstance().User.GetObjectById(userid).DecryptObject(encryptionKey);
+                //Set the database service for usage.
+                AppBase.Database = new DatabaseService(DependencyService.Get<ISqlite>(), encryptionKey);
+
+                var user = AppBase.Database.User.GetObjectById(userid);
                 if (user == null) return false;
 
                 user.EncryptionKey = encryptionKey;

@@ -40,7 +40,7 @@ namespace Chiota.Persistence
                     Accepted = accepted
                 };
 
-                AppBase.GetDatabaseInstance().Contact.AddObject(contact);
+                AppBase.Database.Contact.AddObject(contact);
             });
             task.Wait();
 
@@ -57,7 +57,7 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var contacts = AppBase.GetDatabaseInstance().Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
+                    var contacts = AppBase.Database.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
                     contacts = contacts.DecryptObjectList(UserService.CurrentUser.EncryptionKey);
                     var list = new List<Contact>();
 

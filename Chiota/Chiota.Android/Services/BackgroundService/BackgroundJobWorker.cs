@@ -12,8 +12,10 @@ using Android.Views;
 using Android.Widget;
 using Chiota.Droid.Services.BackgroundService;
 using Chiota.Droid.Services.Database;
+using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Services.BackgroundServices.Base;
+using Chiota.Services.UserServices;
 using Newtonsoft.Json;
 using SQLite;
 using Xamarin.Forms;
@@ -71,7 +73,7 @@ namespace Chiota.Droid.Services.BackgroundService
 
             //Add the new background job.
             _database.CreateTable<DbBackgroundJob>();
-            _database.Insert(job);
+            _database.Insert(job.EncryptObject(UserService.CurrentUser.EncryptionKey));
 
             var lastRowId = SQLite3.LastInsertRowid(_database.Handle);
             var mapping = new TableMapping(typeof(DbBackgroundJob));
@@ -82,6 +84,7 @@ namespace Chiota.Droid.Services.BackgroundService
             jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
             jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
             jobParameters.PutString("data", JsonConvert.SerializeObject(data));
+            jobParameters.PutString("encryption", JsonConvert.SerializeObject(UserService.CurrentUser.EncryptionKey));
 
             var builder = _context.CreateJobInfoBuilder(job.Id)
                 .SetPersisted(true)

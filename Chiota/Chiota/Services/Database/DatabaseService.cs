@@ -13,6 +13,7 @@ namespace Chiota.Services.Database
     {
         #region Properties
 
+        public BackgroundJobRepository BackgroundJob { get; }
         public TransactionCacheRepository TransactionCache { get; }
         public UserRepository User { get; }
         public ContactRepository Contact { get; }
@@ -27,6 +28,7 @@ namespace Chiota.Services.Database
             //Dynamic connection to the database.
             var database = sqlite.GetDatabaseConnection();
 
+            BackgroundJob = new BackgroundJobRepository(database, encryptionKey);
             TransactionCache = new TransactionCacheRepository(database, encryptionKey);
             User = new UserRepository(database, encryptionKey);
             Contact = new ContactRepository(database, encryptionKey);

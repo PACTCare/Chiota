@@ -22,7 +22,6 @@ namespace Chiota.Base
         #region Attributes
 
         private static NavigationImplementation _navigation;
-        private static DatabaseService _databaseService;
 
         #endregion
 
@@ -33,10 +32,7 @@ namespace Chiota.Base
             return _navigation ?? (_navigation = new NavigationImplementation());
         }
 
-        public static DatabaseService GetDatabaseInstance()
-        {
-            return _databaseService;
-        }
+        public static DatabaseService Database { get; set; }
 
         #endregion
 
@@ -66,8 +62,6 @@ namespace Chiota.Base
                 //Ignore
             }
 
-            DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
-
             if (isUserExist)
             {
                 // User is logged in.
@@ -89,8 +83,16 @@ namespace Chiota.Base
 
         public static void ShowMessenger()
         {
-            //Set the database service for usage.
-            _databaseService = new DatabaseService(DependencyService.Get<ISqlite>(), UserService.CurrentUser.EncryptionKey);
+            try
+            {
+                //Start the background service for receiving notifications of the tangle,
+                //to update the user outside of the app.
+                DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
+            }
+            catch (Exception ex)
+            {
+                //Ignore
+            }
 
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));

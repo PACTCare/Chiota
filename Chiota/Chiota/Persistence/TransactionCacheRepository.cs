@@ -22,7 +22,7 @@ namespace Chiota.Persistence
         {
             var task = Task.Run(() =>
             {
-                AppBase.GetDatabaseInstance().TransactionCache.DeleteObjects();
+                AppBase.Database.TransactionCache.DeleteObjects();
             });
             task.Wait();
 
@@ -43,7 +43,7 @@ namespace Chiota.Persistence
                     ChatAddress = item.Address.Value,
                     MessageTryte = item.TransactionTrytes.Value
                 };
-                AppBase.GetDatabaseInstance().TransactionCache.AddObject(transactionCache);
+                AppBase.Database.TransactionCache.AddObject(transactionCache);
             });
             task.Wait();
 
@@ -60,7 +60,7 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var transactionCache = AppBase.GetDatabaseInstance().TransactionCache.GetTransactionCacheByChatAddress(address.Value);
+                    var transactionCache = AppBase.Database.TransactionCache.GetTransactionCacheByChatAddress(address.Value);
                     var list = new List<TransactionCacheItem>();
 
                     foreach (var item in transactionCache)

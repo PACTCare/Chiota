@@ -12,7 +12,7 @@ namespace Chiota.Services.Database.Repositories
     {
         #region BackgroundJobRepository
 
-        protected BackgroundJobRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database, encryptionKey)
+        public BackgroundJobRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database, encryptionKey)
         {
         }
 

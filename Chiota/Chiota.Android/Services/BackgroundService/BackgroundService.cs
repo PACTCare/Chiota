@@ -8,9 +8,12 @@ using Android.OS;
 using Android.Support.V4.App;
 using Android.Util;
 using Chiota.Droid.Services.Database;
+using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services;
 using Chiota.Services.BackgroundServices.Base;
+using Chiota.Services.Database;
+using Newtonsoft.Json;
 using SQLite;
 using Xamarin.Forms;
 using Void = Java.Lang.Void;
@@ -50,6 +53,7 @@ namespace Chiota.Droid.Services.BackgroundService
             var job = @params.Extras.GetString("job");
             var assembly = @params.Extras.GetString("assembly");
             var data = @params.Extras.GetString("data");
+            var encryption = @params.Extras.GetString("encryption");
 
             //Create a new instance of the background job.
             var jobType = Type.GetType(job + ", " + assembly);
@@ -59,7 +63,8 @@ namespace Chiota.Droid.Services.BackgroundService
                 return false;
             }
 
-            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, id, new Sqlite(), new Notification());
+            var encryptionKey = JsonConvert.DeserializeObject<EncryptionKey>(encryption);
+            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, id, new DatabaseService(new Sqlite(), encryptionKey), new Notification());
             backgroundJob.Init(data);
 
             _parameters = @params;
@@ -139,19 +144,17 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 Task.Run(async () =>
                 {
-                    var database = new Sqlite().GetDatabaseConnection();
-                    var mapping = new TableMapping(typeof(DbBackgroundJob));
-                    var query = (DbBackgroundJob)database.Get(job.Id, mapping);
-                    query.Status = BackgroundJobStatus.Running.ToString();
-                    database.Update(query);
+                    var value = job.Database.BackgroundJob.GetObjectById(job.Id);
+                    value.Status = BackgroundJobStatus.Running.ToString();
+                    job.Database.BackgroundJob.UpdateObject(value);
 
                     var result = await job.RunAsync();
 
                     //Update database, because job is finished.
                     if (!result)
                     {
-                        query.Status = BackgroundJobStatus.Finished.ToString();
-                        database.Update(query);
+                        value.Status = BackgroundJobStatus.Finished.ToString();
+                        job.Database.BackgroundJob.UpdateObject(value);
                     }
                 }).Wait();
 
@@ -164,11 +167,9 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 jobService.SendBroadcast();
 
-                var database = new Sqlite().GetDatabaseConnection();
-                var mapping = new TableMapping(typeof(DbBackgroundJob));
-                var query = (DbBackgroundJob)database.Get(result.Id, mapping);
+                var value = result.Database.BackgroundJob.GetObjectById(result.Id);
 
-                if (query.Status == BackgroundJobStatus.Finished.ToString())
+                if (value.Status == BackgroundJobStatus.Finished.ToString())
                 {
                     jobService.JobFinished(jobService._parameters, false);
                     return;

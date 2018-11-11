@@ -37,7 +37,7 @@ namespace Chiota.ViewModels.Base
         /// <summary>
         /// Database of the application.
         /// </summary>
-        public DatabaseService Database => AppBase.GetDatabaseInstance();
+        public DatabaseService Database => AppBase.Database;
 
         /// <summary>
         /// Current page which is shown.

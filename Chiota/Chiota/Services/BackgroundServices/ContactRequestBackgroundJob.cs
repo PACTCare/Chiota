@@ -35,7 +35,7 @@ namespace Chiota.Services.BackgroundServices
 
         #region Constructors
 
-        public ContactRequestBackgroundJob(int id, ISqlite sqlite, INotification notification) : base(id, sqlite, notification)
+        public ContactRequestBackgroundJob(int id, DatabaseService database, INotification notification) : base(id, database, notification)
         {
         }
 

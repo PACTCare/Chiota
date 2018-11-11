@@ -136,17 +136,6 @@ namespace Chiota.ViewModels.Authentication
                             return;
                         }
 
-                        try
-                        {
-                            //Start the background service for receiving notifications of the tangle,
-                            //to update the user outside of the app.
-                            DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
-                        }
-                        catch (Exception ex)
-                        {
-                            //Ignore
-                        }
-
                         AppBase.ShowMessenger();
                     });
             }
