@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class MessageRepository : TableRepository<DbMessage>
+    public class MessageRepository : SecureRepository<DbMessage>
     {
         #region Constructors
 
-        public MessageRepository(SQLiteConnection database) : base(database)
+        public MessageRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database, encryptionKey)
         {
         }
 

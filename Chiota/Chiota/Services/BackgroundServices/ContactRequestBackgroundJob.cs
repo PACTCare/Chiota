@@ -4,25 +4,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Chiota.Extensions;
 using Chiota.Models.Database;
-using Chiota.Persistence;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
-using Chiota.Services.UserServices;
 using Newtonsoft.Json;
 using Pact.Palantir.Cache;
 using Pact.Palantir.Encryption;
 using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
-using Pact.Palantir.Usecase;
-using Pact.Palantir.Usecase.AddContact;
 using Pact.Palantir.Usecase.GetContacts;
 using SQLite;
 using Tangle.Net.Cryptography.Signing;
 using Tangle.Net.Entity;
-using Tangle.Net.Repository;
-using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
@@ -31,23 +25,17 @@ namespace Chiota.Services.BackgroundServices
     {
         #region Attributes
 
-        private SQLiteConnection _connection;
-
-        private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
+        /*private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
         private static IContactRepository ContactRepository => new MemoryContactRepository(Messenger, new SignatureValidator());
         private static GetContactsInteractor Interactor => new GetContactsInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
-        private DbUser User;
+        private DbUser User;*/
 
         #endregion
 
         #region Constructors
 
-        public ContactRequestBackgroundJob(string id) : base(id)
-        {
-        }
-
-        public ContactRequestBackgroundJob(string id, TimeSpan refreshTime) : base(id, refreshTime)
+        public ContactRequestBackgroundJob(ISqlite sqlite, INotification notification) : base(sqlite, notification)
         {
         }
 
@@ -61,12 +49,9 @@ namespace Chiota.Services.BackgroundServices
         {
             base.Init(data);
 
-            //Get the sqlite database connection.
-            _connection = DependencyService.Get<ISqlite>().GetDatabaseConnection();
-
-            if (string.IsNullOrEmpty(data)) return;
+            /*if (string.IsNullOrEmpty(data)) return;
             User = JsonConvert.DeserializeObject<DbUser>(data);
-            User.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(User.Seed.ToLower(), User.PublicKeyAddress);
+            User.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(User.Seed.ToLower(), User.PublicKeyAddress);*/
         }
 
         #endregion
@@ -77,10 +62,12 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                DependencyService.Get<INotification>().Show("Test", "Test");
+                Notification.Show("Test", "Test");
+                await Task.Delay(TimeSpan.FromSeconds(10));
 
+                return true;
                 //Execute a contacts request for the user.
-                var response = await Interactor.ExecuteAsync(
+                /*var response = await Interactor.ExecuteAsync(
                     new GetContactsRequest
                     {
                         RequestAddress = new Address(User.RequestAddress),
@@ -88,8 +75,8 @@ namespace Chiota.Services.BackgroundServices
                         KeyPair = User.NtruKeyPair
                     });
 
-                if (response.PendingContactRequests.Count <= 0) return true;
-                
+                if (response.PendingContactRequests.Count <= 0) return;
+
                 foreach (var item in response.PendingContactRequests)
                 {
                     if (item.Rejected) continue;
@@ -111,9 +98,7 @@ namespace Chiota.Services.BackgroundServices
                         DependencyService.Get<INotification>().Show("New contact request", request.Name);
                         DatabaseService.Contact.AddObject(request.EncryptObject(User.EncryptionKey));
                     }
-                }
-
-                return true;
+                }*/
             }
             catch (Exception)
             {

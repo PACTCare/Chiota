@@ -1,40 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Chiota.Services.Database.Base;
+using SQLite;
 
 namespace Chiota.Services.BackgroundServices.Base
 {
     public abstract class BaseBackgroundJob
     {
+        #region Attributes
+
+        protected ISqlite Sqlite;
+        protected INotification Notification;
+
+        #endregion
+
         #region Properties
 
-        public string Id { get; }
         public bool IsRunning { get; set; }
+
         public bool IsDisposed { get; private set; }
-        public bool IsRepeatable { get; }
-        public TimeSpan RefreshTime { get; }
 
         #endregion
 
         #region Constructors
 
-        private BaseBackgroundJob(bool isRepeatable)
+        protected BaseBackgroundJob(ISqlite sqlite, INotification notification)
         {
-            IsRepeatable = isRepeatable;
             IsRunning = false;
-            IsDisposed = !isRepeatable;
-        }
+            IsDisposed = false;
 
-        protected BaseBackgroundJob(string id) : this(false)
-        {
-            Id = id;
-        }
-
-        protected BaseBackgroundJob(string id, TimeSpan refreshTime) : this(true)
-        {
-            Id = id;
-            RefreshTime = refreshTime;
+            Sqlite = sqlite;
+            Notification = notification;
         }
 
         #endregion

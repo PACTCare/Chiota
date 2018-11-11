@@ -1,5 +1,4 @@
-﻿using Chiota.Services.BackgroundServices.Base;
-using Chiota.Services.Database;
+﻿using Chiota.Services.Database;
 using Chiota.UWP.Services.BackgroundService;
 using Xamarin.Forms;
 

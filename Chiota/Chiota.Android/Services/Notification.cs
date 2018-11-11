@@ -11,7 +11,7 @@ using Notification = Chiota.Droid.Services.Notification;
 [assembly: Dependency(typeof(Notification))]
 namespace Chiota.Droid.Services
 {
-    public sealed class Notification : INotification
+    public class Notification : INotification
     {
         #region Methods
 

@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
 
 namespace Chiota.Services.Database.Repositories
 {
-    public class TransactionCacheRepository : TableRepository<DbTransactionCache>
+    public class TransactionCacheRepository : SecureRepository<DbTransactionCache>
     {
         #region Constructors
 
-        public TransactionCacheRepository(SQLiteConnection database) : base(database)
+        public TransactionCacheRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database, encryptionKey)
         {
         }
 
@@ -28,7 +29,12 @@ namespace Chiota.Services.Database.Repositories
         {
             try
             {
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", chatAddress).Cast<DbTransactionCache>().ToList();
+                var value = Encrypt(chatAddress);
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", value).Cast<DbTransactionCache>().ToList();
+
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
+
                 return query;
             }
             catch (Exception e)

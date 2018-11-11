@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Chiota.Models.Database;
 using Chiota.Services;
 using Chiota.Services.BackgroundServices;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
+using Chiota.Services.Database.Base;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
@@ -19,13 +21,25 @@ namespace Chiota.Base
     {
         #region Attributes
 
-        private static NavigationImplementation navigation;
+        private static NavigationImplementation _navigation;
+        private static DatabaseService _databaseService;
+
+        #endregion
+        #region Properties
 
         #endregion
 
         #region Properties
 
-        public static NavigationImplementation NavigationInstance => navigation ?? (navigation = new NavigationImplementation());
+        public static NavigationImplementation GetNavigationInstance()
+        {
+            return _navigation ?? (_navigation = new NavigationImplementation());
+        }
+
+        public static DatabaseService GetDatabaseInstance()
+        {
+            return _databaseService;
+        }
 
         #endregion
 
@@ -38,8 +52,23 @@ namespace Chiota.Base
             NavigationPage container;
 
             //SecureStorage.RemoveAll();
-            var isUserStored = DatabaseService.User.IsUserStored();
-            if (isUserStored)
+            
+            //Get information, if there exist a user in the database.
+            var sqlite = DependencyService.Get<ISqlite>().GetDatabaseConnection();
+            var result = sqlite.Table<DbUser>();
+
+            var isUserExist = false;
+            try
+            {
+                if (result.Any())
+                    isUserExist = true;
+            }
+            catch (Exception)
+            {
+                //Ignore
+            }
+
+            if (isUserExist)
             {
                 // User is logged in.
                 container = SetNavigationStyles(new NavigationPage(new LogInView()));
@@ -60,7 +89,8 @@ namespace Chiota.Base
 
         public static void ShowMessenger()
         {
-            StartBackgroundServices();
+            //Set the database service for usage.
+            _databaseService = new DatabaseService(DependencyService.Get<ISqlite>(), UserService.CurrentUser.EncryptionKey);
 
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));
@@ -86,13 +116,11 @@ namespace Chiota.Base
         //Start all needed background services for the application.
         private static void StartBackgroundServices()
         {
-            //DependencyService.Get<INotification>().Show("Test", "Test");
-
-            //Start the background service for receiving notifications of the tangle,
-            //to update the user outside of the app.
             try
             {
-                DependencyService.Get<IBackgroundWorker>().Add<ContactRequestBackgroundJob>("ContactRequest", UserService.CurrentUser);
+                //Start the background service for receiving notifications of the tangle,
+                //to update the user outside of the app.
+                //DependencyService.Get<IBackgroundWorker>().Start();
             }
             catch (Exception ex)
             {

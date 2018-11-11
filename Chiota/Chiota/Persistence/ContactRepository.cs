@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chiota.Base;
 using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
@@ -39,7 +40,7 @@ namespace Chiota.Persistence
                     Accepted = accepted
                 };
 
-                DatabaseService.Contact.AddObject(contact.EncryptObject(UserService.CurrentUser.EncryptionKey));
+                AppBase.GetDatabaseInstance().Contact.AddObject(contact);
             });
             task.Wait();
 
@@ -56,7 +57,7 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var contacts = DatabaseService.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress.EncryptValue(UserService.CurrentUser.EncryptionKey));
+                    var contacts = AppBase.GetDatabaseInstance().Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
                     contacts = contacts.DecryptObjectList(UserService.CurrentUser.EncryptionKey);
                     var list = new List<Contact>();
 

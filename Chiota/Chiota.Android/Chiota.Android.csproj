@@ -109,6 +109,15 @@
     <PackageReference Include="Xam.Plugins.Forms.ImageCircle">
       <Version>3.0.0.5</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Android.Arch.Core.Common">
+      <Version>1.0.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.Common">
+      <Version>1.0.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.Runtime">
+      <Version>1.0.3.1</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>0.10.0-preview</Version>
     </PackageReference>
@@ -118,9 +127,6 @@
     <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
-    <PackageReference Include="Xamarin.GooglePlayServices.Gcm">
-      <Version>60.1142.1</Version>
-    </PackageReference>
     <PackageReference Include="ZXing.Net.Mobile">
       <Version>2.4.1</Version>
     </PackageReference>
@@ -134,8 +140,8 @@
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
     <Compile Include="Services\BackgroundService\BackgroundService.cs" />
-    <Compile Include="Services\BackgroundService\BackgroundServiceBinder.cs" />
-    <Compile Include="Services\BackgroundService\BackgroundWorker.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundServiceReciever.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundServiceHelpers.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -192,6 +198,10 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\image_splash_logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Palantir\CEXEngine\CEXEngine.csproj">
+      <Project>{F63F1625-804A-431D-99A7-8D636B0766DE}</Project>
+      <Name>CEXEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Palantir\Pact.Palantir\Pact.Palantir.csproj">
       <Project>{1b8dabd4-a737-41a4-aabb-5a5d0ecde486}</Project>
       <Name>Pact.Palantir</Name>

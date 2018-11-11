@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Chiota.Base;
 using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
@@ -21,7 +22,7 @@ namespace Chiota.Persistence
         {
             var task = Task.Run(() =>
             {
-                DatabaseService.TransactionCache.DeleteObjects();
+                AppBase.GetDatabaseInstance().TransactionCache.DeleteObjects();
             });
             task.Wait();
 
@@ -42,7 +43,7 @@ namespace Chiota.Persistence
                     ChatAddress = item.Address.Value,
                     MessageTryte = item.TransactionTrytes.Value
                 };
-                DatabaseService.TransactionCache.AddObject(transactionCache.EncryptObject(UserService.CurrentUser.EncryptionKey));
+                AppBase.GetDatabaseInstance().TransactionCache.AddObject(transactionCache);
             });
             task.Wait();
 
@@ -59,8 +60,7 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var transactionCache = DatabaseService.TransactionCache.GetTransactionCacheByChatAddress(address.Value.EncryptValue(UserService.CurrentUser.EncryptionKey));
-                    transactionCache = transactionCache.DecryptObjectList(UserService.CurrentUser.EncryptionKey);
+                    var transactionCache = AppBase.GetDatabaseInstance().TransactionCache.GetTransactionCacheByChatAddress(address.Value);
                     var list = new List<TransactionCacheItem>();
 
                     foreach (var item in transactionCache)

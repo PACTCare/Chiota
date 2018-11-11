@@ -101,7 +101,7 @@ namespace Chiota.ViewModels.Authentication
                 //Check, if all the contacts saved in the database and update them, if necessary.
                 foreach (var approved in response.ApprovedContacts)
                 {
-                    var exist = DatabaseService.Contact.GetAcceptedContactByChatAddress(approved.ChatAddress);
+                    var exist = Database.Contact.GetAcceptedContactByChatAddress(approved.ChatAddress);
 
                     //Update the contact in the database.
                     if (exist != null)
@@ -115,9 +115,9 @@ namespace Chiota.ViewModels.Authentication
                         {
                             //exist.ImageBase64
                         }
-                            
+
                         //Update the contact in the database.
-                        DatabaseService.Contact.UpdateObject(exist);
+                        Database.Contact.UpdateObject(exist);
                     }
                 }
 

@@ -10,6 +10,7 @@ using Chiota.Popups.Classes;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
+using Chiota.Services.Database;
 using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
@@ -29,17 +30,22 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         public INavigation Navigation
         {
-            get => AppBase.NavigationInstance.Navigation;
-            set => AppBase.NavigationInstance.Navigation = value;
+            get => AppBase.GetNavigationInstance().Navigation;
+            set => AppBase.GetNavigationInstance().Navigation = value;
         }
+
+        /// <summary>
+        /// Database of the application.
+        /// </summary>
+        public DatabaseService Database => AppBase.GetDatabaseInstance();
 
         /// <summary>
         /// Current page which is shown.
         /// </summary>
         protected Page CurrentPage
         {
-            get => AppBase.NavigationInstance.CurrentPage;
-            set => AppBase.NavigationInstance.CurrentPage = value;
+            get => AppBase.GetNavigationInstance().CurrentPage;
+            set => AppBase.GetNavigationInstance().CurrentPage = value;
         }
 
         /// <summary>
@@ -47,8 +53,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected object InitObject
         {
-            get => AppBase.NavigationInstance.InitObject;
-            set => AppBase.NavigationInstance.InitObject = value;
+            get => AppBase.GetNavigationInstance().InitObject;
+            set => AppBase.GetNavigationInstance().InitObject = value;
         }
 
         /// <summary>
@@ -56,8 +62,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected Page LastPage
         {
-            get => AppBase.NavigationInstance.LastPage;
-            set => AppBase.NavigationInstance.LastPage = value;
+            get => AppBase.GetNavigationInstance().LastPage;
+            set => AppBase.GetNavigationInstance().LastPage = value;
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected object ReverseObject
         {
-            get => AppBase.NavigationInstance.ReverseObject;
-            set => AppBase.NavigationInstance.ReverseObject = value;
+            get => AppBase.GetNavigationInstance().ReverseObject;
+            set => AppBase.GetNavigationInstance().ReverseObject = value;
         }
 
         /// <summary>
@@ -74,8 +80,8 @@ namespace Chiota.ViewModels.Base
         /// </summary>
         protected Page RootPage
         {
-            get => AppBase.NavigationInstance.RootPage;
-            set => AppBase.NavigationInstance.RootPage = value;
+            get => AppBase.GetNavigationInstance().RootPage;
+            set => AppBase.GetNavigationInstance().RootPage = value;
         }
 
         #endregion

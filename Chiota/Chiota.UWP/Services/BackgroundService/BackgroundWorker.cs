@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Chiota.Services.BackgroundServices;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.UWP.Services.BackgroundService;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(BackgroundWorker))]
 namespace Chiota.UWP.Services.BackgroundService
 {
-    public class BackgroundWorker : IBackgroundWorker
+    public class BackgroundWorker : IBackgroundJobWorker
     {
         #region Attributes
 

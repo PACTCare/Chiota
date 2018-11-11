@@ -152,7 +152,7 @@ namespace Chiota.ViewModels.Chat
                 try
                 {
                     //Load all accepted contacts.
-                    var contacts = DatabaseService.Contact.GetAcceptedContacts();
+                    var contacts = Database.Contact.GetAcceptedContacts();
                     foreach (var item in contacts)
                     {
                         /*var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
