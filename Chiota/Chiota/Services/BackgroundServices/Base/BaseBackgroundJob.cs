@@ -15,6 +15,8 @@ namespace Chiota.Services.BackgroundServices.Base
 
         #region Properties
 
+        public int Id { get; }
+
         public bool IsRunning { get; set; }
 
         public bool IsDisposed { get; private set; }
@@ -23,11 +25,12 @@ namespace Chiota.Services.BackgroundServices.Base
 
         #region Constructors
 
-        protected BaseBackgroundJob(ISqlite sqlite, INotification notification)
+        protected BaseBackgroundJob(int id, ISqlite sqlite, INotification notification)
         {
             IsRunning = false;
             IsDisposed = false;
 
+            Id = id;
             Sqlite = sqlite;
             Notification = notification;
         }

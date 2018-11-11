@@ -6,41 +6,51 @@ using Java.Lang;
 
 namespace Chiota.Droid.Services.BackgroundService
 {
-    public static class JobSchedulerHelpers
+    public static class BackgroundServiceHelpers
     {
-        public static readonly int FibonacciJobId = 110;
-        public static readonly string FibonacciValueKey = "fibonacci_value";
-        public static readonly string FibonacciResultKey = "fibonacci_result";
-        public static readonly string FibonacciJobActionKey = "fibonacci_job_action";
+        #region Attributes
+
+        public static readonly string ResultKey = "result";
+        public static readonly string JobActionKey = "job_action";
+
+        #endregion
+
+        #region Methods
+
+        #region CreateJobInfoBuilder
 
         /// <summary>
-        /// Helper to initialize the JobInfo.Builder for the Fibonacci JobService, 
+        /// Helper to initialize the JobInfo.Builder for the JobService, 
         /// initializing the value 
         /// </summary>
-        /// <returns>The job info builder for fibonnaci calculation.</returns>
+        /// <returns>The job info builder.</returns>
         /// <param name="context">Context.</param>
-        /// <param name="value">Value.</param>
-        public static JobInfo.Builder CreateJobInfoBuilderForFibonnaciCalculation(this Context context, int value)
+        public static JobInfo.Builder CreateJobInfoBuilder(this Context context, int id)
         {
             var component = context.GetComponentNameForJob<BackgroundService>();
-            JobInfo.Builder builder = new JobInfo.Builder(FibonacciJobId, component)
-                                                 .SetFibonacciValue(value);
+            var builder = new JobInfo.Builder(id, component);
             return builder;
         }
 
+        #endregion
+
+        #region GetComponentNameForJob
+
+        /// <summary>
+        /// Get the component name for the job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static ComponentName GetComponentNameForJob<T>(this Context context) where T : JobService
         {
-            Type t = typeof(T);
-            Class javaClass = Class.FromType(t);
+            var t = typeof(T);
+            var javaClass = Class.FromType(t);
             return new ComponentName(context, javaClass);
         }
 
-        public static JobInfo.Builder SetFibonacciValue(this JobInfo.Builder builder, int value)
-        {
-            var extras = new PersistableBundle();
-            extras.PutLong(FibonacciValueKey, value);
-            builder.SetExtras(extras);
-            return builder;
-        }
+        #endregion
+
+        #endregion
     }
 }

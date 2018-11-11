@@ -25,9 +25,6 @@ namespace Chiota.Base
         private static DatabaseService _databaseService;
 
         #endregion
-        #region Properties
-
-        #endregion
 
         #region Properties
 
@@ -51,6 +48,7 @@ namespace Chiota.Base
         {
             NavigationPage container;
 
+            //Delete the secure storage.
             //SecureStorage.RemoveAll();
             
             //Get information, if there exist a user in the database.
@@ -67,6 +65,8 @@ namespace Chiota.Base
             {
                 //Ignore
             }
+
+            DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
 
             if (isUserExist)
             {
@@ -107,25 +107,6 @@ namespace Chiota.Base
             page.BarTextColor = (Color)Application.Current.Resources["BrightTextColor"];
 
             return page;
-        }
-
-        #endregion
-
-        #region StartBackgroundServices
-
-        //Start all needed background services for the application.
-        private static void StartBackgroundServices()
-        {
-            try
-            {
-                //Start the background service for receiving notifications of the tangle,
-                //to update the user outside of the app.
-                //DependencyService.Get<IBackgroundWorker>().Start();
-            }
-            catch (Exception ex)
-            {
-                //Ignore
-            }
         }
 
         #endregion

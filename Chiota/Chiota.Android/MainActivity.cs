@@ -45,7 +45,6 @@ namespace Chiota.Droid
 
             //Prepare background services.
             _receiver = new BackgroundServiceReciever(this);
-            _jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
 
             //Set the current activity.
             CrossCurrentActivity.Current.Activity = this;
@@ -63,18 +62,10 @@ namespace Chiota.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
 
             //Init the background services.
-            //DependencyService.Get<BackgroundWorker>().Init(this, (JobScheduler)GetSystemService(JobSchedulerService));
+            DependencyService.Get<BackgroundJobWorker>().Init(this, (JobScheduler)GetSystemService(JobSchedulerService));
 
             //Load the application.
-            this.LoadApplication(new App());
-
-            var builder = this.CreateJobInfoBuilderForFibonnaciCalculation(50)
-                .SetPersisted(true)
-                .SetMinimumLatency(1000)
-                .SetOverrideDeadline(10000)
-                .SetRequiredNetworkType(NetworkType.Unmetered);
-
-            _jobScheduler.Schedule(builder.Build());
+            LoadApplication(new App());
         }
 
         #endregion
@@ -84,10 +75,11 @@ namespace Chiota.Droid
         protected override void OnResume()
         {
             base.OnResume();
-            BaseContext.RegisterReceiver(_receiver, new IntentFilter(JobSchedulerHelpers.FibonacciResultKey));
+
+            BaseContext.RegisterReceiver(_receiver, new IntentFilter(BackgroundServiceHelpers.ResultKey));
 
             var filter = new IntentFilter();
-            filter.AddAction(JobSchedulerHelpers.FibonacciJobActionKey);
+            filter.AddAction(BackgroundServiceHelpers.JobActionKey);
             RegisterReceiver(_receiver, filter);
         }
 
@@ -98,6 +90,7 @@ namespace Chiota.Droid
         protected override void OnPause()
         {
             BaseContext.UnregisterReceiver(_receiver);
+
             base.OnPause();
         }
 

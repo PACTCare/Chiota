@@ -4,9 +4,6 @@
     {
         void Init(params object[] data);
 
-        void Start();
-        void Stop();
-
         void Add<T>(params object[] data) where T : BaseBackgroundJob;
         void Remove(int id);
 

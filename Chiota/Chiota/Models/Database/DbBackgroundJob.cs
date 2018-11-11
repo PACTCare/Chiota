@@ -16,6 +16,12 @@ namespace Chiota.Models.Database
         [JsonProperty("status")]
         public string Status { get; set; }
 
+        [JsonProperty("assembly")]
+        public string Assembly { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
         [JsonProperty("parameter")]
         public string Parameter { get; set; }
 

@@ -6,6 +6,7 @@ namespace Chiota.Services.BackgroundServices.Base
 {
     public enum BackgroundJobStatus
     {
+        Created,
         Running,
         Finished,
         Failed

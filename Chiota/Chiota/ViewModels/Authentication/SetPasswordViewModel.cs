@@ -5,6 +5,8 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
+using Chiota.Services.BackgroundServices;
+using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
@@ -132,6 +134,17 @@ namespace Chiota.ViewModels.Authentication
                             await new UnknownException(new ExcInfo()).ShowAlertAsync();
                             AppBase.ShowStartUp();
                             return;
+                        }
+
+                        try
+                        {
+                            //Start the background service for receiving notifications of the tangle,
+                            //to update the user outside of the app.
+                            DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
+                        }
+                        catch (Exception ex)
+                        {
+                            //Ignore
                         }
 
                         AppBase.ShowMessenger();

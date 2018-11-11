@@ -20,20 +20,6 @@ namespace Chiota.Droid.Services.BackgroundService
 
             public override void OnReceive(Context context, Intent intent)
             {
-
-                if (activity == null)
-                {
-                }
-                else
-                {
-                    long result = intent.Extras.GetLong(JobSchedulerHelpers.FibonacciResultKey, -1);
-                    if (result > -1)
-                    {
-                    }
-                    else
-                    {
-                    }
-                }
             }
         }
     }

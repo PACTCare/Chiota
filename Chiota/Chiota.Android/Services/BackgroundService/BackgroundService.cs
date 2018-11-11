@@ -7,146 +7,186 @@ using Android.Media;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Util;
+using Chiota.Droid.Services.Database;
+using Chiota.Models.Database;
 using Chiota.Services;
 using Chiota.Services.BackgroundServices.Base;
+using SQLite;
 using Xamarin.Forms;
+using Void = Java.Lang.Void;
 
 namespace Chiota.Droid.Services.BackgroundService
 {
-    /// <summary>
-    /// Calculates the Fibonacci number for a given seed value in the 
-    /// background. When the Fibonacci number is calculated, this service
-    /// will broadcast an intent with the action set to 
-    /// <code>JobScheduleSample.FibonacciJob.RESULTS</code>.
-    /// </summary>
     [Service(Name = "Chiota.Droid.Services.BackgroundService.BackgroundService", Permission = "android.permission.BIND_JOB_SERVICE")]
     public class BackgroundService : JobService
     {
-        public static readonly string TAG = typeof(BackgroundService).FullName;
-        long fibonacciValue;
-        BackgroundServiceTask calculator;
-        JobParameters parameters;
+        #region Attributes
+
+        private BackgroundServiceTask _serviceTask;
+        private JobParameters _parameters;
+
+        #endregion
+
+        #region Constructors
 
         public BackgroundService()
         {
         }
 
+        #endregion
+
+        #region Methods
+
+        #region OnStartJob
+
+        /// <summary>
+        /// Called, when the job started.
+        /// </summary>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public override bool OnStartJob(JobParameters @params)
         {
-            var test = new Notification();
-            test.Show("Test", "1");
+            var id = @params.Extras.GetInt("id");
+            var job = @params.Extras.GetString("job");
+            var assembly = @params.Extras.GetString("assembly");
+            var data = @params.Extras.GetString("data");
 
-            Task.Delay(TimeSpan.FromSeconds(5)).Wait();
-
-            fibonacciValue = @params.Extras.GetLong(JobSchedulerHelpers.FibonacciValueKey, -1);
-            if (fibonacciValue < 0)
+            //Create a new instance of the background job.
+            var jobType = Type.GetType(job + ", " + assembly);
+            if (jobType == null)
             {
-                Log.Debug(TAG, "Invalid value - must be > 0.");
+                JobFinished(@params, false);
                 return false;
             }
 
-            parameters = @params;
-            calculator = new BackgroundServiceTask(this);
+            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, id, new Sqlite(), new Notification());
+            backgroundJob.Init(data);
 
-            calculator.Execute(fibonacciValue);
-            return true; // No more work to do!
+            _parameters = @params;
+            _serviceTask = new BackgroundServiceTask(this);
+
+            _serviceTask.Execute(backgroundJob);
+
+            return true;
         }
 
+        #endregion
+
+        #region OnStopJob
+
+        /// <summary>
+        /// Called, if the job is stopped.
+        /// </summary>
+        /// <param name="params"></param>
+        /// <returns></returns>
         public override bool OnStopJob(JobParameters @params)
         {
-            Log.Debug(TAG, "System halted the job.");
-            if (calculator != null && !calculator.IsCancelled)
+            if (_serviceTask != null && !_serviceTask.IsCancelled)
             {
-                calculator.Cancel(true);
+                _serviceTask.Cancel(true);
             }
-            calculator = null;
+            _serviceTask = null;
 
+            SendBroadcast();
 
-            BroadcastResults(-1);
-
-            return false; // Don't reschedule the job.
+            return false;
         }
 
+        #endregion
+
+        #region SendBroadcast
 
         /// <summary>
         /// Broadcast the result of the Fibonacci calculation.
         /// </summary>
-        /// <param name="result">Result.</param>
-        void BroadcastResults(long result)
+        private void SendBroadcast()
         {
-            Intent i = new Intent(JobSchedulerHelpers.FibonacciJobActionKey);
-            i.PutExtra(JobSchedulerHelpers.FibonacciResultKey, result);
+            var i = new Intent(BackgroundServiceHelpers.JobActionKey);
             BaseContext.SendBroadcast(i);
         }
 
+        #endregion
+
+        #endregion
+
+        #region BackgroundServiceTask
 
         /// <summary>
         /// Performs a simple Fibonacci calculation for a seed value. 
         /// </summary>
-        class BackgroundServiceTask : AsyncTask<long, Java.Lang.Void, long>
+        class BackgroundServiceTask : AsyncTask<BaseBackgroundJob, Void, BaseBackgroundJob>
         {
-            readonly BackgroundService jobService;
-            long fibonacciValue = -1;
+            #region Attributes
+
+            private readonly BackgroundService jobService;
+
+            #endregion
+
+            #region Constructors
 
             public BackgroundServiceTask(BackgroundService jobService)
             {
                 this.jobService = jobService;
             }
 
-            long GetFibonacciFor(long value)
+            #endregion
+
+            #region Methods
+
+            protected override BaseBackgroundJob RunInBackground(params BaseBackgroundJob[] @params)
             {
-                if (value == 0) 
-                {
-                    return 0;
-                }
-                if ((value == 1) || (value == 2))
-                {
-                    return 1;
-                }
+                var job = @params[0];
 
-                long result = 0;
-                long n1 = 0;
-                long n2 = 1;
-                for (long i = 2; i <= value; i++)
+                Task.Run(async () =>
                 {
-                    result = n1 + n2;
-                    n1 = n2;
-                    n2 = result;
-                }
+                    var database = new Sqlite().GetDatabaseConnection();
+                    var mapping = new TableMapping(typeof(DbBackgroundJob));
+                    var query = (DbBackgroundJob)database.Get(job.Id, mapping);
+                    query.Status = BackgroundJobStatus.Running.ToString();
+                    database.Update(query);
 
-                return result;
+                    var result = await job.RunAsync();
+
+                    //Update database, because job is finished.
+                    if (!result)
+                    {
+                        query.Status = BackgroundJobStatus.Finished.ToString();
+                        database.Update(query);
+                    }
+                }).Wait();
+
+                return job;
             }
 
-            protected override long RunInBackground(params long[] @params)
+            protected override void OnPostExecute(BaseBackgroundJob result)
             {
-                fibonacciValue = -1;
-                long value = @params[0];
-                return GetFibonacciFor(value);
-            }
-
-            protected override void OnPostExecute(long result)
-            {
-
                 base.OnPostExecute(result);
 
-                fibonacciValue = result;
+                jobService.SendBroadcast();
 
-                jobService.BroadcastResults(result);
+                var database = new Sqlite().GetDatabaseConnection();
+                var mapping = new TableMapping(typeof(DbBackgroundJob));
+                var query = (DbBackgroundJob)database.Get(result.Id, mapping);
 
-                //jobService.JobFinished(jobService.parameters, false);
-                jobService.OnStartJob(jobService.parameters);
+                if (query.Status == BackgroundJobStatus.Finished.ToString())
+                {
+                    jobService.JobFinished(jobService._parameters, false);
+                    return;
+                }
 
-                Log.Debug(TAG, "Finished with fibonacci calculation: " + result);
-
+                //Restart the job.
+                jobService.OnStartJob(jobService._parameters);
             }
 
             protected override void OnCancelled()
             {
-                Log.Debug(TAG, "Job was cancelled.");
-                jobService.BroadcastResults(-1);
+                jobService.SendBroadcast();
                 base.OnCancelled();
             }
 
+            #endregion
         }
+
+        #endregion
     }
 }

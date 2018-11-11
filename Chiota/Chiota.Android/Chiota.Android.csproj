@@ -139,6 +139,7 @@
     <Compile Include="Renderer\ButtonRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\SwitchRenderer.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundJobWorker.cs" />
     <Compile Include="Services\BackgroundService\BackgroundService.cs" />
     <Compile Include="Services\BackgroundService\BackgroundServiceReciever.cs" />
     <Compile Include="Services\BackgroundService\BackgroundServiceHelpers.cs" />
