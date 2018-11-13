@@ -108,6 +108,7 @@
     <Compile Include="Renderer\ChatViewRenderer.cs" />
     <Compile Include="Renderer\EntryRenderer.cs" />
     <Compile Include="Renderer\FrameRenderer.cs" />
+    <Compile Include="Services\BackgroundService\BackgroundService.cs" />
     <Compile Include="Services\BackgroundService\BackgroundWorker.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">

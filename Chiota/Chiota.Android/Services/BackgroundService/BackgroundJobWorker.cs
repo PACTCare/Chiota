@@ -10,6 +10,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Chiota.Base;
 using Chiota.Droid.Services.BackgroundService;
 using Chiota.Droid.Services.Database;
 using Chiota.Extensions;
@@ -67,26 +68,20 @@ namespace Chiota.Droid.Services.BackgroundService
                 Name = typeof(T).Name,
                 Status = BackgroundJobStatus.Created.ToString(),
                 Assembly = typeof(T).Assembly.FullName,
-                Type = typeof(T).Namespace + "." + typeof(T).Name,
-                Parameter = JsonConvert.SerializeObject(data)
+                Type = typeof(T).Namespace + "." + typeof(T).Name
             };
 
             //Add the new background job.
-            _database.CreateTable<DbBackgroundJob>();
-            _database.Insert(job.EncryptObject(UserService.CurrentUser.EncryptionKey));
-
-            var lastRowId = SQLite3.LastInsertRowid(_database.Handle);
-            var mapping = new TableMapping(typeof(DbBackgroundJob));
-            job = (DbBackgroundJob)_database.FindWithQuery(mapping, "SELECT * FROM " + mapping.TableName + " WHERE rowid=" + Convert.ToString(lastRowId) + ";");
+            var added = AppBase.Database.BackgroundJob.AddObject(job);
 
             var jobParameters = new PersistableBundle();
-            jobParameters.PutInt("id", job.Id);
+            jobParameters.PutInt("id", added.Id);
             jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
             jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
             jobParameters.PutString("data", JsonConvert.SerializeObject(data));
             jobParameters.PutString("encryption", JsonConvert.SerializeObject(UserService.CurrentUser.EncryptionKey));
 
-            var builder = _context.CreateJobInfoBuilder(job.Id)
+            var builder = _context.CreateJobInfoBuilder(added.Id)
                 .SetPersisted(true)
                 .SetMinimumLatency(1000)
                 .SetOverrideDeadline(10000)
@@ -119,7 +114,7 @@ namespace Chiota.Droid.Services.BackgroundService
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            AppBase.Database.BackgroundJob.DeleteObjects();
         }
 
         #endregion

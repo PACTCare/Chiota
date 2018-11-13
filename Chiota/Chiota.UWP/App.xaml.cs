@@ -1,6 +1,5 @@
 ﻿using Chiota.Services.Database;
 using Chiota.UWP.Services.BackgroundService;
-using Xamarin.Forms;
 
 namespace Chiota.UWP
 {
@@ -65,7 +64,7 @@ namespace Chiota.UWP
                 ((Style)this.Resources["TabbedPageStyle"]).Setters[0] = ((Style)this.Resources["TabbedPageStyle2"]).Setters[0];
 
                 //Init the background services.
-                DependencyService.Get<BackgroundWorker>().Init();
+                Xamarin.Forms.DependencyService.Get<BackgroundWorker>().Init();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

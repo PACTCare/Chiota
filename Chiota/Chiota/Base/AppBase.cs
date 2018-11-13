@@ -85,6 +85,14 @@ namespace Chiota.Base
         {
             try
             {
+                var job = Database.BackgroundJob.GetBackgroundJobByName(typeof(ContactRequestBackgroundJob).Name);
+
+                if (job != null)
+                {
+                    //Remove the job, if it already exist.
+                    DependencyService.Get<IBackgroundJobWorker>().Remove(job.Id);
+                }
+
                 //Start the background service for receiving notifications of the tangle,
                 //to update the user outside of the app.
                 DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);

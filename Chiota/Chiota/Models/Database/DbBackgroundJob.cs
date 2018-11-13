@@ -22,9 +22,6 @@ namespace Chiota.Models.Database
         [JsonProperty("type")]
         public string Type { get; set; }
 
-        [JsonProperty("parameter")]
-        public string Parameter { get; set; }
-
         #endregion
     }
 }

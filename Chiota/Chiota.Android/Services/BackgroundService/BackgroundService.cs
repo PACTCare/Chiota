@@ -169,8 +169,10 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 var value = result.Database.BackgroundJob.GetObjectById(result.Id);
 
-                if (value.Status == BackgroundJobStatus.Finished.ToString())
+                if (value == null || value.Status == BackgroundJobStatus.Finished.ToString())
                 {
+                    result.Dispose();
+
                     jobService.JobFinished(jobService._parameters, false);
                     return;
                 }
