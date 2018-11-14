@@ -49,7 +49,6 @@ namespace Chiota.Droid.Services.BackgroundService
         /// <returns></returns>
         public override bool OnStartJob(JobParameters @params)
         {
-            var id = @params.Extras.GetInt("id");
             var job = @params.Extras.GetString("job");
             var assembly = @params.Extras.GetString("assembly");
             var data = @params.Extras.GetString("data");
@@ -64,7 +63,7 @@ namespace Chiota.Droid.Services.BackgroundService
             }
 
             var encryptionKey = JsonConvert.DeserializeObject<EncryptionKey>(encryption);
-            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, id, new DatabaseService(new Sqlite(), encryptionKey), new Notification());
+            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, new DatabaseService(new Sqlite(), encryptionKey), new Notification());
             backgroundJob.Init(data);
 
             _parameters = @params;
@@ -144,46 +143,32 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 Task.Run(async () =>
                 {
-                    var value = job.Database.BackgroundJob.GetObjectById(job.Id);
-                    value.Status = BackgroundJobStatus.Running.ToString();
-                    job.Database.BackgroundJob.UpdateObject(value);
-
                     var result = await job.RunAsync();
 
                     //Update database, because job is finished.
                     if (!result)
-                    {
-                        value.Status = BackgroundJobStatus.Finished.ToString();
-                        job.Database.BackgroundJob.UpdateObject(value);
-                    }
+                        job.Dispose();
                 }).Wait();
 
                 return job;
             }
 
-            protected override void OnPostExecute(BaseBackgroundJob result)
+            protected override void OnPostExecute(BaseBackgroundJob job)
             {
-                base.OnPostExecute(result);
+                base.OnPostExecute(job);
 
                 jobService.SendBroadcast();
 
-                var value = result.Database.BackgroundJob.GetObjectById(result.Id);
-
-                if (value == null || value.Status == BackgroundJobStatus.Finished.ToString())
-                {
-                    result.Dispose();
-
+                if(job.IsDisposed)
                     jobService.JobFinished(jobService._parameters, false);
-                    return;
-                }
-
-                //Restart the job.
-                jobService.OnStartJob(jobService._parameters);
+                else
+                    jobService.OnStartJob(jobService._parameters);
             }
 
             protected override void OnCancelled()
             {
                 jobService.SendBroadcast();
+
                 base.OnCancelled();
             }
 

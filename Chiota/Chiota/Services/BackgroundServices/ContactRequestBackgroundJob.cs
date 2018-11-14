@@ -9,10 +9,12 @@ using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Pact.Palantir.Cache;
 using Pact.Palantir.Encryption;
 using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
+using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.GetContacts;
 using SQLite;
 using Tangle.Net.Cryptography.Signing;
@@ -25,17 +27,17 @@ namespace Chiota.Services.BackgroundServices
     {
         #region Attributes
 
-        /*private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
+        private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
         private static IContactRepository ContactRepository => new MemoryContactRepository(Messenger, new SignatureValidator());
         private static GetContactsInteractor Interactor => new GetContactsInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
-        private DbUser User;*/
+        private DbUser _user;
 
         #endregion
 
         #region Constructors
 
-        public ContactRequestBackgroundJob(int id, DatabaseService database, INotification notification) : base(id, database, notification)
+        public ContactRequestBackgroundJob(DatabaseService database, INotification notification) : base(database, notification)
         {
         }
 
@@ -49,9 +51,10 @@ namespace Chiota.Services.BackgroundServices
         {
             base.Init(data);
 
-            /*if (string.IsNullOrEmpty(data)) return;
-            User = JsonConvert.DeserializeObject<DbUser>(data);
-            User.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(User.Seed.ToLower(), User.PublicKeyAddress);*/
+            if (string.IsNullOrEmpty(data)) return;
+            var json = JArray.Parse(data);
+            _user = JsonConvert.DeserializeObject<DbUser>(JsonConvert.SerializeObject(json[0]));
+            _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
         }
 
         #endregion
@@ -62,43 +65,47 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                Notification.Show("Test", "Test");
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromMinutes(1));
 
-                return true;
                 //Execute a contacts request for the user.
-                /*var response = await Interactor.ExecuteAsync(
+                var response = await Interactor.ExecuteAsync(
                     new GetContactsRequest
                     {
-                        RequestAddress = new Address(User.RequestAddress),
-                        PublicKeyAddress = new Address(User.PublicKeyAddress),
-                        KeyPair = User.NtruKeyPair
+                        RequestAddress = new Address(_user.RequestAddress),
+                        PublicKeyAddress = new Address(_user.PublicKeyAddress),
+                        KeyPair = _user.NtruKeyPair
                     });
 
-                if (response.PendingContactRequests.Count <= 0) return;
-
-                foreach (var item in response.PendingContactRequests)
+                if (response.Code == ResponseCode.Success)
                 {
-                    if (item.Rejected) continue;
+                    if (response.PendingContactRequests.Count <= 0) return true;
 
-                    var contact = DatabaseService.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress.EncryptValue(User.EncryptionKey));
-                    if (contact == null)
+                    foreach (var item in response.PendingContactRequests)
                     {
-                        //Add the new contact request to the database and show a notification.
-                        var request = new DbContact()
-                        {
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                            ChatKeyAddress = item.ChatKeyAddress,
-                            ChatAddress = item.ChatAddress,
-                            PublicKeyAddress = item.PublicKeyAddress,
-                            Accepted = false
-                        };
+                        if (item.Rejected) continue;
 
-                        DependencyService.Get<INotification>().Show("New contact request", request.Name);
-                        DatabaseService.Contact.AddObject(request.EncryptObject(User.EncryptionKey));
+                        var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress.EncryptValue(_user.EncryptionKey));
+                        if (contact == null)
+                        {
+                            //Add the new contact request to the database and show a notification.
+                            var request = new DbContact()
+                            {
+                                Name = item.Name,
+                                ImagePath = item.ImagePath,
+                                ChatKeyAddress = item.ChatKeyAddress,
+                                ChatAddress = item.ChatAddress,
+                                PublicKeyAddress = item.PublicKeyAddress,
+                                Accepted = false
+                            };
+
+                            DependencyService.Get<INotification>().Show("New contact request", request.Name);
+                            Database.Contact.AddObject(request.EncryptObject(_user.EncryptionKey));
+                        }
                     }
-                }*/
+
+                    return true;
+                }
+                return false;
             }
             catch (Exception)
             {

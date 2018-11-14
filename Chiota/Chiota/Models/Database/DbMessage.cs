@@ -1,4 +1,5 @@
-﻿using Chiota.Models.Database.Base;
+﻿using System;
+using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
@@ -7,14 +8,23 @@ namespace Chiota.Models.Database
     {
         #region Properties
 
-        [JsonProperty("transactionhash")]
-        public string TransactionHash { get; set; }
+        [JsonProperty("publickeyaddress")]
+        public string PublicKeyAddress { get; set; }
 
         [JsonProperty("chataddress")]
         public string ChatAddress { get; set; }
 
-        [JsonProperty("messagetryte")]
-        public string MessageTryte { get; set; }
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("date")]
+        public DateTime Date { get; set; }
+
+        [JsonProperty("signature")]
+        public string Signature { get; set; }
+
+        [JsonProperty("owner")]
+        public bool Owner { get; set; }
 
         #endregion
     }

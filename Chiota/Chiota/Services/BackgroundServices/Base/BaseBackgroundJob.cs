@@ -15,20 +15,19 @@ namespace Chiota.Services.BackgroundServices.Base
 
         public bool IsDisposed { get; private set; }
 
-        public DatabaseService Database { get; }
+        protected DatabaseService Database { get; }
 
-        public INotification Notification { get; }
+        protected INotification Notification { get; }
 
         #endregion
 
         #region Constructors
 
-        protected BaseBackgroundJob(int id, DatabaseService database, INotification notification)
+        protected BaseBackgroundJob(DatabaseService database, INotification notification)
         {
             IsRunning = false;
             IsDisposed = false;
 
-            Id = id;
             Database = database;
             Notification = notification;
         }

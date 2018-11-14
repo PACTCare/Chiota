@@ -30,7 +30,6 @@ namespace Chiota.Droid.Services.BackgroundService
 
         private static Context _context;
         private static JobScheduler _jobScheduler;
-        private static SQLiteConnection _database;
 
         #endregion
 
@@ -47,9 +46,6 @@ namespace Chiota.Droid.Services.BackgroundService
             //Set the instance of the context and scheduler.
             _context = (Context)data[0];
             _jobScheduler = (JobScheduler)data[1];
-
-            //Get the database connection.
-            _database = new Sqlite().GetDatabaseConnection();
         }
 
         #endregion
@@ -60,28 +56,23 @@ namespace Chiota.Droid.Services.BackgroundService
         /// Add a new background job.
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
         /// <param name="data"></param>
-        public void Add<T>(params object[] data) where T : BaseBackgroundJob
+        public void Add<T>(int id, params object[] data) where T : BaseBackgroundJob
         {
-            var job = new DbBackgroundJob()
-            {
-                Name = typeof(T).Name,
-                Status = BackgroundJobStatus.Created.ToString(),
-                Assembly = typeof(T).Assembly.FullName,
-                Type = typeof(T).Namespace + "." + typeof(T).Name
-            };
+            var jobs = _jobScheduler.AllPendingJobs;
+            foreach (var item in jobs)
+                if (item.Id == id)
+                    Remove(id);
 
             //Add the new background job.
-            var added = AppBase.Database.BackgroundJob.AddObject(job);
-
             var jobParameters = new PersistableBundle();
-            jobParameters.PutInt("id", added.Id);
             jobParameters.PutString("job", typeof(T).Namespace + "." + typeof(T).Name);
             jobParameters.PutString("assembly", typeof(T).Assembly.FullName);
             jobParameters.PutString("data", JsonConvert.SerializeObject(data));
             jobParameters.PutString("encryption", JsonConvert.SerializeObject(UserService.CurrentUser.EncryptionKey));
 
-            var builder = _context.CreateJobInfoBuilder(added.Id)
+            var builder = _context.CreateJobInfoBuilder(id)
                 .SetPersisted(true)
                 .SetMinimumLatency(1000)
                 .SetOverrideDeadline(10000)
@@ -97,15 +88,7 @@ namespace Chiota.Droid.Services.BackgroundService
 
         public void Remove(int id)
         {
-            try
-            {
-                _database.CreateTable<DbBackgroundJob>();
-                _database.Delete<DbBackgroundJob>(id);
-            }
-            catch (Exception)
-            {
-                //Ignore
-            }
+            _jobScheduler.Cancel(id);
         }
 
         #endregion
@@ -114,7 +97,7 @@ namespace Chiota.Droid.Services.BackgroundService
 
         public void Dispose()
         {
-            AppBase.Database.BackgroundJob.DeleteObjects();
+            _jobScheduler.CancelAll();
         }
 
         #endregion

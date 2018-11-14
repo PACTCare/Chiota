@@ -15,10 +15,10 @@ using Chiota.UWP.Services.Database;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(BackgroundWorker))]
+[assembly: Dependency(typeof(BackgroundJobWorker))]
 namespace Chiota.UWP.Services.BackgroundService
 {
-    public class BackgroundWorker : IBackgroundJobWorker
+    public class BackgroundJobWorker : IBackgroundJobWorker
     {
         #region Methods
 
@@ -33,24 +33,15 @@ namespace Chiota.UWP.Services.BackgroundService
 
         #endregion
 
-        #region Disposed
+        #region Dispose
 
         /// <summary>
         /// Dispose the background service.
         /// </summary>
         public void Dispose()
         {
-            /*_isDisposed = true;
-
-            //Unregister the background service.
-            if (IsRegistered())
-                Unregister();
-
-            //Dispose all the jobs.
-            foreach (var item in _backgroundJobs)
-                item?.Dispose();
-
-            _backgroundJobs?.Clear();*/
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+                    task.Value.Unregister(true);
         }
 
         #endregion
@@ -61,26 +52,19 @@ namespace Chiota.UWP.Services.BackgroundService
         /// Add a new background job.
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
         /// <param name="data"></param>
-        public void Add<T>(params object[] data) where T : BaseBackgroundJob
+        public void Add<T>(int id, params object[] data) where T : BaseBackgroundJob
         {
-            var job = new DbBackgroundJob()
-            {
-                Name = typeof(T).Name,
-                Status = BackgroundJobStatus.Created.ToString(),
-                Assembly = typeof(T).Assembly.FullName,
-                Type = typeof(T).Namespace + "." + typeof(T).Name
-            };
-
-            //Add the new background job.
-            var added = AppBase.Database.BackgroundJob.AddObject(job);
+            if (IsRegistered(id))
+                Unregister(id);
 
             //Create an instance of the background job.
-            var backgroundJob = (T)Activator.CreateInstance(typeof(T), added.Id, new DatabaseService(new Sqlite(), UserService.CurrentUser.EncryptionKey), new Notification());
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), new DatabaseService(new Sqlite(), UserService.CurrentUser.EncryptionKey), new Notification());
             backgroundJob.Init(JsonConvert.SerializeObject(data));
 
             var service = new BackgroundService(backgroundJob);
-            service.RegisterAsync().Wait();
+            service.Register(id);
         }
 
         #endregion
@@ -93,12 +77,35 @@ namespace Chiota.UWP.Services.BackgroundService
         /// <param name="id"></param>
         public void Remove(int id)
         {
-            /*var exist = _backgroundJobs.First(t => t.Id == jobId);
-            if (exist != null)
-            {
-                exist.Dispose();
-                _backgroundJobs.Remove(exist);
-            }*/
+            if (IsRegistered(id))
+                Unregister(id);
+        }
+
+        #endregion
+
+        #region Unregister
+
+        /// <summary>
+        /// Unregister the background service of the app.
+        /// </summary>
+        private void Unregister(int id)
+        {
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+                if (task.Value.Name == "BackgroundService_" + id)
+                    task.Value.Unregister(true);
+        }
+
+        #endregion
+
+        #region IsRegistered
+
+        /// <summary>
+        /// Get information, if the service is already registered.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRegistered(int id)
+        {
+            return BackgroundTaskRegistration.AllTasks.Any(task => task.Value.Name == "BackgroundService_" + id);
         }
 
         #endregion

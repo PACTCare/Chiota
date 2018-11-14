@@ -18,5 +18,29 @@ namespace Chiota.Services.Database.Repositories
         }
 
         #endregion
+
+        #region GetMessagesCountByPublicKeyAddress
+
+        /// <summary>
+        /// Get first object of the table by the public key address.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public int GetMessagesCountByPublicKeyAddress(string publicKeyAddress)
+        {
+            try
+            {
+                var value = Encrypt(publicKeyAddress);
+                var query = (int)Database.FindWithQuery(TableMapping, "SELECT COUNT(*) FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.PublicKeyAddress) + "=?;", value);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+        }
+
+        #endregion
     }
 }

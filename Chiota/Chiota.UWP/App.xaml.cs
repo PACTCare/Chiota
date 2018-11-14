@@ -64,7 +64,7 @@ namespace Chiota.UWP
                 ((Style)this.Resources["TabbedPageStyle"]).Setters[0] = ((Style)this.Resources["TabbedPageStyle2"]).Setters[0];
 
                 //Init the background services.
-                Xamarin.Forms.DependencyService.Get<BackgroundWorker>().Init();
+                Xamarin.Forms.DependencyService.Get<BackgroundJobWorker>().Init();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
