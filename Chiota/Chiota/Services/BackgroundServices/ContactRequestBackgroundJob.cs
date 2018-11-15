@@ -78,13 +78,14 @@ namespace Chiota.Services.BackgroundServices
 
                 if (response.Code == ResponseCode.Success)
                 {
-                    if (response.PendingContactRequests.Count <= 0) return true;
+                    if (response.PendingContactRequests == null ||
+                        response.PendingContactRequests.Count == 0) return true;
 
                     foreach (var item in response.PendingContactRequests)
                     {
                         if (item.Rejected) continue;
 
-                        var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress.EncryptValue(_user.EncryptionKey));
+                        var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
                         if (contact == null)
                         {
                             //Add the new contact request to the database and show a notification.
@@ -99,7 +100,7 @@ namespace Chiota.Services.BackgroundServices
                             };
 
                             DependencyService.Get<INotification>().Show("New contact request", request.Name);
-                            Database.Contact.AddObject(request.EncryptObject(_user.EncryptionKey));
+                            Database.Contact.AddObject(request);
                         }
                     }
 

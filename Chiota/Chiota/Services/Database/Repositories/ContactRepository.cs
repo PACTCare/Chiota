@@ -44,6 +44,32 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
+        #region GetUnacceptedContacts
+
+        /// <summary>
+        /// Get all unaccepted contacts of the user.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public List<DbContact> GetUnacceptedContacts()
+        {
+            try
+            {
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=0;").Cast<DbContact>().ToList();
+
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
         #region GetAcceptedContactsByPublicKeyAddress
 
         /// <summary>

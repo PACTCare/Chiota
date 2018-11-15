@@ -13,7 +13,7 @@ namespace Chiota.Services.Database.Base
     {
         #region Attributes
 
-        protected EncryptionKey EncryptionKey { get; }
+        protected static EncryptionKey EncryptionKey;
 
         #endregion
 
