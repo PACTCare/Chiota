@@ -65,7 +65,7 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                await Task.Delay(TimeSpan.FromMinutes(1));
+                await Task.Delay(TimeSpan.FromSeconds(30));
 
                 //Execute a contacts request for the user.
                 var response = await Interactor.ExecuteAsync(
@@ -78,31 +78,64 @@ namespace Chiota.Services.BackgroundServices
 
                 if (response.Code == ResponseCode.Success)
                 {
-                    if (response.PendingContactRequests == null ||
-                        response.PendingContactRequests.Count == 0) return true;
-
-                    foreach (var item in response.PendingContactRequests)
+                    //Handle contact requests for the user.
+                    await Task.Run(() =>
                     {
-                        if (item.Rejected) continue;
+                        if (response.PendingContactRequests == null ||
+                            response.PendingContactRequests.Count == 0) return;
 
-                        var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
-                        if (contact == null)
+                        foreach (var item in response.PendingContactRequests)
                         {
-                            //Add the new contact request to the database and show a notification.
-                            var request = new DbContact()
-                            {
-                                Name = item.Name,
-                                ImagePath = item.ImagePath,
-                                ChatKeyAddress = item.ChatKeyAddress,
-                                ChatAddress = item.ChatAddress,
-                                PublicKeyAddress = item.PublicKeyAddress,
-                                Accepted = false
-                            };
+                            if (item.Rejected) continue;
 
-                            DependencyService.Get<INotification>().Show("New contact request", request.Name);
-                            Database.Contact.AddObject(request);
+                            var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
+                            if (contact == null)
+                            {
+                                //Add the new contact request to the database and show a notification.
+                                var request = new DbContact()
+                                {
+                                    Name = item.Name,
+                                    ImagePath = item.ImagePath,
+                                    ChatKeyAddress = item.ChatKeyAddress,
+                                    ChatAddress = item.ChatAddress,
+                                    ContactAddress = item.ContactAddress,
+                                    PublicKeyAddress = item.PublicKeyAddress,
+                                    Accepted = false
+                                };
+
+                                DependencyService.Get<INotification>().Show("New contact request", request.Name);
+                                Database.Contact.AddObject(request);
+                            }
                         }
-                    }
+                    });
+
+                    //Update the contacts of the user.
+                    await Task.Run(() =>
+                    {
+                        if (response.ApprovedContacts == null ||
+                            response.ApprovedContacts.Count == 0) return;
+
+                        foreach (var item in response.ApprovedContacts)
+                        {
+                            if (item.Rejected) continue;
+
+                            var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
+                            if (contact != null && contact.ChatKeyAddress == null)
+                            {
+                                //Update the new contact request to the database and show a notification.
+                                contact.Name = item.Name;
+                                contact.ImagePath = item.ImagePath;
+                                contact.ChatKeyAddress = item.ChatKeyAddress;
+                                contact.ChatAddress = item.ChatAddress;
+                                contact.ContactAddress = item.ContactAddress;
+                                contact.PublicKeyAddress = item.PublicKeyAddress;
+                                contact.Accepted = true;
+
+                                DependencyService.Get<INotification>().Show("New contact", contact.Name);
+                                Database.Contact.UpdateObject(contact);
+                            }
+                        }
+                    });
 
                     return true;
                 }

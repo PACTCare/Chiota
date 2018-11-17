@@ -168,6 +168,7 @@ namespace Chiota.ViewModels.Chat
                         ImagePath = item.ImagePath,
                         ChatAddress = item.ChatAddress,
                         ChatKeyAddress = item.ChatKeyAddress,
+                        ContactAddress = item.ContactAddress,
                         PublicKeyAddress = item.PublicKeyAddress,
                         Rejected = !item.Accepted
                     };
@@ -205,6 +206,7 @@ namespace Chiota.ViewModels.Chat
                         ImagePath = item.ImagePath,
                         ChatAddress = item.ChatAddress,
                         ChatKeyAddress = item.ChatKeyAddress,
+                        ContactAddress = item.ContactAddress,
                         PublicKeyAddress = item.PublicKeyAddress,
                         Rejected = !item.Accepted
                     };

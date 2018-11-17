@@ -97,32 +97,6 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
-        #region GetContactsOrderByAcceptedDesc
-
-        /// <summary>
-        /// Get all objects of the table order by accepted desc.
-        /// </summary>
-        /// <returns>List of the table objects</returns>
-        public List<DbContact> GetContactsOrderByAcceptedDesc()
-        {
-            try
-            {
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " ORDER BY " + nameof(DbContact.Accepted) + " DESC;").Cast<DbContact>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
-                return query;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        #endregion
-
         #region GetContactByPublicKeyAddress
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                await Task.Delay(TimeSpan.FromMinutes(1));
+                await Task.Delay(TimeSpan.FromSeconds(30));
 
                 //Execute a messages request for the chat.
                 var response = await Interactor.ExecuteAsync(

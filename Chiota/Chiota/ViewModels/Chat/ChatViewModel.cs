@@ -25,7 +25,6 @@ namespace Chiota.ViewModels.Chat
 
         private IAsymmetricKeyPair _chatKeyPair;
         private Pact.Palantir.Entity.Contact _contact;
-        private Address _chatAddress;
         private string _message;
         private InfiniteScrollCollection<MessageBinding> _messageList;
         private MessageBinding _lastMessage;
@@ -162,7 +161,6 @@ namespace Chiota.ViewModels.Chat
 
             //Set the contact property.
             Contact = (Pact.Palantir.Entity.Contact)data;
-            _chatAddress = new Address(Contact.ChatAddress);
 
             //Load the first package of message from the database.
             LoadMessages();
@@ -204,40 +202,27 @@ namespace Chiota.ViewModels.Chat
 
         private bool LoadMessages()
         {
-            var task = Task.Run(async () =>
+            var task = Task.Run(() =>
             {
-                var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
-                    new GetMessagesRequest
-                    {
-                        ChatAddress = _chatAddress,
-                        ChatKeyPair = _chatKeyPair,
-                        ChatKeyAddress = new Address(Contact.ChatKeyAddress),
-                        UserKeyPair = UserService.CurrentUser.NtruKeyPair
-                    });
+                var messages = Database.Message.GetMessagesByPublicKeyAddress(_contact.PublicKeyAddress);
+                var list = new List<MessageBinding>();
 
-                if (response.Code == ResponseCode.Success)
+                foreach (var item in messages)
                 {
-                    _chatAddress = response.CurrentChatAddress;
-                    _chatKeyPair = response.ChatKeyPair;
+                    var message = new MessageBinding(item.Value, item.Owner, item.Date);
+                    list.Add(message);
+                }
 
-                    var messages = new List<MessageBinding>();
-                    foreach (var message in response.Messages)
+                if (MessageList.Count != list.Count)
+                {
+                    var newMessages = new List<MessageBinding>();
+                    for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
                     {
-                        var isOwner = message.Signature != Contact.PublicKeyAddress.Substring(0, 30);
-                        messages.Add(new MessageBinding(message.Message, isOwner));
+                        newMessages.Add(list[i]);
                     }
 
-                    if (MessageList.Count != messages.Count)
-                    {
-                        var newMessages = new List<MessageBinding>();
-                        for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
-                        {
-                            newMessages.Add(messages[i]);
-                        }
-
-                        MessageList.AddRange(newMessages);
-                        MessageListHeight = MessageList.Count * 43;
-                    }
+                    MessageList.AddRange(newMessages);
+                    MessageListHeight = MessageList.Count * 43;
                 }
             });
 
@@ -261,9 +246,10 @@ namespace Chiota.ViewModels.Chat
             var response = await DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().ExecuteAsync(new SendMessageRequest
             {
                 ChatAddress = new Address(Contact.ChatAddress),
-                ChatKeyPair = _chatKeyPair,
-                Message = tmp,
-                UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
+                ChatKeyAddress = new Address(Contact.ChatKeyAddress),
+                UserKeyPair = UserService.CurrentUser.NtruKeyPair,
+                UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                Message = tmp
             });
 
             if (response.Code == ResponseCode.Success)

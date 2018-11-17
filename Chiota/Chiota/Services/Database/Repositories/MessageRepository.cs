@@ -43,6 +43,33 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
+        #region GetMessagesByPublicKeyAddress
+
+        /// <summary>
+        /// Get the last message by the public key address.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public List<DbMessage> GetMessagesByPublicKeyAddress(string publicKeyAddress)
+        {
+            try
+            {
+                var value = Encrypt(publicKeyAddress);
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.PublicKeyAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + " DESC LIMIT 1;", value).Cast<DbMessage>().ToList();
+
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
         #region GetLastMessagesByPublicKeyAddress
 
         /// <summary>
