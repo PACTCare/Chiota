@@ -37,7 +37,7 @@ namespace Chiota.Services.BackgroundServices
 
         #region Constructors
 
-        public ContactRequestBackgroundJob(DatabaseService database, INotification notification) : base(database, notification)
+        public ContactRequestBackgroundJob(int id, DatabaseService database, INotification notification) : base(id, database, notification)
         {
         }
 
@@ -65,7 +65,7 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(30));
+                await Task.Delay(TimeSpan.FromSeconds(5));
 
                 //Execute a contacts request for the user.
                 var response = await Interactor.ExecuteAsync(

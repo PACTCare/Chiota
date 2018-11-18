@@ -23,8 +23,10 @@ namespace Chiota.Services.BackgroundServices.Base
 
         #region Constructors
 
-        protected BaseBackgroundJob(DatabaseService database, INotification notification)
+        protected BaseBackgroundJob(int id, DatabaseService database, INotification notification)
         {
+            Id = id;
+
             IsRunning = false;
             IsDisposed = false;
 

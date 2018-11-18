@@ -20,6 +20,12 @@ namespace Chiota.UWP.Services.BackgroundService
 {
     public class BackgroundJobWorker : IBackgroundJobWorker
     {
+        #region Attributes
+
+        private static List<BaseBackgroundJob> _backgroundJobs;
+
+        #endregion
+
         #region Methods
 
         #region Init
@@ -29,6 +35,7 @@ namespace Chiota.UWP.Services.BackgroundService
         /// </summary>
         public void Init(params object[] data)
         {
+            _backgroundJobs = new List<BaseBackgroundJob>();
         }
 
         #endregion
@@ -52,60 +59,43 @@ namespace Chiota.UWP.Services.BackgroundService
         /// Add a new background job.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
         /// <param name="data"></param>
-        public void Add<T>(int id, params object[] data) where T : BaseBackgroundJob
+        public void Add<T>(params object[] data) where T : BaseBackgroundJob
         {
-            if (IsRegistered(id))
-                Unregister(id);
-
             //Create an instance of the background job.
-            var backgroundJob = (T)Activator.CreateInstance(typeof(T), new DatabaseService(new Sqlite(), UserService.CurrentUser.EncryptionKey), new Notification());
+            var backgroundJob = (T)Activator.CreateInstance(typeof(T), _backgroundJobs.Count(), new DatabaseService(new Sqlite(), UserService.CurrentUser.EncryptionKey), new Notification());
             backgroundJob.Init(JsonConvert.SerializeObject(data));
 
-            var service = new BackgroundService(backgroundJob);
-            service.Register(id);
+            _backgroundJobs.Add(backgroundJob);
         }
 
         #endregion
 
-        #region Remove
+        #region Clear
 
         /// <summary>
         /// Remove a background job by his id.
         /// </summary>
-        /// <param name="id"></param>
-        public void Remove(int id)
+        public void Clear()
         {
-            if (IsRegistered(id))
-                Unregister(id);
+            _backgroundJobs.Clear();
         }
 
         #endregion
 
-        #region Unregister
+        #region Register
 
         /// <summary>
-        /// Unregister the background service of the app.
-        /// </summary>
-        private void Unregister(int id)
-        {
-            foreach (var task in BackgroundTaskRegistration.AllTasks)
-                if (task.Value.Name == "BackgroundService_" + id)
-                    task.Value.Unregister(true);
-        }
-
-        #endregion
-
-        #region IsRegistered
-
-        /// <summary>
-        /// Get information, if the service is already registered.
+        /// Register the background task of the app.
         /// </summary>
         /// <returns></returns>
-        private bool IsRegistered(int id)
+        public void Register()
         {
-            return BackgroundTaskRegistration.AllTasks.Any(task => task.Value.Name == "BackgroundService_" + id);
+            //First cancel all running jobs.
+            Dispose();
+
+            var service = new BackgroundService(_backgroundJobs);
+            Task.Run(async () => { await service.RegisterAsync(); });
         }
 
         #endregion

@@ -18,15 +18,15 @@ namespace Chiota.UWP.Services.BackgroundService
 
         #region Properties
 
-        public BaseBackgroundJob BackgroundJob { get; }
+        public List<BaseBackgroundJob> BackgroundJobs { get; }
 
         #endregion
 
         #region Constructors
 
-        public BackgroundService(BaseBackgroundJob backgroundJob)
+        public BackgroundService(List<BaseBackgroundJob> backgroundJobs)
         {
-            BackgroundJob = backgroundJob;
+            BackgroundJobs = backgroundJobs;
         }
 
         #endregion
@@ -39,37 +39,34 @@ namespace Chiota.UWP.Services.BackgroundService
         /// Register the background task of the app.
         /// </summary>
         /// <returns></returns>
-        public void Register(int id)
+        public async Task RegisterAsync()
         {
-            Task.Run(async () =>
+            //Update the access to the execution manager.
+            BackgroundExecutionManager.RemoveAccess();
+            var requestAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
+
+            //Create new background task.
+            var builder = new BackgroundTaskBuilder
             {
-                //Update the access to the execution manager.
-                BackgroundExecutionManager.RemoveAccess();
-                var requestAccessStatus = await BackgroundExecutionManager.RequestAccessAsync();
+                Name = "ChiotaBackgroundService",
+                TaskEntryPoint = "RuntimeComponent.UWP.BackgroundTask"
+            };
 
-                //Create new background task.
-                var builder = new BackgroundTaskBuilder
-                {
-                    Name = "BackgroundService_" + id,
-                    TaskEntryPoint = "RuntimeComponent.UWP.BackgroundTask"
-                };
+            if (requestAccessStatus == BackgroundAccessStatus.AlwaysAllowed || requestAccessStatus == BackgroundAccessStatus.AllowedSubjectToSystemPolicy)
+            {
+                _trigger = new ApplicationTrigger();
 
-                if (requestAccessStatus == BackgroundAccessStatus.AlwaysAllowed || requestAccessStatus == BackgroundAccessStatus.AllowedSubjectToSystemPolicy)
-                {
-                    _trigger = new ApplicationTrigger();
+                //Set the triggers.
+                builder.SetTrigger(_trigger);
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
 
-                    //Set the triggers.
-                    builder.SetTrigger(_trigger);
-                    builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                //Register the new task.
+                var task = builder.Register();
 
-                    //Register the new task.
-                    var task = builder.Register();
+                task.Completed += TaskCompleted;
 
-                    task.Completed += TaskCompleted;
-
-                    await _trigger.RequestAsync();
-                }
-            });
+                await _trigger.RequestAsync();
+            }
         }
 
         #endregion
@@ -85,14 +82,20 @@ namespace Chiota.UWP.Services.BackgroundService
         {
             Task.Run(async () =>
             {
-                var result = await BackgroundJob.RunAsync();
-
-                //Update database, because job is finished.
-                if (!result)
+                foreach (var item in BackgroundJobs)
                 {
-                    BackgroundJob.Dispose();
-                    return;
+                    var result = await item.RunAsync();
+
+                    //Update database, because job is finished.
+                    if (!result)
+                    {
+                        item.Dispose();
+                        BackgroundJobs.Remove(item);
+                        return;
+                    }
                 }
+
+                if (BackgroundJobs.Count == 0) return;
 
                 //Repeat it.
                 await _trigger.RequestAsync();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
 using Android.App.Job;
@@ -14,6 +15,7 @@ using Chiota.Services;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SQLite;
 using Xamarin.Forms;
 using Void = Java.Lang.Void;
@@ -49,27 +51,30 @@ namespace Chiota.Droid.Services.BackgroundService
         /// <returns></returns>
         public override bool OnStartJob(JobParameters @params)
         {
-            var job = @params.Extras.GetString("job");
-            var assembly = @params.Extras.GetString("assembly");
-            var data = @params.Extras.GetString("data");
+            var jobs = @params.Extras.GetStringArray("jobs");
             var encryption = @params.Extras.GetString("encryption");
 
-            //Create a new instance of the background job.
-            var jobType = Type.GetType(job + ", " + assembly);
-            if (jobType == null)
+            foreach (var item in jobs)
             {
-                JobFinished(@params, false);
-                return false;
+                var job = JObject.Parse(item);
+
+                //Create a new instance of the background job.
+                var jobType = Type.GetType((string)job.GetValue("job"));
+                if (jobType == null)
+                {
+                    JobFinished(@params, false);
+                    return false;
+                }
+
+                var encryptionKey = JsonConvert.DeserializeObject<EncryptionKey>(encryption);
+                var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, (int)job.GetValue("id"), new DatabaseService(new Sqlite(), encryptionKey), new Notification());
+                backgroundJob.Init((string)job.GetValue("data"));
+
+                _parameters = @params;
+                _serviceTask = new BackgroundServiceTask(this);
+
+                _serviceTask.Execute(backgroundJob);
             }
-
-            var encryptionKey = JsonConvert.DeserializeObject<EncryptionKey>(encryption);
-            var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, new DatabaseService(new Sqlite(), encryptionKey), new Notification());
-            backgroundJob.Init(data);
-
-            _parameters = @params;
-            _serviceTask = new BackgroundServiceTask(this);
-
-            _serviceTask.Execute(backgroundJob);
 
             return true;
         }
@@ -159,10 +164,32 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 jobService.SendBroadcast();
 
-                if(job.IsDisposed)
-                    jobService.JobFinished(jobService._parameters, false);
-                else
-                    jobService.OnStartJob(jobService._parameters);
+                if (job.IsDisposed)
+                {
+                    //Remove the job from the parameters.
+                    var jobs = jobService._parameters.Extras.GetStringArray("jobs");
+                    foreach (var item in jobs)
+                    {
+                        var json = JObject.Parse(item);
+                        if (job.Id == (int) json.GetValue("id"))
+                        {
+                            var list = new List<string>(jobs);
+                            list.Remove(item);
+                            jobService._parameters.Extras.PutStringArray("jobs", list.ToArray());
+                            break;
+                        }
+                    }
+
+                    jobs = jobService._parameters.Extras.GetStringArray("jobs");
+
+                    if (jobs.Length == 0)
+                    {
+                        jobService.JobFinished(jobService._parameters, false);
+                        return;
+                    }
+                }
+
+                jobService.OnStartJob(jobService._parameters);
             }
 
             protected override void OnCancelled()

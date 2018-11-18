@@ -45,7 +45,7 @@ namespace Chiota.Services.BackgroundServices
 
         #region Constructors
 
-        public ChatMessageBackgroundJob(DatabaseService database, INotification notification) : base(database, notification)
+        public ChatMessageBackgroundJob(int id, DatabaseService database, INotification notification) : base(id, database, notification)
         {
         }
 
@@ -74,7 +74,7 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(30));
+                await Task.Delay(TimeSpan.FromSeconds(5));
 
                 //Execute a messages request for the chat.
                 var response = await Interactor.ExecuteAsync(

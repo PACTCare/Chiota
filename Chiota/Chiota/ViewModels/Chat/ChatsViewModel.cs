@@ -113,6 +113,17 @@ namespace Chiota.ViewModels.Chat
 
         #endregion
 
+        #region Reverse
+
+        public override void Reverse(object data = null)
+        {
+            base.Reverse(data);
+
+            UpdateView();
+        }
+
+        #endregion
+
         #region ViewIsAppearing
 
         protected override void ViewIsAppearing()
@@ -120,7 +131,7 @@ namespace Chiota.ViewModels.Chat
             base.ViewIsAppearing();
         
             _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromMinutes(1), UpdateView);
+            Device.StartTimer(TimeSpan.FromSeconds(10), UpdateView);
         }
 
         #endregion
