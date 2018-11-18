@@ -24,16 +24,6 @@
           <uap:Rotation Preference="portrait" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
-      <Extensions>
-        <Extension Category="windows.backgroundTasks" EntryPoint="RuntimeComponent.UWP.BackgroundTask">
-          <BackgroundTasks>
-            <Task Type="general" />
-            <Task Type="systemEvent" />
-            <Task Type="timer" />
-            <Task Type="pushNotification" />
-          </BackgroundTasks>
-        </Extension>
-      </Extensions>
     </Application>
   </Applications>
   <Capabilities>

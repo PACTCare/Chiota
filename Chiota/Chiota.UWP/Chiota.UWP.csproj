@@ -273,10 +273,6 @@
       <Project>{a569a7a8-467d-45bd-8848-00f6a0dc34bc}</Project>
       <Name>Chiota</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RuntimeComponent.UWP\RuntimeComponent.UWP.csproj">
-      <Project>{64edbc7f-b72b-480b-ae2d-d93b2c19d827}</Project>
-      <Name>RuntimeComponent.UWP</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
