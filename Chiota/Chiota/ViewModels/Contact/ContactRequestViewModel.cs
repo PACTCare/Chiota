@@ -109,7 +109,7 @@ namespace Chiota.ViewModels.Contact
                     if (response.Code == ResponseCode.Success)
                     {
                         //Update the contact in the database.
-                        var contact = Database.Contact.GetContactByPublicKeyAddress(_contact.PublicKeyAddress);
+                        var contact = Database.Contact.GetContactByChatAddress(_contact.ChatAddress);
                         contact.Accepted = true;
                         Database.Contact.UpdateObject(contact);
 
@@ -147,7 +147,7 @@ namespace Chiota.ViewModels.Contact
                     if (response.Code == ResponseCode.Success)
                     {
                         //Update the contact in the database.
-                        var contact = Database.Contact.GetContactByPublicKeyAddress(_contact.PublicKeyAddress);
+                        var contact = Database.Contact.GetContactByChatAddress(_contact.ChatAddress);
                         Database.Contact.DeleteObject(contact.Id);
 
                         await DisplayAlertAsync("Successful action", "The contact was successfully declined.");

@@ -103,12 +103,12 @@ namespace Chiota.Services.Database.Repositories
         /// Get an contact by his public key address of the user.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public DbContact GetContactByPublicKeyAddress(string publicKeyAddress)
+        public DbContact GetContactByChatAddress(string chatAddress)
         {
             try
             {
-                var value = Encrypt(publicKeyAddress);
-                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+                var value = Encrypt(chatAddress);
+                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=?", value) as DbContact;
 
                 DecryptModel(query);
 

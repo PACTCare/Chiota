@@ -88,7 +88,7 @@ namespace Chiota.Services.BackgroundServices
                         {
                             if (item.Rejected) continue;
 
-                            var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
+                            var contact = Database.Contact.GetContactByChatAddress(item.ChatAddress);
                             if (contact == null)
                             {
                                 //Add the new contact request to the database and show a notification.
@@ -119,7 +119,7 @@ namespace Chiota.Services.BackgroundServices
                         {
                             if (item.Rejected) continue;
 
-                            var contact = Database.Contact.GetContactByPublicKeyAddress(item.PublicKeyAddress);
+                            var contact = Database.Contact.GetContactByChatAddress(item.ChatAddress);
                             if (contact != null && contact.ChatKeyAddress == null)
                             {
                                 //Update the new contact request to the database and show a notification.
