@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="55427Noc2.Chiota" Publisher="CN=E8171C74-A62F-4E42-8C8F-66B93C0754CD" Version="1.1.4.0" />
+  <Identity Name="55427Noc2.Chiota" Publisher="CN=E8171C74-A62F-4E42-8C8F-66B93C0754CD" Version="1.1.5.0" />
   <mp:PhoneIdentity PhoneProductId="f0fb23ed-4306-47ef-9c2e-e261c96129b3" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Chiota</DisplayName>

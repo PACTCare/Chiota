@@ -1,12 +1,12 @@
 ﻿namespace Chiota.UWP
 {
-  public sealed partial class MainPage
-  {
-    public MainPage()
+    public sealed partial class MainPage
     {
-      this.InitializeComponent();
+        public MainPage()
+        {
+            this.InitializeComponent();
 
-      this.LoadApplication(new Chiota.App());
+            this.LoadApplication(new Chiota.App());
+        }
     }
-  }
 }
