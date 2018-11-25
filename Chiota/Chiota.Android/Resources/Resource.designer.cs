@@ -1269,50 +1269,50 @@ namespace Chiota.Droid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0c0050
-			public const int ListViewHighlighted = 2131492944;
-			
-			// aapt resource value: 0x7f0c004f
-			public const int ListViewSelected = 2131492943;
-			
 			// aapt resource value: 0x7f0c0051
-			public const int abc_background_cache_hint_selector_material_dark = 2131492945;
+			public const int ListViewHighlighted = 2131492945;
+			
+			// aapt resource value: 0x7f0c0050
+			public const int ListViewSelected = 2131492944;
 			
 			// aapt resource value: 0x7f0c0052
-			public const int abc_background_cache_hint_selector_material_light = 2131492946;
+			public const int abc_background_cache_hint_selector_material_dark = 2131492946;
 			
 			// aapt resource value: 0x7f0c0053
-			public const int abc_btn_colored_borderless_text_material = 2131492947;
+			public const int abc_background_cache_hint_selector_material_light = 2131492947;
 			
 			// aapt resource value: 0x7f0c0054
-			public const int abc_btn_colored_text_material = 2131492948;
+			public const int abc_btn_colored_borderless_text_material = 2131492948;
 			
 			// aapt resource value: 0x7f0c0055
-			public const int abc_color_highlight_material = 2131492949;
+			public const int abc_btn_colored_text_material = 2131492949;
 			
 			// aapt resource value: 0x7f0c0056
-			public const int abc_hint_foreground_material_dark = 2131492950;
+			public const int abc_color_highlight_material = 2131492950;
 			
 			// aapt resource value: 0x7f0c0057
-			public const int abc_hint_foreground_material_light = 2131492951;
+			public const int abc_hint_foreground_material_dark = 2131492951;
+			
+			// aapt resource value: 0x7f0c0058
+			public const int abc_hint_foreground_material_light = 2131492952;
 			
 			// aapt resource value: 0x7f0c0004
 			public const int abc_input_method_navigation_guard = 2131492868;
 			
-			// aapt resource value: 0x7f0c0058
-			public const int abc_primary_text_disable_only_material_dark = 2131492952;
-			
 			// aapt resource value: 0x7f0c0059
-			public const int abc_primary_text_disable_only_material_light = 2131492953;
+			public const int abc_primary_text_disable_only_material_dark = 2131492953;
 			
 			// aapt resource value: 0x7f0c005a
-			public const int abc_primary_text_material_dark = 2131492954;
+			public const int abc_primary_text_disable_only_material_light = 2131492954;
 			
 			// aapt resource value: 0x7f0c005b
-			public const int abc_primary_text_material_light = 2131492955;
+			public const int abc_primary_text_material_dark = 2131492955;
 			
 			// aapt resource value: 0x7f0c005c
-			public const int abc_search_url_text = 2131492956;
+			public const int abc_primary_text_material_light = 2131492956;
+			
+			// aapt resource value: 0x7f0c005d
+			public const int abc_search_url_text = 2131492957;
 			
 			// aapt resource value: 0x7f0c0005
 			public const int abc_search_url_text_normal = 2131492869;
@@ -1323,29 +1323,29 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0c0007
 			public const int abc_search_url_text_selected = 2131492871;
 			
-			// aapt resource value: 0x7f0c005d
-			public const int abc_secondary_text_material_dark = 2131492957;
-			
 			// aapt resource value: 0x7f0c005e
-			public const int abc_secondary_text_material_light = 2131492958;
+			public const int abc_secondary_text_material_dark = 2131492958;
 			
 			// aapt resource value: 0x7f0c005f
-			public const int abc_tint_btn_checkable = 2131492959;
+			public const int abc_secondary_text_material_light = 2131492959;
 			
 			// aapt resource value: 0x7f0c0060
-			public const int abc_tint_default = 2131492960;
+			public const int abc_tint_btn_checkable = 2131492960;
 			
 			// aapt resource value: 0x7f0c0061
-			public const int abc_tint_edittext = 2131492961;
+			public const int abc_tint_default = 2131492961;
 			
 			// aapt resource value: 0x7f0c0062
-			public const int abc_tint_seek_thumb = 2131492962;
+			public const int abc_tint_edittext = 2131492962;
 			
 			// aapt resource value: 0x7f0c0063
-			public const int abc_tint_spinner = 2131492963;
+			public const int abc_tint_seek_thumb = 2131492963;
 			
 			// aapt resource value: 0x7f0c0064
-			public const int abc_tint_switch_track = 2131492964;
+			public const int abc_tint_spinner = 2131492964;
+			
+			// aapt resource value: 0x7f0c0065
+			public const int abc_tint_switch_track = 2131492965;
 			
 			// aapt resource value: 0x7f0c004d
 			public const int accent = 2131492941;
@@ -1355,6 +1355,9 @@ namespace Chiota.Droid
 			
 			// aapt resource value: 0x7f0c0009
 			public const int accent_material_light = 2131492873;
+			
+			// aapt resource value: 0x7f0c004e
+			public const int arrow_color = 2131492942;
 			
 			// aapt resource value: 0x7f0c000a
 			public const int background_floating_material_dark = 2131492874;
@@ -1407,8 +1410,8 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0c0040
 			public const int design_bottom_navigation_shadow_color = 2131492928;
 			
-			// aapt resource value: 0x7f0c0065
-			public const int design_error = 2131492965;
+			// aapt resource value: 0x7f0c0066
+			public const int design_error = 2131492966;
 			
 			// aapt resource value: 0x7f0c0041
 			public const int design_fab_shadow_end_color = 2131492929;
@@ -1434,8 +1437,8 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0c0048
 			public const int design_snackbar_background_color = 2131492936;
 			
-			// aapt resource value: 0x7f0c0066
-			public const int design_tint_password_toggle = 2131492966;
+			// aapt resource value: 0x7f0c0067
+			public const int design_tint_password_toggle = 2131492967;
 			
 			// aapt resource value: 0x7f0c0016
 			public const int dim_foreground_disabled_material_dark = 2131492886;
@@ -1557,8 +1560,8 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0c0038
 			public const int secondary_text_disabled_material_light = 2131492920;
 			
-			// aapt resource value: 0x7f0c004e
-			public const int splash_background = 2131492942;
+			// aapt resource value: 0x7f0c004f
+			public const int splash_background = 2131492943;
 			
 			// aapt resource value: 0x7f0c0039
 			public const int switch_thumb_disabled_material_dark = 2131492921;
@@ -1566,11 +1569,11 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0c003a
 			public const int switch_thumb_disabled_material_light = 2131492922;
 			
-			// aapt resource value: 0x7f0c0067
-			public const int switch_thumb_material_dark = 2131492967;
-			
 			// aapt resource value: 0x7f0c0068
-			public const int switch_thumb_material_light = 2131492968;
+			public const int switch_thumb_material_dark = 2131492968;
+			
+			// aapt resource value: 0x7f0c0069
+			public const int switch_thumb_material_light = 2131492969;
 			
 			// aapt resource value: 0x7f0c003b
 			public const int switch_thumb_normal_material_dark = 2131492923;
@@ -4135,6 +4138,9 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f070036
 			public const int character_counter_pattern = 2131165238;
 			
+			// aapt resource value: 0x7f07003d
+			public const int google_app_id = 2131165245;
+			
 			// aapt resource value: 0x7f070000
 			public const int library_name = 2131165184;
 			
@@ -4757,6 +4763,9 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0b000e
 			public const int CardView_Light = 2131427342;
 			
+			// aapt resource value: 0x7f0b0193
+			public const int DrawerArrowStyle = 2131427731;
+			
 			// aapt resource value: 0x7f0b018f
 			public const int MainTheme = 2131427727;
 			
@@ -4850,11 +4859,11 @@ namespace Chiota.Droid
 			// aapt resource value: 0x7f0b0047
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131427399;
 			
-			// aapt resource value: 0x7f0b0193
-			public const int SplashTheme = 2131427731;
-			
 			// aapt resource value: 0x7f0b0194
-			public const int SplashTheme_Base = 2131427732;
+			public const int SplashTheme = 2131427732;
+			
+			// aapt resource value: 0x7f0b0195
+			public const int SplashTheme_Base = 2131427733;
 			
 			// aapt resource value: 0x7f0b00d6
 			public const int TextAppearance_AppCompat = 2131427542;

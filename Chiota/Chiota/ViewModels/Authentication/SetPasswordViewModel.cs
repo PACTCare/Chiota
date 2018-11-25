@@ -5,6 +5,8 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
+using Chiota.Services.BackgroundServices;
+using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;

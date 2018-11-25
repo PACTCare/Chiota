@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
@@ -13,18 +14,8 @@ namespace Chiota.Services.Database.Repositories
     {
         #region Constructors
 
-        public UserRepository(SQLiteConnection database, string key, string salt) : base(database, key, salt)
+        public UserRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database, encryptionKey)
         {
-        }
-
-        #endregion
-
-        #region IsUserStored
-
-        public bool IsUserStored()
-        {
-            var result = Database.Table<DbUser>();
-            return result.Any();
         }
 
         #endregion

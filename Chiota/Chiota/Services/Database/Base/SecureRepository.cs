@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using Chiota.Models;
 using Chiota.Models.Database.Base;
 using Chiota.Services.Security;
 using SQLite;
@@ -13,17 +13,15 @@ namespace Chiota.Services.Database.Base
     {
         #region Attributes
 
-        protected string Key { get; }
-        protected string Salt { get; }
+        protected static EncryptionKey EncryptionKey;
 
         #endregion
 
         #region Constructors
 
-        protected SecureRepository(SQLiteConnection database, string key, string salt) : base(database)
+        protected SecureRepository(SQLiteConnection database, EncryptionKey encryptionKey) : base(database)
         {
-            Key = key;
-            Salt = salt;
+            EncryptionKey = encryptionKey;
         }
 
         #endregion
@@ -52,7 +50,7 @@ namespace Chiota.Services.Database.Base
                 Console.WriteLine(e);
                 return null;
             }
-        }        
+        }
 
         #endregion
 
@@ -125,7 +123,7 @@ namespace Chiota.Services.Database.Base
                 return null;
             }
         }
-                
+
         #endregion
 
         #region UpdateObject
@@ -148,7 +146,7 @@ namespace Chiota.Services.Database.Base
                 Console.WriteLine(e);
                 return false;
             }
-        }               
+        }
 
         #endregion
 
@@ -177,7 +175,7 @@ namespace Chiota.Services.Database.Base
 
         protected string Encrypt(string value)
         {
-            var encrypted = Rijndael.Encrypt(value, Key, Salt);
+            var encrypted = Encryption.Encrypt(value, EncryptionKey.Value, EncryptionKey.Salt);
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(encrypted));
         }
 
@@ -205,7 +203,7 @@ namespace Chiota.Services.Database.Base
         protected string Decrypt(string value)
         {
             var text = Encoding.UTF8.GetString(Convert.FromBase64String(value));
-            return Rijndael.Decrypt(text, Key, Salt);
+            return Encryption.Decrypt(text, EncryptionKey.Value, EncryptionKey.Salt);
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace Chiota.UWP.Services.Database
 
         public string GetDatabasePath()
         {
-            var databasePath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, DatabaseService.Name + ".db");
+            var databasePath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "Chiota" + ".db");
             return databasePath;
         }
 

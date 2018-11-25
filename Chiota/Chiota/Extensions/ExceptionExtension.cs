@@ -66,7 +66,7 @@ namespace Chiota.Extensions
                 alert.Message = exception.Detail;
 
             //Get the current navigation instance and show the popup.
-            var navigation = AppBase.NavigationInstance.CurrentPage.Navigation;
+            var navigation = AppBase.GetNavigationInstance().CurrentPage.Navigation;
             await navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
         }
 
