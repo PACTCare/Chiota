@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Helper;
@@ -13,6 +14,7 @@ using Chiota.Popups.PopupPages;
 using Chiota.Resources.Localizations;
 using Chiota.Resources.Settings;
 using Chiota.Services;
+using Chiota.Services.Database.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
@@ -247,6 +249,42 @@ namespace Chiota.ViewModels.Settings
                     {
                         await PopPopupAsync();
                         await exception.ShowAlertAsync();
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region DeleteAccount
+
+        public ICommand DeleteAccountCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    //Show alert for delete informations.
+                    var result = await DisplayAlertAsync("Delete account", "Are you sure, you want to delete your account? All of your local data will be lost.", true);
+
+                    if (!result.Result) return;
+
+                    await PushLoadingSpinnerAsync("Delete account ...");
+
+                    var userService = DependencyResolver.Resolve<UserService>();
+                    var deleteResult = await userService.DeleteAsync();
+
+                    await PopPopupAsync();
+
+                    if (!deleteResult)
+                    {
+                        //Could not delete the database. This should not happen.
+                        await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                    }
+                    else
+                    {
+                        //Show the welcome page.
+                        AppBase.ShowStartUp();
                     }
                 });
             }

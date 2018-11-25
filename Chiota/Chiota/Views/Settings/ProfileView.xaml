@@ -20,7 +20,7 @@
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
+                <StackLayout HorizontalOptions="Center" VerticalOptions="StartAndExpand" Spacing="32">
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="48">
                         <Grid HorizontalOptions="Center">
                             <Grid.RowDefinitions>
@@ -54,11 +54,15 @@
                         </Frame>
                     </StackLayout>
                 </StackLayout>
+
+                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="32">
+                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgDeleteAccount}" WidthRequest="256" Command="{Binding DeleteAccountCommand}"/>
+                </StackLayout>
             </StackLayout>
 
-            <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
+            <!--<StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
                 <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSave}" WidthRequest="256" IsVisible="{Binding IsEdit}" Command="{Binding SaveCommand}"/>
-            </StackLayout>
+            </StackLayout>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

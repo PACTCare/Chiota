@@ -644,9 +644,17 @@ namespace Chiota.ViewModels.Base
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public async Task DisplayAlertAsync(string title, string message)
+        public async Task<AlertPopupModel> DisplayAlertAsync(string title, string message, bool isNegVisible = false, bool isNegDefault = true)
         {
-            await DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), new AlertPopupModel { Title = title, Message = message });
+            var alert = new AlertPopupModel()
+            {
+                Title = title,
+                Message = message,
+                IsNegButtonVisible = isNegVisible,
+                IsNegButtonDefault = isNegDefault
+            };
+
+            return await DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
         }
 
         /// <summary>

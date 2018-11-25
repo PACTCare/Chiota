@@ -309,4 +309,7 @@
   <data name="CmnNewContact" xml:space="preserve">
     <value>New Contact</value>
   </data>
+  <data name="DlgDeleteAccount" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
 </root>

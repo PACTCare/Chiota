@@ -313,6 +313,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete account.
+        /// </summary>
+        internal static string DlgDeleteAccount {
+            get {
+                return ResourceManager.GetString("DlgDeleteAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must back up your seed with at least one of the options listed below..
         /// </summary>
         internal static string DlgDescBackUp {

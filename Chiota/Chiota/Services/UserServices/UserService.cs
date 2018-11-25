@@ -190,5 +190,17 @@ namespace Chiota.Services.UserServices
 
             return CurrentUser.Id == userid;
         }
+
+        public async Task<bool> DeleteAsync()
+        {
+            //Delete the local sqlite database.
+            if (!DependencyService.Get<ISqlite>().DeleteDatabase())
+                return false;
+
+            //Delete the secure database.
+            SecureStorage.RemoveAll();
+
+            return true;
+        }
     }
 }
