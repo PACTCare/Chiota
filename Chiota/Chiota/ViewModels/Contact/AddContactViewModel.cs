@@ -147,38 +147,49 @@ namespace Chiota.ViewModels.Contact
                         if (InputValidator.IsAddress(ContactAddress) &&
                             ContactAddress != UserService.CurrentUser.PublicKeyAddress)
                         {
-                            await PushLoadingSpinnerAsync(AppResources.DlgAddContact);
+                            
 
-                            var addContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<AddContactRequest, AddContactResponse>>();
-                            var response = await addContactInteractor.ExecuteAsync(
-                                new AddContactRequest
-                                {
-                                    Name = UserService.CurrentUser.Name,
-                                    ImagePath = UserService.CurrentUser.ImagePath,
-                                    RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                                    PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                                    ContactAddress = new Address(ContactAddress),
-                                    UserPublicKey = UserService.CurrentUser.NtruKeyPair.PublicKey
-                                });
-
-                            await PopPopupAsync();
-
-                            switch (response.Code)
+                            try
                             {
-                                case ResponseCode.Success:
-                                    await DisplayAlertAsync(
-                                        "Successful Request",
-                                        "Your new contact needs to accept the request before you can start chatting!");
-                                    break;
-                                case ResponseCode.MessengerException:
-                                    await DisplayAlertAsync("Error", "It seems like the connection to the tangle failed. Try again later or change your node.");
-                                    break;
-                                default:
-                                    await DisplayAlertAsync("Error", "Something seems to be broken. Please try again later.");
-                                    break;
-                            }
+                                await PushLoadingSpinnerAsync(AppResources.DlgAddContact);
 
-                            return;
+                                var addContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<AddContactRequest, AddContactResponse>>();
+                                var response = await addContactInteractor.ExecuteAsync(
+                                    new AddContactRequest
+                                    {
+                                        Name = UserService.CurrentUser.Name,
+                                        ImagePath = UserService.CurrentUser.ImagePath,
+                                        RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
+                                        PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                                        ContactAddress = new Address(ContactAddress),
+                                        UserPublicKey = UserService.CurrentUser.NtruKeyPair.PublicKey
+                                    });
+
+                                await PopPopupAsync();
+
+                                switch (response.Code)
+                                {
+                                    case ResponseCode.Success:
+                                        await DisplayAlertAsync(
+                                            "Successful Request",
+                                            "Your new contact needs to accept the request before you can start chatting!");
+                                        break;
+                                    case ResponseCode.MessengerException:
+                                        await DisplayAlertAsync("Error", "It seems like the connection to the tangle failed. Try again later or change your node.");
+                                        break;
+                                    default:
+                                        await DisplayAlertAsync("Error", "Something seems to be broken. Please try again later.");
+                                        break;
+                                }
+
+                                return;
+                            }
+                            catch (Exception)
+                            {
+                                await PopPopupAsync();
+                                await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                                return;
+                            }
                         }
                     }
 

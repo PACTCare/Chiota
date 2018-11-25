@@ -1,27 +1,102 @@
-﻿using Android.Runtime;
+﻿using Android.Util;
+using Chiota.Droid.Services.BackgroundService;
+#region References
+
 using ImageCircle.Forms.Plugin.Droid;
+using Android.App;
+using Android.App.Job;
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
+using Chiota.Services.DependencyInjection;
+using Plugin.CurrentActivity;
+using Plugin.Permissions;
+using Xamarin.Forms;
+using static Chiota.Droid.Services.BackgroundService.MainActivity;
+
+#endregion
 
 namespace Chiota.Droid
 {
-    using Android.App;
-    using Android.App.Job;
-    using Android.Content;
-    using Android.Content.PM;
-    using Android.OS;
-
-    using Chiota;
-    using Chiota.Droid.Services;
-    using Chiota.Services.DependencyInjection;
-
-    using Plugin.CurrentActivity;
-    using Plugin.Permissions;
-
-    using Xamarin.Forms;
-
-    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false)]
+    [Activity(Label = "Chiota", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = false, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        private JobScheduler jobScheduler;
+        #region Attributes
+
+        private JobScheduler _jobScheduler;
+        private BackgroundServiceReciever _receiver;
+
+        #endregion
+
+        #region Methods
+
+        #region OnCreate
+
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
+
+            //Add the injection module.
+            DependencyResolver.Modules.Add(new InjectionModule());
+
+            //Set the layout for tab and toolbar.
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
+
+            //Prepare background services.
+            _receiver = new BackgroundServiceReciever(this);
+
+            //Set the current activity.
+            CrossCurrentActivity.Current.Activity = this;
+
+            //Pre initialization. 
+            Forms.SetFlags("FastRenderers_Experimental");
+            Xamarin.Essentials.Platform.Init(this, bundle);
+            Rg.Plugins.Popup.Popup.Init(this, bundle);
+
+            //Init Xamarin.Forms.
+            Forms.Init(this, bundle);
+
+            //Post initialization.
+            ImageCircleRenderer.Init();
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+
+            //Init the background services.
+            DependencyService.Get<BackgroundJobWorker>().Init(this, (JobScheduler)GetSystemService(JobSchedulerService));
+
+            //Load the application.
+            LoadApplication(new App());
+        }
+
+        #endregion
+
+        #region OnResume
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            BaseContext.RegisterReceiver(_receiver, new IntentFilter(BackgroundServiceHelpers.ResultKey));
+
+            var filter = new IntentFilter();
+            filter.AddAction(BackgroundServiceHelpers.JobActionKey);
+            RegisterReceiver(_receiver, filter);
+        }
+
+        #endregion
+
+        #region OnPause
+
+        protected override void OnPause()
+        {
+            BaseContext.UnregisterReceiver(_receiver);
+
+            base.OnPause();
+        }
+
+        #endregion
+
+        #region OnRequestPermissionsResult
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
@@ -32,41 +107,8 @@ namespace Chiota.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            DependencyResolver.Modules.Add(new InjectionModule());
+        #endregion
 
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
-
-            // ToolbarResource = Resource.Id.toolbar;
-            base.OnCreate(bundle);
-            CrossCurrentActivity.Current.Activity = this;
-
-            // https://docs.microsoft.com/de-de/xamarin/xamarin-forms/internals/fast-renderers
-            Forms.SetFlags("FastRenderers_Experimental");
-            Xamarin.Essentials.Platform.Init(this, bundle);
-            Rg.Plugins.Popup.Popup.Init(this, bundle);
-            Forms.Init(this, bundle);
-            ImageCircleRenderer.Init();
-
-            this.jobScheduler = (JobScheduler)this.GetSystemService(JobSchedulerService);
-
-            ZXing.Net.Mobile.Forms.Android.Platform.Init();
-
-            this.LoadApplication(new App());
-            this.WireUpLongRunningTask();
-        }
-
-        private void WireUpLongRunningTask()
-        {
-            // https://stackoverflow.com/questions/38344220/job-scheduler-not-running-on-android-n
-            var javaClass = Java.Lang.Class.FromType(typeof(PeriodicJob));
-            var compName = new ComponentName(this, javaClass);
-            var jobInfo = new JobInfo.Builder(1, compName)
-              .SetRequiredNetworkType(NetworkType.Any)
-              .SetPeriodic(1000 * 60 * 15).Build();
-            var result = this.jobScheduler.Schedule(jobInfo);
-        }
+        #endregion
     }
 }

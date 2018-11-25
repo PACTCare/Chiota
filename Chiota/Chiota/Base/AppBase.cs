@@ -1,6 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Chiota.Models.Database;
+using Chiota.Services;
+using Chiota.Services.BackgroundServices;
+using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
+using Chiota.Services.Database.Base;
+using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
 using Chiota.Views.Chat;
@@ -14,13 +21,18 @@ namespace Chiota.Base
     {
         #region Attributes
 
-        private static NavigationImplementation navigation;
+        private static NavigationImplementation _navigation;
 
         #endregion
 
         #region Properties
 
-        public static NavigationImplementation NavigationInstance => navigation ?? (navigation = new NavigationImplementation());
+        public static NavigationImplementation GetNavigationInstance()
+        {
+            return _navigation ?? (_navigation = new NavigationImplementation());
+        }
+
+        public static DatabaseService Database { get; set; }
 
         #endregion
 
@@ -32,9 +44,25 @@ namespace Chiota.Base
         {
             NavigationPage container;
 
+            //Delete the secure storage.
             //SecureStorage.RemoveAll();
-            var isUserStored = DatabaseService.User.IsUserStored();
-            if (isUserStored)
+            
+            //Get information, if there exist a user in the database.
+            var sqlite = DependencyService.Get<ISqlite>().GetDatabaseConnection();
+            var result = sqlite.Table<DbUser>();
+
+            var isUserExist = false;
+            try
+            {
+                if (result.Any())
+                    isUserExist = true;
+            }
+            catch (Exception)
+            {
+                //Ignore
+            }
+
+            if (isUserExist)
             {
                 // User is logged in.
                 container = SetNavigationStyles(new NavigationPage(new LogInView()));
@@ -55,6 +83,25 @@ namespace Chiota.Base
 
         public static void ShowMessenger()
         {
+            try
+            {
+                //Start the background service for receiving notifications of the tangle,
+                //to update the user outside of the app.
+                DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
+
+                //Start a service for every chat in the database.
+                var chats = Database.Contact.GetAcceptedContacts();
+                foreach (var chat in chats)
+                    DependencyService.Get<IBackgroundJobWorker>().Add<ChatMessageBackgroundJob>(UserService.CurrentUser, chat);
+
+                //Register the background jobs.
+                DependencyService.Get<IBackgroundJobWorker>().Register();
+            }
+            catch (Exception ex)
+            {
+                //Ignore
+            }
+
             // Show the page.
             var container = SetNavigationStyles(new NavigationPage(new TabbedNavigationView()));
             Application.Current.MainPage = container;

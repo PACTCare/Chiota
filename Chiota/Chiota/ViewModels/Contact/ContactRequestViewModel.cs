@@ -108,6 +108,11 @@ namespace Chiota.ViewModels.Contact
 
                     if (response.Code == ResponseCode.Success)
                     {
+                        //Update the contact in the database.
+                        var contact = Database.Contact.GetContactByChatAddress(_contact.ChatAddress);
+                        contact.Accepted = true;
+                        Database.Contact.UpdateObject(contact);
+
                         await DisplayAlertAsync("Successful action", "The contact was successfully added.");
                         await PopAsync();
                     }
@@ -131,13 +136,25 @@ namespace Chiota.ViewModels.Contact
 
                     var declineContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<DeclineContactRequest, DeclineContactResponse>>();
 
-                    await declineContactInteractor.ExecuteAsync(new DeclineContactRequest
+                    var response = await declineContactInteractor.ExecuteAsync(new DeclineContactRequest
                     {
                         ContactChatAddress = new Address(_contact.ChatAddress),
                         UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress)
                     });
 
                     await PopPopupAsync();
+
+                    if (response.Code == ResponseCode.Success)
+                    {
+                        //Update the contact in the database.
+                        var contact = Database.Contact.GetContactByChatAddress(_contact.ChatAddress);
+                        Database.Contact.DeleteObject(contact.Id);
+
+                        await DisplayAlertAsync("Successful action", "The contact was successfully declined.");
+                        await PopAsync();
+                    }
+                    else
+                        await DisplayAlertAsync("Error", $"An error (Code: {(int)response.Code}) occured while decline the contact.");
                 });
             }
         }

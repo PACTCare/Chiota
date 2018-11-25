@@ -1,4 +1,6 @@
 ﻿using Chiota.Base;
+using Chiota.Services;
+using Xamarin.Forms;
 
 namespace Chiota
 {

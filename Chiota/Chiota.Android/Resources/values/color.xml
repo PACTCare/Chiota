@@ -3,7 +3,7 @@
   <color name="primary">#1d4999</color>
   <color name="primary_dark">#00236a</color>
   <color name="accent">#5874ca</color>
-  <!--<color name="window_background">#F5F5F5</color>-->
+  <color name="arrow_color">#FFFFFF</color>
   <color name="splash_background">#eaeaea</color>
   <color name="ListViewSelected">#eaeaea</color>
   <color name="ListViewHighlighted">#eaeaea</color>

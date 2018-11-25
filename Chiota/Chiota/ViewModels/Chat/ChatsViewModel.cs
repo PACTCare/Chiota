@@ -113,12 +113,23 @@ namespace Chiota.ViewModels.Chat
 
         #endregion
 
+        #region Reverse
+
+        public override void Reverse(object data = null)
+        {
+            base.Reverse(data);
+
+            UpdateView();
+        }
+
+        #endregion
+
         #region ViewIsAppearing
 
         protected override void ViewIsAppearing()
         {
             base.ViewIsAppearing();
-
+        
             _isUpdating = true;
             Device.StartTimer(TimeSpan.FromSeconds(10), UpdateView);
         }
@@ -145,65 +156,73 @@ namespace Chiota.ViewModels.Chat
         /// </summary>
         private bool UpdateView()
         {
-            var task = Task.Run(async () =>
+            //Show the contact requests of the user.
+            Task.Run(() =>
+            {
+                var contactRequests = new List<ContactBinding>();
+
+                var requests = Database.Contact.GetUnacceptedContacts();
+                if (requests.Count <= 0)
+                {
+                    //Reset the request list.
+                    RequestList = null;
+                    IsRequestExist = false;
+                    RequestListHeight = 0;
+                    return;
+                }
+
+                foreach (var item in requests)
+                {
+                    var contact = new Pact.Palantir.Entity.Contact()
+                    {
+                        Name = item.Name,
+                        ImagePath = item.ImagePath,
+                        ChatAddress = item.ChatAddress,
+                        ChatKeyAddress = item.ChatKeyAddress,
+                        ContactAddress = item.ContactAddress,
+                        PublicKeyAddress = item.PublicKeyAddress,
+                        Rejected = !item.Accepted
+                    };
+                    contactRequests.Add(new ContactBinding(contact, false, item.ImageBase64));
+                }
+
+                //Update the request list.
+                if ( RequestList == null ||
+                     RequestList.Count != contactRequests.Count)
+                {
+                    RequestList = contactRequests;
+                    RequestListHeight = contactRequests.Count * RequestItemHeight;
+                    IsRequestExist = contactRequests.Count > 0;
+                }
+            });
+
+            //Show the chats of the user.
+            Task.Run(() =>
             {
                 var chats = new List<ChatBinding>();
 
-                try
+                //Load all accepted contacts.
+                var contacts = Database.Contact.GetAcceptedContacts();
+                foreach (var item in contacts)
                 {
-                    //Load all accepted contacts.
-                    var contacts = DatabaseService.Contact.GetAcceptedContacts();
-                    foreach (var item in contacts)
+                    //Get the last message of the contact.
+                    var lastMessage = Database.Message.GetLastMessagesByPublicKeyAddress(item.PublicKeyAddress);
+
+                    if (lastMessage == null) continue;
+
+                    //If there is a message, load the chat of the contact.
+                    var contact = new Pact.Palantir.Entity.Contact()
                     {
-                        var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
-                            new GetMessagesRequest
-                            {
-                                ChatAddress = new Address(item.ChatAddress),
-                                ChatKeyAddress = new Address(item.ChatKeyAddress),
-                                UserKeyPair = UserService.CurrentUser.NtruKeyPair
-                            });
-
-                        //If there is a message, load the chat of the contact.
-                        if (response.Code == ResponseCode.Success && response.Messages.Count > 0)
-                        {
-                            var lastMessage = response.Messages[response.Messages.Count - 1];
-                            var contact = new Pact.Palantir.Entity.Contact()
-                            {
-                                Name = item.Name,
-                                ImagePath = item.ImagePath,
-                                ChatAddress = item.ChatAddress,
-                                ChatKeyAddress = item.ChatKeyAddress,
-                                PublicKeyAddress = item.PublicKeyAddress,
-                                Rejected = !item.Accepted
-                            };
-                            chats.Add(new ChatBinding(contact, lastMessage.Message, lastMessage.Date));
-                        }
-
-
-                        /*var lastMessage = DatabaseService.Message.GetObjectById(0);
-
-                        //If there is a message, load the chat of the contact.
-                        if (lastMessage != null)
-                        {
-                            var contact = new Pact.Palantir.Entity.Contact()
-                            {
-                                Name = item.Name,
-                                ImagePath = item.ImagePath,
-                                ChatAddress = item.ChatAddress,
-                                ChatKeyAddress = item.ChatKeyAddress,
-                                PublicKeyAddress = item.PublicKeyAddress,
-                                Rejected = !item.Accepted
-                            };
-                            chats.Add(new ChatBinding(contact));
-                        }*/
-                    }
+                        Name = item.Name,
+                        ImagePath = item.ImagePath,
+                        ChatAddress = item.ChatAddress,
+                        ChatKeyAddress = item.ChatKeyAddress,
+                        ContactAddress = item.ContactAddress,
+                        PublicKeyAddress = item.PublicKeyAddress,
+                        Rejected = !item.Accepted
+                    };
+                    chats.Add(new ChatBinding(contact, lastMessage.Value, lastMessage.Date));
                 }
-                catch (Exception ex)
-                {
-
-                }
-
-                
 
                 //Update the chat list.
                 var changed = IsChatListChanged(chats);
@@ -213,44 +232,6 @@ namespace Chiota.ViewModels.Chat
                     ChatListHeight = chats.Count * ChatItemHeight;
                 }
             });
-            task.Wait();
-
-            //If there is an internet connection, try to get the contact requests of the user.
-            if (Connectivity.NetworkAccess == NetworkAccess.Internet)
-            {
-                Device.BeginInvokeOnMainThread(async () =>
-                {
-                    var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(
-                        new GetContactsRequest
-                        {
-                            RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                            PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                            KeyPair = UserService.CurrentUser.NtruKeyPair
-                        });
-
-                    if (response.Code == ResponseCode.Success && response.PendingContactRequests.Count > 0)
-                    {
-                        var requests = new List<ContactBinding>();
-
-                        foreach (var item in response.PendingContactRequests)
-                            requests.Add(new ContactBinding(item, false));
-
-                        //Update the request list.
-                        if (RequestList.Count != requests.Count)
-                        {
-                            RequestList = requests;
-                            RequestListHeight = requests.Count * RequestItemHeight;
-                            IsRequestExist = requests.Count > 0;
-                        }
-                        return;
-                    }
-
-                    //Reset the request list.
-                    RequestList = null;
-                    IsRequestExist = false;
-                    RequestListHeight = 0;
-                });
-            }
 
             return _isUpdating;
         }

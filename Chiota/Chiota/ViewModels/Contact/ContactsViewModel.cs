@@ -137,7 +137,9 @@ namespace Chiota.ViewModels.Contact
 
             try
             {
-                var contacts = DatabaseService.Contact.GetContactsOrderByAcceptedDesc();
+                var test = Database.Contact.GetObjects();
+
+                var contacts = Database.Contact.GetAcceptedContacts();
                 foreach (var item in contacts)
                 {
                     var exist = list.Any(t => t.Contact.ChatAddress == item.ChatAddress);
@@ -149,6 +151,7 @@ namespace Chiota.ViewModels.Contact
                             Name = item.Name,
                             ImagePath = item.ImagePath,
                             ChatKeyAddress = item.ChatKeyAddress,
+                            ContactAddress = item.ContactAddress,
                             PublicKeyAddress = item.PublicKeyAddress,
                             Rejected = !item.Accepted
                         };

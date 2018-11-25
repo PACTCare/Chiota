@@ -25,8 +25,8 @@ namespace Chiota.Droid.Services.Database
 
         public string GetDatabasePath()
         {
-            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // Documents folder
-            var path = Path.Combine(documentsPath, DatabaseService.Name + ".db");
+            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            var path = Path.Combine(documentsPath, "Chiota.db");
 
             return path;
         }

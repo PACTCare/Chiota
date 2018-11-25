@@ -22,6 +22,9 @@ namespace Chiota.Models.Database
         [JsonProperty("chataddress")]
         public string ChatAddress { get; set; }
 
+        [JsonProperty("contactaddress")]
+        public string ContactAddress { get; set; }
+
         [JsonProperty("publickeyaddress")]
         public string PublicKeyAddress { get; set; }
 

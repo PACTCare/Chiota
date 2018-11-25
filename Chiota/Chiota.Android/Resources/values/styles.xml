@@ -2,8 +2,6 @@
 <resources>
   <style name="MainTheme" parent="MainTheme.Base">
     <item name="android:textAppearanceButton">@style/MyTextAppearance.Material.Button</item>
-    <!--<item name="android:windowNoTitle">true</item>
-    <item name="android:windowFullscreen">true</item>-->
     <item name="android:colorPressedHighlight">@color/ListViewSelected</item>
     <item name="android:colorLongPressedHighlight">@color/ListViewHighlighted</item>
     <item name="android:colorFocusedHighlight">@color/ListViewSelected</item>
@@ -15,9 +13,10 @@
     <item name="textAllCaps">false</item>
     <item name="android:textAllCaps">false</item>
   </style>
-  <!--Base theme applied no matter what API-->
 
+  <!--Base theme applied no matter what API-->
   <style name="MainTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
     <item name="windowNoTitle">true</item>
     <!--We will be using the toolbar so no need to show ActionBar-->
@@ -39,6 +38,10 @@
 
   <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
     <item name="colorAccent">#ff0000</item>
+  </style>
+  <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+    <item name="spinBars">true</item>
+    <item name="color">@color/arrow_color</item>
   </style>
 
   <style name="SplashTheme" parent="SplashTheme.Base">

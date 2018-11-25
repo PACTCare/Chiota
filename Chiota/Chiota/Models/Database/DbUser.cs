@@ -34,6 +34,10 @@ namespace Chiota.Models.Database
         [JsonProperty("seed")]
         public string Seed { get; set; }
 
+        [JsonProperty("encryptionkey")]
+        [Ignore]
+        public EncryptionKey EncryptionKey { get; set; }
+
         #endregion
     }
 }
