@@ -12,7 +12,7 @@
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance tabbed:TabbedNavigationViewModel}"
              Title="{DynamicResource AppName}"
-             BarBackgroundColor="{DynamicResource TabbedbarColor}"
+             BarBackgroundColor="{DynamicResource AccentDarkColor}"
              BarTextColor="{DynamicResource BrightTextColor}">
 
     <TabbedPage.ToolbarItems>

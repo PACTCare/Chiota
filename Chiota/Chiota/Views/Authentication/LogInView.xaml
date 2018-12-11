@@ -34,12 +34,6 @@
                             </Frame>
                             <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgLogIn}" WidthRequest="256" Command="{Binding LogInCommand}"/>
                         </StackLayout>
-
-                        <Label Text="{extensions:Translate CmnPrivacyPolicy}" Style="{DynamicResource Label14}" HorizontalOptions="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding PrivacyCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

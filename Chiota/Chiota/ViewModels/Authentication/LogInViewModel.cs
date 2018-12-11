@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿#region References
+
+using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Exceptions;
@@ -14,23 +17,19 @@ using Pact.Palantir.Usecase.GetContacts;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
 
+#endregion
+
 namespace Chiota.ViewModels.Authentication
 {
-  using System;
-
-  using Chiota.Annotations;
-  using Chiota.Views.Authentication;
-  using Chiota.Views.Help;
-
-  /// <summary>
-    /// The log in view model.
-    /// </summary>
     public class LogInViewModel : BaseViewModel
     {
         #region Attributes
 
         private string password;
+
         private bool _isEntryFocused;
+
+        private bool _isAlertShown;
 
         #endregion
 
@@ -145,42 +144,48 @@ namespace Chiota.ViewModels.Authentication
 
         #region LogIn
 
-        /// <summary>
-        /// Gets the log in command.
-        /// </summary>
         public ICommand LogInCommand
         {
             get
             {
-                return new Command(async () =>
+                return new Command(async () => 
+                {
+                    try
                     {
-                        try
+                        //If there is an alert shown,
+                        //the user must answer this, before going on.
+                        if (_isAlertShown) return;
+
+                        await PushLoadingSpinnerAsync(AppResources.DlgLoggingIn);
+
+                        var userService = DependencyResolver.Resolve<UserService>();
+                        var result = await userService.LogInAsync(Password);
+
+                        //Update database, if the log in is successfully.
+                        if (result)
+                            await LoadUserDataAsync();
+
+                        await PopPopupAsync();
+
+                        if (!result)
                         {
-                            await PushLoadingSpinnerAsync(AppResources.DlgLoggingIn);
-
-                            var userService = DependencyResolver.Resolve<UserService>();
-                            var result = await userService.LogInAsync(Password);
-
-                            //Update database, if the log in is successfully.
-                            if (result)
-                                await LoadUserDataAsync();
-
-                            await PopPopupAsync();
-
-                            if (!result)
-                            {
-                                await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
-                                return;
-                            }
-
-                            AppBase.ShowMessenger();
+                            _isAlertShown = true;
+                            await new InvalidUserInputException(new ExcInfo(), Details.AuthInvalidUserInputPassword).ShowAlertAsync();
+                            _isAlertShown = false;
+                            return;
                         }
-                        catch (BaseException exception)
-                        {
-                            await PopPopupAsync();
-                            await exception.ShowAlertAsync();
-                        }
-                    });
+
+                        AppBase.ShowMessenger();
+                    }
+                    catch (BaseException exception)
+                    {
+                        await PopPopupAsync();
+
+                        _isAlertShown = true;
+                        await exception.ShowAlertAsync();
+                        _isAlertShown = false;
+                    }
+                });
             }
         }
 

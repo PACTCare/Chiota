@@ -15,7 +15,6 @@
     <Color x:Key="EntryColor">#32000000</Color>
 
     <Color x:Key="PopupColor">#0d47a1</Color>
-    <Color x:Key="TabbedbarColor">#1565c0</Color>
     <Color x:Key="BackgroundColor">#f5f5f5</Color>
 
 </ResourceDictionary>
