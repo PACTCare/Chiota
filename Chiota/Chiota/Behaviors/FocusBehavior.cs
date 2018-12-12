@@ -5,11 +5,11 @@ using Xamarin.Forms;
 
 namespace Chiota.Behaviors
 {
-    public class FocusBehavior : Behavior<InputView>
+    public class FocusBehavior : Behavior<View>
     {
         #region Attributes
 
-        private InputView _inputView;
+        private View _view;
 
         #endregion
 
@@ -34,24 +34,24 @@ namespace Chiota.Behaviors
 
         #region OnAttachedTo
 
-        protected override void OnAttachedTo(InputView bindable)
+        protected override void OnAttachedTo(View bindable)
         {
             base.OnAttachedTo(bindable);
             bindable.BindingContextChanged += BindableContextChanged;
 
-            _inputView = bindable;
+            _view = bindable;
         }
 
         #endregion
 
         #region OnDetachingFrom
 
-        protected override void OnDetachingFrom(InputView bindable)
+        protected override void OnDetachingFrom(View bindable)
         {
             base.OnDetachingFrom(bindable);
             bindable.BindingContextChanged -= BindableContextChanged;
 
-            _inputView = null;
+            _view = null;
         }
 
         #endregion
@@ -60,16 +60,16 @@ namespace Chiota.Behaviors
 
         private void BindableContextChanged(object sender, EventArgs e)
         {
-            var bindable = sender as InputView;
+            var bindable = sender as View;
             BindingContext = bindable?.BindingContext;
         }
 
         public void FocusChanged(bool value)
         {
             if (value)
-                _inputView?.Focus();
+                _view?.Focus();
             else
-                _inputView?.Unfocus();
+                _view?.Unfocus();
         }
 
         #endregion

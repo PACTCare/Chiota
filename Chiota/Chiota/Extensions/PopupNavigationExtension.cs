@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.Popups.Classes;
+using Chiota.Popups.Base;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
@@ -43,6 +43,8 @@ namespace Chiota.Extensions
                 popupPageModel = (TA)Activator.CreateInstance(typeof(TA));
             else
                 popupPageModel = (TA)Activator.CreateInstance(typeof(TA), popupModel);
+
+            popupPageModel.Setup(page, data);
 
             popupPageModel.Finish = false;
             page.BindingContext = popupPageModel;

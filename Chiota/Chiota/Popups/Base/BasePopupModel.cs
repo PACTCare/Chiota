@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
 
-namespace Chiota.Popups.Classes
+namespace Chiota.Popups.Base
 {
     public abstract class BasePopupModel : INotifyPropertyChanged
     {

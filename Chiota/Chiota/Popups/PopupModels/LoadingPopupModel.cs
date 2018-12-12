@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Chiota.Popups.Classes;
+using Chiota.Popups.Base;
 
 namespace Chiota.Popups.PopupModels
 {

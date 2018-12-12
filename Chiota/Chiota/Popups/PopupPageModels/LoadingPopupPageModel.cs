@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
-using Chiota.Popups.Classes;
+using Chiota.Popups.Base;
 using Chiota.Popups.PopupModels;
 using Xamarin.Forms;
 

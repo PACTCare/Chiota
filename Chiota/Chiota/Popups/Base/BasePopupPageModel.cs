@@ -8,7 +8,7 @@ using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
-namespace Chiota.Popups.Classes
+namespace Chiota.Popups.Base
 {
     public abstract class BasePopupPageModel<T> : INotifyPropertyChanged where T : BasePopupModel
     {
@@ -47,10 +47,17 @@ namespace Chiota.Popups.Classes
         /// Setup the popup page model and provide the needed objects for the popup.
         /// </summary>
         /// <param name="page"></param>
-        public void Setup(PopupPage page)
+        public void Setup(PopupPage page, object data = null)
         {
             Page = page;
             Navigation = Page.Navigation;
+
+            // Activate appearing events for the page model.
+            page.Appearing += OnAppearing;
+            page.Disappearing += OnDisappearing;
+
+            //Call Init.
+            Init(data);
         }
 
         #endregion

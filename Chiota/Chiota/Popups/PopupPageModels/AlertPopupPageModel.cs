@@ -1,27 +1,62 @@
-﻿namespace Chiota.Popups.PopupPageModels
+﻿#region Rerferences
+
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Chiota.Popups.Base;
+using Chiota.Popups.PopupModels;
+
+using Xamarin.Forms;
+
+#endregion
+
+namespace Chiota.Popups.PopupPageModels
 {
-    using System.Windows.Input;
-
-    using Chiota.Popups.Classes;
-    using Chiota.Popups.PopupModels;
-
-    using Xamarin.Forms;
-
-    /// <summary>
-    /// The alert popup page model.
-    /// </summary>
     public class AlertPopupPageModel : BasePopupPageModel<AlertPopupModel>
     {
+        #region Attributes
+
+        private bool _isPosButtonFocused;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the neg button text color.
+        /// </summary>
+        public Color NegButtonColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pos button text color.
+        /// </summary>
+        public Color PosButtonColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the focus of the pos button.
+        /// </summary>
+        public bool IsPosButtonFocused
+        {
+            get => _isPosButtonFocused;
+            set
+            {
+                _isPosButtonFocused = value;
+                OnPropertyChanged(nameof(IsPosButtonFocused));
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AlertPopupPageModel"/> class.
         /// </summary>
-        public AlertPopupPageModel()
-          : base()
+        public AlertPopupPageModel() : base()
         {
         }
 
-        public AlertPopupPageModel(AlertPopupModel popupModel)
-          : base(popupModel)
+        public AlertPopupPageModel(AlertPopupModel popupModel) : base(popupModel)
         {
             if (!string.IsNullOrEmpty(PopupModel.Title))
             {
@@ -39,30 +74,25 @@
             PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
         }
 
-        /// <summary>
-        /// Gets or sets the neg button text color.
-        /// </summary>
-        public Color NegButtonColor { get; set; }
+        #endregion
 
-        /// <summary>
-        /// Cancel method of the popup
-        /// </summary>
-        public ICommand NegCommand
+        #region ViewIsAppearing
+
+        protected override void ViewIsAppearing()
         {
-            get
-            {
-                return new Command(
-                  async () =>
-                    {
-                        PopupModel.Result = false;
+            base.ViewIsAppearing();
 
-                        Finish = true;
-                        await PopPopupAsync();
-                    });
-            }
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                //Focus the entry.
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                IsPosButtonFocused = true;
+            });
         }
 
-        public Color PosButtonColor { get; set; }
+        #endregion
+
+        #region Commands
 
         /// <summary>
         /// Ok method of the popup.
@@ -72,7 +102,7 @@
             get
             {
                 return new Command(
-                  async () =>
+                    async () =>
                     {
                         PopupModel.Result = true;
 
@@ -81,5 +111,25 @@
                     });
             }
         }
+
+        /// <summary>
+        /// Cancel method of the popup
+        /// </summary>
+        public ICommand NegCommand
+        {
+            get
+            {
+                return new Command(
+                    async () =>
+                    {
+                        PopupModel.Result = false;
+
+                        Finish = true;
+                        await PopPopupAsync();
+                    });
+            }
+        }
+
+        #endregion
     }
 }

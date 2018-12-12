@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Chiota.Popups.Classes;
+using Chiota.Popups.Base;
 using Chiota.Resources.Localizations;
 
 namespace Chiota.Popups.PopupModels

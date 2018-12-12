@@ -1,6 +1,7 @@
-﻿namespace Chiota.Popups.PopupModels
+﻿using Chiota.Popups.Base;
+
+namespace Chiota.Popups.PopupModels
 {
-    using Chiota.Popups.Classes;
     using Chiota.Resources.Localizations;
 
     public class AlertPopupModel : BasePopupModel

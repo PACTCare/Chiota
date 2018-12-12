@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Extensions;
-using Chiota.Popups.Classes;
+using Chiota.Popups.Base;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
@@ -486,11 +486,8 @@ namespace Chiota.ViewModels.Base
         {
             if (!(page.BindingContext is TA popupPageModel)) return null;
 
-            popupPageModel.Setup(page);
-            popupPageModel.Init(data);
-
-            page.Appearing += popupPageModel.OnAppearing;
-            page.Disappearing += popupPageModel.OnDisappearing;
+            //Not needed, because it is already a part of the popup extension.
+            //popupPageModel.Setup(page, data);
 
             return Navigation.DisplayPopupAsync<TA, TB>(page, popupModel, animated);
         }
@@ -528,10 +525,7 @@ namespace Chiota.ViewModels.Base
                 page.BindingContext = popupPageModel;
             }
 
-            popupPageModel.Init(data);
-
-            page.Appearing += popupPageModel.OnAppearing;
-            page.Disappearing += popupPageModel.OnDisappearing;
+            popupPageModel.Setup(page, data);
 
             return Navigation.PushPopupAsync(page, animated);
         }

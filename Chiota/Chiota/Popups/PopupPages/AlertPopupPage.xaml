@@ -4,6 +4,7 @@
              xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
              xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              x:Class="Chiota.Popups.PopupPages.AlertPopupPage"
              CloseWhenBackgroundIsClicked="False">
 
@@ -35,7 +36,11 @@
                             <Button Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding NegButtonColor}" HorizontalOptions="Center" Command="{Binding NegCommand}"/>
                         </StackLayout>
                         <StackLayout HorizontalOptions="CenterAndExpand">
-                            <Button Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding PosButtonColor}" HorizontalOptions="Center" Command="{Binding PosCommand}"/>
+                            <Button Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding PosButtonColor}" HorizontalOptions="Center" Command="{Binding PosCommand}">
+                                <Button.Behaviors>
+                                    <behaviors:FocusBehavior IsFocused="{Binding IsPosButtonFocused}"/>
+                                </Button.Behaviors>
+                            </Button>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

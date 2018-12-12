@@ -1,8 +1,8 @@
-﻿namespace Chiota.Popups.PopupPageModels
+﻿using Chiota.Popups.Base;
+
+namespace Chiota.Popups.PopupPageModels
 {
     using System.Windows.Input;
-
-    using Chiota.Popups.Classes;
     using Chiota.Popups.PopupModels;
 
     using Xamarin.Forms;
