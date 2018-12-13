@@ -11,7 +11,7 @@
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance authentication:NewSeedViewModel}"
-             Title="{extensions:Translate CmnNewSeed}">
+             Title="{DynamicResource AppName}">
 
     <ContentPage.Resources>
         <ResourceDictionary>

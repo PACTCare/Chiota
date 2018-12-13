@@ -14,7 +14,7 @@
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance authentication:SetUserViewModel}"
-             Title="{extensions:Translate CmnSetUser}">
+             Title="{DynamicResource AppName}">
 
     <ContentPage.Resources>
         <ResourceDictionary>

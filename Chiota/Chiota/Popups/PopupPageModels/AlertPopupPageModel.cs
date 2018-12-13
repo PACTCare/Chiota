@@ -14,12 +14,6 @@ namespace Chiota.Popups.PopupPageModels
 {
     public class AlertPopupPageModel : BasePopupPageModel<AlertPopupModel>
     {
-        #region Attributes
-
-        private bool _isPosButtonFocused;
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -31,19 +25,6 @@ namespace Chiota.Popups.PopupPageModels
         /// Gets or sets the pos button text color.
         /// </summary>
         public Color PosButtonColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the focus of the pos button.
-        /// </summary>
-        public bool IsPosButtonFocused
-        {
-            get => _isPosButtonFocused;
-            set
-            {
-                _isPosButtonFocused = value;
-                OnPropertyChanged(nameof(IsPosButtonFocused));
-            }
-        }
 
         #endregion
 
@@ -72,22 +53,6 @@ namespace Chiota.Popups.PopupPageModels
 
             NegButtonColor = (Color)Application.Current.Resources["FadedColor"];
             PosButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
-        }
-
-        #endregion
-
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                //Focus the entry.
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-                IsPosButtonFocused = true;
-            });
         }
 
         #endregion

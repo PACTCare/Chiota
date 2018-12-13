@@ -12,7 +12,7 @@
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance backUp:QrCodeViewModel}"
-             Title="{extensions:Translate CmnQrCode}">
+             Title="{DynamicResource AppName}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

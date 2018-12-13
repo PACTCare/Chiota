@@ -14,55 +14,64 @@
              Title="{extensions:Translate CmnProfile}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Order="Primary" Text="{extensions:Translate CmnEdit}" Icon="edit.png" Command="{Binding EditCommand}"/>
+        <ToolbarItem Order="Primary" Text="{extensions:Translate CmnEdit}" Icon="{Binding EditImage}" Command="{Binding EditCommand}"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="Center" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="Center" VerticalOptions="StartAndExpand" Spacing="32">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="48">
+            <ScrollView>
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                    <!-- Header with profile image and username -->
+                    <StackLayout HorizontalOptions="Center" Margin="0, 16, 0, 0">
                         <Grid HorizontalOptions="Center">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="192"/>
+                                <RowDefinition Height="128"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="192"/>
+                                <ColumnDefinition Width="128"/>
                             </Grid.ColumnDefinitions>
 
-                            <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Source="{Binding ProfileImageSource}" Aspect="AspectFill" HorizontalOptions="Center" HeightRequest="192" WidthRequest="192"/>
+                            <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Source="{Binding ProfileImageSource}" Aspect="AspectFill" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                             <Grid Grid.Row="0" Grid.Column="0" >
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"/>
                                     <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
                                     <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Row="1" Grid.Column="1" Style="{DynamicResource BaseButton}" CornerRadius="32" Image="camera.png" Command="{Binding ProfileImageCommand}" IsVisible="{Binding IsEdit}"/>
                             </Grid>
                         </Grid>
-
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="This name and profile image will be visible to your contacts."/>
                     </StackLayout>
 
-                    <StackLayout VerticalOptions="CenterAndExpand">
-                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{DynamicResource EntryColor}" IsEnabled="{Binding IsEdit}">
-                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Username}" Placeholder="{extensions:Translate DlgName}"/>
-                        </Frame>
+                    <!-- General user data -->
+                    <StackLayout>
+                        <TableView Intent="Settings" HeightRequest="96">
+                            <TableRoot>
+                                <TableSection>
+                                    <ViewCell>
+                                        <StackLayout HorizontalOptions="FillAndExpand" IsEnabled="{Binding IsEdit}">
+                                            <Entry Style="{DynamicResource Entry16}" Text="{Binding Username}" Placeholder="{extensions:Translate DlgName}" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand" Margin="16, 0"/>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </TableSection>
+                            </TableRoot>
+                        </TableView>
                     </StackLayout>
-                </StackLayout>
 
-                <StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="32">
-                    <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgDeleteAccount}" WidthRequest="256" Command="{Binding DeleteAccountCommand}"/>
-                </StackLayout>
-            </StackLayout>
+                    <!-- Danger Zone -->
+                    <StackLayout BackgroundColor="{DynamicResource FadedDangerColor}" Padding="0, 16">
+                        <StackLayout HorizontalOptions="Center" Spacing="8" Padding="0, 16">
+                            <Button Style="{DynamicResource RoundedButton16}" BackgroundColor="{DynamicResource DangerColor}" Text="{extensions:Translate DlgDeleteAccount}" WidthRequest="256" Command="{Binding DeleteAccountCommand}"/>
+                        </StackLayout>
+                    </StackLayout>
 
-            <!--<StackLayout HorizontalOptions="Center" VerticalOptions="End" Spacing="8" Padding="0, 0, 0, 24">
-                <Button Style="{DynamicResource RoundedButton16}" Text="{extensions:Translate DlgSave}" WidthRequest="256" IsVisible="{Binding IsEdit}" Command="{Binding SaveCommand}"/>
-            </StackLayout>-->
+                </StackLayout>
+            </ScrollView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -11,7 +11,7 @@
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance backUp:BackUpViewModel}"
              NavigationPage.HasBackButton="False"
-             Title="{extensions:Translate CmnBackUp}">
+             Title="{DynamicResource AppName}">
 
     <ContentPage.Resources>
 

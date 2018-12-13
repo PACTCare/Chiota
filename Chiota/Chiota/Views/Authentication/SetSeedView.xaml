@@ -12,7 +12,7 @@
              xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance authentication:SetSeedViewModel}"
-             Title="{extensions:Translate CmnSetSeed}">
+             Title="{DynamicResource AppName}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

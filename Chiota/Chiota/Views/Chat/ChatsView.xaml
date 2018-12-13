@@ -23,8 +23,15 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+
             <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <ScrollView>
+
+                <StackLayout IsVisible="{Binding IsNoneExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+                    <Label Style="{DynamicResource Label16}" Text="No chat available." HorizontalOptions="Center"/>
+                    <Label Style="{DynamicResource Label12}" Text="To start a new chat press the '+' button." HorizontalOptions="Center"/>
+                </StackLayout>
+
+                <ScrollView IsVisible="{Binding IsAnyExist}">
                     <StackLayout Spacing="0" VerticalOptions="StartAndExpand">
 
                         <StackLayout BackgroundColor="#16000000" Padding="16, 8" IsVisible="{Binding IsRequestExist}">
@@ -59,7 +66,7 @@
                             <Label Text="Chats" TextColor="#616161"/>
                         </StackLayout>
 
-                        <ListView ItemsSource="{Binding ChatList, Mode=TwoWay}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ChatListHeight}">
+                        <ListView ItemsSource="{Binding ChatList, Mode=TwoWay}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ChatListHeight}" IsVisible="{Binding IsChatExist}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <ViewCell>

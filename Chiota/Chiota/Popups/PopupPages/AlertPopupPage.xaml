@@ -36,11 +36,7 @@
                             <Button Text="{Binding PopupModel.NegButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding NegButtonColor}" HorizontalOptions="Center" Command="{Binding NegCommand}"/>
                         </StackLayout>
                         <StackLayout HorizontalOptions="CenterAndExpand">
-                            <Button Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding PosButtonColor}" HorizontalOptions="Center" Command="{Binding PosCommand}">
-                                <Button.Behaviors>
-                                    <behaviors:FocusBehavior IsFocused="{Binding IsPosButtonFocused}"/>
-                                </Button.Behaviors>
-                            </Button>
+                            <Button Text="{Binding PopupModel.PosButtonText}" Style="{DynamicResource PopupButton14}" BackgroundColor="{Binding PosButtonColor}" HorizontalOptions="Center" Command="{Binding PosCommand}"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

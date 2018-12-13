@@ -1,22 +1,18 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.Binding;
-using Chiota.Services.Database;
-using Chiota.Services.DependencyInjection;
-using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
-using Pact.Palantir.Usecase;
-using Pact.Palantir.Usecase.GetContacts;
-using Pact.Palantir.Usecase.GetMessages;
-using Tangle.Net.Entity;
-using Xamarin.Essentials;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Chat
 {
@@ -34,6 +30,10 @@ namespace Chiota.ViewModels.Chat
         private int _chatListHeight;
 
         private bool _isRequestExist;
+        private bool _isChatExist;
+        private bool _isAnyExist;
+        private bool _isNoneExist;
+
         private bool _isUpdating;
 
         #endregion
@@ -87,6 +87,36 @@ namespace Chiota.ViewModels.Chat
             {
                 _isRequestExist = value;
                 OnPropertyChanged(nameof(IsRequestExist));
+            }
+        }
+
+        public bool IsChatExist
+        {
+            get => _isChatExist;
+            set
+            {
+                _isChatExist = value;
+                OnPropertyChanged(nameof(IsChatExist));
+            }
+        }
+
+        public bool IsAnyExist
+        {
+            get => _isAnyExist;
+            set
+            {
+                _isAnyExist = value;
+                OnPropertyChanged(nameof(IsAnyExist));
+            }
+        }
+
+        public bool IsNoneExist
+        {
+            get => _isNoneExist;
+            set
+            {
+                _isNoneExist = value;
+                OnPropertyChanged(nameof(IsNoneExist));
             }
         }
 
@@ -186,13 +216,17 @@ namespace Chiota.ViewModels.Chat
                     contactRequests.Add(new ContactBinding(contact, false, item.ImageBase64));
                 }
 
+                //Set flag to show the contact requests.
+                IsRequestExist = contactRequests.Count > 0;
+                IsAnyExist = contactRequests.Count > 0;
+                IsNoneExist = !(contactRequests.Count > 0);
+
                 //Update the request list.
                 if ( RequestList == null ||
                      RequestList.Count != contactRequests.Count)
                 {
                     RequestList = contactRequests;
                     RequestListHeight = contactRequests.Count * RequestItemHeight;
-                    IsRequestExist = contactRequests.Count > 0;
                 }
             });
 
@@ -223,6 +257,12 @@ namespace Chiota.ViewModels.Chat
                     };
                     chats.Add(new ChatBinding(contact, lastMessage.Value, lastMessage.Date));
                 }
+
+
+                //Set flag to show the chats.
+                IsChatExist = chats.Count > 0;
+                IsAnyExist = chats.Count > 0;
+                IsNoneExist = !(chats.Count > 0);
 
                 //Update the chat list.
                 var changed = IsChatListChanged(chats);

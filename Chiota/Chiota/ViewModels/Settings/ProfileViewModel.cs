@@ -1,27 +1,25 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Helper;
-using Chiota.Models;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupPageModels;
 using Chiota.Popups.PopupPages;
 using Chiota.Resources.Localizations;
 using Chiota.Resources.Settings;
 using Chiota.Services;
-using Chiota.Services.Database.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Plugin.Media;
-using Plugin.Media.Abstractions;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Settings
 {
@@ -30,10 +28,12 @@ namespace Chiota.ViewModels.Settings
         #region Attributes
 
         private ImageSource _profileImageSource;
+        private FileImageSource _editImage;
         private string _username;
         private bool _isEdit;
+        private bool _isNotEdit;
 
-        private byte[] imageBuffer;
+        private byte[] _imageBuffer;
 
         private ImageSource _originImageSource;
         private string _originUsername;
@@ -72,6 +72,26 @@ namespace Chiota.ViewModels.Settings
             }
         }
 
+        public bool IsNotEdit
+        {
+            get => _isNotEdit;
+            set
+            {
+                _isNotEdit = value;
+                OnPropertyChanged(nameof(IsNotEdit));
+            }
+        }
+
+        public FileImageSource EditImage
+        {
+            get => _editImage;
+            set
+            {
+                _editImage = value;
+                OnPropertyChanged(nameof(EditImage));
+            }
+        }
+
         #endregion
 
         #region Init
@@ -79,6 +99,7 @@ namespace Chiota.ViewModels.Settings
         public override void Init(object data = null)
         {
             IsEdit = false;
+            IsNotEdit = true;
 
             _originUsername = UserService.CurrentUser.Name;
 
@@ -99,13 +120,24 @@ namespace Chiota.ViewModels.Settings
 
         #endregion
 
+        #region ViewIsAppearing
+
+        protected override void ViewIsAppearing()
+        {
+            base.ViewIsAppearing();
+
+            EditImage = (FileImageSource)ImageSource.FromFile("edit.png");
+        }
+
+        #endregion
+
         #region Methods
 
         #region IsChanged
 
         private bool IsChanged()
         {
-            if (_username != _originUsername || _profileImageSource != _originImageSource)
+            if (Username != _originUsername || ProfileImageSource != _originImageSource)
                 return true;
             return false;
         }
@@ -122,16 +154,95 @@ namespace Chiota.ViewModels.Settings
         {
             get
             {
-                return new Command(() =>
+                return new Command( async () =>
                 {
                     IsEdit = !IsEdit;
+                    IsNotEdit = !IsEdit;
 
                     //Set the origin user information.
                     if (!IsEdit)
                     {
-                        Username = _originUsername;
-                        ProfileImageSource = _originImageSource;
+                        EditImage = (FileImageSource)ImageSource.FromFile("edit.png");
+
+                        //Set the focus to the page, because of a possible bug.
+                        //Otherwise the user can manipulate an input view, if the edit flag is false.
+                        //CurrentPage.Unfocus();
+
+                        //Set the changes.
+                        /*Username = _originUsername;
+                        ProfileImageSource = _originImageSource;*/
+
+                        //Save the changes.
+                        //Check if something changed.
+                        if (!IsChanged()) return;
+
+                        //Check if the username is set, otherwise set the origin and throw an exception.
+                        if (string.IsNullOrEmpty(Username))
+                        {
+                            await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
+                            Username = _originUsername;
+                            IsEdit = false;
+                            return;
+                        }
+
+                        //Need the password to update the user information.
+                        var dialog = new DialogPopupModel()
+                        {
+                            Title = "Please confirm your password to change your personal information.",
+                            Placeholder = AppResources.DlgPassword,
+                            IsPassword = true
+                        };
+                        var result = await DisplayPopupAsync<DialogPopupPageModel, DialogPopupModel>(new DialogPopupPage(), dialog);
+                        if (!result.Result)
+                        {
+                            //Reset the origin data.
+                            Username = _originUsername;
+                            ProfileImageSource = _profileImageSource;
+
+                            return;
+                        }
+
+                        //Show loading popup.
+                        await PushLoadingSpinnerAsync("Loading");
+
+                        try
+                        {
+                            if (_imageBuffer != null)
+                            {
+                                UserService.CurrentUser.ImagePath = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(_imageBuffer));
+                                UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(Convert.ToBase64String(_imageBuffer)));
+                            }
+
+                            UserService.CurrentUser.Name = Username;
+
+                            var userService = DependencyResolver.Resolve<UserService>();
+                            var isValid = await userService.UpdateAsync(result.ResultText, UserService.CurrentUser);
+                            if (!isValid)
+                            {
+                                await PopPopupAsync();
+                                await new InvalidUserInputException(new ExcInfo(), AppResources.DlgPassword).ShowAlertAsync();
+                                return;
+                            }
+
+                            var settings = ApplicationSettings.Load();
+                            await settings.Save();
+
+                            DependencyResolver.Reload();
+
+                            await PopPopupAsync();
+
+                            await DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
+                            await PopAsync();
+                            return;
+                        }
+                        catch (BaseException exception)
+                        {
+                            await PopPopupAsync();
+                            await exception.ShowAlertAsync();
+                        }
                     }
+                    else
+                        EditImage = (FileImageSource)ImageSource.FromFile("done.png");
                 });
             }
         }
@@ -161,94 +272,16 @@ namespace Chiota.ViewModels.Settings
                     var buffer = new byte[stream.Length];
                     stream.Read(buffer, 0, buffer.Length);
 
-                    imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
+                    _imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
 
                     try
                     {
                         // Load the image.
-                        ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(imageBuffer));
+                        ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
                     }
                     catch (Exception)
                     {
                         await new FailedLoadingFileException(new ExcInfo()).ShowAlertAsync();
-                    }
-                });
-            }
-        }
-
-        #endregion
-
-        #region Save
-
-        public ICommand SaveCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    if (!IsChanged())
-                    {
-                        IsEdit = false;
-                        return;
-                    }
-
-                    //Check if the username is set, otherwise set the origin and throw an exception.
-                    if (string.IsNullOrEmpty(Username))
-                    {
-                        await new MissingUserInputException(new ExcInfo(), Details.AuthMissingUserInputName).ShowAlertAsync();
-                        Username = _originUsername;
-                        IsEdit = false;
-                        return;
-                    }
-
-                    //Need the password to update the user information.
-                    var dialog = new DialogPopupModel()
-                    {
-                        Title = "Please confirm your password to change your personal information.",
-                        Placeholder = AppResources.DlgPassword,
-                        IsPassword = true
-                    };
-                    var result = await DisplayPopupAsync<DialogPopupPageModel, DialogPopupModel>(new DialogPopupPage(), dialog);
-                    if(!result.Result)
-                        return;
-
-                    //Show loading popup.
-                    await PushLoadingSpinnerAsync("Loading");
-
-                    try
-                    {
-                        if (imageBuffer != null)
-                        {
-                            UserService.CurrentUser.ImagePath = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(imageBuffer));
-                            UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(Convert.ToBase64String(imageBuffer)));
-                        }
-
-                        UserService.CurrentUser.Name = Username;
-
-                        var userService = DependencyResolver.Resolve<UserService>();
-                        var isValid = await userService.UpdateAsync(result.ResultText, UserService.CurrentUser);
-                        if (!isValid)
-                        {
-                            await PopPopupAsync();
-                            await new InvalidUserInputException(new ExcInfo(), AppResources.DlgPassword).ShowAlertAsync();
-                            return;
-                        }
-
-                        var settings = ApplicationSettings.Load();
-                        await settings.Save();
-
-                        DependencyResolver.Reload();
-
-                        await PopPopupAsync();
-
-                        await DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
-                        await PopAsync();
-                        return;
-                    }
-                    catch (BaseException exception)
-                    {
-                        await PopPopupAsync();
-                        await exception.ShowAlertAsync();
                     }
                 });
             }

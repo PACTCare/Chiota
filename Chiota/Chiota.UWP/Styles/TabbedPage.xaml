@@ -14,8 +14,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
                         <Image Source="{Binding Icon, Converter={StaticResource IconConverter}}" Width="16" Height="16" Visibility="{Binding Icon, Converter={StaticResource IconToVisibilityConverter}}"/>
-                        <TextBlock Name="TabbedPageHeaderTextBlock" Text="{Binding Title}"
-                                   Style="{ThemeResource BodyTextBlockStyle}" Visibility="{Binding Title, Converter={StaticResource TitleToVisibilityConverter}}"/>
+                        <TextBlock Name="TabbedPageHeaderTextBlock" Text="{Binding Title}" Style="{ThemeResource BodyTextBlockStyle}" Visibility="{Binding Title, Converter={StaticResource TitleToVisibilityConverter}}"/>
                     </StackPanel>
                 </DataTemplate>
             </Setter.Value>
