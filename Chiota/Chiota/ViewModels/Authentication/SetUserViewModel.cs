@@ -1,23 +1,22 @@
 ﻿using System;
+using Chiota.Resources.Localizations;
+
+#region References
+
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
-using Chiota.Annotations;
-using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Resources.Localizations;
 using Chiota.Services;
-using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
-using Chiota.Views;
 using Chiota.Views.Authentication;
 using Plugin.Media;
-using Plugin.Media.Abstractions;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Authentication
 {
@@ -25,12 +24,12 @@ namespace Chiota.ViewModels.Authentication
     {
         #region Attributes
 
-        private string name;
+        private string _name;
         private bool _isEntryFocused;
-        private ImageSource profileImageSource;
-        private byte[] imageBuffer;
+        private ImageSource _profileImageSource;
+        private byte[] _imageBuffer;
 
-        private static UserCreationProperties UserProperties;
+        private static UserCreationProperties _userProperties;
 
         #endregion
 
@@ -38,10 +37,10 @@ namespace Chiota.ViewModels.Authentication
 
         public string Name
         {
-            get => name;
+            get => _name;
             set
             {
-                name = value;
+                _name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
@@ -58,10 +57,10 @@ namespace Chiota.ViewModels.Authentication
 
         public ImageSource ProfileImageSource
         {
-            get => profileImageSource;
+            get => _profileImageSource;
             set
             {
-                profileImageSource = value;
+                _profileImageSource = value;
                 OnPropertyChanged(nameof(ProfileImageSource));
             }
         }
@@ -75,7 +74,7 @@ namespace Chiota.ViewModels.Authentication
         {
             base.Init(data);
 
-            UserProperties = data as UserCreationProperties;
+            _userProperties = data as UserCreationProperties;
         }
 
         #endregion
@@ -124,12 +123,12 @@ namespace Chiota.ViewModels.Authentication
                         var buffer = new byte[stream.Length];
                         stream.Read(buffer, 0, buffer.Length);
 
-                        imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
+                        _imageBuffer = await DependencyService.Get<IImageResizer>().Resize(buffer, 256);
 
                         try
                         {
                             // Load the image.
-                            ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(imageBuffer));
+                            ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
                         }
                         catch (Exception)
                         {
@@ -155,12 +154,20 @@ namespace Chiota.ViewModels.Authentication
                             return;
                         }
 
-                        UserProperties.Name = Name;
+                        _userProperties.Name = Name;
 
-                        if(imageBuffer != null)
-                            UserProperties.ImageBase64 = Convert.ToBase64String(imageBuffer);
+                        await PushLoadingSpinnerAsync(AppResources.DlgLoading);
 
-                        await PushAsync<SetPasswordView>(UserProperties);
+                        if (_imageBuffer != null)
+                        {
+                            _userProperties.ImageBase64 = Convert.ToBase64String(_imageBuffer);
+
+                            //Create new ipfs entry with the image data.
+                            _userProperties.ImagePath = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(_imageBuffer));
+                        }
+
+                        await PopPopupAsync();
+                        await PushAsync<SetPasswordView>(_userProperties);
                     });
             }
         }

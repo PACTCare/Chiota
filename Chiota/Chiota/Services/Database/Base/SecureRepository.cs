@@ -139,6 +139,8 @@ namespace Chiota.Services.Database.Base
             {
                 var encrypted = EncryptModel(t);
                 var result = base.UpdateObject(encrypted);
+                DecryptModel(t);
+
                 return result;
             }
             catch (Exception e)

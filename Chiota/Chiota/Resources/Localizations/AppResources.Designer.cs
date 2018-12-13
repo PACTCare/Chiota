@@ -502,6 +502,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        internal static string DlgLoading {
+            get {
+                return ResourceManager.GetString("DlgLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging you in.
         /// </summary>
         internal static string DlgLoggingIn {

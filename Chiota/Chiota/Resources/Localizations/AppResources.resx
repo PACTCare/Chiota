@@ -312,4 +312,7 @@
   <data name="DlgDeleteAccount" xml:space="preserve">
     <value>Delete account</value>
   </data>
+  <data name="DlgLoading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
 </root>

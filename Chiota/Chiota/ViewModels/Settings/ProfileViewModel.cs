@@ -210,7 +210,7 @@ namespace Chiota.ViewModels.Settings
                             if (_imageBuffer != null)
                             {
                                 UserService.CurrentUser.ImagePath = await new IpfsHelper().PostStringAsync(Convert.ToBase64String(_imageBuffer));
-                                UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(File.ReadAllBytes(Convert.ToBase64String(_imageBuffer)));
+                                UserService.CurrentUser.ImageBase64 = Convert.ToBase64String(_imageBuffer);
                             }
 
                             UserService.CurrentUser.Name = Username;
@@ -231,9 +231,8 @@ namespace Chiota.ViewModels.Settings
 
                             await PopPopupAsync();
 
-                            await DisplayAlertAsync("Settings Saved", "The settings got saved successfully");
+                            await DisplayAlertAsync("Settings saved", "The settings got saved successfully");
                             await PopAsync();
-                            return;
                         }
                         catch (BaseException exception)
                         {
