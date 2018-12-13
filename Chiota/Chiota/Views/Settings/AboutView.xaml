@@ -18,7 +18,7 @@
                 <StackLayout VerticalOptions="Center" Spacing="32">
                     <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" WidthRequest="128" HeightRequest="128"/>
                     <StackLayout Spacing="24">
-                        <Label Style="{DynamicResource Label14}" Text="Version 1.0" HorizontalTextAlignment="Center" Opacity="0.8"/>
+                        <Label Style="{DynamicResource Label14}" Text="{Binding Version}" HorizontalTextAlignment="Center" Opacity="0.8"/>
                         <StackLayout>
                             <Label Style="{DynamicResource Label14}" Text="© 2018 Pact Care BV" HorizontalTextAlignment="Center" Opacity="0.6"/>
                             <Label Style="{DynamicResource Label14}" Text="All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>

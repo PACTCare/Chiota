@@ -646,6 +646,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string DlgVersion {
+            get {
+                return ResourceManager.GetString("DlgVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Write seed down.
         /// </summary>
         internal static string DlgWriteSeedDown {

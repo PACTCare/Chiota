@@ -315,4 +315,7 @@
   <data name="DlgLoading" xml:space="preserve">
     <value>Loading</value>
   </data>
+  <data name="DlgVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
 </root>
