@@ -29,6 +29,7 @@ namespace Chiota.ViewModels.Settings
 
         private ImageSource _profileImageSource;
         private FileImageSource _editImage;
+
         private string _username;
         private bool _isEdit;
         private bool _isNotEdit;
@@ -49,6 +50,16 @@ namespace Chiota.ViewModels.Settings
             {
                 _profileImageSource = value;
                 OnPropertyChanged(nameof(ProfileImageSource));
+            }
+        }
+
+        public FileImageSource EditImage
+        {
+            get => _editImage;
+            set
+            {
+                _editImage = value;
+                OnPropertyChanged(nameof(EditImage));
             }
         }
 
@@ -82,22 +93,14 @@ namespace Chiota.ViewModels.Settings
             }
         }
 
-        public FileImageSource EditImage
-        {
-            get => _editImage;
-            set
-            {
-                _editImage = value;
-                OnPropertyChanged(nameof(EditImage));
-            }
-        }
-
         #endregion
 
         #region Init
 
         public override void Init(object data = null)
         {
+            base.Init(data);
+
             IsEdit = false;
             IsNotEdit = true;
 
@@ -114,17 +117,6 @@ namespace Chiota.ViewModels.Settings
 
             ProfileImageSource = _originImageSource;
             Username = _originUsername;
-
-            base.Init(data);
-        }
-
-        #endregion
-
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
 
             EditImage = (FileImageSource)ImageSource.FromFile("edit.png");
         }
@@ -154,7 +146,7 @@ namespace Chiota.ViewModels.Settings
         {
             get
             {
-                return new Command( async () =>
+                return new Command(async () =>
                 {
                     IsEdit = !IsEdit;
                     IsNotEdit = !IsEdit;
@@ -239,9 +231,11 @@ namespace Chiota.ViewModels.Settings
                             await PopPopupAsync();
                             await exception.ShowAlertAsync();
                         }
+
+                        return;
                     }
-                    else
-                        EditImage = (FileImageSource)ImageSource.FromFile("done.png");
+
+                    EditImage = (FileImageSource)ImageSource.FromFile("done.png");
                 });
             }
         }
