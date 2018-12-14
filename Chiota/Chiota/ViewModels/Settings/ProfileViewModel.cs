@@ -7,8 +7,8 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Popups.PopupModels;
-using Chiota.Popups.PopupPageModels;
-using Chiota.Popups.PopupPages;
+using Chiota.Popups.PopupViewModels;
+using Chiota.Popups.PopupViews;
 using Chiota.Resources.Localizations;
 using Chiota.Resources.Settings;
 using Chiota.Services;
@@ -184,7 +184,7 @@ namespace Chiota.ViewModels.Settings
                             Placeholder = AppResources.DlgPassword,
                             IsPassword = true
                         };
-                        var result = await DisplayPopupAsync<DialogPopupPageModel, DialogPopupModel>(new DialogPopupPage(), dialog);
+                        var result = await DisplayPopupAsync<DialogPopupViewModel, DialogPopupModel>(new DialogPopupView(), dialog);
                         if (!result.Result)
                         {
                             //Reset the origin data.

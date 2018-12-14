@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Chiota.Popups.Base
 {
-    public abstract class BasePopupPageModel<T> : INotifyPropertyChanged where T : BasePopupModel
+    public abstract class BasePopupViewModel<T> : INotifyPropertyChanged where T : BasePopupModel
     {
         #region Properties
 
@@ -30,11 +30,11 @@ namespace Chiota.Popups.Base
 
         #region Constructors
 
-        protected BasePopupPageModel()
+        protected BasePopupViewModel()
         {
         }
 
-        protected BasePopupPageModel(T popupModel)
+        protected BasePopupViewModel(T popupModel)
         {
             PopupModel = popupModel;
         }
@@ -122,7 +122,7 @@ namespace Chiota.Popups.Base
         /// <param name="animated">Whether to animate the display.</param>
         /// <returns>Type of PopupModel</returns>
         public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel, object data = null, bool animated = true)
-            where TA : BasePopupPageModel<TB>
+            where TA : BasePopupViewModel<TB>
             where TB : BasePopupModel
         {
             if (!(page.BindingContext is TA popupPageModel)) return null;
@@ -146,7 +146,7 @@ namespace Chiota.Popups.Base
         /// <param name="data">Passing data for init of the page model.</param>
         /// <param name="animated">Whether to animate the push.</param>
         public Task PushPopupAsync<TA, TB>(PopupPage page, object data = null, bool animated = true)
-            where TA : BasePopupPageModel<TB>
+            where TA : BasePopupViewModel<TB>
             where TB : BasePopupModel
         {
             if (!(page.BindingContext is TA popupPageModel)) return null;

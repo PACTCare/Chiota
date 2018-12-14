@@ -2,14 +2,14 @@
 <pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-             xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels;assembly=Chiota"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
              xmlns:animated="clr-namespace:Chiota.Controls.Animated;assembly=Chiota"
-             x:Class="Chiota.Popups.PopupPages.LoadingPopupPage"
+             xmlns:popupViewModels1="clr-namespace:Chiota.Popups.PopupViewModels"
+             x:Class="Chiota.Popups.PopupViews.LoadingPopupView"
              CloseWhenBackgroundIsClicked="False">
 
     <pages:PopupPage.BindingContext>
-        <popupPageModels:LoadingPopupPageModel/>
+        <popupViewModels1:LoadingPopupViewModel/>
     </pages:PopupPage.BindingContext>
 
     <pages:PopupPage.Animation >

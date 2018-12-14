@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Popups.PopupModels;
-using Chiota.Popups.PopupPageModels;
-using Chiota.Popups.PopupPages;
+using Chiota.Popups.PopupViewModels;
+using Chiota.Popups.PopupViews;
 
 namespace Chiota.Extensions
 {
@@ -67,7 +67,7 @@ namespace Chiota.Extensions
 
             //Get the current navigation instance and show the popup.
             var navigation = AppBase.GetNavigationInstance().CurrentPage.Navigation;
-            await navigation.DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+            await navigation.DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), alert);
         }
 
         #endregion

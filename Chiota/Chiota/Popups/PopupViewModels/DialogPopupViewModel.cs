@@ -1,49 +1,32 @@
-﻿#region Rerferences
+﻿#region References
 
-using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Popups.Base;
 using Chiota.Popups.PopupModels;
-
 using Xamarin.Forms;
 
 #endregion
 
-namespace Chiota.Popups.PopupPageModels
+namespace Chiota.Popups.PopupViewModels
 {
-    public class AlertPopupPageModel : BasePopupPageModel<AlertPopupModel>
+    public class DialogPopupViewModel : BasePopupViewModel<DialogPopupModel>
     {
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the neg button text color.
-        /// </summary>
-        public Color NegButtonColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pos button text color.
-        /// </summary>
         public Color PosButtonColor { get; set; }
+
+        public Color NegButtonColor { get; set; }
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AlertPopupPageModel"/> class.
-        /// </summary>
-        public AlertPopupPageModel() : base()
+        public DialogPopupViewModel() : base()
         {
         }
 
-        public AlertPopupPageModel(AlertPopupModel popupModel) : base(popupModel)
+        public DialogPopupViewModel(DialogPopupModel popupModel) : base(popupModel)
         {
-            if (!string.IsNullOrEmpty(PopupModel.Title))
-            {
-                PopupModel.IsTitleVisible = true;
-            }
-
             if (PopupModel.IsNegButtonDefault)
             {
                 NegButtonColor = (Color)Application.Current.Resources["HighlightedColor"];
@@ -78,7 +61,7 @@ namespace Chiota.Popups.PopupPageModels
         }
 
         /// <summary>
-        /// Cancel method of the popup
+        /// Cancel method of the popup.
         /// </summary>
         public ICommand NegCommand
         {
@@ -88,6 +71,7 @@ namespace Chiota.Popups.PopupPageModels
                     async () =>
                     {
                         PopupModel.Result = false;
+                        PopupModel.ResultText = string.Empty;
 
                         Finish = true;
                         await PopPopupAsync();
@@ -96,5 +80,6 @@ namespace Chiota.Popups.PopupPageModels
         }
 
         #endregion
+        
     }
 }

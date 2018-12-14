@@ -3,13 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
              xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
-             xmlns:popupPageModels="clr-namespace:Chiota.Popups.PopupPageModels;assembly=Chiota"
-             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
-             x:Class="Chiota.Popups.PopupPages.AlertPopupPage"
+             xmlns:popupViewModels1="clr-namespace:Chiota.Popups.PopupViewModels"
+             x:Class="Chiota.Popups.PopupViews.AlertPopupView"
              CloseWhenBackgroundIsClicked="False">
 
     <pages:PopupPage.BindingContext>
-        <popupPageModels:AlertPopupPageModel/>
+        <popupViewModels1:AlertPopupViewModel/>
     </pages:PopupPage.BindingContext>
 
     <pages:PopupPage.Animation >

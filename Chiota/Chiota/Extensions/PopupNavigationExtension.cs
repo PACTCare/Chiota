@@ -10,8 +10,6 @@ using Xamarin.Forms;
 namespace Chiota.Extensions
 {
     using Chiota.Popups.PopupModels;
-    using Chiota.Popups.PopupPageModels;
-    using Chiota.Popups.PopupPages;
 
     public static class PopupNavigationExtension
     {
@@ -31,7 +29,7 @@ namespace Chiota.Extensions
         /// <param name="animate">Whether to animate the display.</param>
         /// <returns>Type of PopupModel</returns>
         public static async Task<TB> DisplayPopupAsync<TA, TB>(this INavigation sender, PopupPage page, TB popupModel = null, object data = null, bool animate = true)
-            where TA : BasePopupPageModel<TB>
+            where TA : BasePopupViewModel<TB>
             where TB : BasePopupModel
         {
             if (!(page.BindingContext is TA)) return null;

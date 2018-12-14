@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
-using Chiota.Popups.Base;
+﻿using Chiota.Popups.Base;
 using Chiota.Popups.PopupModels;
-using Xamarin.Forms;
 
-namespace Chiota.Popups.PopupPageModels
+namespace Chiota.Popups.PopupViewModels
 {
-    public class LoadingPopupPageModel : BasePopupPageModel<LoadingPopupModel>
+    public class LoadingPopupViewModel : BasePopupViewModel<LoadingPopupModel>
     {
         #region Attributes
 
@@ -32,14 +27,14 @@ namespace Chiota.Popups.PopupPageModels
 
         #region Constructors
 
-        public LoadingPopupPageModel() : base(new LoadingPopupModel())
+        public LoadingPopupViewModel() : base(new LoadingPopupModel())
         {
             //Set the message visible, if there is any message.
             if (!string.IsNullOrEmpty(PopupModel.Message))
                 PopupModel.IsMessageVisible = true;
         }
 
-        public LoadingPopupPageModel(LoadingPopupModel popupModel) : base(popupModel)
+        public LoadingPopupViewModel(LoadingPopupModel popupModel) : base(popupModel)
         {
             //Set the message visible, if there is any message.
             if (!string.IsNullOrEmpty(PopupModel.Message))

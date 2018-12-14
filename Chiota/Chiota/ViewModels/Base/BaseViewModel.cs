@@ -8,8 +8,8 @@ using Chiota.Base;
 using Chiota.Extensions;
 using Chiota.Popups.Base;
 using Chiota.Popups.PopupModels;
-using Chiota.Popups.PopupPageModels;
-using Chiota.Popups.PopupPages;
+using Chiota.Popups.PopupViewModels;
+using Chiota.Popups.PopupViews;
 using Chiota.Services.Database;
 using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
@@ -482,7 +482,7 @@ namespace Chiota.ViewModels.Base
         /// Type of PopupModel
         /// </returns>
         public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel, object data = null, bool animated = true)
-            where TA : BasePopupPageModel<TB> where TB : BasePopupModel
+            where TA : BasePopupViewModel<TB> where TB : BasePopupModel
         {
             if (!(page.BindingContext is TA popupPageModel)) return null;
 
@@ -514,7 +514,7 @@ namespace Chiota.ViewModels.Base
         /// The <see cref="Task"/>.
         /// </returns>
         public Task PushPopupAsync<TA, TB>(PopupPage page, BasePopupModel popupModel = null, object data = null, bool animated = true)
-          where TA : BasePopupPageModel<TB> where TB : BasePopupModel
+          where TA : BasePopupViewModel<TB> where TB : BasePopupModel
         {
             if (!(page.BindingContext is TA popupPageModel)) return null;
 
@@ -648,7 +648,7 @@ namespace Chiota.ViewModels.Base
                 IsNegButtonDefault = isNegDefault
             };
 
-            return await DisplayPopupAsync<AlertPopupPageModel, AlertPopupModel>(new AlertPopupPage(), alert);
+            return await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), alert);
         }
 
         /// <summary>
@@ -662,7 +662,7 @@ namespace Chiota.ViewModels.Base
         /// </returns>
         public async Task PushLoadingSpinnerAsync(string text)
         {
-            await PushPopupAsync<LoadingPopupPageModel, LoadingPopupModel>(new LoadingPopupPage(), new LoadingPopupModel { Message = text });
+            await PushPopupAsync<LoadingPopupViewModel, LoadingPopupModel>(new LoadingPopupView(), new LoadingPopupModel { Message = text });
         }
 
         #endregion

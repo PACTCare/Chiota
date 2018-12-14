@@ -213,7 +213,7 @@ namespace Chiota.ViewModels.Contact
                     {
                         if (action.Name == AppResources.CmnNewContact)
                         {
-                            await PushAsync<AddContactView>();
+                            //await PushAsync<AddContactView>();
                             return;
                         }
                     }
