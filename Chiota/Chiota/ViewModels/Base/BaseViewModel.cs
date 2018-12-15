@@ -481,11 +481,9 @@ namespace Chiota.ViewModels.Base
         /// <returns>
         /// Type of PopupModel
         /// </returns>
-        public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel, object data = null, bool animated = true)
+        public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel = null, object data = null, bool animated = true)
             where TA : BasePopupViewModel<TB> where TB : BasePopupModel
         {
-            if (!(page.BindingContext is TA popupPageModel)) return null;
-
             //Not needed, because it is already a part of the popup extension.
             //popupPageModel.Setup(page, data);
 

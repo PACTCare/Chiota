@@ -1,24 +1,23 @@
-﻿using System;
-using System.IO;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Tangle.Net.Entity;
 using Tangle.Net.Utils;
-
 using Xamarin.Forms;
-
 using ZXing.Net.Mobile.Forms;
+using Chiota.Views.Authentication;
+
+#endregion
 
 namespace Chiota.ViewModels.Authentication
 {
-  using Chiota.Views.Authentication;
-
-  public class SetSeedViewModel : BaseViewModel
+    public class SetSeedViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -73,8 +72,6 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region Commands
-
         #region Init
 
         public override void Init(object data = null)
@@ -102,6 +99,8 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
+        #region Commands
+
         #region IsValid
 
         public ICommand IsValidCommand
@@ -110,11 +109,11 @@ namespace Chiota.ViewModels.Authentication
             {
                 return new Command((param) =>
                 {
-                    var isValid = (bool) param;
+                    var isValid = (bool)param;
 
-                    if(isValid)
+                    if (isValid)
                         ValidationImageSource = ImageSource.FromFile("done.png");
-                    else if(!string.IsNullOrEmpty(Seed))
+                    else if (!string.IsNullOrEmpty(Seed))
                         ValidationImageSource = ImageSource.FromFile("clear.png");
                     else
                         ValidationImageSource = null;

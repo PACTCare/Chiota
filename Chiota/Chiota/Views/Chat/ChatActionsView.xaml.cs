@@ -1,12 +1,12 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Chiota.Views.Contact
+namespace Chiota.Views.Chat
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ContactsView : ContentPage
+	public partial class ChatActionsView : ContentPage
 	{
-		public ContactsView ()
+		public ChatActionsView ()
 		{
 			InitializeComponent ();
         }

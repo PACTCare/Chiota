@@ -91,6 +91,9 @@
     <Compile Update="Views\BackUp\WriteSeedView.xaml.cs">
       <DependentUpon>WriteSeedView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Chat\ChatActionsView.xaml.cs">
+      <DependentUpon>ChatActionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Help\SeedHelpView.xaml.cs">
       <DependentUpon>SeedHelpView.xaml</DependentUpon>
     </Compile>
@@ -181,7 +184,7 @@
     <EmbeddedResource Update="Views\Chat\ChatsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Contact\ContactsView.xaml">
+    <EmbeddedResource Update="Views\Chat\ChatActionsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Settings\AboutView.xaml">

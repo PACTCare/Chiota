@@ -25,13 +25,13 @@
     </pages:PopupPage.Animation>
 
     <pages:PopupPage.Resources>
-    <ResourceDictionary>
-        <Style x:Key="PopupEntryFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame8}">
-            <Setter Property="BackgroundColor" Value="#96ffffff"/>
-            <Setter Property="HeightRequest" Value="40"/>
-            <Setter Property="WidthRequest" Value="256"/>
-        </Style>
-    </ResourceDictionary>
+        <ResourceDictionary>
+            <Style x:Key="PopupEntryFrame" TargetType="Frame" BasedOn="{StaticResource RoundedFrame8}">
+                <Setter Property="BackgroundColor" Value="#96ffffff"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="WidthRequest" Value="256"/>
+            </Style>
+        </ResourceDictionary>
     </pages:PopupPage.Resources>
 
     <pages:PopupPage.Content>

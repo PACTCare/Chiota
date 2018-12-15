@@ -32,8 +32,16 @@
         <Setter Property="CornerRadius" Value="16"/>
     </Style>
 
+    <Style x:Key="RoundedFrame24" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="24"/>
+    </Style>
+
     <Style x:Key="RoundedFrame32" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
         <Setter Property="CornerRadius" Value="32"/>
+    </Style>
+
+    <Style x:Key="RoundedFrame48" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="48"/>
     </Style>
 
     <!-- Label styles -->
@@ -70,7 +78,7 @@
 
     <!-- Entry styles -->
     <Style x:Key="BaseEntry" TargetType="Entry">
-        <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
+        <Setter Property="TextColor" Value="{DynamicResource DarkTextColor}"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
     </Style>

@@ -11,6 +11,7 @@ using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Xamarin.Forms;
+using ChatActionsView = Chiota.Views.Chat.ChatActionsView;
 
 #endregion
 
@@ -302,7 +303,7 @@ namespace Chiota.ViewModels.Chat
             {
                 return new Command(async () =>
                 {
-                    await PushAsync<ContactsView>();
+                    await PushAsync<ChatActionsView>();
                 });
             }
         }

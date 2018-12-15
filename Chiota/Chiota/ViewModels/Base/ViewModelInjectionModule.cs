@@ -34,7 +34,7 @@ namespace Chiota.ViewModels.Base
             builder.RegisterType<ChatViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ContactAddressViewModel>().PropertiesAutowired();
-            builder.RegisterType<ContactsViewModel>().PropertiesAutowired();
+            builder.RegisterType<ChatActionsViewModel>().PropertiesAutowired();
             builder.RegisterType<ContactRequestViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ProfileViewModel>().PropertiesAutowired();

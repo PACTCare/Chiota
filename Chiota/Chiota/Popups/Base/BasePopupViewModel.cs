@@ -67,8 +67,8 @@ namespace Chiota.Popups.Base
         /// <summary>
         /// Calling to initialize the page model.
         /// </summary>
-        /// /// <param name="data">Passed data of the push.</param>
-        public void Init(object data = null)
+        /// <param name="data">Passed data of the push.</param>
+        public virtual void Init(object data = null)
         {
 
         }
@@ -121,16 +121,12 @@ namespace Chiota.Popups.Base
         /// <param name="data">Passing data for init of the page model.</param>
         /// <param name="animated">Whether to animate the display.</param>
         /// <returns>Type of PopupModel</returns>
-        public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel, object data = null, bool animated = true)
+        public Task<TB> DisplayPopupAsync<TA, TB>(PopupPage page, TB popupModel = null, object data = null, bool animated = true)
             where TA : BasePopupViewModel<TB>
             where TB : BasePopupModel
         {
-            if (!(page.BindingContext is TA popupPageModel)) return null;
-
-            popupPageModel.Init(data);
-
-            page.Appearing += popupPageModel.OnAppearing;
-            page.Disappearing += popupPageModel.OnDisappearing;
+            //Not needed, because it is already a part of the popup extension.
+            //popupPageModel.Setup(page, data);
 
             return Navigation.DisplayPopupAsync<TA, TB>(page, popupModel, animated);
         }

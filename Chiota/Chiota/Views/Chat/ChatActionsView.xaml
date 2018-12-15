@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.Views.Contact.ContactsView"
+             x:Class="Chiota.Views.Chat.ChatActionsView"
              base:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
+             xmlns:chat="clr-namespace:Chiota.ViewModels.Chat;assembly=Chiota"
              mc:Ignorable="design"
-             design:DataContext="{design:DesignInstance contact:ContactsViewModel}"
-             Title="{extensions:Translate CmnContacts}">
+             design:DataContext="{design:DesignInstance chat:ChatActionsViewModel}"
+             Title="{DynamicResource AppName}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Icon="qr.png" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>

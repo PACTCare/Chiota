@@ -1,9 +1,12 @@
-﻿using Chiota.Popups.Base;
+﻿#region References
+
+using Chiota.Popups.Base;
+using Chiota.Resources.Localizations;
+
+#endregion
 
 namespace Chiota.Popups.PopupModels
 {
-    using Chiota.Resources.Localizations;
-
     public class AlertPopupModel : BasePopupModel
     {
         #region Properties

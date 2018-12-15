@@ -1,26 +1,27 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Models;
 using Chiota.Models.Binding;
+using Chiota.Popups.PopupModels;
+using Chiota.Popups.PopupViewModels;
+using Chiota.Popups.PopupViews;
 using Chiota.Resources.Localizations;
-using Chiota.Services.Database;
-using Chiota.Services.DependencyInjection;
-using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
-using Tangle.Net.Entity;
-using Xamarin.Essentials;
+using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
-namespace Chiota.ViewModels.Contact
+#endregion
+
+namespace Chiota.ViewModels.Chat
 {
-    public class ContactsViewModel : BaseViewModel
+    public class ChatActionsViewModel : BaseViewModel
     {
         #region Attributes
 
@@ -81,7 +82,7 @@ namespace Chiota.ViewModels.Contact
 
         #region Constructors
 
-        public ContactsViewModel()
+        public ChatActionsViewModel()
         {
             _actionList = new List<ActionBinding>();
             _contactList = new List<ContactBinding>();
@@ -214,6 +215,7 @@ namespace Chiota.ViewModels.Contact
                         if (action.Name == AppResources.CmnNewContact)
                         {
                             //await PushAsync<AddContactView>();
+                            var result = await DisplayPopupAsync<AddContactPopupViewModel, AddContactPopupModel>(new AddContactPopupView());
                             return;
                         }
                     }

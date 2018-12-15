@@ -318,4 +318,7 @@
   <data name="DlgVersion" xml:space="preserve">
     <value>Version</value>
   </data>
+  <data name="DlgAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
 </root>
