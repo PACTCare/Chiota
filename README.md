@@ -1,14 +1,10 @@
 # Chiota
 
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-
-**Chiota Android:** [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Android)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=10)
-
-**Messenger Package:** [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Messenger%20Package)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=9)
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme) Chiota Android: [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Android)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=10) Messenger Package: [![Build status](https://florencechat.visualstudio.com/Chiota/_apis/build/status/Chiota%20Messenger%20Package)](https://florencechat.visualstudio.com/Chiota/_build/latest?definitionId=9)
 
 > Your IOTA Chat App
 
-Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat App based on [Felandils C# .NET Port of the IOTA lib](https://github.com/Felandil/tangle-.net), who also helped with this app, [Steppenwolfe65 CEX-NET](https://github.com/Steppenwolfe65/CEX-NET) and [jamesmontemagnos MonkeyChat](https://github.com/jamesmontemagno/app-monkeychat).  
+Chiota is an [IOTA](http://iota.org/) [Xamarin](https://www.xamarin.com/) Chat App based on [Felandils C# .NET Port of the IOTA lib](https://github.com/Felandil/tangle-.net), [Steppenwolfe65 CEX-NET](https://github.com/Steppenwolfe65/CEX-NET) and [jamesmontemagnos MonkeyChat](https://github.com/jamesmontemagno/app-monkeychat).  
 
 The goal is to create a quantum secure chat app, in which you are the owner of your own data and nobody else! 
 
