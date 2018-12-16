@@ -61,6 +61,7 @@ During the process of creating the health care chatbot Florence, we found out th
 You can either support this project by [donating](#donate) or by contributing to the [code](#code). 
 
 ### Donate
+IOTA Donation address
 ```
 SSFQNEKDAMMAJSTMLRPIHSKZMHQTMYITPPLUWLOPYKS9K9YDGJZKTNQHJVD9YGZFOVZKAZHDIDMFWJGUYFZOTSAS9C 
 ```
