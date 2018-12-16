@@ -51,6 +51,7 @@ namespace Chiota.Services.BackgroundServices
             base.Init(data);
 
             if (string.IsNullOrEmpty(data)) return;
+
             var json = JArray.Parse(data);
             _user = JsonConvert.DeserializeObject<DbUser>(JsonConvert.SerializeObject(json[0]));
             _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);

@@ -321,4 +321,7 @@
   <data name="DlgAddress" xml:space="preserve">
     <value>Address</value>
   </data>
+  <data name="DlgAllRightsReserved" xml:space="preserve">
+    <value>All rights reserved.</value>
+  </data>
 </root>

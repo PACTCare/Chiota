@@ -21,7 +21,7 @@
                         <Label Style="{DynamicResource Label14}" Text="{Binding Version}" HorizontalTextAlignment="Center" Opacity="0.8"/>
                         <StackLayout>
                             <Label Style="{DynamicResource Label14}" Text="© 2018 Pact Care BV" HorizontalTextAlignment="Center" Opacity="0.6"/>
-                            <Label Style="{DynamicResource Label14}" Text="All rights reserved." HorizontalTextAlignment="Center" Opacity="0.6"/>
+                            <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgAllRightsReserved}" HorizontalTextAlignment="Center" Opacity="0.6"/>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

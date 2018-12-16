@@ -90,9 +90,9 @@ namespace Chiota.Base
                 DependencyService.Get<IBackgroundJobWorker>().Add<ContactRequestBackgroundJob>(UserService.CurrentUser);
 
                 //Start a service for every chat in the database.
-                var chats = Database.Contact.GetAcceptedContacts();
+                /*var chats = Database.Contact.GetAcceptedContacts();
                 foreach (var chat in chats)
-                    DependencyService.Get<IBackgroundJobWorker>().Add<ChatMessageBackgroundJob>(UserService.CurrentUser, chat);
+                    DependencyService.Get<IBackgroundJobWorker>().Add<ChatMessageBackgroundJob>(UserService.CurrentUser, chat);*/
 
                 //Register the background jobs.
                 DependencyService.Get<IBackgroundJobWorker>().Register();

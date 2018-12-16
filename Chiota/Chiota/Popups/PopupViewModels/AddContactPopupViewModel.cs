@@ -212,13 +212,13 @@ namespace Chiota.Popups.PopupViewModels
                                     {
                                         Name = UserService.CurrentUser.Name,
                                         ImagePath = UserService.CurrentUser.ImagePath,
+                                        ContactAddress = new Address(PopupModel.Address),
                                         RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
                                         PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                                        ContactAddress = new Address(PopupModel.Address),
                                         UserPublicKey = UserService.CurrentUser.NtruKeyPair.PublicKey
                                     });
 
-                                await PopPopupAsync();
+                                //await PopPopupAsync();
                                 await PopPopupAsync();
 
                                 switch (response.Code)
@@ -237,7 +237,7 @@ namespace Chiota.Popups.PopupViewModels
                                 Finish = true;
                                 return;
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
                                 await PopPopupAsync();
                                 await PopPopupAsync();

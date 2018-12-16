@@ -42,23 +42,23 @@
                 <StackLayout Style="{DynamicResource PopupLayout}" Spacing="24">
                     <Grid HorizontalOptions="Center" Margin="0, 8, 0, 0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="96"/>
+                            <RowDefinition Height="128"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="96"/>
+                            <ColumnDefinition Width="128"/>
                         </Grid.ColumnDefinitions>
 
-                        <Frame Grid.Row="0" Grid.Column="0" Style="{DynamicResource RoundedFrame48}" BackgroundColor="{DynamicResource BackgroundColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Frame Grid.Row="0" Grid.Column="0" Style="{DynamicResource RoundedFrame64}" BackgroundColor="{DynamicResource BackgroundColor}" HorizontalOptions="Center" VerticalOptions="Center">
                             <Image Source="addperson.png" Opacity="0.8" HeightRequest="84" WidthRequest="84" Margin="12"/>
                         </Frame>
                         <Grid Grid.Row="0" Grid.Column="0" >
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="1*"/>
-                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="2*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
 
                             <Button Style="{DynamicResource BaseButton}" Grid.Row="1" Grid.Column="1" CornerRadius="32" Image="qr.png" Command="{Binding QrCodeCommand}"/>

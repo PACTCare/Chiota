@@ -295,6 +295,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All rights reserved..
+        /// </summary>
+        internal static string DlgAllRightsReserved {
+            get {
+                return ResourceManager.GetString("DlgAllRightsReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string DlgCancel {

@@ -44,6 +44,10 @@
         <Setter Property="CornerRadius" Value="48"/>
     </Style>
 
+    <Style x:Key="RoundedFrame64" TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="CornerRadius" Value="64"/>
+    </Style>
+
     <!-- Label styles -->
     <Style x:Key="BaseLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{DynamicResource DarkTextColor}"/>

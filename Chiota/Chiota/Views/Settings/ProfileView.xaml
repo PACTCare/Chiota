@@ -25,10 +25,10 @@
                 <StackLayout VerticalOptions="Start" HorizontalOptions="Center" Margin="0, 16, 0, 0">
                     <Grid HorizontalOptions="Center">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="128"/>
+                            <RowDefinition Height="144"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="128"/>
+                            <ColumnDefinition Width="144"/>
                         </Grid.ColumnDefinitions>
 
                         <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Source="{Binding ProfileImageSource}" Aspect="AspectFill" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
