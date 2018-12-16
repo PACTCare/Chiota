@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Android.App;
@@ -7,6 +9,8 @@ using Chiota.Droid.Services;
 using Chiota.Services;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(Screenshot))]
 namespace Chiota.Droid.Services

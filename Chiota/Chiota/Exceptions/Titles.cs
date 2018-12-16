@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiota.Exceptions
+﻿namespace Chiota.Exceptions
 {
     public static class Titles
     {

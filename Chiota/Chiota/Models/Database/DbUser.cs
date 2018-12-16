@@ -1,7 +1,11 @@
-﻿using Chiota.Models.Database.Base;
+﻿#region References
+
+using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
 using SQLite;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
+
+#endregion
 
 namespace Chiota.Models.Database
 {

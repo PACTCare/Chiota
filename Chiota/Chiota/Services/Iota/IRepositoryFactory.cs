@@ -1,21 +1,25 @@
-﻿namespace Chiota.Services.Iota
-{
-  using Tangle.Net.Repository;
+﻿#region References
 
-  /// <summary>
-  /// The RepositoryFactory interface.
-  /// </summary>
-  public interface IRepositoryFactory
-  {
+using Tangle.Net.Repository;
+
+#endregion
+
+namespace Chiota.Services.Iota
+{
     /// <summary>
-    /// The create.
+    /// The RepositoryFactory interface.
     /// </summary>
-    /// <param name="roundNumber">
-    /// The round number.
-    /// </param>
-    /// <returns>
-    /// The <see cref="RestIotaRepository"/>.
-    /// </returns>
-    RestIotaRepository Create(int roundNumber = 0);
-  }
+    public interface IRepositoryFactory
+    {
+        /// <summary>
+        /// The create.
+        /// </summary>
+        /// <param name="roundNumber">
+        /// The round number.
+        /// </param>
+        /// <returns>
+        /// The <see cref="RestIotaRepository"/>.
+        /// </returns>
+        RestIotaRepository Create(int roundNumber = 0);
+    }
 }

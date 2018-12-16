@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region References
+
+using System;
 using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Chiota.Models.Database
 {

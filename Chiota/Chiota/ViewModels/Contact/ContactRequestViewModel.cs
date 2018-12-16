@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
@@ -13,6 +13,8 @@ using Pact.Palantir.Usecase.AcceptContact;
 using Pact.Palantir.Usecase.DeclineContact;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Contact
 {

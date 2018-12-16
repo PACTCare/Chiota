@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Chiota.Models;
 using Chiota.Models.Database.Base;
 using Chiota.Services.Security;
+
+#endregion
 
 namespace Chiota.Extensions
 {

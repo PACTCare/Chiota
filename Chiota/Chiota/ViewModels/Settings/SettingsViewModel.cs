@@ -1,16 +1,16 @@
-﻿using System;
+﻿#region References
+
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Services.Share;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Settings;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Settings
 {

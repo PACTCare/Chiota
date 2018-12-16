@@ -1,23 +1,23 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
-using Chiota.Services.BackgroundServices;
-using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
+#endregion
+
 namespace Chiota.ViewModels.Authentication
 {
-  using Chiota.Views.Authentication;
-
-  public class SetPasswordViewModel : BaseViewModel
+    public class SetPasswordViewModel : BaseViewModel
     {
         #region Attributes
 

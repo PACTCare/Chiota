@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿#region References
 
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using TextAlignment = Android.Views.TextAlignment;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(Button), typeof(Chiota.Droid.Renderer.ButtonRenderer))]
 namespace Chiota.Droid.Renderer

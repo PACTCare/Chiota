@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Reflection;
 using System.Resources;
 using Chiota.Services.Localization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
+#endregion
 
 namespace Chiota.Extensions
 {

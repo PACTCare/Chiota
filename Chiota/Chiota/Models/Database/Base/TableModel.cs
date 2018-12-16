@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Chiota.Annotations;
+﻿#region References
+
 using Newtonsoft.Json;
 using SQLite;
+
+#endregion
 
 namespace Chiota.Models.Database.Base
 {

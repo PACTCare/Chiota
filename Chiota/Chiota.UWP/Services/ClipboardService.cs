@@ -1,23 +1,26 @@
-﻿namespace Chiota.UWP.Services
+﻿#region References
+
+using Chiota.Services;
+using Windows.ApplicationModel.DataTransfer;
+
+#endregion
+
+namespace Chiota.UWP.Services
 {
-  using Chiota.Services;
-
-  using Windows.ApplicationModel.DataTransfer;
-
-  public class ClipboardService : IClipboardService
-  {
-    public string GetTextFromClipboard()
+    public class ClipboardService : IClipboardService
     {
-      var dataPackage = Clipboard.GetContent();
-      var text = dataPackage.GetTextAsync();
-      return text.GetResults();
-    }
+        public string GetTextFromClipboard()
+        {
+            var dataPackage = Clipboard.GetContent();
+            var text = dataPackage.GetTextAsync();
+            return text.GetResults();
+        }
 
-    public void SendTextToClipboard(string text)
-    {
-      var dataPackage = new DataPackage();
-      dataPackage.SetText(text);
-      Clipboard.SetContent(dataPackage);
+        public void SendTextToClipboard(string text)
+        {
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(text);
+            Clipboard.SetContent(dataPackage);
+        }
     }
-  }
 }

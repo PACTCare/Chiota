@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
 using Android.Graphics;
 using Chiota.Droid.Services;
@@ -6,6 +8,8 @@ using Chiota.Services;
 using Xamarin.Forms;
 using ZXing;
 using ZXing.Common;
+
+#endregion
 
 [assembly: Dependency(typeof(ImageQrCodeReader))]
 namespace Chiota.Droid.Services

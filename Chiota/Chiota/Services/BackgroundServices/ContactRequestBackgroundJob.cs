@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
-using Chiota.Extensions;
 using Chiota.Models.Database;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
-using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,10 +14,11 @@ using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.GetContacts;
-using SQLite;
 using Tangle.Net.Cryptography.Signing;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Services.BackgroundServices
 {

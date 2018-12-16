@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Text;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Controls.Bindable
 {

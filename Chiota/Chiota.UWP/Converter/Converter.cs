@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region References
+
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
+
+#endregion
 
 namespace Chiota.UWP.Converter
 {

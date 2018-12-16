@@ -1,24 +1,21 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
 using Android.App.Job;
 using Android.Content;
-using Android.Media;
 using Android.OS;
-using Android.Support.V4.App;
-using Android.Util;
 using Chiota.Droid.Services.Database;
 using Chiota.Models;
-using Chiota.Models.Database;
-using Chiota.Services;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SQLite;
-using Xamarin.Forms;
 using Void = Java.Lang.Void;
+
+#endregion
 
 namespace Chiota.Droid.Services.BackgroundService
 {

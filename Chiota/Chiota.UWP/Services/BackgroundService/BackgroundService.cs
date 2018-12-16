@@ -1,10 +1,12 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Chiota.Services.BackgroundServices.Base;
+
+#endregion
 
 namespace Chiota.UWP.Services.BackgroundService
 {

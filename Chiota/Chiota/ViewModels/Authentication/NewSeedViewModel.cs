@@ -1,22 +1,23 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
-
 using Chiota.Exceptions;
 using Chiota.Extensions;
-using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
+using Chiota.Views.BackUp;
+
+#endregion
 
 namespace Chiota.ViewModels.Authentication
 {
-  using Chiota.Views.BackUp;
-
-  /// <summary>
+    /// <summary>
     /// The new seed view model.
     /// </summary>
     public class NewSeedViewModel : BaseViewModel

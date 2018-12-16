@@ -1,7 +1,6 @@
 ﻿#region References
 
 using Chiota.Popups.Base;
-using Tangle.Net.Entity;
 
 #endregion
 

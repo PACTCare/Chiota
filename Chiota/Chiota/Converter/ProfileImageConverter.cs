@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.Globalization;
-using System.Text;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Converter
 {
+    #region ProfileImageSourceConverter
+
     public class ProfileImageSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -22,6 +26,10 @@ namespace Chiota.Converter
         }
     }
 
+    #endregion
+
+    #region ProfileImageSourceOpacityConverter
+
     public class ProfileImageSourceOpacityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -37,4 +45,6 @@ namespace Chiota.Converter
             throw new NotImplementedException();
         }
     }
+
+    #endregion
 }

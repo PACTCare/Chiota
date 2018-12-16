@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
 using Chiota.Popups.Base;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 
+#endregion
+
 namespace Chiota.Extensions
 {
-    using Chiota.Popups.PopupModels;
-
     public static class PopupNavigationExtension
     {
         #region Methods

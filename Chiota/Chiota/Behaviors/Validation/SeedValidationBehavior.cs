@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Windows.Input;
+﻿#region References
+
 using Tangle.Net.Utils;
-using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Behaviors.Validation
 {

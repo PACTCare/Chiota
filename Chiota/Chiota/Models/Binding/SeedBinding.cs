@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿#region References
+
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
 using Chiota.Models.Database.Base;
+
+#endregion
 
 namespace Chiota.Models.Binding
 {

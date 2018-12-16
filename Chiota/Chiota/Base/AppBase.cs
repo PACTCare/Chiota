@@ -1,8 +1,8 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Chiota.Models.Database;
-using Chiota.Services;
 using Chiota.Services.BackgroundServices;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
@@ -10,10 +10,10 @@ using Chiota.Services.Database.Base;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
-using Chiota.Views.Chat;
 using Chiota.Views.Tabbed;
-using Xamarin.Essentials;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Base
 {

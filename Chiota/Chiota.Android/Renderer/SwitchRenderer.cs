@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region References
+
 using Android.Content;
 using Android.Graphics;
 using Android.Widget;
@@ -10,6 +7,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Color = Android.Graphics.Color;
 using Switch = Xamarin.Forms.Switch;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(Switch), typeof(Chiota.Droid.Renderer.SwitchRenderer))]
 namespace Chiota.Droid.Renderer

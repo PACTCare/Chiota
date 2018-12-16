@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿#region References
+
+using System.Threading.Tasks;
+
+#endregion
 
 namespace Chiota.Services.Share
 {

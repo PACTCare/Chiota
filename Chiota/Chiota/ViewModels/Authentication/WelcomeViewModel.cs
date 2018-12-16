@@ -1,15 +1,17 @@
-﻿using System.Windows.Input;
+﻿#region References
+
+using System;
+using Chiota.Annotations;
+using Chiota.Views.Authentication;
+using Chiota.Views.Help;
+using System.Windows.Input;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
 
+#endregion
+
 namespace Chiota.ViewModels.Authentication
 {
-    using System;
-
-    using Chiota.Annotations;
-    using Chiota.Views.Authentication;
-    using Chiota.Views.Help;
-
     public class WelcomeViewModel : BaseViewModel
     {
         #region Commands

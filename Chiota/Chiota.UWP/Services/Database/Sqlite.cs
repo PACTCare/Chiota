@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.UWP.Services.Database;
 using SQLite;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(Sqlite))]
 namespace Chiota.UWP.Services.Database

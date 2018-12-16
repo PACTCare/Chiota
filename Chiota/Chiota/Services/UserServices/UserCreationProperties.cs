@@ -1,7 +1,11 @@
-﻿namespace Chiota.Services.UserServices
-{
-    using Tangle.Net.Entity;
+﻿#region References
 
+using Tangle.Net.Entity;
+
+#endregion
+
+namespace Chiota.Services.UserServices
+{
     public class UserCreationProperties
     {
         #region Properties

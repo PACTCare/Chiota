@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
 using System.Windows.Input;
-using Chiota.Resources.Localizations;
 using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Contact
 {

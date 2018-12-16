@@ -1,17 +1,17 @@
-﻿using Chiota.ViewModels.Base;
+﻿#region References
+
+using System.Windows.Input;
+using Chiota.ViewModels.Base;
+using Chiota.Services;
+using Chiota.Services.DependencyInjection;
+using Chiota.Services.UserServices;
+using Chiota.Views.BackUp;
+using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.BackUp
 {
-    using System.Windows.Input;
-
-    using Chiota.Annotations;
-    using Chiota.Services;
-    using Chiota.Services.DependencyInjection;
-    using Chiota.Services.UserServices;
-    using Chiota.Views.BackUp;
-
-    using Xamarin.Forms;
-
     /// <summary>
     /// The back up view model.
     /// </summary>

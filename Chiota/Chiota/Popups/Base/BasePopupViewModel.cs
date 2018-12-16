@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -7,6 +9,8 @@ using Chiota.Extensions;
 using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Popups.Base
 {

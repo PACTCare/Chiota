@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
@@ -11,6 +10,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Chiota.Services;
 using Chiota.UWP.Services;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(ImageResizer))]
 namespace Chiota.UWP.Services

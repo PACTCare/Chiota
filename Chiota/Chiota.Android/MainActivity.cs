@@ -1,6 +1,4 @@
-﻿using Android.Util;
-using Chiota.Droid.Services.BackgroundService;
-#region References
+﻿#region References
 
 using ImageCircle.Forms.Plugin.Droid;
 using Android.App;
@@ -12,6 +10,7 @@ using Chiota.Services.DependencyInjection;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using Xamarin.Forms;
+using Chiota.Droid.Services.BackgroundService;
 using static Chiota.Droid.Services.BackgroundService.MainActivity;
 
 #endregion

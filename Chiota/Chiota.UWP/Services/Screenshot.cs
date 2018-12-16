@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
@@ -14,6 +13,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Chiota.Services;
 using Chiota.UWP.Services;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(Screenshot))]
 namespace Chiota.UWP.Services

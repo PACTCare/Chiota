@@ -1,4 +1,8 @@
-﻿using System;
+﻿#region References
+
+using System;
+
+#endregion
 
 namespace Chiota.Controls.InfiniteScrolling
 {

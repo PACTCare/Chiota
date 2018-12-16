@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
 using System.Threading.Tasks;
 using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Popups.PopupModels;
 using Chiota.Popups.PopupViewModels;
 using Chiota.Popups.PopupViews;
+
+#endregion
 
 namespace Chiota.Extensions
 {

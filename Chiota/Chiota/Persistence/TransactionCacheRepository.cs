@@ -1,14 +1,14 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Chiota.Base;
-using Chiota.Extensions;
 using Chiota.Models.Database;
-using Chiota.Services.Database;
-using Chiota.Services.UserServices;
 using Pact.Palantir.Cache;
 using Tangle.Net.Entity;
+
+#endregion
 
 namespace Chiota.Persistence
 {

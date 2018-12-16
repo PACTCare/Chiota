@@ -1,11 +1,14 @@
-﻿namespace Chiota.Services.Ipfs
+﻿#region References
+
+using System.IO;
+using System.Threading.Tasks;
+using Ipfs.Api;
+using Ipfs.CoreApi;
+
+#endregion
+
+namespace Chiota.Services.Ipfs
 {
-    using System.IO;
-    using System.Threading.Tasks;
-
-    using global::Ipfs.Api;
-    using global::Ipfs.CoreApi;
-
     public class IpfsHelper
     {
         private readonly IpfsClient ipfs;

@@ -1,17 +1,18 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Chiota.Base;
 using Chiota.Extensions;
 using Chiota.Models.Database;
-using Chiota.Services.Database;
 using Chiota.Services.UserServices;
 using Pact.Palantir.Entity;
 using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
 using Tangle.Net.Cryptography.Signing;
+
+#endregion
 
 namespace Chiota.Persistence
 {

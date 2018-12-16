@@ -1,7 +1,8 @@
-﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using SQLite;
+
+#endregion
 
 namespace Chiota.Services.Database.Base
 {

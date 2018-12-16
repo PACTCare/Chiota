@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
 using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Chiota.Models.Database
 {

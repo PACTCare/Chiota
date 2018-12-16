@@ -1,23 +1,25 @@
-﻿namespace Chiota.Services.Iota
+﻿#region References
+
+using System.Collections.Generic;
+using Chiota.Resources.Settings;
+using Tangle.Net.ProofOfWork;
+using Tangle.Net.ProofOfWork.Service;
+using Tangle.Net.Repository;
+using Tangle.Net.Repository.Client;
+
+#endregion
+
+namespace Chiota.Services.Iota
 {
-  using System.Collections.Generic;
-
-  using Chiota.Resources.Settings;
-
-  using Tangle.Net.ProofOfWork;
-  using Tangle.Net.ProofOfWork.Service;
-  using Tangle.Net.Repository;
-  using Tangle.Net.Repository.Client;
-
-  /// <summary>
-  /// The repository factory.
-  /// </summary>
-  public class RepositoryFactory : IRepositoryFactory
-  {
     /// <summary>
-    /// The node uri list.
+    /// The repository factory.
     /// </summary>
-    private readonly List<string> nodeUriList = new List<string>
+    public class RepositoryFactory : IRepositoryFactory
+    {
+        /// <summary>
+        /// The node uri list.
+        /// </summary>
+        private readonly List<string> nodeUriList = new List<string>
                                                   {
                                                     "https://field.deviota.com:443",
                                                     "https://peanut.iotasalad.org:14265",
@@ -42,17 +44,17 @@
                                                     "https://pow5.iota.community:443"
                                                   };
 
-    /// <inheritdoc />
-    public RestIotaRepository Create(int roundNumber = 0)
-    {
-      var appSettings = ApplicationSettings.Load();
-      nodeUriList.Insert(0, appSettings.IotaNodeUri);
+        /// <inheritdoc />
+        public RestIotaRepository Create(int roundNumber = 0)
+        {
+            var appSettings = ApplicationSettings.Load();
+            nodeUriList.Insert(0, appSettings.IotaNodeUri);
 
-      var iotaClient = new FallbackIotaClient(this.nodeUriList, 5000);
+            var iotaClient = new FallbackIotaClient(this.nodeUriList, 5000);
 
-      return appSettings.DoRemotePoW
-               ? new RestIotaRepository(iotaClient, new PoWSrvService())
-               : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
+            return appSettings.DoRemotePoW
+                     ? new RestIotaRepository(iotaClient, new PoWSrvService())
+                     : new RestIotaRepository(iotaClient, new PoWService(new CpuPearlDiver()));
+        }
     }
-  }
 }

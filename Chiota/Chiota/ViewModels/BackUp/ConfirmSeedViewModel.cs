@@ -1,7 +1,8 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Services;
@@ -9,12 +10,9 @@ using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Plugin.Media;
 using Tangle.Net.Utils;
-
 using Xamarin.Forms;
-using ZXing;
-using ZXing.Common;
-using ZXing.Net.Mobile.Forms;
-using ZXing.QrCode;
+
+#endregion
 
 namespace Chiota.ViewModels.BackUp
 {

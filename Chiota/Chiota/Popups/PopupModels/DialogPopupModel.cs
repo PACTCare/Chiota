@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region References
+
 using Chiota.Popups.Base;
 using Chiota.Resources.Localizations;
+
+#endregion
 
 namespace Chiota.Popups.PopupModels
 {

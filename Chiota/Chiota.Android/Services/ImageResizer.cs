@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
 using Android.Graphics;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Chiota.Droid.Services;
-using Chiota.Droid.Services.Database;
 using Chiota.Services;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(ImageResizer))]
 namespace Chiota.Droid.Services

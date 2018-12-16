@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
 using System.Threading.Tasks;
+
+#endregion
 
 namespace Chiota.Services
 {

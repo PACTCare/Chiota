@@ -1,25 +1,28 @@
-﻿using Chiota.Persistence;
+﻿#region References
+
+using Chiota.Persistence;
+using Autofac;
+
+using Chiota.Droid.Services;
+using Chiota.Services;
+
+using Pact.Palantir.Cache;
+using Pact.Palantir.Repository;
+
+#endregion
 
 namespace Chiota.Droid
 {
-  using Autofac;
-
-  using Chiota.Droid.Services;
-  using Chiota.Services;
-
-  using Pact.Palantir.Cache;
-  using Pact.Palantir.Repository;
-
-  /// <inheritdoc />
-  public class InjectionModule : Module
-  {
     /// <inheritdoc />
-    protected override void Load(ContainerBuilder builder)
+    public class InjectionModule : Module
     {
-      builder.RegisterType<ClipboardService>().As<IClipboardService>();
+        /// <inheritdoc />
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<ClipboardService>().As<IClipboardService>();
 
-        builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
-        builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
+            builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
+            builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
         }
-  }
+    }
 }

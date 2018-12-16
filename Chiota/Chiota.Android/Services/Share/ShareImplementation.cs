@@ -1,3 +1,5 @@
+#region References
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,6 +9,8 @@ using Chiota.Services.Share;
 using Plugin.CurrentActivity;
 using Xamarin.Forms;
 using Application = Android.App.Application;
+
+#endregion
 
 [assembly: Dependency(typeof(ShareImplementation))]
 namespace Chiota.Droid.Services.Share

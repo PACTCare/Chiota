@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiota.Controls.Animated
+﻿namespace Chiota.Controls.Animated
 {
     public enum Animations
     {

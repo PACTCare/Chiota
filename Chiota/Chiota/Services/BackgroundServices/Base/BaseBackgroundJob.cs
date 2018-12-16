@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿#region References
+
+using System.Threading.Tasks;
 using Chiota.Services.Database;
-using Chiota.Services.Database.Base;
-using SQLite;
+
+#endregion
 
 namespace Chiota.Services.BackgroundServices.Base
 {

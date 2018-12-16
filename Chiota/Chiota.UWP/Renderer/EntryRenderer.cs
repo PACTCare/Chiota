@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
+﻿#region References
+
 using Windows.UI.Xaml;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(Entry), typeof(Chiota.UWP.Renderer.EntryRenderer))]
 namespace Chiota.UWP.Renderer

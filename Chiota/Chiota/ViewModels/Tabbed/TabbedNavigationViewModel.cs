@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using System.Windows.Input;
 using Chiota.Base;
 using Chiota.Services.DependencyInjection;
@@ -9,6 +9,8 @@ using Chiota.ViewModels.Base;
 using Chiota.Views.Settings;
 using Pact.Palantir.Cache;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Tabbed
 {

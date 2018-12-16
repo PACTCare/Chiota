@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿#region References
+
+using Autofac;
 using Chiota.ViewModels.Authentication;
 using Chiota.ViewModels.BackUp;
 using Chiota.ViewModels.Chat;
@@ -6,6 +8,8 @@ using Chiota.ViewModels.Contact;
 using Chiota.ViewModels.Help;
 using Chiota.ViewModels.Settings;
 using Chiota.ViewModels.Tabbed;
+
+#endregion
 
 namespace Chiota.ViewModels.Base
 {

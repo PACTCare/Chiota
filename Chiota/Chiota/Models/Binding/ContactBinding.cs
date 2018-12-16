@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.IO;
 using Chiota.Helper;
 using Chiota.Models.Database.Base;
 using Pact.Palantir.Entity;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Models.Binding
 {

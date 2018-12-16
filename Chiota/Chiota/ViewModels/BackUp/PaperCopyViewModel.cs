@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows.Input;
-using Chiota.Models;
 using Chiota.Models.Binding;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.BackUp
 {

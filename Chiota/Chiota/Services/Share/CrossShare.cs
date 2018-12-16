@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region References
+
+using System;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Services.Share
 {

@@ -1,3 +1,5 @@
+#region References
+
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -6,6 +8,8 @@ using Windows.Foundation;
 using Chiota.Services.Share;
 using Chiota.UWP.Services.Share;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(ShareImplementation))]
 namespace Chiota.UWP.Services.Share

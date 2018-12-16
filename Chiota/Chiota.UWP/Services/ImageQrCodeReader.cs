@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿#region References
+
+using System;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using Chiota.Services;
@@ -13,6 +10,8 @@ using Chiota.UWP.Services;
 using Xamarin.Forms;
 using ZXing;
 using ZXing.Common;
+
+#endregion
 
 [assembly: Dependency(typeof(ImageQrCodeReader))]
 namespace Chiota.UWP.Services

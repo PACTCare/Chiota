@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region References
+
 using Android.Content;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using Xamarin.Forms.PlatformConfiguration;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(Entry), typeof(Chiota.Droid.Renderer.EntryRenderer))]
 namespace Chiota.Droid.Renderer

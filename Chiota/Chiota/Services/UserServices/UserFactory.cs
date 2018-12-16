@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿#region References
 
+using System.Threading.Tasks;
 using Chiota.Models;
 using Chiota.Models.Database;
-
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.CreateUser;
-
 using Tangle.Net.Entity;
+
+#endregion
 
 namespace Chiota.Services.UserServices
 {

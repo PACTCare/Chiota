@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+
+#endregion
 
 namespace Chiota.Services.Security
 {

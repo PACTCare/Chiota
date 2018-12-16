@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿#region References
 
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+using System;
+using System.IO;
 using Chiota.Droid.Services.Database;
-using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(Sqlite))]
 namespace Chiota.Droid.Services.Database

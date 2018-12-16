@@ -1,4 +1,8 @@
-﻿using Xamarin.Forms;
+﻿#region References
+
+using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Base
 {

@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using System.Windows.Input;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Behaviors
 {

@@ -1,8 +1,10 @@
-﻿using System;
+﻿#region References
+
 using Android.App.Job;
 using Android.Content;
-using Android.OS;
 using Java.Lang;
+
+#endregion
 
 namespace Chiota.Droid.Services.BackgroundService
 {

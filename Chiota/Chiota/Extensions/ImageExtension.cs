@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Refgerences
+
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
+#endregion
 
 namespace Chiota.Extensions
 {

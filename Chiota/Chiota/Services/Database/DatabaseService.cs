@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region
+
 using Chiota.Models;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Database.Repositories;
-using SQLite;
-using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Services.Database
 {

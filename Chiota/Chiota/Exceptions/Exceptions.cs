@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Newtonsoft.Json;
+
+#endregion
 
 namespace Chiota.Exceptions
 {

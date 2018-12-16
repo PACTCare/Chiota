@@ -1,4 +1,6 @@
-﻿using Android.App;
+﻿#region References
+
+using Android.App;
 using Android.Content;
 using Android.Media;
 using Android.OS;
@@ -7,6 +9,8 @@ using Chiota.Services;
 using Xamarin.Forms;
 using Application = Android.App.Application;
 using Notification = Chiota.Droid.Services.Notification;
+
+#endregion
 
 [assembly: Dependency(typeof(Notification))]
 namespace Chiota.Droid.Services

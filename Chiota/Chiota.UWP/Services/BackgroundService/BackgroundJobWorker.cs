@@ -1,18 +1,19 @@
-﻿using Chiota.UWP.Services.BackgroundService;
+﻿#region References
+
+using Chiota.UWP.Services.BackgroundService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
 using Chiota.Services.UserServices;
 using Chiota.UWP.Services.Database;
-
 using Newtonsoft.Json;
-
 using Windows.ApplicationModel.Background;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(BackgroundJobWorker))]
 namespace Chiota.UWP.Services.BackgroundService

@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
+﻿#region References
+
+using System.ComponentModel;
 using Android.Content;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(ScrollView), typeof(Chiota.Droid.Scrollbardisabledrenderer))]
 

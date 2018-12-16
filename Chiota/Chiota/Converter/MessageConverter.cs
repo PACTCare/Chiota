@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
+using System;
 using System.Globalization;
-using System.Text;
 using Chiota.Services.Localization;
 using Xamarin.Forms;
 
+#endregion
+
 namespace Chiota.Converter
 {
+    #region MessageIsOwnerToColorConverter
+
     public class MessageIsOwnerToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -25,6 +29,10 @@ namespace Chiota.Converter
             throw new NotImplementedException();
         }
     }
+
+    #endregion
+
+    #region MessageIsOwnerToLayoutOptionConverter
 
     public class MessageIsOwnerToLayoutOptionConverter : IValueConverter
     {
@@ -45,6 +53,10 @@ namespace Chiota.Converter
         }
     }
 
+    #endregion
+
+    #region MessageDateTimeToDateStringConverter
+
     public class MessageDateTimeToDateStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -58,6 +70,10 @@ namespace Chiota.Converter
         }
     }
 
+    #endregion
+
+    #region MessageDateTimeToTimeStringConverter
+
     public class MessageDateTimeToTimeStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -70,4 +86,6 @@ namespace Chiota.Converter
             throw new NotImplementedException();
         }
     }
+
+    #endregion
 }

@@ -1,11 +1,14 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database.Base;
 using SQLite;
+
+#endregion
 
 namespace Chiota.Services.Database.Repositories
 {

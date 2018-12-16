@@ -1,6 +1,10 @@
-﻿using System.Windows.Input;
+﻿#region References
+
+using System.Windows.Input;
 using Chiota.ViewModels.Base;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Help
 {

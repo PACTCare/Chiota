@@ -1,7 +1,4 @@
-﻿using System;
-using Chiota.Resources.Localizations;
-
-#region References
+﻿#region References
 
 using System.IO;
 using System.Threading.Tasks;
@@ -15,6 +12,8 @@ using Chiota.ViewModels.Base;
 using Chiota.Views.Authentication;
 using Plugin.Media;
 using Xamarin.Forms;
+using System;
+using Chiota.Resources.Localizations;
 
 #endregion
 

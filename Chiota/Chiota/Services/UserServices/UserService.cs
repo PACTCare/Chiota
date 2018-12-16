@@ -1,22 +1,21 @@
-﻿using System;
+﻿#region Referenes
+
+using System;
 using System.Text;
 using System.Threading.Tasks;
-
 using Chiota.Base;
 using Chiota.Models;
 using Chiota.Models.Database;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 using Pact.Palantir.Encryption;
-
 using Tangle.Net.Entity;
-
 using Xamarin.Essentials;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Services.UserServices
 {
@@ -79,8 +78,7 @@ namespace Chiota.Services.UserServices
         /// <returns>
         /// The <see cref="T"/>.
         /// </returns>
-        public T GetCurrentUserAs<T>()
-          where T : DbUser
+        public T GetCurrentUserAs<T>() where T : DbUser
         {
             return CurrentUser as T;
         }

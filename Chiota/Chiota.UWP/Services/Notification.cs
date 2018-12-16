@@ -1,6 +1,10 @@
-﻿using Windows.UI.Notifications;
+﻿#region References
+
+using Windows.UI.Notifications;
 using Chiota.Services;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(Chiota.UWP.Services.Notification))]
 namespace Chiota.UWP.Services

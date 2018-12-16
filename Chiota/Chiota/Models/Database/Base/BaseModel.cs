@@ -1,6 +1,10 @@
-﻿using System.ComponentModel;
+﻿#region References
+
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Chiota.Annotations;
+
+#endregion
 
 namespace Chiota.Models.Database.Base
 {

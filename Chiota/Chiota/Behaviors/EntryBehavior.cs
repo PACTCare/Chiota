@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Behaviors
 {
@@ -46,6 +48,8 @@ namespace Chiota.Behaviors
 
         #endregion
 
+        #region OnAttachedTo
+
         protected override void OnAttachedTo(Entry bindable)
         {
             base.OnAttachedTo(bindable);
@@ -56,6 +60,10 @@ namespace Chiota.Behaviors
             _entry = bindable;
         }
 
+        #endregion
+
+        #region OnDetachingFrom
+
         protected override void OnDetachingFrom(Entry bindable)
         {
             base.OnDetachingFrom(bindable);
@@ -65,6 +73,10 @@ namespace Chiota.Behaviors
 
             _entry = null;
         }
+
+        #endregion
+
+        #region Methods
 
         #region BindableContextChanged
 
@@ -91,6 +103,8 @@ namespace Chiota.Behaviors
         {
             IsFocused = false;
         }
+
+        #endregion
 
         #endregion
     }

@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region References
+
+using System;
 using Chiota.Models.Database.Base;
+
+#endregion
 
 namespace Chiota.Models.Binding
 {

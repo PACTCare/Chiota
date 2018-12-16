@@ -1,4 +1,8 @@
-﻿using System.Globalization;
+﻿#region References
+
+using System.Globalization;
+
+#endregion
 
 namespace Chiota.Services.Localization
 {

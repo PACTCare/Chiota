@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿#region References
+
+using System;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.Controls.Animated
 {

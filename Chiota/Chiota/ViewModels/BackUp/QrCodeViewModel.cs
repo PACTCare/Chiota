@@ -1,14 +1,14 @@
-﻿using Chiota.Services;
+﻿#region References
+
+using System.Windows.Input;
+using Xamarin.Forms;
+using Chiota.Services;
 using Chiota.ViewModels.Base;
-using ZXing;
-using ZXing.Net.Mobile.Forms;
-using ZXing.QrCode;
+
+#endregion
 
 namespace Chiota.ViewModels.BackUp
 {
-    using System.Windows.Input;
-    using Xamarin.Forms;
-
     public class QrCodeViewModel : BaseViewModel
     {
         #region Attributes

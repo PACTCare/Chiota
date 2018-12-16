@@ -1,4 +1,8 @@
-﻿using Android.Content;
+﻿#region References
+
+using Android.Content;
+
+#endregion
 
 namespace Chiota.Droid.Services.BackgroundService
 {

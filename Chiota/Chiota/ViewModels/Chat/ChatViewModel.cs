@@ -1,6 +1,7 @@
-﻿using System;
+﻿#region References
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Controls.InfiniteScrolling;
@@ -9,11 +10,12 @@ using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
 using Pact.Palantir.Usecase;
-using Pact.Palantir.Usecase.GetMessages;
 using Pact.Palantir.Usecase.SendMessage;
 using Tangle.Net.Entity;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
+
+#endregion
 
 namespace Chiota.ViewModels.Chat
 {

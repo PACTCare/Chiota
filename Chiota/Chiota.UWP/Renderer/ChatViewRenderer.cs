@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region References
+
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Chiota.Controls;
 using Chiota.UWP.Renderer;
 using Xamarin.Forms.Platform.UWP;
 using Windows.UI.Xaml.Controls;
+
+#endregion
 
 [assembly: ExportRenderer(typeof(ChatView), typeof(ChatViewRenderer))]
 namespace Chiota.UWP.Renderer

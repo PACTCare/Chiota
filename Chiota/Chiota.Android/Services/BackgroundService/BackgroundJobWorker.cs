@@ -1,26 +1,18 @@
-﻿using System;
+﻿#region References
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.App.Job;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Chiota.Base;
 using Chiota.Droid.Services.BackgroundService;
-using Chiota.Droid.Services.Database;
-using Chiota.Extensions;
-using Chiota.Models.Database;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.UserServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SQLite;
 using Xamarin.Forms;
+
+#endregion
 
 [assembly: Dependency(typeof(BackgroundJobWorker))]
 namespace Chiota.Droid.Services.BackgroundService
