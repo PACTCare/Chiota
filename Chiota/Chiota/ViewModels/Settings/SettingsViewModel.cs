@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.Binding;
+using Chiota.Resources.Localizations;
 using Chiota.Services.Share;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Settings;
@@ -65,9 +66,10 @@ namespace Chiota.ViewModels.Settings
         {
             var tmp = new List<SettingsBinding>
             {
-                new SettingsBinding(SettingsItemType.Profile, "Profile", ImageSource.FromFile("account.png")),
-                new SettingsBinding(SettingsItemType.InviteFriends, "Invite friends", ImageSource.FromFile("friends.png")),
-                new SettingsBinding(SettingsItemType.About, "About", ImageSource.FromFile("help.png"))
+                new SettingsBinding(SettingsItemType.Profile, AppResources.SettingsProfile, ImageSource.FromFile("account.png")),
+                new SettingsBinding(SettingsItemType.Security, AppResources.SettingsSecurity, ImageSource.FromFile("security.png")),
+                new SettingsBinding(SettingsItemType.InviteFriends, AppResources.SettingsInviteFriends, ImageSource.FromFile("friends.png")),
+                new SettingsBinding(SettingsItemType.About, AppResources.SettingsAbout, ImageSource.FromFile("help.png"))
             };
 
             SettingsList = tmp;
@@ -94,6 +96,11 @@ namespace Chiota.ViewModels.Settings
                         case SettingsItemType.Profile:
 
                             await PushAsync<ProfileView>();
+
+                            break;
+                        case SettingsItemType.Security:
+
+                            await PushAsync<SecurityView>();
 
                             break;
                         case SettingsItemType.InviteFriends:

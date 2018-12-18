@@ -196,15 +196,6 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Profile.
-        /// </summary>
-        internal static string CmnProfile {
-            get {
-                return ResourceManager.GetString("CmnProfile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to QR code.
         /// </summary>
         internal static string CmnQrCode {
@@ -678,6 +669,42 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgWriteSeedDown {
             get {
                 return ResourceManager.GetString("DlgWriteSeedDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string SettingsAbout {
+            get {
+                return ResourceManager.GetString("SettingsAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invite friends.
+        /// </summary>
+        internal static string SettingsInviteFriends {
+            get {
+                return ResourceManager.GetString("SettingsInviteFriends", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        internal static string SettingsProfile {
+            get {
+                return ResourceManager.GetString("SettingsProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        internal static string SettingsSecurity {
+            get {
+                return ResourceManager.GetString("SettingsSecurity", resourceCulture);
             }
         }
     }

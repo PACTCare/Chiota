@@ -42,6 +42,7 @@ namespace Chiota.ViewModels.Base
             builder.RegisterType<ContactRequestViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ProfileViewModel>().PropertiesAutowired();
+            builder.RegisterType<SecurityViewModel>().PropertiesAutowired();
             builder.RegisterType<AboutViewModel>().PropertiesAutowired();
 
             builder.RegisterType<SettingsViewModel>().PropertiesAutowired();

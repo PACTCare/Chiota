@@ -11,7 +11,7 @@
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance settings:ProfileViewModel}"
-             Title="{extensions:Translate CmnProfile}">
+             Title="{extensions:Translate SettingsProfile}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Text="{extensions:Translate CmnEdit}" Icon="{Binding EditImage}" Command="{Binding EditCommand}"/>

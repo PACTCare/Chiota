@@ -144,9 +144,6 @@
   <data name="CmnPrivacyPolicy" xml:space="preserve">
     <value>Open Privacy Policy</value>
   </data>
-  <data name="CmnProfile" xml:space="preserve">
-    <value>Profile</value>
-  </data>
   <data name="CmnQrCode" xml:space="preserve">
     <value>QR code</value>
   </data>
@@ -323,5 +320,17 @@
   </data>
   <data name="DlgAllRightsReserved" xml:space="preserve">
     <value>All rights reserved.</value>
+  </data>
+  <data name="SettingsAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SettingsInviteFriends" xml:space="preserve">
+    <value>Invite friends</value>
+  </data>
+  <data name="SettingsProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="SettingsSecurity" xml:space="preserve">
+    <value>Security</value>
   </data>
 </root>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.Settings.SecurityView"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
+             xmlns:settings="clr-namespace:Chiota.ViewModels.Settings"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance settings:SecurityViewModel}"
+             Title="{extensions:Translate SettingsSecurity}">
+
+    <ContentPage.BindingContext>
+        <settings:SecurityViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Coming soon"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

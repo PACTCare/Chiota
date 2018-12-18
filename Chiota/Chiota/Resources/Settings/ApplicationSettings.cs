@@ -25,7 +25,7 @@ namespace Chiota.Resources.Settings
         {
             var node = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsNodeKey)
                          ? Application.Current.Properties[ChiotaConstants.SettingsNodeKey] as string
-                         : "https://field.deviota.com:443";
+                         : "https://peanut.iotasalad.org:14265";
 
             var remotePoW = Application.Current.Properties.ContainsKey(ChiotaConstants.SettingsPowKey)
                               ? Application.Current.Properties[ChiotaConstants.SettingsPowKey] as bool?

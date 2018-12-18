@@ -20,6 +20,6 @@
     <Color x:Key="DangerColor">#b71c1c</Color>
     <Color x:Key="FadedDangerColor">#64b71c1c</Color>
 
-    <Color x:Key="SeperatorColor">#616161</Color>
+    <Color x:Key="SeparatorColor">#16000000</Color>
 
 </ResourceDictionary>

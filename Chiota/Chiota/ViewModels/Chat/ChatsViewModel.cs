@@ -223,8 +223,7 @@ namespace Chiota.ViewModels.Chat
                 IsNoneExist = !(contactRequests.Count > 0);
 
                 //Update the request list.
-                if ( RequestList == null ||
-                     RequestList.Count != contactRequests.Count)
+                if ( RequestList == null || RequestList.Count != contactRequests.Count)
                 {
                     RequestList = contactRequests;
                     RequestListHeight = contactRequests.Count * RequestItemHeight;

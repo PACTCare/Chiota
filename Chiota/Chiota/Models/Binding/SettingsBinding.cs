@@ -9,6 +9,7 @@ namespace Chiota.Models.Binding
     public enum SettingsItemType
     {
         Profile,
+        Security,
         InviteFriends,
         About
     }
