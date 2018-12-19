@@ -140,9 +140,6 @@ namespace Chiota.Services.BackgroundServices
 
                         foreach (var item in response.ApprovedContacts)
                         {
-                            if (item.Rejected) continue;
-
-
                             //Get the contact by public key address.
                             var value = Encrypt(item.PublicKeyAddress);
                             var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
@@ -176,7 +173,7 @@ namespace Chiota.Services.BackgroundServices
             catch (Exception)
             {
                 //Ignore
-                return false;
+                return true;
             }
         }
 

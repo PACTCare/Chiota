@@ -28,7 +28,6 @@ namespace Chiota.Popups.PopupViewModels
         #region Attributes
 
         private bool _isVisible;
-        private bool _isEntryFocused;
         private Keyboard _keyboard;
         private ImageSource _validationImageSource;
 
@@ -43,16 +42,6 @@ namespace Chiota.Popups.PopupViewModels
             {
                 _isVisible = value;
                 OnPropertyChanged(nameof(IsVisible));
-            }
-        }
-
-        public bool IsEntryFocused
-        {
-            get => _isEntryFocused;
-            set
-            {
-                _isEntryFocused = value;
-                OnPropertyChanged(nameof(IsEntryFocused));
             }
         }
 
@@ -108,22 +97,6 @@ namespace Chiota.Popups.PopupViewModels
 
         #endregion
 
-        #region ViewIsAppearing
-
-        protected override void ViewIsAppearing()
-        {
-            base.ViewIsAppearing();
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                //Focus the entry.
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-                IsEntryFocused = true;
-            });
-        }
-
-        #endregion
-
         #region Commands
 
         #region IsValid
@@ -137,7 +110,7 @@ namespace Chiota.Popups.PopupViewModels
                     var isValid = (bool)param;
 
                     if (isValid)
-                        ValidationImageSource = ImageSource.FromFile("done.png");
+                        ValidationImageSource = ImageSource.FromFile("done_white.png");
                     else if (!string.IsNullOrEmpty(PopupModel.Address))
                         ValidationImageSource = ImageSource.FromFile("clear.png");
                     else

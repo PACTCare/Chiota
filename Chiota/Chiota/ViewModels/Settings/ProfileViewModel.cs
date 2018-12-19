@@ -235,7 +235,7 @@ namespace Chiota.ViewModels.Settings
                         return;
                     }
 
-                    EditImage = (FileImageSource)ImageSource.FromFile("done.png");
+                    EditImage = (FileImageSource)ImageSource.FromFile("done_black.png");
                 });
             }
         }

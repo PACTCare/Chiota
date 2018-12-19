@@ -9,6 +9,7 @@
              xmlns:tabbed="clr-namespace:Chiota.ViewModels.Tabbed;assembly=Chiota"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:chat="clr-namespace:Chiota.Views.Chat;assembly=Chiota"
+             xmlns:contact="clr-namespace:Chiota.Views.Contact;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance tabbed:TabbedNavigationViewModel}"
              Title="{DynamicResource AppName}"
@@ -23,6 +24,7 @@
 
     <!-- Children of the tabbedpage -->
     <chat:ChatsView Title="{extensions:Translate CmnChats}"/>
+    <contact:ContactRequestsView Title="{extensions:Translate CmnRequests}"/>
     <!--<ContentPage Title="Status"/>-->
 
 </TabbedPage>

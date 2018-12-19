@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Chiota.Views.Contact.ContactRequestsView"
+             base:ViewModelLocator.AutoWireViewModel="true"
+             xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             mc:Ignorable="design"
+             design:DataContext="{design:DesignInstance contact:ContactRequestsViewModel}">
+
+    <ContentPage.BindingContext>
+        <contact:ContactRequestsViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
+
+            <StackLayout IsVisible="{Binding IsNoRequestExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+                <Label Style="{DynamicResource Label16}" Text="There is no request at the moment." HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <!-- Requests -->
+            <ListView IsVisible="{Binding IsRequestExist}" ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding RequestListHeight}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                    <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                                </StackLayout>
+
+                                <StackLayout VerticalOptions="Center" Spacing="2">
+                                    <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
+                                    <Label Style="{DynamicResource Label12}" Text="Tap to answer the contact request." VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.Behaviors>
+                    <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                </ListView.Behaviors>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

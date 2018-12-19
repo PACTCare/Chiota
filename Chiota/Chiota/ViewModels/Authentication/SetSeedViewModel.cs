@@ -112,7 +112,7 @@ namespace Chiota.ViewModels.Authentication
                     var isValid = (bool)param;
 
                     if (isValid)
-                        ValidationImageSource = ImageSource.FromFile("done.png");
+                        ValidationImageSource = ImageSource.FromFile("done_black.png");
                     else if (!string.IsNullOrEmpty(Seed))
                         ValidationImageSource = ImageSource.FromFile("clear.png");
                     else

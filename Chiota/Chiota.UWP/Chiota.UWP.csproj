@@ -182,6 +182,7 @@
     <Content Include="add.png" />
     <Content Include="addgroup.png" />
     <Content Include="addperson.png" />
+    <Content Include="done_white.png" />
     <Content Include="search.png" />
     <Content Include="emoticon.png" />
     <Content Include="keyboard_voice.png" />
@@ -195,7 +196,7 @@
     <Content Include="camera.png" />
     <Content Include="loading.png" />
     <Content Include="clear.png" />
-    <Content Include="done.png" />
+    <Content Include="done_black.png" />
     <Content Include="chiota.png" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />

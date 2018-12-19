@@ -205,6 +205,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Requests.
+        /// </summary>
+        internal static string CmnRequests {
+            get {
+                return ResourceManager.GetString("CmnRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         internal static string CmnSearch {
@@ -723,6 +732,15 @@ namespace Chiota.Resources.Localizations {
         internal static string SettingsSecurity {
             get {
                 return ResourceManager.GetString("SettingsSecurity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to Chiota.
+        /// </summary>
+        internal static string WelcomeToChiota {
+            get {
+                return ResourceManager.GetString("WelcomeToChiota", resourceCulture);
             }
         }
     }

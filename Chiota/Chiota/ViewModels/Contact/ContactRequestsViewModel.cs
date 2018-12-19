@@ -11,29 +11,23 @@ using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Xamarin.Forms;
-using ChatActionsView = Chiota.Views.Chat.ChatActionsView;
 
 #endregion
 
-namespace Chiota.ViewModels.Chat
+namespace Chiota.ViewModels.Contact
 {
-    public class ChatsViewModel : BaseViewModel
+    public class ContactRequestsViewModel : BaseViewModel
     {
         #region Attributes
 
         private const int RequestItemHeight = 64;
-        private const int ChatItemHeight = 72;
 
         private static List<ContactBinding> _requestList;
-        private static List<ChatBinding> _chatList;
 
         private int _requestListHeight;
-        private int _chatListHeight;
 
         private bool _isRequestExist;
-        private bool _isChatExist;
-        private bool _isAnyExist;
-        private bool _isNoneExist;
+        private bool _isNoRequestExist;
 
         private bool _isUpdating;
 
@@ -51,16 +45,6 @@ namespace Chiota.ViewModels.Chat
             }
         }
 
-        public List<ChatBinding> ChatList
-        {
-            get => _chatList;
-            set
-            {
-                _chatList = value;
-                OnPropertyChanged(nameof(ChatList));
-            }
-        }
-
         public int RequestListHeight
         {
             get => _requestListHeight;
@@ -68,16 +52,6 @@ namespace Chiota.ViewModels.Chat
             {
                 _requestListHeight = value;
                 OnPropertyChanged(nameof(RequestListHeight));
-            }
-        }
-
-        public int ChatListHeight
-        {
-            get => _chatListHeight;
-            set
-            {
-                _chatListHeight = value;
-                OnPropertyChanged(nameof(ChatListHeight));
             }
         }
 
@@ -91,33 +65,13 @@ namespace Chiota.ViewModels.Chat
             }
         }
 
-        public bool IsChatExist
+        public bool IsNoRequestExist
         {
-            get => _isChatExist;
+            get => _isNoRequestExist;
             set
             {
-                _isChatExist = value;
-                OnPropertyChanged(nameof(IsChatExist));
-            }
-        }
-
-        public bool IsAnyExist
-        {
-            get => _isAnyExist;
-            set
-            {
-                _isAnyExist = value;
-                OnPropertyChanged(nameof(IsAnyExist));
-            }
-        }
-
-        public bool IsNoneExist
-        {
-            get => _isNoneExist;
-            set
-            {
-                _isNoneExist = value;
-                OnPropertyChanged(nameof(IsNoneExist));
+                _isNoRequestExist = value;
+                OnPropertyChanged(nameof(IsNoRequestExist));
             }
         }
 
@@ -125,10 +79,9 @@ namespace Chiota.ViewModels.Chat
 
         #region Constructors
 
-        public ChatsViewModel()
+        public ContactRequestsViewModel()
         {
             _requestList = new List<ContactBinding>();
-            _chatList = new List<ChatBinding>();
         }
 
         #endregion
@@ -160,7 +113,7 @@ namespace Chiota.ViewModels.Chat
         protected override void ViewIsAppearing()
         {
             base.ViewIsAppearing();
-        
+
             _isUpdating = true;
             Device.StartTimer(TimeSpan.FromSeconds(5), UpdateView);
         }
@@ -199,7 +152,7 @@ namespace Chiota.ViewModels.Chat
                     {
                         foreach (var item in requests)
                         {
-                            if(item.Name == null || item.ChatAddress == null || item.ChatKeyAddress == null || item.ContactAddress == null) continue;
+                            if (item.Name == null || item.ChatAddress == null || item.ChatKeyAddress == null || item.ContactAddress == null) continue;
 
                             var contact = new Pact.Palantir.Entity.Contact()
                             {
@@ -232,44 +185,7 @@ namespace Chiota.ViewModels.Chat
                         RequestListHeight = 0;
                     }
 
-                    var chats = new List<ChatBinding>();
-
-                    //Load all accepted contacts.
-                    var contacts = Database.Contact.GetAcceptedContacts();
-                    foreach (var item in contacts)
-                    {
-                        //Get the last message of the contact.
-                        var lastMessage = Database.Message.GetLastMessagesByPublicKeyAddress(item.PublicKeyAddress);
-
-                        if (lastMessage == null) continue;
-
-                        //If there is a message, load the chat of the contact.
-                        var contact = new Pact.Palantir.Entity.Contact()
-                        {
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                            ChatAddress = item.ChatAddress,
-                            ChatKeyAddress = item.ChatKeyAddress,
-                            ContactAddress = item.ContactAddress,
-                            PublicKeyAddress = item.PublicKeyAddress,
-                            Rejected = !item.Accepted
-                        };
-                        chats.Add(new ChatBinding(contact, lastMessage.Value, lastMessage.Date));
-                    }
-
-                    //Set flag to show the chats.
-                    IsChatExist = chats.Count > 0;
-
-                    //Update the chat list.
-                    var changed = IsChatListChanged(chats);
-                    if (changed)
-                    {
-                        ChatList = chats;
-                        ChatListHeight = chats.Count * ChatItemHeight;
-                    }
-
-                    IsAnyExist = contactRequests.Count > 0 || chats.Count > 0;
-                    IsNoneExist = !(contactRequests.Count > 0) && !(chats.Count > 0);
+                    IsNoRequestExist = !(contactRequests.Count > 0);
                 }
                 catch (Exception)
                 {
@@ -284,36 +200,9 @@ namespace Chiota.ViewModels.Chat
 
         #endregion
 
-        #region IsChatsListChanged
-
-        private bool IsChatListChanged(List<ChatBinding> chats)
-        {
-            if (ChatList == null || ChatList.Count != chats.Count)
-                return true;
-
-            return false;
-        }
-
-        #endregion
-
         #endregion
 
         #region Commands
-
-        #region Contacts
-
-        public ICommand ContactsCommand
-        {
-            get
-            {
-                return new Command(async () =>
-                {
-                    await PushAsync<ChatActionsView>();
-                });
-            }
-        }
-
-        #endregion
 
         #region Tap
 

@@ -138,8 +138,6 @@ namespace Chiota.ViewModels.Chat
 
             try
             {
-                var test = Database.Contact.GetObjects();
-
                 var contacts = Database.Contact.GetAcceptedContacts();
                 foreach (var item in contacts)
                 {

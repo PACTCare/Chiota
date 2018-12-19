@@ -7,6 +7,7 @@ using Chiota.Base;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Resources.Localizations;
+using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.Ipfs;
 using Chiota.Services.UserServices;
@@ -126,6 +127,8 @@ namespace Chiota.ViewModels.Authentication
 
                         var userService = DependencyResolver.Resolve<UserService>();
                         var result = await userService.CreateNew(userProperties);
+
+                        DependencyService.Get<INotification>().Show(AppResources.WelcomeToChiota, userProperties.Name);
 
                         await PopPopupAsync();
 

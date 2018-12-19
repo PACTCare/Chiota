@@ -77,69 +77,6 @@ namespace Chiota.ViewModels.Authentication
 
         #endregion
 
-        #region Methods
-
-        #region LoadUserData
-
-        /// <summary>
-        /// Load all user data.
-        /// </summary>
-        /// <returns></returns>
-        private async Task LoadUserDataAsync()
-        {
-            //Load all accepted contacts.
-            var response = await DependencyResolver.Resolve<IUsecaseInteractor<GetContactsRequest, GetContactsResponse>>().ExecuteAsync(new GetContactsRequest()
-            {
-                RequestAddress = new Address(UserService.CurrentUser.RequestAddress),
-                PublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                KeyPair = UserService.CurrentUser.NtruKeyPair
-            });
-
-            if (response.Code == ResponseCode.Success && response.ApprovedContacts.Count > 0)
-            {
-                //Check, if all the contacts saved in the database and update them, if necessary.
-                foreach (var approved in response.ApprovedContacts)
-                {
-                    var exist = Database.Contact.GetContactByPublicKeyAddress(approved.ChatAddress);
-
-                    //Update the contact in the database.
-                    if (exist != null)
-                    {
-                        exist.Name = approved.Name;
-                        exist.ChatKeyAddress = approved.ChatKeyAddress;
-                        exist.ImagePath = approved.ImagePath;
-
-                        //Load the image, if the hash is not empty.
-                        if (!string.IsNullOrEmpty(exist.ImagePath))
-                        {
-                            //exist.ImageBase64
-                        }
-
-                        //Update the contact in the database.
-                        Database.Contact.UpdateObject(exist);
-                    }
-                }
-
-
-                //Load new messages from of the user.
-                /*foreach (var approved in response.ApprovedContacts)
-                {
-                    var messagesResponse = await DependencyResolver.Resolve<IUsecaseInteractor<GetMessagesRequest, GetMessagesResponse>>().ExecuteAsync(
-                        new GetMessagesRequest
-                        {
-                            ChatAddress = new Address(approved.ChatAddress),
-                            ChatKeyPair = null,
-                            ChatKeyAddress = new Address(approved.ChatKeyAddress),
-                            UserKeyPair = UserService.CurrentUser.NtruKeyPair
-                        });
-                }*/
-            }
-        }
-
-        #endregion
-
-        #endregion
-
         #region Commands
 
         #region LogIn
@@ -160,10 +97,6 @@ namespace Chiota.ViewModels.Authentication
 
                         var userService = DependencyResolver.Resolve<UserService>();
                         var result = await userService.LogInAsync(Password);
-
-                        //Update database, if the log in is successfully.
-                        if (result)
-                            await LoadUserDataAsync();
 
                         await PopPopupAsync();
 

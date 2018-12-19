@@ -6,7 +6,7 @@
              xmlns:popupViewModels1="clr-namespace:Chiota.Popups.PopupViewModels"
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:validation="clr-namespace:Chiota.Behaviors.Validation;assembly=Chiota"
-             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              x:Class="Chiota.Popups.PopupViews.AddContactPopupView">
 
     <pages:PopupPage.BindingContext>
@@ -48,29 +48,31 @@
                             <ColumnDefinition Width="128"/>
                         </Grid.ColumnDefinitions>
 
-                        <Frame Grid.Row="0" Grid.Column="0" Style="{DynamicResource RoundedFrame64}" BackgroundColor="{DynamicResource BackgroundColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                            <Image Source="addperson.png" Opacity="0.8" HeightRequest="84" WidthRequest="84" Margin="12"/>
-                        </Frame>
-                        <Grid Grid.Row="0" Grid.Column="0" >
+                        <StackLayout Grid.Row="0" Grid.Column="0" IsEnabled="False">
+                            <Button BackgroundColor="{DynamicResource BackgroundColor}" CornerRadius="64" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                        </StackLayout>
+
+                        <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Aspect="AspectFill" Source="addperson.png" Opacity="0.8" HeightRequest="84" WidthRequest="84" Margin="12"/>
+
+                        <Grid Grid.Row="0" Grid.Column="0">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="4*"/>
                                 <RowDefinition Height="3*"/>
-                                <RowDefinition Height="2*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
                                 <ColumnDefinition Width="3*"/>
-                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
 
                             <Button Style="{DynamicResource BaseButton}" Grid.Row="1" Grid.Column="1" CornerRadius="32" Image="qr.png" Command="{Binding QrCodeCommand}"/>
                         </Grid>
                     </Grid>
-                    
+
                     <StackLayout Orientation="Horizontal" Spacing="8" Margin="32, 0, 0, 0">
                         <Frame Style="{DynamicResource PopupEntryFrame}">
                             <Entry Style="{DynamicResource Entry16}" Text="{Binding PopupModel.Address}" Placeholder="{extensions:Translate DlgAddress}" WidthRequest="256" Keyboard="{Binding Keyboard}" ReturnCommand="{Binding PosCommand}">
                                 <Entry.Behaviors>
                                     <validation:SeedValidationBehavior Command="{Binding IsValidCommand}"/>
-                                    <behaviors:FocusBehavior IsFocused="{Binding IsEntryFocused}"/>
                                 </Entry.Behaviors>
                             </Entry>
                         </Frame>

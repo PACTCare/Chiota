@@ -339,4 +339,10 @@
   <data name="NotifyNewContactRequest" xml:space="preserve">
     <value>New contact request</value>
   </data>
+  <data name="WelcomeToChiota" xml:space="preserve">
+    <value>Welcome to Chiota</value>
+  </data>
+  <data name="CmnRequests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
 </root>
