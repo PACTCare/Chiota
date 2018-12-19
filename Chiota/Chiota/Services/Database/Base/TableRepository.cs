@@ -10,7 +10,7 @@ using SQLite;
 
 namespace Chiota.Services.Database.Base
 {
-    public class TableRepository<T> : BaseRepository where T : TableModel
+    public class TableRepository<T> : BaseRepository where T : BaseModel
     {
         #region Attributes
 

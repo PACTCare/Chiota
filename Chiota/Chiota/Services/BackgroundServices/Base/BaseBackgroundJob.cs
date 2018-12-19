@@ -11,29 +11,18 @@ namespace Chiota.Services.BackgroundServices.Base
     {
         #region Properties
 
-        public int Id { get; }
-
         public bool IsRunning { get; set; }
 
         public bool IsDisposed { get; private set; }
-
-        protected DatabaseService Database { get; }
-
-        protected INotification Notification { get; }
 
         #endregion
 
         #region Constructors
 
-        protected BaseBackgroundJob(int id, DatabaseService database, INotification notification)
+        protected BaseBackgroundJob()
         {
-            Id = id;
-
             IsRunning = false;
             IsDisposed = false;
-
-            Database = database;
-            Notification = notification;
         }
 
         #endregion
@@ -45,7 +34,7 @@ namespace Chiota.Services.BackgroundServices.Base
         /// <summary>
         /// Do some initialization for the background job.
         /// </summary>
-        public virtual void Init(string data = null)
+        public virtual void Init(params object[] data)
         {
         }
 

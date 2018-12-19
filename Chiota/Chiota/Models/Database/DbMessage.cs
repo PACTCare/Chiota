@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class DbMessage : TableModel
+    public class DbMessage : BaseModel
     {
         #region Properties
 

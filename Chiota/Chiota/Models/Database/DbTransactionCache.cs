@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class DbTransactionCache : TableModel
+    public class DbTransactionCache : BaseModel
     {
         [JsonProperty("transactionhash")]
         public string TransactionHash { get; set; }

@@ -107,38 +107,12 @@ namespace Chiota.Services.Database.Repositories
         /// Get an contact by his public key address of the user.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public DbContact GetContactByChatAddress(string chatAddress)
+        public DbContact GetContactByPublicKeyAddress(string publicKeyAddress)
         {
             try
             {
-                var value = Encrypt(chatAddress);
-                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=?", value) as DbContact;
-
-                DecryptModel(query);
-
-                return query;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region GetAcceptedContactByChatAddress
-
-        /// <summary>
-        /// Get first object of the table by the public key address.
-        /// </summary>
-        /// <returns>List of the table objects</returns>
-        public DbContact GetAcceptedContactByChatAddress(string chatAddress)
-        {
-            try
-            {
-                var value = Encrypt(chatAddress);
-                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.ChatAddress) + "=? AND " + nameof(DbContact.Accepted) + "=1;", value) as DbContact;
+                var value = Encrypt(publicKeyAddress);
+                var query = Database.FindWithQuery(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
 
                 DecryptModel(query);
 

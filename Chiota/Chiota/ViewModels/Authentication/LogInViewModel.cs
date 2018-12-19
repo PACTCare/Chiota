@@ -100,7 +100,7 @@ namespace Chiota.ViewModels.Authentication
                 //Check, if all the contacts saved in the database and update them, if necessary.
                 foreach (var approved in response.ApprovedContacts)
                 {
-                    var exist = Database.Contact.GetAcceptedContactByChatAddress(approved.ChatAddress);
+                    var exist = Database.Contact.GetContactByPublicKeyAddress(approved.ChatAddress);
 
                     //Update the contact in the database.
                     if (exist != null)

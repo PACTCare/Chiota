@@ -4,10 +4,7 @@
     {
         void Init(params object[] data);
 
-        void Add<T>(params object[] data) where T : BaseBackgroundJob;
-        void Clear();
-
-        void Register();
+        void Run<T>(params object[] data) where T : BaseBackgroundJob;
 
         void Dispose();
     }

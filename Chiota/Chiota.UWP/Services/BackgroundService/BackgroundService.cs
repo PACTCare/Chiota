@@ -1,7 +1,6 @@
 ﻿#region References
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Chiota.Services.BackgroundServices.Base;
@@ -15,20 +14,15 @@ namespace Chiota.UWP.Services.BackgroundService
         #region Attributes
 
         private ApplicationTrigger _trigger;
-
-        #endregion
-
-        #region Properties
-
-        public List<BaseBackgroundJob> BackgroundJobs { get; }
+        private BackgroundJobScheduler _backgroundJobWorker;
 
         #endregion
 
         #region Constructors
 
-        public BackgroundService(List<BaseBackgroundJob> backgroundJobs)
+        public BackgroundService(BackgroundJobScheduler backgroundJobWorker)
         {
-            BackgroundJobs = backgroundJobs;
+            _backgroundJobWorker = backgroundJobWorker;
         }
 
         #endregion
@@ -84,20 +78,11 @@ namespace Chiota.UWP.Services.BackgroundService
         {
             Task.Run(async () =>
             {
-                foreach (var item in BackgroundJobs)
-                {
-                    var result = await item.RunAsync();
+                await _backgroundJobWorker.RunAsync();
 
-                    //Update database, because job is finished.
-                    if (!result)
-                    {
-                        item.Dispose();
-                        BackgroundJobs.Remove(item);
-                        return;
-                    }
-                }
+                if (_backgroundJobWorker.IsDisposed) return;
 
-                if (BackgroundJobs.Count == 0) return;
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
 
                 //Repeat it.
                 await _trigger.RequestAsync();

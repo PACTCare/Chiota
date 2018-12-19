@@ -63,9 +63,6 @@ namespace Chiota.UWP
                 ImageCircleRenderer.Init();
                 ((Style)this.Resources["TabbedPageStyle"]).Setters[0] = ((Style)this.Resources["TabbedPageStyle2"]).Setters[0];
 
-                //Init the background services.
-                Xamarin.Forms.DependencyService.Get<BackgroundJobWorker>().Init();
-
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application

@@ -673,6 +673,24 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New contact.
+        /// </summary>
+        internal static string NotifyNewContact {
+            get {
+                return ResourceManager.GetString("NotifyNewContact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New contact request.
+        /// </summary>
+        internal static string NotifyNewContactRequest {
+            get {
+                return ResourceManager.GetString("NotifyNewContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About.
         /// </summary>
         internal static string SettingsAbout {

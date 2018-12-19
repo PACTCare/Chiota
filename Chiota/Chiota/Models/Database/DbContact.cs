@@ -7,14 +7,14 @@ using Newtonsoft.Json;
 
 namespace Chiota.Models.Database
 {
-    public class DbContact : TableModel
+    public class DbContact : BaseModel
     {
         #region Properties
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("ImagePath")]
+        [JsonProperty("imagepath")]
         public string ImagePath { get; set; }
 
         [JsonProperty("imagebase64")]

@@ -2,14 +2,8 @@
 
 using Chiota.UWP.Services.BackgroundService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Chiota.Services.BackgroundServices.Base;
-using Chiota.Services.Database;
-using Chiota.Services.UserServices;
-using Chiota.UWP.Services.Database;
-using Newtonsoft.Json;
 using Windows.ApplicationModel.Background;
 using Xamarin.Forms;
 
@@ -20,33 +14,24 @@ namespace Chiota.UWP.Services.BackgroundService
 {
     public class BackgroundJobWorker : IBackgroundJobWorker
     {
-        private static List<BaseBackgroundJob> _backgroundJobs;
-
         /// <summary>
-        /// Add a new background job.
+        /// Init the background service.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        public void Add<T>(params object[] data)
-          where T : BaseBackgroundJob
+        public void Init(params object[] data)
         {
-            // Create an instance of the background job.
-            var backgroundJob = (T)Activator.CreateInstance(
-              typeof(T),
-              _backgroundJobs.Count(),
-              new DatabaseService(new Sqlite(), UserService.CurrentUser.EncryptionKey),
-              new Notification());
-            backgroundJob.Init(JsonConvert.SerializeObject(data));
+            // Create an instance of the background job worker, where all background jobs running.
+            var backgroundJobScheduler = (BackgroundJobScheduler)Activator.CreateInstance(typeof(BackgroundJobScheduler));
+            backgroundJobScheduler.Init();
 
-            _backgroundJobs.Add(backgroundJob);
-        }
+            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "Add", (sender, arg) => {
+                backgroundJobScheduler.Add(arg);
+            });
 
-        /// <summary>
-        /// Remove a background job by his id.
-        /// </summary>
-        public void Clear()
-        {
-            _backgroundJobs.Clear();
+            // First cancel all running jobs.
+            this.Dispose();
+
+            var service = new BackgroundService(backgroundJobScheduler);
+            Task.Run(async () => { await service.RegisterAsync(); });
         }
 
         /// <summary>
@@ -59,24 +44,16 @@ namespace Chiota.UWP.Services.BackgroundService
         }
 
         /// <summary>
-        /// Init the background service.
+        /// Run a new background job.
         /// </summary>
-        public void Init(params object[] data)
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void Run<T>(params object[] data)
+            where T : BaseBackgroundJob
         {
-            _backgroundJobs = new List<BaseBackgroundJob>();
-        }
+            var type = typeof(T).Namespace + "." + typeof(T).Name + ", " + typeof(T).Assembly.FullName;
 
-        /// <summary>
-        /// Register the background task of the app.
-        /// </summary>
-        /// <returns></returns>
-        public void Register()
-        {
-            // First cancel all running jobs.
-            this.Dispose();
-
-            var service = new BackgroundService(_backgroundJobs);
-            Task.Run(async () => { await service.RegisterAsync(); });
+            MessagingCenter.Send(this, "Add", new BackgroundJobSchedulerMessage(type, data));
         }
     }
 }

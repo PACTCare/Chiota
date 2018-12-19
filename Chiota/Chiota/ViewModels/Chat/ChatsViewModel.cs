@@ -193,7 +193,7 @@ namespace Chiota.ViewModels.Chat
                 var contactRequests = new List<ContactBinding>();
 
                 var requests = Database.Contact.GetUnacceptedContacts();
-                if (requests.Count <= 0)
+                if (requests == null || requests.Count <= 0)
                 {
                     //Reset the request list.
                     RequestList = null;

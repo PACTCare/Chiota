@@ -55,7 +55,7 @@ namespace Chiota.Extensions
         /// <param name="t"></param>
         /// <param name="encryptionKey"></param>
         /// <returns></returns>
-        public static T EncryptObject<T>(this T t, EncryptionKey encryptionKey) where T: TableModel
+        public static T EncryptObject<T>(this T t, EncryptionKey encryptionKey) where T: BaseModel
         {
             foreach (var property in t.GetType().GetProperties())
             {
@@ -82,7 +82,7 @@ namespace Chiota.Extensions
         /// <param name="t"></param>
         /// <param name="encryptionKey"></param>
         /// <returns></returns>
-        public static T DecryptObject<T>(this T t, EncryptionKey encryptionKey) where T : TableModel
+        public static T DecryptObject<T>(this T t, EncryptionKey encryptionKey) where T : BaseModel
         {
             foreach (var property in t.GetType().GetProperties())
             {
@@ -109,7 +109,7 @@ namespace Chiota.Extensions
         /// <param name="t"></param>
         /// <param name="encryptionKey"></param>
         /// <returns></returns>
-        public static List<T> EncryptObjectList<T>(this List<T> t, EncryptionKey encryptionKey) where T : TableModel
+        public static List<T> EncryptObjectList<T>(this List<T> t, EncryptionKey encryptionKey) where T : BaseModel
         {
             foreach (var item in t)
                 item.EncryptObject(encryptionKey);
@@ -127,7 +127,7 @@ namespace Chiota.Extensions
         /// <param name="t"></param>
         /// <param name="encryptionKey"></param>
         /// <returns></returns>
-        public static List<T> DecryptObjectList<T>(this List<T> t, EncryptionKey encryptionKey) where T : TableModel
+        public static List<T> DecryptObjectList<T>(this List<T> t, EncryptionKey encryptionKey) where T : BaseModel
         {
             foreach (var item in t)
                 item.DecryptObject(encryptionKey);

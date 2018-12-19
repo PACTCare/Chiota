@@ -1,11 +1,19 @@
 ﻿#region References
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Chiota.Models;
 using Chiota.Models.Database;
+using Chiota.Models.Database.Base;
+using Chiota.Resources.Localizations;
 using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
+using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
+using Chiota.Services.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pact.Palantir.Cache;
@@ -14,6 +22,7 @@ using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.GetContacts;
+using SQLite;
 using Tangle.Net.Cryptography.Signing;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
@@ -22,23 +31,20 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ContactRequestBackgroundJob : BaseBackgroundJob
+    public class ContactRequestBackgroundJob : BaseSecurityBackgroundJob
     {
         #region Attributes
+
+        private INotification _notification;
+        private SQLiteConnection _database;
+
+        private TableMapping _contactTableMapping;
+
+        private DbUser _user;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
         private static IContactRepository ContactRepository => new MemoryContactRepository(Messenger, new SignatureValidator());
         private static GetContactsInteractor Interactor => new GetContactsInteractor(ContactRepository, Messenger, NtruEncryption.Key);
-
-        private DbUser _user;
-
-        #endregion
-
-        #region Constructors
-
-        public ContactRequestBackgroundJob(int id, DatabaseService database, INotification notification) : base(id, database, notification)
-        {
-        }
 
         #endregion
 
@@ -46,15 +52,28 @@ namespace Chiota.Services.BackgroundServices
 
         #region Init
 
-        public override void Init(string data = null)
+        public override void Init(params object[] data)
         {
             base.Init(data);
 
-            if (string.IsNullOrEmpty(data)) return;
+            //Init the notification interface.
+            _notification = DependencyService.Get<INotification>();
+            _database = DependencyService.Get<ISqlite>().GetDatabaseConnection();
 
-            var json = JArray.Parse(data);
-            _user = JsonConvert.DeserializeObject<DbUser>(JsonConvert.SerializeObject(json[0]));
-            _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
+            _contactTableMapping = new TableMapping(typeof(DbContact));
+
+            if (data.Length == 0) return;
+
+            foreach (var item in data)
+            {
+                switch (item)
+                {
+                    case DbUser user:
+                        _user = user;
+                        _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
+                        break;
+                }
+            }
         }
 
         #endregion
@@ -65,8 +84,6 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-
                 //Execute a contacts request for the user.
                 var response = await Interactor.ExecuteAsync(
                     new GetContactsRequest
@@ -88,7 +105,10 @@ namespace Chiota.Services.BackgroundServices
                         {
                             if (item.Rejected) continue;
 
-                            var contact = Database.Contact.GetContactByChatAddress(item.ChatAddress);
+                            //Get the contact by public key address.
+                            var value = Encrypt(item.PublicKeyAddress);
+                            var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+
                             if (contact == null)
                             {
                                 //Add the new contact request to the database and show a notification.
@@ -96,15 +116,18 @@ namespace Chiota.Services.BackgroundServices
                                 {
                                     Name = item.Name,
                                     ImagePath = item.ImagePath,
-                                    ChatKeyAddress = item.ChatKeyAddress,
-                                    ChatAddress = item.ChatAddress,
                                     ContactAddress = item.ContactAddress,
                                     PublicKeyAddress = item.PublicKeyAddress,
+                                    ChatKeyAddress = item.ChatKeyAddress,
+                                    ChatAddress = item.ChatAddress,
                                     Accepted = false
                                 };
 
-                                DependencyService.Get<INotification>().Show("New contact request", request.Name);
-                                Database.Contact.AddObject(request);
+                                _notification.Show(AppResources.NotifyNewContactRequest, item.Name);
+
+                                //Add the contact and chat for the contact as an object into the database.
+                                EncryptModel(request);
+                                _database.Insert(request);
                             }
                         }
                     });
@@ -119,9 +142,15 @@ namespace Chiota.Services.BackgroundServices
                         {
                             if (item.Rejected) continue;
 
-                            var contact = Database.Contact.GetContactByChatAddress(item.ChatAddress);
+
+                            //Get the contact by public key address.
+                            var value = Encrypt(item.PublicKeyAddress);
+                            var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+
                             if (contact != null && contact.ChatKeyAddress == null)
                             {
+                                DecryptModel(contact);
+
                                 //Update the new contact request to the database and show a notification.
                                 contact.Name = item.Name;
                                 contact.ImagePath = item.ImagePath;
@@ -131,15 +160,18 @@ namespace Chiota.Services.BackgroundServices
                                 contact.PublicKeyAddress = item.PublicKeyAddress;
                                 contact.Accepted = true;
 
-                                DependencyService.Get<INotification>().Show("New contact", contact.Name);
-                                Database.Contact.UpdateObject(contact);
+                                _notification.Show(AppResources.NotifyNewContact, contact.Name);
+
+                                //Update the object in the database.
+                                EncryptModel(contact);
+                                _database.Update(contact);
                             }
                         }
                     });
 
                     return true;
                 }
-                return false;
+                return true;
             }
             catch (Exception)
             {

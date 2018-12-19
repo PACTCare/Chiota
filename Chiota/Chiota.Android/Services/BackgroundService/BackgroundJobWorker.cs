@@ -1,15 +1,11 @@
 ﻿#region References
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using Android.App.Job;
 using Android.Content;
 using Android.OS;
 using Chiota.Droid.Services.BackgroundService;
 using Chiota.Services.BackgroundServices.Base;
-using Chiota.Services.UserServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xamarin.Forms;
 
 #endregion
@@ -23,8 +19,6 @@ namespace Chiota.Droid.Services.BackgroundService
 
         private static Context _context;
         private static JobScheduler _jobScheduler;
-
-        private static PersistableBundle _parameters;
 
         #endregion
 
@@ -42,70 +36,32 @@ namespace Chiota.Droid.Services.BackgroundService
             _context = (Context)data[0];
             _jobScheduler = (JobScheduler)data[1];
 
-            _parameters = new PersistableBundle();
-        }
-
-        #endregion
-
-        #region Add
-
-        /// <summary>
-        /// Add a new background job.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        public void Add<T>(params object[] data) where T : BaseBackgroundJob
-        {
-            var jobs = _parameters.GetStringArray("jobs");
-
-            var json = new JObject
-            {
-                {"job", typeof(T).Namespace + "." + typeof(T).Name + ", " + typeof(T).Assembly.FullName},
-                {"data", JsonConvert.SerializeObject(data)}
-            };
-
-            if (jobs != null)
-            {
-                json.Add("id", jobs.Count());
-                var list = new List<string>(jobs) {JsonConvert.SerializeObject(json)};
-                _parameters.PutStringArray("jobs", list.ToArray());
-            }
-            else
-            {
-                json.Add("id", 0);
-                _parameters.PutStringArray("jobs", new string[] { JsonConvert.SerializeObject(json) });
-            }
-        }
-
-        #endregion
-
-        #region Register
-
-        public void Register()
-        {
             //First cancel all running jobs.
             Dispose();
-
-            //Add the encryption of the current user.
-            _parameters.PutString("encryption", JsonConvert.SerializeObject(UserService.CurrentUser.EncryptionKey));
 
             var builder = _context.CreateJobInfoBuilder(1)
                 .SetPersisted(true)
                 .SetMinimumLatency(1000)
                 .SetOverrideDeadline(10000)
-                .SetRequiredNetworkType(NetworkType.Any)
-                .SetExtras(_parameters);
+                .SetRequiredNetworkType(NetworkType.Any);
 
             _jobScheduler.Schedule(builder.Build());
         }
 
         #endregion
 
-        #region Clear
+        #region Run
 
-        public void Clear()
+        /// <summary>
+        /// Add a new background job.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void Run<T>(params object[] data) where T : BaseBackgroundJob
         {
-            _parameters = new PersistableBundle();
+            var type = typeof(T).Namespace + "." + typeof(T).Name + ", " + typeof(T).Assembly.FullName;
+
+            MessagingCenter.Send(this, "Add", new BackgroundJobSchedulerMessage(type, data));
         }
 
         #endregion

@@ -20,7 +20,7 @@ using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ChatMessageBackgroundJob : BaseBackgroundJob
+    /*public class ChatMessageBackgroundJob : BaseBackgroundJob
     {
         #region Attributes
 
@@ -48,7 +48,7 @@ namespace Chiota.Services.BackgroundServices
 
         #region Init
 
-        public override void Init(string data = null)
+        public override void Init(params object[] data)
         {
             base.Init(data);
 
@@ -132,5 +132,5 @@ namespace Chiota.Services.BackgroundServices
         #endregion
 
         #endregion
-    }
+    }*/
 }

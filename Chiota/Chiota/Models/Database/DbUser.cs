@@ -9,7 +9,7 @@ using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
 namespace Chiota.Models.Database
 {
-    public class DbUser : TableModel
+    public class DbUser : BaseModel
     {
         #region Properties
 

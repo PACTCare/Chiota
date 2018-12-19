@@ -333,4 +333,10 @@
   <data name="SettingsSecurity" xml:space="preserve">
     <value>Security</value>
   </data>
+  <data name="NotifyNewContact" xml:space="preserve">
+    <value>New contact</value>
+  </data>
+  <data name="NotifyNewContactRequest" xml:space="preserve">
+    <value>New contact request</value>
+  </data>
 </root>

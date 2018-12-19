@@ -1,18 +1,13 @@
 ﻿#region References
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.App;
 using Android.App.Job;
 using Android.Content;
 using Android.OS;
-using Chiota.Droid.Services.Database;
-using Chiota.Models;
 using Chiota.Services.BackgroundServices.Base;
-using Chiota.Services.Database;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Xamarin.Forms;
 using Void = Java.Lang.Void;
 
 #endregion
@@ -26,6 +21,7 @@ namespace Chiota.Droid.Services.BackgroundService
 
         private BackgroundServiceTask _serviceTask;
         private JobParameters _parameters;
+        private BackgroundJobScheduler _backgroundJobScheduler;
 
         #endregion
 
@@ -33,6 +29,13 @@ namespace Chiota.Droid.Services.BackgroundService
 
         public BackgroundService()
         {
+            // Create an instance of the background job worker, where all background jobs running.
+            _backgroundJobScheduler = (BackgroundJobScheduler)Activator.CreateInstance(typeof(BackgroundJobScheduler));
+            _backgroundJobScheduler.Init();
+
+            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "Add", (sender, arg) => {
+                _backgroundJobScheduler.Add(arg);
+            });
         }
 
         #endregion
@@ -48,30 +51,10 @@ namespace Chiota.Droid.Services.BackgroundService
         /// <returns></returns>
         public override bool OnStartJob(JobParameters @params)
         {
-            var jobs = @params.Extras.GetStringArray("jobs");
-            var encryption = @params.Extras.GetString("encryption");
+            _parameters = @params;
+            _serviceTask = new BackgroundServiceTask(this);
 
-            foreach (var item in jobs)
-            {
-                var job = JObject.Parse(item);
-
-                //Create a new instance of the background job.
-                var jobType = Type.GetType((string)job.GetValue("job"));
-                if (jobType == null)
-                {
-                    JobFinished(@params, false);
-                    return false;
-                }
-
-                var encryptionKey = JsonConvert.DeserializeObject<EncryptionKey>(encryption);
-                var backgroundJob = (BaseBackgroundJob)Activator.CreateInstance(jobType, (int)job.GetValue("id"), new DatabaseService(new Sqlite(), encryptionKey), new Notification());
-                backgroundJob.Init((string)job.GetValue("data"));
-
-                _parameters = @params;
-                _serviceTask = new BackgroundServiceTask(this);
-
-                _serviceTask.Execute(backgroundJob);
-            }
+            _serviceTask.Execute(_backgroundJobScheduler);
 
             return true;
         }
@@ -120,7 +103,7 @@ namespace Chiota.Droid.Services.BackgroundService
         /// <summary>
         /// Performs a simple Fibonacci calculation for a seed value. 
         /// </summary>
-        class BackgroundServiceTask : AsyncTask<BaseBackgroundJob, Void, BaseBackgroundJob>
+        class BackgroundServiceTask : AsyncTask<BackgroundJobScheduler, Void, BackgroundJobScheduler>
         {
             #region Attributes
 
@@ -139,23 +122,19 @@ namespace Chiota.Droid.Services.BackgroundService
 
             #region Methods
 
-            protected override BaseBackgroundJob RunInBackground(params BaseBackgroundJob[] @params)
+            protected override BackgroundJobScheduler RunInBackground(params BackgroundJobScheduler[] @params)
             {
                 var job = @params[0];
 
                 Task.Run(async () =>
                 {
-                    var result = await job.RunAsync();
-
-                    //Update database, because job is finished.
-                    if (!result)
-                        job.Dispose();
+                    await job.RunAsync();
                 }).Wait();
 
                 return job;
             }
 
-            protected override void OnPostExecute(BaseBackgroundJob job)
+            protected override void OnPostExecute(BackgroundJobScheduler job)
             {
                 base.OnPostExecute(job);
 
@@ -163,27 +142,8 @@ namespace Chiota.Droid.Services.BackgroundService
 
                 if (job.IsDisposed)
                 {
-                    //Remove the job from the parameters.
-                    var jobs = jobService._parameters.Extras.GetStringArray("jobs");
-                    foreach (var item in jobs)
-                    {
-                        var json = JObject.Parse(item);
-                        if (job.Id == (int) json.GetValue("id"))
-                        {
-                            var list = new List<string>(jobs);
-                            list.Remove(item);
-                            jobService._parameters.Extras.PutStringArray("jobs", list.ToArray());
-                            break;
-                        }
-                    }
-
-                    jobs = jobService._parameters.Extras.GetStringArray("jobs");
-
-                    if (jobs.Length == 0)
-                    {
-                        jobService.JobFinished(jobService._parameters, false);
-                        return;
-                    }
+                    jobService.JobFinished(jobService._parameters, false);
+                    return;
                 }
 
                 jobService.OnStartJob(jobService._parameters);
