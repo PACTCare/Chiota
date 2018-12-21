@@ -135,16 +135,18 @@ namespace Chiota.Services.BackgroundServices
                     //Update the contacts of the user.
                     await Task.Run(() =>
                     {
-                        if (response.ApprovedContacts == null ||
-                            response.ApprovedContacts.Count == 0) return;
+                        //This shoud normally Accepted, not pending BUG in Palantir
+                        if (response.PendingContactRequests == null ||
+                            response.PendingContactRequests.Count == 0) return;
 
-                        foreach (var item in response.ApprovedContacts)
+                        foreach (var item in response.PendingContactRequests)
                         {
                             //Get the contact by public key address.
                             var value = Encrypt(item.PublicKeyAddress);
                             var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+                            DecryptModel(contact);
 
-                            if (contact != null && contact.ChatKeyAddress == null)
+                            if (contact != null && contact.Name == null && contact.ChatKeyAddress == null && contact.ContactAddress == null)
                             {
                                 DecryptModel(contact);
 
@@ -155,7 +157,7 @@ namespace Chiota.Services.BackgroundServices
                                 contact.ChatAddress = item.ChatAddress;
                                 contact.ContactAddress = item.ContactAddress;
                                 contact.PublicKeyAddress = item.PublicKeyAddress;
-                                contact.Accepted = true;
+                                contact.Accepted = !item.Rejected;
 
                                 _notification.Show(AppResources.NotifyNewContact, contact.Name);
 

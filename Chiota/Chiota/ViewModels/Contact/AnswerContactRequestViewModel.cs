@@ -22,8 +22,8 @@ namespace Chiota.ViewModels.Contact
     {
         #region Attributes
 
-        private static string _username;
-        private static ImageSource _imageSource;
+        private string _username;
+        private ImageSource _imageSource;
 
         private Pact.Palantir.Entity.Contact _contact;
 
@@ -86,7 +86,7 @@ namespace Chiota.ViewModels.Contact
 
         public void AcceptContactRequest(ResponseCode responseCode)
         {
-            Task.Run(async () =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
                 await PopPopupAsync();
 
@@ -98,10 +98,11 @@ namespace Chiota.ViewModels.Contact
                     Database.Contact.UpdateObject(contact);
 
                     await DisplayAlertAsync(AppResources.DlgSuccessfullAction, AppResources.DlgContactAddedDesc);
-                    await PopAsync();
                 }
                 else
                     await DisplayAlertAsync(AppResources.DlgError, AppResources.DlgErrorDesc0 + $" {(int)responseCode}" + AppResources.DlgErrorDesc1);
+
+                await PopAsync();
             });
         }
 
@@ -111,7 +112,7 @@ namespace Chiota.ViewModels.Contact
 
         public void DeclineContactRequest(ResponseCode responseCode)
         {
-            Task.Run(async () =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
                 await PopPopupAsync();
 
@@ -122,10 +123,11 @@ namespace Chiota.ViewModels.Contact
                     Database.Contact.DeleteObject(contact.Id);
 
                     await DisplayAlertAsync(AppResources.DlgSuccessfullAction, AppResources.DlgContactDeclinedDesc);
-                    await PopAsync();
                 }
                 else
                     await DisplayAlertAsync(AppResources.DlgError, AppResources.DlgErrorDesc0 + $" {(int)responseCode}" + AppResources.DlgErrorDesc1);
+
+                await PopAsync();
             });
         }
 
@@ -145,15 +147,15 @@ namespace Chiota.ViewModels.Contact
                 {
                     await PushLoadingSpinnerAsync(AppResources.DlgAcceptContact);
 
-                    DependencyService.Get<IBackgroundJobWorker>().Run<AnswerContactRequestBackgroundJob>(UserService.CurrentUser, _contact, true);
-
-                    MessagingCenter.Subscribe<AnswerContactRequestViewModel, ResponseCode>(this, "AnswerContactRequest", (sender, args) => {
+                    MessagingCenter.Subscribe<AnswerContactRequestBackgroundJob, ResponseCode>(this, "AnswerContactRequest", (sender, args) => {
 
                         //First unsubscribe from the message center.
-                        MessagingCenter.Unsubscribe<AnswerContactRequestViewModel, ResponseCode>(this, "AnswerContactRequest");
-                        
+                        MessagingCenter.Unsubscribe<AnswerContactRequestBackgroundJob, ResponseCode>(this, "AnswerContactRequest");
+
                         AcceptContactRequest(args);
                     });
+
+                    DependencyService.Get<IBackgroundJobWorker>().Run<AnswerContactRequestBackgroundJob>(UserService.CurrentUser, _contact, true);
                 });
             }
         }
@@ -169,16 +171,16 @@ namespace Chiota.ViewModels.Contact
                 return new Command(async () =>
                 {
                     await PushLoadingSpinnerAsync(AppResources.DlgDeclineContact);
-                    
-                    DependencyService.Get<IBackgroundJobWorker>().Run<AnswerContactRequestBackgroundJob>(UserService.CurrentUser, _contact, false);
 
-                    MessagingCenter.Subscribe<AnswerContactRequestViewModel, ResponseCode>(this, "AnswerContactRequest", (sender, args) => {
+                    MessagingCenter.Subscribe<AnswerContactRequestBackgroundJob, ResponseCode>(this, "AnswerContactRequest", (sender, args) => {
 
                         //First unsubscribe from the message center.
-                        MessagingCenter.Unsubscribe<AnswerContactRequestViewModel, ResponseCode>(this, "AnswerContactRequest");
+                        MessagingCenter.Unsubscribe<AnswerContactRequestBackgroundJob, ResponseCode>(this, "AnswerContactRequest");
 
                         DeclineContactRequest(args);
                     });
+
+                    DependencyService.Get<IBackgroundJobWorker>().Run<AnswerContactRequestBackgroundJob>(UserService.CurrentUser, _contact, false);
                 });
             }
         }

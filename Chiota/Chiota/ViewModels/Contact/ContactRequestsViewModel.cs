@@ -202,6 +202,21 @@ namespace Chiota.ViewModels.Contact
 
         #region Commands
 
+        #region ContactAddress
+
+        public ICommand ContactAddressCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    await PushAsync<ContactAddressView>();
+                });
+            }
+        }
+
+        #endregion
+
         #region Tap
 
         public ICommand TapCommand

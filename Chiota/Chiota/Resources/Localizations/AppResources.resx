@@ -316,7 +316,7 @@
     <value>This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request.</value>
   </data>
   <data name="DlgNoContactRequest" xml:space="preserve">
-    <value>There is no request at the moment.</value>
+    <value>No request available.</value>
   </data>
   <data name="DlgNoChat" xml:space="preserve">
     <value>No chat available.</value>
@@ -374,5 +374,11 @@
   </data>
   <data name="DlgAnswerContactRequestDesc" xml:space="preserve">
     <value>Tap to answer the contact request.</value>
+  </data>
+  <data name="CmnSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="DlgNoContactRequestDesc" xml:space="preserve">
+    <value>Start a request by sharing your contact address.</value>
   </data>
 </root>

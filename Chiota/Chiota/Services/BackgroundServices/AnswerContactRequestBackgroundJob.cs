@@ -9,6 +9,7 @@ using Chiota.Services.UserServices;
 using Chiota.ViewModels.Contact;
 using Pact.Palantir.Cache;
 using Pact.Palantir.Encryption;
+using Pact.Palantir.Entity;
 using Pact.Palantir.Repository;
 using Pact.Palantir.Service;
 using Pact.Palantir.Usecase;
@@ -29,7 +30,7 @@ namespace Chiota.Services.BackgroundServices
         private INotification _notification;
 
         private DbUser _user;
-        private DbContact _contact;
+        private Contact _contact;
         private bool _isAccepted;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
@@ -60,7 +61,7 @@ namespace Chiota.Services.BackgroundServices
                         _user = user;
                         _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
                         break;
-                    case DbContact contact:
+                    case Contact contact:
                         _contact = contact;
                         break;
                     case bool isAccepted:

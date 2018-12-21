@@ -115,6 +115,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string CmnSettings {
+            get {
+                return ResourceManager.GetString("CmnSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Accept.
         /// </summary>
         internal static string DlgAccept {
@@ -565,11 +574,20 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There is no request at the moment..
+        ///   Looks up a localized string similar to No request available..
         /// </summary>
         internal static string DlgNoContactRequest {
             get {
                 return ResourceManager.GetString("DlgNoContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start a request by sharing your contact address..
+        /// </summary>
+        internal static string DlgNoContactRequestDesc {
+            get {
+                return ResourceManager.GetString("DlgNoContactRequestDesc", resourceCulture);
             }
         }
         

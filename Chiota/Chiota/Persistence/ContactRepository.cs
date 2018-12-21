@@ -34,6 +34,9 @@ namespace Chiota.Persistence
         {
             await Task.Run(() =>
             {
+                var exist = AppBase.Database.Contact.GetContactByPublicKeyAddress(publicKeyAddress);
+                if(exist != null) return;
+
                 var contact = new DbContact()
                 {
                     ChatAddress = address,

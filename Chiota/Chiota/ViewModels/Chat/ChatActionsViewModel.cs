@@ -153,6 +153,8 @@ namespace Chiota.ViewModels.Chat
                 var contacts = Database.Contact.GetAcceptedContacts();
                 foreach (var item in contacts)
                 {
+                    if(item.Name == null || item.ContactAddress == null || item.ChatKeyAddress == null) continue;
+
                     var exist = list.Any(t => t.Contact.ChatAddress == item.ChatAddress);
                     if (!exist)
                     {
@@ -174,8 +176,8 @@ namespace Chiota.ViewModels.Chat
             }
             catch (Exception)
             {
-                //By error return an empty list.
-                list = new List<ContactBinding>();
+                //By error return the last list.
+                list = ContactList;
             }
 
             return list;

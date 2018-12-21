@@ -19,8 +19,6 @@ namespace Chiota.Droid
         /// <inheritdoc />
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ClipboardService>().As<IClipboardService>();
-
             builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
             builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
         }
