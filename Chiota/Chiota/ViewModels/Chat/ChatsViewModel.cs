@@ -21,7 +21,7 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private const int ChatItemHeight = 72;
+        private const int ChatItemHeight = 73;
 
         private List<ChatBinding> _chatList;
 

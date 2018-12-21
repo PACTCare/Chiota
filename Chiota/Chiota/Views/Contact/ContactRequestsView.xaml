@@ -32,15 +32,20 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                            <StackLayout Spacing="0">
+                                <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                        <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                                    </StackLayout>
+
+                                    <StackLayout VerticalOptions="Center" Spacing="2">
+                                        <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
+                                        <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgAnswerContactRequestDesc}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                    </StackLayout>
                                 </StackLayout>
 
-                                <StackLayout VerticalOptions="Center" Spacing="2">
-                                    <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
-                                    <Label Style="{DynamicResource Label12}" Text="Tap to answer the contact request." VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
-                                </StackLayout>
+                                <!-- Separator -->
+                                <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

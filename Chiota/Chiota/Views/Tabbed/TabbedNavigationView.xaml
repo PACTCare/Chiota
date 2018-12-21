@@ -23,8 +23,8 @@
     </TabbedPage.ToolbarItems>
 
     <!-- Children of the tabbedpage -->
-    <chat:ChatsView Title="{extensions:Translate CmnChats}"/>
-    <contact:ContactRequestsView Title="{extensions:Translate CmnRequests}"/>
+    <chat:ChatsView Title="{extensions:Translate TitleChats}"/>
+    <contact:ContactRequestsView Title="{extensions:Translate TitleRequests}"/>
     <!--<ContentPage Title="Status"/>-->
 
 </TabbedPage>

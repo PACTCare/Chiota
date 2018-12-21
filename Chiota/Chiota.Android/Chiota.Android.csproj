@@ -146,7 +146,6 @@
     <Compile Include="Services\BackgroundService\BackgroundService.cs" />
     <Compile Include="Services\BackgroundService\BackgroundServiceReciever.cs" />
     <Compile Include="Services\BackgroundService\BackgroundServiceHelpers.cs" />
-    <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

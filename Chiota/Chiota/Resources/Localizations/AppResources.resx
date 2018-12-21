@@ -117,50 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CmnBackUp" xml:space="preserve">
-    <value>Back up</value>
-  </data>
-  <data name="CmnChats" xml:space="preserve">
+  <data name="TitleChats" xml:space="preserve">
     <value>Chats</value>
   </data>
-  <data name="CmnConfirmSeed" xml:space="preserve">
-    <value>Confirm seed</value>
-  </data>
-  <data name="CmnContacts" xml:space="preserve">
-    <value>Contacts</value>
-  </data>
-  <data name="CmnHelp" xml:space="preserve">
+  <data name="TitleHelp" xml:space="preserve">
     <value>Help</value>
   </data>
   <data name="CmnLogOut" xml:space="preserve">
     <value>Log out</value>
   </data>
-  <data name="CmnNewSeed" xml:space="preserve">
-    <value>New seed</value>
-  </data>
-  <data name="CmnPrintPaperCopy" xml:space="preserve">
-    <value>Print paper copy</value>
-  </data>
   <data name="CmnPrivacyPolicy" xml:space="preserve">
     <value>Open Privacy Policy</value>
   </data>
-  <data name="CmnQrCode" xml:space="preserve">
-    <value>QR code</value>
-  </data>
-  <data name="CmnSetPassword" xml:space="preserve">
-    <value>New password</value>
-  </data>
-  <data name="CmnSetSeed" xml:space="preserve">
-    <value>Set seed</value>
-  </data>
-  <data name="CmnSettings" xml:space="preserve">
+  <data name="TitleSettings" xml:space="preserve">
     <value>Settings</value>
-  </data>
-  <data name="CmnSetUser" xml:space="preserve">
-    <value>Set user</value>
-  </data>
-  <data name="CmnWriteSeedDown" xml:space="preserve">
-    <value>Write seed down</value>
   </data>
   <data name="DlgCancel" xml:space="preserve">
     <value>Cancel</value>
@@ -261,14 +231,8 @@
   <data name="DlgWriteSeedDown" xml:space="preserve">
     <value>Write seed down</value>
   </data>
-  <data name="CmnAddContact" xml:space="preserve">
-    <value>Add contact</value>
-  </data>
   <data name="CmnContactAddress" xml:space="preserve">
     <value>Contact address</value>
-  </data>
-  <data name="DlgHelpContactAddress" xml:space="preserve">
-    <value>What is a contact address?</value>
   </data>
   <data name="DlgSave" xml:space="preserve">
     <value>Save</value>
@@ -276,7 +240,7 @@
   <data name="CmnEdit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="CmnAbout" xml:space="preserve">
+  <data name="TitleAbout" xml:space="preserve">
     <value>About</value>
   </data>
   <data name="DlgAccept" xml:space="preserve">
@@ -285,7 +249,7 @@
   <data name="DlgDecline" xml:space="preserve">
     <value>Decline</value>
   </data>
-  <data name="CmnContactRequest" xml:space="preserve">
+  <data name="TitleContactRequest" xml:space="preserve">
     <value>Contact request</value>
   </data>
   <data name="DlgMessage" xml:space="preserve">
@@ -342,7 +306,7 @@
   <data name="WelcomeToChiota" xml:space="preserve">
     <value>Welcome to Chiota</value>
   </data>
-  <data name="CmnRequests" xml:space="preserve">
+  <data name="TitleRequests" xml:space="preserve">
     <value>Requests</value>
   </data>
   <data name="DlgContactAddress" xml:space="preserve">
@@ -359,5 +323,56 @@
   </data>
   <data name="DlgNoChatAction" xml:space="preserve">
     <value>To start a new chat press the '+' button.</value>
+  </data>
+  <data name="DlgAddContactMessengerException" xml:space="preserve">
+    <value>It seems like the connection to the tangle failed. Try again later or change your node.</value>
+  </data>
+  <data name="DlgAddContactUnknownException" xml:space="preserve">
+    <value>Something seems to be broken. Please try again later.</value>
+  </data>
+  <data name="DlgError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="DlgSuccessfulRequest" xml:space="preserve">
+    <value>Successful request</value>
+  </data>
+  <data name="DlgSuccessfulRequestDesc" xml:space="preserve">
+    <value>Your new contact needs to accept the request before you can start chatting!</value>
+  </data>
+  <data name="DlgContactAddedDesc" xml:space="preserve">
+    <value>The contact was successfully added.</value>
+  </data>
+  <data name="DlgErrorDesc0" xml:space="preserve">
+    <value>An error (Code: </value>
+  </data>
+  <data name="DlgErrorDesc1" xml:space="preserve">
+    <value>)occured during the action.</value>
+  </data>
+  <data name="DlgSuccessfullAction" xml:space="preserve">
+    <value>Successful action</value>
+  </data>
+  <data name="DlgContactDeclinedDesc" xml:space="preserve">
+    <value>The contact was successfully declined.</value>
+  </data>
+  <data name="DlgAcceptContact" xml:space="preserve">
+    <value>Accepting contact</value>
+  </data>
+  <data name="DlgAddressCopied" xml:space="preserve">
+    <value>Address copied</value>
+  </data>
+  <data name="DlgAddressCopiedDesc" xml:space="preserve">
+    <value>The address has been copied to your clipboard.</value>
+  </data>
+  <data name="DlgDeclineContact" xml:space="preserve">
+    <value>Declining contact</value>
+  </data>
+  <data name="DlgSeedCopied" xml:space="preserve">
+    <value>Seed copied</value>
+  </data>
+  <data name="DlgSeedCopiedDesc" xml:space="preserve">
+    <value>The seed has been copied to your clipboard.</value>
+  </data>
+  <data name="DlgAnswerContactRequestDesc" xml:space="preserve">
+    <value>Tap to answer the contact request.</value>
   </data>
 </root>

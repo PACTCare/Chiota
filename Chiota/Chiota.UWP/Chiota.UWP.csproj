@@ -110,7 +110,6 @@
     <Compile Include="Renderer\FrameRenderer.cs" />
     <Compile Include="Services\BackgroundService\BackgroundJobWorker.cs" />
     <Compile Include="Services\BackgroundService\BackgroundService.cs" />
-    <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

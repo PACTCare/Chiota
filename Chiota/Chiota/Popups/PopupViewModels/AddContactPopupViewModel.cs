@@ -191,28 +191,26 @@ namespace Chiota.Popups.PopupViewModels
                                         UserPublicKey = UserService.CurrentUser.NtruKeyPair.PublicKey
                                     });
 
-                                //await PopPopupAsync();
                                 await PopPopupAsync();
 
                                 switch (response.Code)
                                 {
                                     case ResponseCode.Success:
-                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel(){Title = "Successful Request", Message = "Your new contact needs to accept the request before you can start chatting!" });
+                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel(){Title = AppResources.DlgSuccessfulRequest, Message = AppResources.DlgSuccessfulRequestDesc });
                                         break;
                                     case ResponseCode.MessengerException:
-                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel() { Title = "Error", Message = "It seems like the connection to the tangle failed. Try again later or change your node." });
+                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel() { Title = AppResources.DlgError, Message = AppResources.DlgAddContactMessengerException });
                                         break;
                                     default:
-                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel() { Title = "Error", Message = "Something seems to be broken. Please try again later." });
+                                        await DisplayPopupAsync<AlertPopupViewModel, AlertPopupModel>(new AlertPopupView(), new AlertPopupModel() { Title = AppResources.DlgError, Message = AppResources.DlgAddContactUnknownException });
                                         break;
                                 }
 
                                 Finish = true;
                                 return;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                await PopPopupAsync();
                                 await PopPopupAsync();
                                 await new UnknownException(new ExcInfo()).ShowAlertAsync();
 

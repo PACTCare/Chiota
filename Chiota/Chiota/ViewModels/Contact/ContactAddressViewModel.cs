@@ -1,10 +1,10 @@
 ﻿#region References
 
 using System.Windows.Input;
-using Chiota.Services;
-using Chiota.Services.DependencyInjection;
+using Chiota.Resources.Localizations;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 #endregion
@@ -55,8 +55,8 @@ namespace Chiota.ViewModels.Contact
             {
                 return new Command(async () =>
                 {
-                    DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(ContactAddress);
-                    await DisplayAlertAsync("Address copied", "The address has been copied to your clipboard");
+                    await Clipboard.SetTextAsync(ContactAddress);
+                    await DisplayAlertAsync(AppResources.DlgAddressCopied, AppResources.DlgAddressCopiedDesc);
                 });
             }
         }

@@ -7,7 +7,8 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:validation="clr-namespace:Chiota.Behaviors.Validation;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
-             x:Class="Chiota.Popups.PopupViews.AddContactPopupView">
+             x:Class="Chiota.Popups.PopupViews.AddContactPopupView"
+             CloseWhenBackgroundIsClicked="False">
 
     <pages:PopupPage.BindingContext>
         <popupViewModels1:AddContactPopupViewModel/>

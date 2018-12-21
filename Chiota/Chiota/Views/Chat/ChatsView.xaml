@@ -36,19 +36,24 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                        <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
+                                <StackLayout Spacing="0">
+                                    <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                            <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
+                                        </StackLayout>
+
+                                        <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
+                                            <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                                                <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                                <StackLayout HorizontalOptions="CenterAndExpand"/>
+                                                <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
+                                            </StackLayout>
+                                            <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                        </StackLayout>
                                     </StackLayout>
 
-                                    <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
-                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                                            <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
-                                            <StackLayout HorizontalOptions="CenterAndExpand"/>
-                                            <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
-                                        </StackLayout>
-                                        <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
-                                    </StackLayout>
+                                    <!-- Separator -->
+                                    <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>

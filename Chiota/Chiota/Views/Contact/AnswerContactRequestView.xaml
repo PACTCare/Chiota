@@ -12,7 +12,7 @@
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:AnswerContactRequestViewModel}"
-             Title="{extensions:Translate CmnContactRequest}">
+             Title="{extensions:Translate TitleContactRequest}">
 
     <ContentPage.Resources>
         <ResourceDictionary>

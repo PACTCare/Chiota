@@ -11,7 +11,7 @@
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance settings:SettingsViewModel}"
-             Title="{extensions:Translate CmnSettings}">
+             Title="{extensions:Translate TitleSettings}">
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">

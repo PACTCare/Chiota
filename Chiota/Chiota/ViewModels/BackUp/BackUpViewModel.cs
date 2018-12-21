@@ -1,11 +1,13 @@
 ﻿#region References
 
 using System.Windows.Input;
+using Chiota.Resources.Localizations;
 using Chiota.ViewModels.Base;
 using Chiota.Services;
 using Chiota.Services.DependencyInjection;
 using Chiota.Services.UserServices;
 using Chiota.Views.BackUp;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 #endregion
@@ -96,8 +98,8 @@ namespace Chiota.ViewModels.BackUp
         public ICommand CopyToClipboardCommand =>
             new Command(async () =>
             {
-                DependencyResolver.Resolve<IClipboardService>().SendTextToClipboard(UserProperties.Seed.Value);
-                await DisplayAlertAsync("Seed copied", "The seed has been copied to your clipboard");
+                await Clipboard.SetTextAsync(UserProperties.Seed.Value);
+                await DisplayAlertAsync(AppResources.DlgSeedCopied, AppResources.DlgSeedCopiedDesc);
                 IsContinueVisible = true;
             });
 

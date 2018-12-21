@@ -25,14 +25,16 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private const int ActionItemHeight = 48;
-        private const int ContactItemHeight = 68;
+        private const int ActionItemHeight = 49;
+        private const int ContactItemHeight = 69;
 
         private List<ActionBinding> _actionList;
         private List<ContactBinding> _contactList;
 
         private int _actionListHeight;
         private int _contactListHeight;
+
+        private bool _isContactExist;
 
         #endregion
 
@@ -75,6 +77,16 @@ namespace Chiota.ViewModels.Chat
             {
                 _contactListHeight = value;
                 OnPropertyChanged(nameof(ContactListHeight));
+            }
+        }
+
+        public bool IsContactExist
+        {
+            get => _isContactExist;
+            set
+            {
+                _isContactExist = value;
+                OnPropertyChanged(nameof(IsContactExist));
             }
         }
 
@@ -157,6 +169,8 @@ namespace Chiota.ViewModels.Chat
                         list.Add(new ContactBinding(contact, item.Accepted, item.ImageBase64));
                     }
                 }
+
+                IsContactExist = list.Count > 0;
             }
             catch (Exception)
             {
@@ -212,8 +226,7 @@ namespace Chiota.ViewModels.Chat
                     {
                         if (action.Name == AppResources.CmnNewContact)
                         {
-                            //await PushAsync<AddContactView>();
-                            var result = await DisplayPopupAsync<AddContactPopupViewModel, AddContactPopupModel>(new AddContactPopupView());
+                            await DisplayPopupAsync<AddContactPopupViewModel, AddContactPopupModel>(new AddContactPopupView());
                             return;
                         }
                     }

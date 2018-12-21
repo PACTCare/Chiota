@@ -19,7 +19,7 @@ namespace Chiota.ViewModels.Contact
     {
         #region Attributes
 
-        private const int RequestItemHeight = 64;
+        private const int RequestItemHeight = 65;
 
         private List<ContactBinding> _requestList;
 

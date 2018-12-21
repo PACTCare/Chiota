@@ -61,51 +61,6 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About.
-        /// </summary>
-        internal static string CmnAbout {
-            get {
-                return ResourceManager.GetString("CmnAbout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add contact.
-        /// </summary>
-        internal static string CmnAddContact {
-            get {
-                return ResourceManager.GetString("CmnAddContact", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Back up.
-        /// </summary>
-        internal static string CmnBackUp {
-            get {
-                return ResourceManager.GetString("CmnBackUp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chats.
-        /// </summary>
-        internal static string CmnChats {
-            get {
-                return ResourceManager.GetString("CmnChats", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Confirm seed.
-        /// </summary>
-        internal static string CmnConfirmSeed {
-            get {
-                return ResourceManager.GetString("CmnConfirmSeed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Contact address.
         /// </summary>
         internal static string CmnContactAddress {
@@ -115,38 +70,11 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contact request.
-        /// </summary>
-        internal static string CmnContactRequest {
-            get {
-                return ResourceManager.GetString("CmnContactRequest", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Contacts.
-        /// </summary>
-        internal static string CmnContacts {
-            get {
-                return ResourceManager.GetString("CmnContacts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         internal static string CmnEdit {
             get {
                 return ResourceManager.GetString("CmnEdit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Help.
-        /// </summary>
-        internal static string CmnHelp {
-            get {
-                return ResourceManager.GetString("CmnHelp", resourceCulture);
             }
         }
         
@@ -169,47 +97,11 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New seed.
-        /// </summary>
-        internal static string CmnNewSeed {
-            get {
-                return ResourceManager.GetString("CmnNewSeed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Print paper copy.
-        /// </summary>
-        internal static string CmnPrintPaperCopy {
-            get {
-                return ResourceManager.GetString("CmnPrintPaperCopy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Open Privacy Policy.
         /// </summary>
         internal static string CmnPrivacyPolicy {
             get {
                 return ResourceManager.GetString("CmnPrivacyPolicy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to QR code.
-        /// </summary>
-        internal static string CmnQrCode {
-            get {
-                return ResourceManager.GetString("CmnQrCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Requests.
-        /// </summary>
-        internal static string CmnRequests {
-            get {
-                return ResourceManager.GetString("CmnRequests", resourceCulture);
             }
         }
         
@@ -223,56 +115,20 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New password.
-        /// </summary>
-        internal static string CmnSetPassword {
-            get {
-                return ResourceManager.GetString("CmnSetPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set seed.
-        /// </summary>
-        internal static string CmnSetSeed {
-            get {
-                return ResourceManager.GetString("CmnSetSeed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Settings.
-        /// </summary>
-        internal static string CmnSettings {
-            get {
-                return ResourceManager.GetString("CmnSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set user.
-        /// </summary>
-        internal static string CmnSetUser {
-            get {
-                return ResourceManager.GetString("CmnSetUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Write seed down.
-        /// </summary>
-        internal static string CmnWriteSeedDown {
-            get {
-                return ResourceManager.GetString("CmnWriteSeedDown", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Accept.
         /// </summary>
         internal static string DlgAccept {
             get {
                 return ResourceManager.GetString("DlgAccept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accepting contact.
+        /// </summary>
+        internal static string DlgAcceptContact {
+            get {
+                return ResourceManager.GetString("DlgAcceptContact", resourceCulture);
             }
         }
         
@@ -286,11 +142,47 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It seems like the connection to the tangle failed. Try again later or change your node..
+        /// </summary>
+        internal static string DlgAddContactMessengerException {
+            get {
+                return ResourceManager.GetString("DlgAddContactMessengerException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something seems to be broken. Please try again later..
+        /// </summary>
+        internal static string DlgAddContactUnknownException {
+            get {
+                return ResourceManager.GetString("DlgAddContactUnknownException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         internal static string DlgAddress {
             get {
                 return ResourceManager.GetString("DlgAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address copied.
+        /// </summary>
+        internal static string DlgAddressCopied {
+            get {
+                return ResourceManager.GetString("DlgAddressCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The address has been copied to your clipboard..
+        /// </summary>
+        internal static string DlgAddressCopiedDesc {
+            get {
+                return ResourceManager.GetString("DlgAddressCopiedDesc", resourceCulture);
             }
         }
         
@@ -313,6 +205,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tap to answer the contact request..
+        /// </summary>
+        internal static string DlgAnswerContactRequestDesc {
+            get {
+                return ResourceManager.GetString("DlgAnswerContactRequestDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string DlgCancel {
@@ -322,11 +223,29 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The contact was successfully added..
+        /// </summary>
+        internal static string DlgContactAddedDesc {
+            get {
+                return ResourceManager.GetString("DlgContactAddedDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tap on the qr code to copy the address to your clipboard..
         /// </summary>
         internal static string DlgContactAddress {
             get {
                 return ResourceManager.GetString("DlgContactAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The contact was successfully declined..
+        /// </summary>
+        internal static string DlgContactDeclinedDesc {
+            get {
+                return ResourceManager.GetString("DlgContactDeclinedDesc", resourceCulture);
             }
         }
         
@@ -345,6 +264,15 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgDecline {
             get {
                 return ResourceManager.GetString("DlgDecline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Declining contact.
+        /// </summary>
+        internal static string DlgDeclineContact {
+            get {
+                return ResourceManager.GetString("DlgDeclineContact", resourceCulture);
             }
         }
         
@@ -466,6 +394,33 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string DlgError {
+            get {
+                return ResourceManager.GetString("DlgError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error (Code: .
+        /// </summary>
+        internal static string DlgErrorDesc0 {
+            get {
+                return ResourceManager.GetString("DlgErrorDesc0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to )occured during the action..
+        /// </summary>
+        internal static string DlgErrorDesc1 {
+            get {
+                return ResourceManager.GetString("DlgErrorDesc1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New seed.
         /// </summary>
         internal static string DlgGenerateSeed {
@@ -480,15 +435,6 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgGotIt {
             get {
                 return ResourceManager.GetString("DlgGotIt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to What is a contact address?.
-        /// </summary>
-        internal static string DlgHelpContactAddress {
-            get {
-                return ResourceManager.GetString("DlgHelpContactAddress", resourceCulture);
             }
         }
         
@@ -691,6 +637,24 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seed copied.
+        /// </summary>
+        internal static string DlgSeedCopied {
+            get {
+                return ResourceManager.GetString("DlgSeedCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The seed has been copied to your clipboard..
+        /// </summary>
+        internal static string DlgSeedCopiedDesc {
+            get {
+                return ResourceManager.GetString("DlgSeedCopiedDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I have a seed.
         /// </summary>
         internal static string DlgSetSeed {
@@ -705,6 +669,33 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgSettingUpAccount {
             get {
                 return ResourceManager.GetString("DlgSettingUpAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successful action.
+        /// </summary>
+        internal static string DlgSuccessfullAction {
+            get {
+                return ResourceManager.GetString("DlgSuccessfullAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successful request.
+        /// </summary>
+        internal static string DlgSuccessfulRequest {
+            get {
+                return ResourceManager.GetString("DlgSuccessfulRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your new contact needs to accept the request before you can start chatting!.
+        /// </summary>
+        internal static string DlgSuccessfulRequestDesc {
+            get {
+                return ResourceManager.GetString("DlgSuccessfulRequestDesc", resourceCulture);
             }
         }
         
@@ -777,6 +768,60 @@ namespace Chiota.Resources.Localizations {
         internal static string SettingsSecurity {
             get {
                 return ResourceManager.GetString("SettingsSecurity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string TitleAbout {
+            get {
+                return ResourceManager.GetString("TitleAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chats.
+        /// </summary>
+        internal static string TitleChats {
+            get {
+                return ResourceManager.GetString("TitleChats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact request.
+        /// </summary>
+        internal static string TitleContactRequest {
+            get {
+                return ResourceManager.GetString("TitleContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string TitleHelp {
+            get {
+                return ResourceManager.GetString("TitleHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requests.
+        /// </summary>
+        internal static string TitleRequests {
+            get {
+                return ResourceManager.GetString("TitleRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string TitleSettings {
+            get {
+                return ResourceManager.GetString("TitleSettings", resourceCulture);
             }
         }
         
