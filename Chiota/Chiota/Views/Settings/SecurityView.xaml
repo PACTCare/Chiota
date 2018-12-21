@@ -12,10 +12,6 @@
              design:DataContext="{design:DesignInstance settings:SecurityViewModel}"
              Title="{extensions:Translate SettingsSecurity}">
 
-    <ContentPage.BindingContext>
-        <settings:SecurityViewModel/>
-    </ContentPage.BindingContext>
-
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Coming soon"/>

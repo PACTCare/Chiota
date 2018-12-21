@@ -21,7 +21,7 @@
                     <StackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="24">
                         <!-- Logo of the iota chat app-->
                         <Image Style="{DynamicResource ChiotaLogo}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
-                        <Label Style="{DynamicResource DescriptionLabel}" Text="Tap on the Qr code to copy the address to your clipboard."/>
+                        <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgContactAddress}"/>
                     </StackLayout>
 
                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#000000" HorizontalOptions="Center" VerticalOptions="Center" Padding="4">

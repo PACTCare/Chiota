@@ -21,5 +21,6 @@
     <Color x:Key="FadedDangerColor">#64b71c1c</Color>
 
     <Color x:Key="SeparatorColor">#16000000</Color>
+    <Color x:Key="SeparatorTextColor">#616161</Color>
 
 </ResourceDictionary>

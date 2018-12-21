@@ -23,7 +23,7 @@ namespace Chiota.UWP.Services.BackgroundService
             var backgroundJobScheduler = (BackgroundJobScheduler)Activator.CreateInstance(typeof(BackgroundJobScheduler));
             backgroundJobScheduler.Init();
 
-            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "Add", (sender, arg) => {
+            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "AddContact", (sender, arg) => {
                 backgroundJobScheduler.Add(arg);
             });
 
@@ -53,7 +53,7 @@ namespace Chiota.UWP.Services.BackgroundService
         {
             var type = typeof(T).Namespace + "." + typeof(T).Name + ", " + typeof(T).Assembly.FullName;
 
-            MessagingCenter.Send(this, "Add", new BackgroundJobSchedulerMessage(type, data));
+            MessagingCenter.Send(this, "AddContact", new BackgroundJobSchedulerMessage(type, data));
         }
     }
 }

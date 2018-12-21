@@ -8,7 +8,6 @@ using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.Binding;
 using Chiota.ViewModels.Base;
-using Chiota.Views.Chat;
 using Chiota.Views.Contact;
 using Xamarin.Forms;
 
@@ -22,7 +21,7 @@ namespace Chiota.ViewModels.Contact
 
         private const int RequestItemHeight = 64;
 
-        private static List<ContactBinding> _requestList;
+        private List<ContactBinding> _requestList;
 
         private int _requestListHeight;
 
@@ -167,9 +166,6 @@ namespace Chiota.ViewModels.Contact
                             contactRequests.Add(new ContactBinding(contact, false, item.ImageBase64));
                         }
 
-                        //Set flag to show the contact requests.
-                        IsRequestExist = contactRequests.Count > 0;
-
                         //Update the request list.
                         if (RequestList == null || RequestList.Count != contactRequests.Count)
                         {
@@ -185,6 +181,8 @@ namespace Chiota.ViewModels.Contact
                         RequestListHeight = 0;
                     }
 
+                    //Set flag to show the contact requests.
+                    IsRequestExist = contactRequests.Count > 0;
                     IsNoRequestExist = !(contactRequests.Count > 0);
                 }
                 catch (Exception)
@@ -212,18 +210,12 @@ namespace Chiota.ViewModels.Contact
             {
                 return new Command(async (param) =>
                 {
-                    if (param is ChatBinding chat)
-                    {
-                        //Show the chat view.
-                        await PushAsync<ChatView>(chat.Contact);
-                        return;
-                    }
-                    else if (param is ContactBinding contact)
+                    if (param is ContactBinding contact)
                     {
                         //Show the chat view, or a dialog for a contact request acceptation.
                         if (!contact.IsApproved)
                         {
-                            await PushAsync<ContactRequestView>(contact.Contact);
+                            await PushAsync<AnswerContactRequestView>(contact.Contact);
                             return;
                         }
                     }

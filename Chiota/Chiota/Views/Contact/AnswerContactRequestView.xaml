@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Chiota.Views.Contact.ContactRequestView"
+             x:Class="Chiota.Views.Contact.AnswerContactRequestView"
              base:ViewModelLocator.AutoWireViewModel="true"
              xmlns:design="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,20 +9,28 @@
              xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              mc:Ignorable="design"
-             design:DataContext="{design:DesignInstance contact:ContactRequestViewModel}"
+             design:DataContext="{design:DesignInstance contact:AnswerContactRequestViewModel}"
              Title="{extensions:Translate CmnContactRequest}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>
+            <converter:ProfileImageSourceOpacityConverter x:Key="ProfileImageSourceToOpacity"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
             <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Spacing="32">
                 <StackLayout VerticalOptions="Center" Spacing="24">
                     <StackLayout Spacing="16">
-                        <abstractions:CircleImage Source="{Binding ProfileImageSource}" Aspect="AspectFill" HeightRequest="128" WidthRequest="128"/>
+                        <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Label Style="{DynamicResource Label18}" Text="{Binding Username}" HorizontalOptions="Center"/>
                     </StackLayout>
 
-                    <Label Style="{DynamicResource DescriptionLabel}" Text="This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request."/>
+                    <Label Style="{DynamicResource DescriptionLabel}" Text="{extensions:Translate DlgAnswerContactRequest}"/>
                 </StackLayout>
 
                 <StackLayout Orientation="Horizontal" VerticalOptions="Center">

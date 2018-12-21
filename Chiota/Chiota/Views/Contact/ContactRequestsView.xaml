@@ -7,20 +7,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              xmlns:contact="clr-namespace:Chiota.ViewModels.Contact;assembly=Chiota"
-             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
+             xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
+             xmlns:extensions="clr-namespace:Chiota.Extensions;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance contact:ContactRequestsViewModel}">
 
-    <ContentPage.BindingContext>
-        <contact:ContactRequestsViewModel/>
-    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>
+            <converter:ProfileImageSourceOpacityConverter x:Key="ProfileImageSourceToOpacity"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-
             <StackLayout IsVisible="{Binding IsNoRequestExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
-                <Label Style="{DynamicResource Label16}" Text="There is no request at the moment." HorizontalOptions="Center"/>
+                <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoContactRequest}" HorizontalOptions="Center"/>
             </StackLayout>
 
             <!-- Requests -->
@@ -45,6 +49,7 @@
                 <ListView.Behaviors>
                     <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
                 </ListView.Behaviors>
+                
             </ListView>
         </StackLayout>
     </ContentPage.Content>

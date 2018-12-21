@@ -304,11 +304,29 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request..
+        /// </summary>
+        internal static string DlgAnswerContactRequest {
+            get {
+                return ResourceManager.GetString("DlgAnswerContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string DlgCancel {
             get {
                 return ResourceManager.GetString("DlgCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tap on the qr code to copy the address to your clipboard..
+        /// </summary>
+        internal static string DlgContactAddress {
+            get {
+                return ResourceManager.GetString("DlgContactAddress", resourceCulture);
             }
         }
         
@@ -579,6 +597,33 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgNewSeed {
             get {
                 return ResourceManager.GetString("DlgNewSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No chat available..
+        /// </summary>
+        internal static string DlgNoChat {
+            get {
+                return ResourceManager.GetString("DlgNoChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To start a new chat press the &apos;+&apos; button..
+        /// </summary>
+        internal static string DlgNoChatAction {
+            get {
+                return ResourceManager.GetString("DlgNoChatAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no request at the moment..
+        /// </summary>
+        internal static string DlgNoContactRequest {
+            get {
+                return ResourceManager.GetString("DlgNoContactRequest", resourceCulture);
             }
         }
         

@@ -33,7 +33,7 @@ namespace Chiota.Droid.Services.BackgroundService
             _backgroundJobScheduler = (BackgroundJobScheduler)Activator.CreateInstance(typeof(BackgroundJobScheduler));
             _backgroundJobScheduler.Init();
 
-            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "Add", (sender, arg) => {
+            MessagingCenter.Subscribe<BackgroundJobWorker, BackgroundJobSchedulerMessage>(this, "AddContact", (sender, arg) => {
                 _backgroundJobScheduler.Add(arg);
             });
         }

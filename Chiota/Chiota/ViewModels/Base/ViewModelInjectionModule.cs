@@ -35,11 +35,12 @@ namespace Chiota.ViewModels.Base
             builder.RegisterType<TabbedNavigationViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ChatsViewModel>().PropertiesAutowired();
+            builder.RegisterType<ChatActionsViewModel>().PropertiesAutowired();
             builder.RegisterType<ChatViewModel>().PropertiesAutowired();
 
+            builder.RegisterType<ContactRequestsViewModel>().PropertiesAutowired();
             builder.RegisterType<ContactAddressViewModel>().PropertiesAutowired();
-            builder.RegisterType<ChatActionsViewModel>().PropertiesAutowired();
-            builder.RegisterType<ContactRequestViewModel>().PropertiesAutowired();
+            builder.RegisterType<AnswerContactRequestViewModel>().PropertiesAutowired();
 
             builder.RegisterType<ProfileViewModel>().PropertiesAutowired();
             builder.RegisterType<SecurityViewModel>().PropertiesAutowired();

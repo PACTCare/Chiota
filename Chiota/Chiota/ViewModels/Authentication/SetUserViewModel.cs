@@ -25,7 +25,7 @@ namespace Chiota.ViewModels.Authentication
 
         private string _name;
         private bool _isEntryFocused;
-        private ImageSource _profileImageSource;
+        private ImageSource _imageSource;
         private byte[] _imageBuffer;
 
         private static UserCreationProperties _userProperties;
@@ -54,13 +54,13 @@ namespace Chiota.ViewModels.Authentication
             }
         }
 
-        public ImageSource ProfileImageSource
+        public ImageSource ImageSource
         {
-            get => _profileImageSource;
+            get => _imageSource;
             set
             {
-                _profileImageSource = value;
-                OnPropertyChanged(nameof(ProfileImageSource));
+                _imageSource = value;
+                OnPropertyChanged(nameof(ImageSource));
             }
         }
 
@@ -127,7 +127,7 @@ namespace Chiota.ViewModels.Authentication
                         try
                         {
                             // Load the image.
-                            ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
+                            ImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
                         }
                         catch (Exception)
                         {

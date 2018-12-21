@@ -61,7 +61,7 @@ namespace Chiota.Droid.Services.BackgroundService
         {
             var type = typeof(T).Namespace + "." + typeof(T).Name + ", " + typeof(T).Assembly.FullName;
 
-            MessagingCenter.Send(this, "Add", new BackgroundJobSchedulerMessage(type, data));
+            MessagingCenter.Send(this, "AddContact", new BackgroundJobSchedulerMessage(type, data));
         }
 
         #endregion

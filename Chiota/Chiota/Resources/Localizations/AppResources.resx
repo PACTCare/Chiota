@@ -345,4 +345,19 @@
   <data name="CmnRequests" xml:space="preserve">
     <value>Requests</value>
   </data>
+  <data name="DlgContactAddress" xml:space="preserve">
+    <value>Tap on the qr code to copy the address to your clipboard.</value>
+  </data>
+  <data name="DlgAnswerContactRequest" xml:space="preserve">
+    <value>This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request.</value>
+  </data>
+  <data name="DlgNoContactRequest" xml:space="preserve">
+    <value>There is no request at the moment.</value>
+  </data>
+  <data name="DlgNoChat" xml:space="preserve">
+    <value>No chat available.</value>
+  </data>
+  <data name="DlgNoChatAction" xml:space="preserve">
+    <value>To start a new chat press the '+' button.</value>
+  </data>
 </root>

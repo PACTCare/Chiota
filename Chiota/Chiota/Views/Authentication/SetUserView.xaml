@@ -36,7 +36,7 @@
                                 <ColumnDefinition Width="192"/>
                             </Grid.ColumnDefinitions>
 
-                            <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Aspect="AspectFill" Source="{Binding ProfileImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ProfileImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HorizontalOptions="Center" HeightRequest="192" WidthRequest="192"/>
+                            <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HorizontalOptions="Center" HeightRequest="192" WidthRequest="192"/>
                             <Grid Grid.Row="0" Grid.Column="0" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="2*"/>

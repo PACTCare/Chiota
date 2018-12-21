@@ -9,6 +9,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              mc:Ignorable="design"
              design:DataContext="{design:DesignInstance settings:ProfileViewModel}"
              Title="{extensions:Translate SettingsProfile}">
@@ -16,6 +17,13 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Primary" Text="{extensions:Translate CmnEdit}" Icon="{Binding EditImage}" Command="{Binding EditCommand}"/>
     </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>
+            <converter:ProfileImageSourceOpacityConverter x:Key="ProfileImageSourceToOpacity"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
@@ -31,7 +39,7 @@
                             <ColumnDefinition Width="144"/>
                         </Grid.ColumnDefinitions>
 
-                        <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Source="{Binding ProfileImageSource}" Aspect="AspectFill" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
+                        <abstractions:CircleImage Grid.Row="0" Grid.Column="0" Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HorizontalOptions="Center" HeightRequest="128" WidthRequest="128"/>
                         <Grid Grid.Row="0" Grid.Column="0" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="4*"/>

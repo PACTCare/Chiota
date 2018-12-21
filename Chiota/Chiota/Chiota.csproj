@@ -95,6 +95,9 @@
     <Compile Update="Views\Chat\ChatActionsView.xaml.cs">
       <DependentUpon>ChatActionsView.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Contact\AnswerContactRequestView.xaml.cs">
+      <DependentUpon>AnswerContactRequestView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Help\SeedHelpView.xaml.cs">
       <DependentUpon>SeedHelpView.xaml</DependentUpon>
     </Compile>
@@ -150,10 +153,10 @@
     <EmbeddedResource Update="Views\Contact\ContactAddressView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Contact\ContactRequestsView.xaml">
+    <EmbeddedResource Update="Views\Contact\AnswerContactRequestView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Contact\ContactRequestView.xaml">
+    <EmbeddedResource Update="Views\Contact\ContactRequestsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Help\SeedHelpView.xaml">

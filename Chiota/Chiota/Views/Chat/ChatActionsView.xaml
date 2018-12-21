@@ -53,7 +53,7 @@
                     </ListView>
 
                     <StackLayout BackgroundColor="#16000000" Padding="16, 8">
-                        <Label Text="Contacts" TextColor="#616161"/>
+                        <Label Text="Contacts" TextColor="{DynamicResource SeparatorTextColor}"/>
                     </StackLayout>
 
                     <ListView ItemsSource="{Binding ContactList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ContactListHeight}">

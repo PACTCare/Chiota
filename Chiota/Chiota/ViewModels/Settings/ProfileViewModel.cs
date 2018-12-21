@@ -27,7 +27,7 @@ namespace Chiota.ViewModels.Settings
     {
         #region Attributes
 
-        private ImageSource _profileImageSource;
+        private ImageSource _imageSource;
         private FileImageSource _editImage;
 
         private string _username;
@@ -43,13 +43,13 @@ namespace Chiota.ViewModels.Settings
 
         #region Properties
 
-        public ImageSource ProfileImageSource
+        public ImageSource ImageSource
         {
-            get => _profileImageSource;
+            get => _imageSource;
             set
             {
-                _profileImageSource = value;
-                OnPropertyChanged(nameof(ProfileImageSource));
+                _imageSource = value;
+                OnPropertyChanged(nameof(ImageSource));
             }
         }
 
@@ -112,10 +112,8 @@ namespace Chiota.ViewModels.Settings
                 var buffer = Convert.FromBase64String(UserService.CurrentUser.ImageBase64);
                 _originImageSource = ImageSource.FromStream(() => new MemoryStream(buffer));
             }
-            else
-                _originImageSource = ImageSource.FromFile("account.png");
 
-            ProfileImageSource = _originImageSource;
+            ImageSource = _originImageSource;
             Username = _originUsername;
 
             EditImage = (FileImageSource)ImageSource.FromFile("edit.png");
@@ -129,7 +127,7 @@ namespace Chiota.ViewModels.Settings
 
         private bool IsChanged()
         {
-            if (Username != _originUsername || ProfileImageSource != _originImageSource)
+            if (Username != _originUsername || ImageSource != _originImageSource)
                 return true;
             return false;
         }
@@ -189,7 +187,7 @@ namespace Chiota.ViewModels.Settings
                         {
                             //Reset the origin data.
                             Username = _originUsername;
-                            ProfileImageSource = _profileImageSource;
+                            ImageSource = _imageSource;
 
                             return;
                         }
@@ -270,7 +268,7 @@ namespace Chiota.ViewModels.Settings
                     try
                     {
                         // Load the image.
-                        ProfileImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
+                        ImageSource = ImageSource.FromStream(() => new MemoryStream(_imageBuffer));
                     }
                     catch (Exception)
                     {
