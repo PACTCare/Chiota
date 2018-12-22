@@ -142,6 +142,15 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        internal static string DlgActions {
+            get {
+                return ResourceManager.GetString("DlgActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adding contact.
         /// </summary>
         internal static string DlgAddContact {
@@ -255,6 +264,15 @@ namespace Chiota.Resources.Localizations {
         internal static string DlgContactDeclinedDesc {
             get {
                 return ResourceManager.GetString("DlgContactDeclinedDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacts.
+        /// </summary>
+        internal static string DlgContacts {
+            get {
+                return ResourceManager.GetString("DlgContacts", resourceCulture);
             }
         }
         

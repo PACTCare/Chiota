@@ -381,4 +381,10 @@
   <data name="DlgNoContactRequestDesc" xml:space="preserve">
     <value>Start a request by sharing your contact address.</value>
   </data>
+  <data name="DlgActions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="DlgContacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
 </root>

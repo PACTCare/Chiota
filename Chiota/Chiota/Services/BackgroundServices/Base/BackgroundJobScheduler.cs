@@ -89,6 +89,9 @@ namespace Chiota.Services.BackgroundServices.Base
         {
             try
             {
+                if(_backgroundJobs.Count == 0)
+                    await Task.Delay(TimeSpan.FromMilliseconds(500));
+
                 //Show that the background service is running.
                 IsRunning = true;
 

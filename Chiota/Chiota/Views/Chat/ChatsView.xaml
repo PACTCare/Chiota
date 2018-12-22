@@ -32,7 +32,7 @@
                     <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoChatAction}" HorizontalOptions="Center"/>
                 </StackLayout>
 
-                <ListView IsVisible="{Binding IsChatExist}" ItemsSource="{Binding ChatList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ChatListHeight}">
+                <ListView IsVisible="{Binding IsChatExist}" ItemsSource="{Binding ChatList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HeightRequest="{Binding ChatListHeight}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>

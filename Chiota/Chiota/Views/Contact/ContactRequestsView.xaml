@@ -27,11 +27,11 @@
 
                 <StackLayout IsVisible="{Binding IsNoRequestExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
                     <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoContactRequest}" HorizontalOptions="Center"/>
-                    <Label Style="{DynamicResource Label14}" Text="{extensions:Translate DlgNoContactRequestDesc}" HorizontalOptions="Center"/>
+                    <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoContactRequestDesc}" HorizontalOptions="Center"/>
                 </StackLayout>
 
                 <!-- Requests -->
-                <ListView IsVisible="{Binding IsRequestExist}" ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding RequestListHeight}">
+                <ListView IsVisible="{Binding IsRequestExist}" ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HeightRequest="{Binding RequestListHeight}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>

@@ -82,8 +82,6 @@ namespace Chiota.UWP.Services.BackgroundService
 
                 if (_backgroundJobWorker.IsDisposed) return;
 
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-
                 //Repeat it.
                 await _trigger.RequestAsync();
             }).Wait();

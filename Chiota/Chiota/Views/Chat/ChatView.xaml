@@ -66,8 +66,10 @@
                     </ListView.Behaviors>
                 </ListView>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Spacing="2" Padding="2, 0, 2, 4" HorizontalOptions="FillAndExpand" VerticalOptions="End">
-                <Frame Style="{DynamicResource RoundedFrame32}" Padding="8, 0" BackgroundColor="#24000000" HorizontalOptions="FillAndExpand">
+
+            <!-- Message -->
+            <StackLayout Orientation="Horizontal" Spacing="4" Padding="4" HorizontalOptions="FillAndExpand" VerticalOptions="End">
+                <Frame Style="{DynamicResource RoundedFrame16}" Padding="8, 0" BackgroundColor="#24000000" HorizontalOptions="FillAndExpand">
                     <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat"/>
                 </Frame>
                 <Frame Style="{DynamicResource RoundedFrame32}" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="End" HeightRequest="48" WidthRequest="48">

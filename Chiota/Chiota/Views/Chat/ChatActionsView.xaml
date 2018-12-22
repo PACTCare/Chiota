@@ -32,7 +32,7 @@
                 <StackLayout Spacing="0" VerticalOptions="StartAndExpand">
 
                     <StackLayout BackgroundColor="{DynamicResource SeparatorColor}" Padding="16, 8">
-                        <Label Text="Actions" TextColor="{DynamicResource SeparatorTextColor}"/>
+                        <Label Text="{extensions:Translate DlgActions}" TextColor="{DynamicResource SeparatorTextColor}"/>
                     </StackLayout>
 
                     <!-- Actions -->
@@ -62,7 +62,7 @@
                     </ListView>
 
                     <StackLayout IsVisible="{Binding IsContactExist}" BackgroundColor="{DynamicResource SeparatorColor}" Padding="16, 8">
-                        <Label Text="Contacts" TextColor="{DynamicResource SeparatorTextColor}"/>
+                        <Label Text="{extensions:Translate DlgContacts}" TextColor="{DynamicResource SeparatorTextColor}"/>
                     </StackLayout>
 
                     <ListView ItemsSource="{Binding ContactList}" HasUnevenRows="True" SelectionMode="None" HeightRequest="{Binding ContactListHeight}">
