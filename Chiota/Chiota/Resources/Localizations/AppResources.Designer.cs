@@ -754,7 +754,34 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New contact.
+        ///   Looks up a localized string similar to Accepted successfully contact request..
+        /// </summary>
+        internal static string NotifyAcceptedContactRequest {
+            get {
+                return ResourceManager.GetString("NotifyAcceptedContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Declined successfully contact request..
+        /// </summary>
+        internal static string NotifyDeclinedContactRequest {
+            get {
+                return ResourceManager.GetString("NotifyDeclinedContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed answer contact request..
+        /// </summary>
+        internal static string NotifyFailedAnswerContactRequest {
+            get {
+                return ResourceManager.GetString("NotifyFailedAnswerContactRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New contact..
         /// </summary>
         internal static string NotifyNewContact {
             get {
@@ -763,7 +790,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New contact request.
+        ///   Looks up a localized string similar to New contact request..
         /// </summary>
         internal static string NotifyNewContactRequest {
             get {

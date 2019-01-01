@@ -298,10 +298,10 @@
     <value>Security</value>
   </data>
   <data name="NotifyNewContact" xml:space="preserve">
-    <value>New contact</value>
+    <value>New contact.</value>
   </data>
   <data name="NotifyNewContactRequest" xml:space="preserve">
-    <value>New contact request</value>
+    <value>New contact request.</value>
   </data>
   <data name="WelcomeToChiota" xml:space="preserve">
     <value>Welcome to Chiota</value>
@@ -386,5 +386,14 @@
   </data>
   <data name="DlgContacts" xml:space="preserve">
     <value>Contacts</value>
+  </data>
+  <data name="NotifyAcceptedContactRequest" xml:space="preserve">
+    <value>Accepted successfully contact request.</value>
+  </data>
+  <data name="NotifyDeclinedContactRequest" xml:space="preserve">
+    <value>Declined successfully contact request.</value>
+  </data>
+  <data name="NotifyFailedAnswerContactRequest" xml:space="preserve">
+    <value>Failed answer contact request.</value>
   </data>
 </root>

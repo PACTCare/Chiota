@@ -166,7 +166,7 @@ namespace Chiota.ViewModels.Chat
                     IsChatExist = chats.Count > 0;
                     IsNoChatExist = !(chats.Count > 0);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     //Unknown exception during update the chats view.
                     await new UnknownException(new ExcInfo()).ShowAlertAsync();

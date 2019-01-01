@@ -3,7 +3,9 @@
 using System;
 using System.Threading.Tasks;
 using Chiota.Models.Database;
+using Chiota.Resources.Localizations;
 using Chiota.Services.BackgroundServices.Base;
+using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Contact;
@@ -15,6 +17,7 @@ using Pact.Palantir.Service;
 using Pact.Palantir.Usecase;
 using Pact.Palantir.Usecase.AcceptContact;
 using Pact.Palantir.Usecase.DeclineContact;
+using SQLite;
 using Tangle.Net.Cryptography.Signing;
 using Tangle.Net.Entity;
 using Xamarin.Forms;
@@ -23,11 +26,14 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class AnswerContactRequestBackgroundJob : BaseBackgroundJob
+    public class AnswerContactRequestBackgroundJob : BaseSecurityBackgroundJob
     {
         #region Attributes
 
         private INotification _notification;
+        private SQLiteConnection _database;
+
+        private TableMapping _contactTableMapping;
 
         private DbUser _user;
         private DbContact _contact;
@@ -50,6 +56,9 @@ namespace Chiota.Services.BackgroundServices
 
             //Init the notification interface.
             _notification = DependencyService.Get<INotification>();
+            _database = DependencyService.Get<ISqlite>().GetDatabaseConnection();
+
+            _contactTableMapping = new TableMapping(typeof(DbContact));
 
             if (data.Length == 0) return;
 
@@ -94,6 +103,26 @@ namespace Chiota.Services.BackgroundServices
                         UserContactAddress = new Address(_user.RequestAddress)
                     });
 
+                    if (response.Code == ResponseCode.Success)
+                    {
+                        //Update the contact in the database.
+                        var value = Encrypt(_contact.PublicKeyAddress);
+                        var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+
+                        if (contact != null)
+                        {
+                            DecryptModel(contact);
+
+                            _notification.Show(AppResources.NotifyAcceptedContactRequest, _contact.Name);
+
+                            contact.Accepted = true;
+                            EncryptModel(contact);
+                            _database.Update(contact);
+                        }
+                    }
+                    else
+                        _notification.Show(AppResources.NotifyFailedAnswerContactRequest, _contact.Name);
+
                     MessagingCenter.Send(this, "AnswerContactRequest", response.Code);
                 }
                 else
@@ -103,6 +132,25 @@ namespace Chiota.Services.BackgroundServices
                         ContactChatAddress = new Address(_contact.ChatAddress),
                         UserPublicKeyAddress = new Address(_user.PublicKeyAddress)
                     });
+
+                    if (response.Code == ResponseCode.Success)
+                    {
+                        //Update the contact in the database.
+                        var value = Encrypt(_contact.PublicKeyAddress);
+                        var contact = _database.FindWithQuery(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.PublicKeyAddress) + "=?", value) as DbContact;
+
+                        if (contact != null)
+                        {
+                            DecryptModel(contact);
+
+                            _notification.Show(AppResources.NotifyDeclinedContactRequest, _contact.Name);
+
+                            //Update the contact in the database.
+                            _database.Delete(contact.Id, _contactTableMapping);
+                        }
+                    }
+                    else
+                        _notification.Show(AppResources.NotifyFailedAnswerContactRequest, _contact.Name);
 
                     MessagingCenter.Send(this, "AnswerContactRequest", response.Code);
                 }

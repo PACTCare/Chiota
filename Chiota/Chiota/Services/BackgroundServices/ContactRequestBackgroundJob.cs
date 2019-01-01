@@ -143,10 +143,10 @@ namespace Chiota.Services.BackgroundServices
                     await Task.Run(() =>
                     {
                         //This shoud normally Accepted, not pending BUG in Palantir
-                        if (response.PendingContactRequests == null ||
-                            response.PendingContactRequests.Count == 0) return;
+                        if (response.ApprovedContacts == null ||
+                            response.ApprovedContacts.Count == 0) return;
 
-                        foreach (var item in response.PendingContactRequests)
+                        foreach (var item in response.ApprovedContacts)
                         {
                             //Get the contact by public key address.
                             var value = Encrypt(item.PublicKeyAddress);

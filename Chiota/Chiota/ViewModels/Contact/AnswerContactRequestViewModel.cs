@@ -95,14 +95,7 @@ namespace Chiota.ViewModels.Contact
                 await PopPopupAsync();
 
                 if (responseCode == ResponseCode.Success)
-                {
-                    //Update the contact in the database.
-                    var contact = Database.Contact.GetContactByPublicKeyAddress(_contact.PublicKeyAddress);
-                    contact.Accepted = true;
-                    Database.Contact.UpdateObject(contact);
-
                     await DisplayAlertAsync(AppResources.DlgSuccessfullAction, AppResources.DlgContactAddedDesc);
-                }
                 else
                     await DisplayAlertAsync(AppResources.DlgError, AppResources.DlgErrorDesc0 + $" {(int)responseCode}" + AppResources.DlgErrorDesc1);
 
@@ -121,13 +114,7 @@ namespace Chiota.ViewModels.Contact
                 await PopPopupAsync();
 
                 if (responseCode == ResponseCode.Success)
-                {
-                    //Update the contact in the database.
-                    var contact = Database.Contact.GetContactByPublicKeyAddress(_contact.PublicKeyAddress);
-                    Database.Contact.DeleteObject(contact.Id);
-
                     await DisplayAlertAsync(AppResources.DlgSuccessfullAction, AppResources.DlgContactDeclinedDesc);
-                }
                 else
                     await DisplayAlertAsync(AppResources.DlgError, AppResources.DlgErrorDesc0 + $" {(int)responseCode}" + AppResources.DlgErrorDesc1);
 

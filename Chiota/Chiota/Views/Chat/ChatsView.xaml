@@ -62,7 +62,7 @@
                     </ListView.Behaviors>
                 </ListView>
                 <Frame Style="{DynamicResource RoundedFrame32}" Margin="20" Padding="18" BackgroundColor="{DynamicResource ButtonColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1">
-                    <Image Source="add.png" HeightRequest="28" WidthRequest="28" Margin="0, 0, 2, 2"/>
+                    <Image Source="add.png" HeightRequest="28" WidthRequest="28"/>
 
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ContactsCommand}"/>
