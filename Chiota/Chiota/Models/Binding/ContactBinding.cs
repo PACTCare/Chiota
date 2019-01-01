@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using Chiota.Helper;
+using Chiota.Models.Database;
 using Chiota.Models.Database.Base;
 using Pact.Palantir.Entity;
 using Xamarin.Forms;
@@ -15,11 +16,7 @@ namespace Chiota.Models.Binding
     {
         #region Properties
 
-        public Contact Contact { get; }
-
-        public bool IsApproved { get; }
-
-        public string ImageBase64 { get; }
+        public DbContact Contact { get; }
 
         public ImageSource ImageSource { get;}
 
@@ -29,17 +26,15 @@ namespace Chiota.Models.Binding
 
         #region Constructors
 
-        public ContactBinding(Contact contact, bool isApproved, string imageBase64 = null)
+        public ContactBinding(DbContact contact)
         {
             Contact = contact;
-            ImageBase64 = imageBase64;
-            IsApproved = isApproved;
 
-            if (!IsApproved)
+            if (!Contact.Accepted)
                 BackgroundColor = Color.FromHex("#321565c0");
 
-            if(!string.IsNullOrEmpty(ImageBase64))
-                ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(ImageBase64)));
+            if(!string.IsNullOrEmpty(Contact.ImageBase64))
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(Contact.ImageBase64)));
             else if (!string.IsNullOrEmpty(Contact.ImagePath))
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
             else

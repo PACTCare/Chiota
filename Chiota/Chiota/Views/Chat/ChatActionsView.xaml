@@ -15,10 +15,6 @@
              design:DataContext="{design:DesignInstance chat:ChatActionsViewModel}"
              Title="{DynamicResource AppName}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Order="Primary" Icon="qr.png" Text="{extensions:Translate CmnContactAddress}" Command="{Binding ContactAddressCommand}"/>
-    </ContentPage.ToolbarItems>
-
     <ContentPage.Resources>
         <ResourceDictionary>
             <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>

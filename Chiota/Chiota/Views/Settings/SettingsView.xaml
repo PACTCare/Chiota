@@ -15,7 +15,7 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <ListView ItemsSource="{Binding SettingsList}" HasUnevenRows="True" SelectionMode="None">
+            <ListView ItemsSource="{Binding SettingsList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

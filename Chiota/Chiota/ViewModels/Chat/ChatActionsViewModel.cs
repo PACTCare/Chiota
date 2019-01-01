@@ -157,19 +157,7 @@ namespace Chiota.ViewModels.Chat
 
                     var exist = list.Any(t => t.Contact.ChatAddress == item.ChatAddress);
                     if (!exist)
-                    {
-                        var contact = new Pact.Palantir.Entity.Contact()
-                        {
-                            ChatAddress = item.ChatAddress,
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                            ChatKeyAddress = item.ChatKeyAddress,
-                            ContactAddress = item.ContactAddress,
-                            PublicKeyAddress = item.PublicKeyAddress,
-                            Rejected = !item.Accepted
-                        };
-                        list.Add(new ContactBinding(contact, item.Accepted, item.ImageBase64));
-                    }
+                        list.Add(new ContactBinding(item));
                 }
 
                 IsContactExist = list.Count > 0;
@@ -218,7 +206,7 @@ namespace Chiota.ViewModels.Chat
                     if (param is ContactBinding contact)
                     {
                         //Show the chat view, or a dialog for a contact request acceptation.
-                        if (contact.IsApproved)
+                        if (contact.Contact.Accepted)
                         {
                             await PushAsync<ChatView>(contact.Contact);
                             return;

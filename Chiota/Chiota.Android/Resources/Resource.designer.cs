@@ -3093,7 +3093,7 @@ namespace Chiota.Droid
 			public const int plus = 2130837824;
 			
 			// aapt resource value: 0x7f020141
-			public const int qr = 2130837825;
+			public const int qrcode = 2130837825;
 			
 			// aapt resource value: 0x7f020142
 			public const int reminder = 2130837826;

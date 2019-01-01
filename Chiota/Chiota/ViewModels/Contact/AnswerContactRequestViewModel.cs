@@ -1,11 +1,13 @@
 ﻿#region References
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Helper;
+using Chiota.Models.Database;
 using Chiota.Resources.Localizations;
 using Chiota.Services.BackgroundServices;
 using Chiota.Services.BackgroundServices.Base;
@@ -25,7 +27,7 @@ namespace Chiota.ViewModels.Contact
         private string _username;
         private ImageSource _imageSource;
 
-        private Pact.Palantir.Entity.Contact _contact;
+        private DbContact _contact;
 
         #endregion
 
@@ -59,7 +61,7 @@ namespace Chiota.ViewModels.Contact
         {
             base.Init(data);
 
-            _contact = data as Pact.Palantir.Entity.Contact;
+            _contact = data as DbContact;
             if (_contact == null)
             {
                 Device.BeginInvokeOnMainThread(async () =>
@@ -72,10 +74,12 @@ namespace Chiota.ViewModels.Contact
 
             Username = _contact.Name;
 
-            if (_contact.ImagePath != null)
-                ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + _contact.ImagePath));
+            if (!string.IsNullOrEmpty(_contact.ImageBase64))
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(_contact.ImageBase64)));
+            else if (!string.IsNullOrEmpty(_contact.ImagePath))
+                ImageSource = ChiotaConstants.IpfsHashGateway + _contact.ImagePath;
             else
-                ImageSource = ImageSource.FromFile("account.png");
+                ImageSource = null;
         }
 
         #endregion

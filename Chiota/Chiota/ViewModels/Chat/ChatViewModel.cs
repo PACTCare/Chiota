@@ -206,25 +206,32 @@ namespace Chiota.ViewModels.Chat
         {
             var task = Task.Run(() =>
             {
-                var messages = Database.Message.GetMessagesByPublicKeyAddress(_contact.PublicKeyAddress);
-                var list = new List<MessageBinding>();
-
-                foreach (var item in messages)
+                try
                 {
-                    var message = new MessageBinding(item.Value, item.Owner, item.Date);
-                    list.Add(message);
-                }
+                    /*var messages = Database.Message.GetMessagesByPublicKeyAddress(_contact.PublicKeyAddress);
+                    var list = new List<MessageBinding>();
 
-                if (MessageList.Count != list.Count)
-                {
-                    var newMessages = new List<MessageBinding>();
-                    for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
+                    foreach (var item in messages)
                     {
-                        newMessages.Add(list[i]);
+                        var message = new MessageBinding(item.Value, item.Owner, item.Date);
+                        list.Add(message);
                     }
 
-                    MessageList.AddRange(newMessages);
-                    MessageListHeight = MessageList.Count * 43;
+                    if (MessageList.Count != list.Count)
+                    {
+                        var newMessages = new List<MessageBinding>();
+                        for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
+                        {
+                            newMessages.Add(list[i]);
+                        }
+
+                        MessageList.AddRange(newMessages);
+                        MessageListHeight = MessageList.Count * 43;
+                    }*/
+                }
+                catch (Exception ex)
+                {
+                    //Ignore
                 }
             });
 

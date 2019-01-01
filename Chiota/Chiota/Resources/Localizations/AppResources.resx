@@ -313,7 +313,7 @@
     <value>Tap on the qr code to copy the address to your clipboard.</value>
   </data>
   <data name="DlgAnswerContactRequest" xml:space="preserve">
-    <value>This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request.</value>
+    <value>This user asked for a contact request. Tap 'Accept' to add him as a new contact or tap 'Decline' to reject the request.</value>
   </data>
   <data name="DlgNoContactRequest" xml:space="preserve">
     <value>No request available.</value>

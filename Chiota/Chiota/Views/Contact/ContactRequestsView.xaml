@@ -23,64 +23,56 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
-                <StackLayout IsVisible="{Binding IsNoRequestExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
-                    <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoContactRequest}" HorizontalOptions="Center"/>
-                    <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoContactRequestDesc}" HorizontalOptions="Center"/>
-                </StackLayout>
+            <!--Requests-->
+            <RelativeLayout Rotation="180">
+                <ContentView IsVisible="{Binding IsNoRequestExist}" Rotation="180"
+                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                    RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+                        <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoContactRequest}" HorizontalOptions="Center"/>
+                        <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoContactRequestDesc}" HorizontalOptions="Center"/>
+                    </StackLayout>
+                </ContentView>
+                <ContentView IsVisible="{Binding IsRequestExist}" Rotation="180"
+                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                    RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}">
+                    <ListView ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HeightRequest="{Binding RequestListHeight}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Spacing="0">
+                                        <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                                <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                                            </StackLayout>
 
-                <!-- Requests -->
-                <ListView IsVisible="{Binding IsRequestExist}" ItemsSource="{Binding RequestList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HeightRequest="{Binding RequestListHeight}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Spacing="0">
-                                    <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                            <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="48" WidthRequest="48"/>
+                                            <StackLayout VerticalOptions="Center" Spacing="2">
+                                                <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
+                                                <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgAnswerContactRequestDesc}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                            </StackLayout>
                                         </StackLayout>
 
-                                        <StackLayout VerticalOptions="Center" Spacing="2">
-                                            <Label Style="{DynamicResource Label14}" Text="{Binding Contact.Name}" VerticalOptions="Center"/>
-                                            <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgAnswerContactRequestDesc}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
-                                        </StackLayout>
+                                        <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
                                     </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
 
-                                    <!-- Separator -->
-                                    <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                        <ListView.Behaviors>
+                            <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                        </ListView.Behaviors>
+                    </ListView>
+                </ContentView>
 
-                    <ListView.Behaviors>
-                        <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
-                    </ListView.Behaviors>
+                <Frame Style="{DynamicResource RoundedFrame32}" Margin="16" Padding="20" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Image Source="qrcode.png" Rotation="180" HeightRequest="24" WidthRequest="24"/>
 
-                </ListView>
-
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="64"/>
-                        <RowDefinition Height="8"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="64"/>
-                        <ColumnDefinition Width="8"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Frame Grid.Row="1" Grid.Column="1" Style="{DynamicResource RoundedFrame32}" Padding="16" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BackgroundColor="{DynamicResource ButtonColor}">
-                        <Image Source="qr.png" HeightRequest="24" WidthRequest="24" Margin="4"/>
-
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ContactAddressCommand}"/>
-                        </Frame.GestureRecognizers>
-                    </Frame>
-                </Grid>
-            </Grid>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ContactAddressCommand}"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+            </RelativeLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

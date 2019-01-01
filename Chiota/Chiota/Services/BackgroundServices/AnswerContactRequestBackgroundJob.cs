@@ -30,7 +30,7 @@ namespace Chiota.Services.BackgroundServices
         private INotification _notification;
 
         private DbUser _user;
-        private Contact _contact;
+        private DbContact _contact;
         private bool _isAccepted;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
@@ -61,7 +61,7 @@ namespace Chiota.Services.BackgroundServices
                         _user = user;
                         _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
                         break;
-                    case Contact contact:
+                    case DbContact contact:
                         _contact = contact;
                         break;
                     case bool isAccepted:

@@ -214,7 +214,7 @@ namespace Chiota.Resources.Localizations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This user asked for a contact request. Tap Accept to add him as a new contact or tap Decline to reject the request..
+        ///   Looks up a localized string similar to This user asked for a contact request. Tap &apos;Accept&apos; to add him as a new contact or tap &apos;Decline&apos; to reject the request..
         /// </summary>
         internal static string DlgAnswerContactRequest {
             get {

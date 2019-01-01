@@ -7,6 +7,8 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.Binding;
+using Chiota.Models.Database;
+using Chiota.Services.Ipfs;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Contact;
 using Xamarin.Forms;
@@ -147,23 +149,30 @@ namespace Chiota.ViewModels.Contact
                     var contactRequests = new List<ContactBinding>();
 
                     var requests = Database.Contact.GetUnacceptedContacts();
+
+                    /*if (requests == null || requests.Count == 0)
+                    {
+                        requests = new List<DbContact>();
+                        for (var i = 0; i < 16; i++)
+                        {
+                            requests.Add(new DbContact()
+                            {
+                                Name = "Test",
+                                ChatKeyAddress = "QRUJNINNFGOUVRSVHHIFOVDPWYMZTUQZOSFVUDFHBQGAIVMFQHESCIRWGSOM9GRKRXIWWGGBNUFJGLXWE",
+                                ChatAddress = "HRIGIBGTKNHHFOVJWFULBHHIOEVBCAGYKMEN9HGLLNKUGRZMNKGSAY9KZEDWSYICPJYQZPNGMBJNVUGNB",
+                                ContactAddress = "JVBKBETSMRYWLBMIAOICHG9JYBMNVSJTPMYTLCNANGOULMKMJGIBLQQBPXNCZYMMEZONPVFDZKDVB99MD",
+                                PublicKeyAddress = "EL9XDHECBKNKAZJMIWLCMZNURJZOZEPQEMVMLHSDJCXBIBKOFELLDMLHWZGNV9GOUSNSJCU9HKKCGPVTV",
+                                Accepted = false
+                            });
+                        }
+                    }*/
+
                     if (requests != null && requests.Count > 0)
                     {
                         foreach (var item in requests)
                         {
                             if (item.Name == null || item.ChatAddress == null || item.ChatKeyAddress == null || item.ContactAddress == null) continue;
-
-                            var contact = new Pact.Palantir.Entity.Contact()
-                            {
-                                Name = item.Name,
-                                ImagePath = item.ImagePath,
-                                ChatAddress = item.ChatAddress,
-                                ChatKeyAddress = item.ChatKeyAddress,
-                                ContactAddress = item.ContactAddress,
-                                PublicKeyAddress = item.PublicKeyAddress,
-                                Rejected = !item.Accepted
-                            };
-                            contactRequests.Add(new ContactBinding(contact, false, item.ImageBase64));
+                            contactRequests.Add(new ContactBinding(item));
                         }
 
                         //Update the request list.
@@ -228,7 +237,7 @@ namespace Chiota.ViewModels.Contact
                     if (param is ContactBinding contact)
                     {
                         //Show the chat view, or a dialog for a contact request acceptation.
-                        if (!contact.IsApproved)
+                        if (!contact.Contact.Accepted)
                         {
                             await PushAsync<AnswerContactRequestView>(contact.Contact);
                             return;

@@ -13,6 +13,7 @@ using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.Database;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Iota;
+using Chiota.Services.Ipfs;
 using Chiota.Services.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -96,7 +97,7 @@ namespace Chiota.Services.BackgroundServices
                 if (response.Code == ResponseCode.Success)
                 {
                     //Handle contact requests for the user.
-                    await Task.Run(() =>
+                    await Task.Run(async() =>
                     {
                         if (response.PendingContactRequests == null ||
                             response.PendingContactRequests.Count == 0) return;
@@ -111,11 +112,17 @@ namespace Chiota.Services.BackgroundServices
 
                             if (contact == null)
                             {
+                                //If there is a image path for ipfs load the image and save it as base64 in the database for fast loading.
+                                string imageBase64 = null;
+                                if (!string.IsNullOrEmpty(item.ImagePath))
+                                    imageBase64 = await new IpfsHelper().GetStringAsync(item.ImagePath);
+
                                 //Add the new contact request to the database and show a notification.
                                 var request = new DbContact()
                                 {
                                     Name = item.Name,
                                     ImagePath = item.ImagePath,
+                                    ImageBase64 = imageBase64,
                                     ContactAddress = item.ContactAddress,
                                     PublicKeyAddress = item.PublicKeyAddress,
                                     ChatKeyAddress = item.ChatKeyAddress,
@@ -123,7 +130,7 @@ namespace Chiota.Services.BackgroundServices
                                     Accepted = false
                                 };
 
-                                _notification.Show(AppResources.NotifyNewContactRequest, item.Name);
+                                 _notification.Show(AppResources.NotifyNewContactRequest, item.Name);
 
                                 //Add the contact and chat for the contact as an object into the database.
                                 EncryptModel(request);
