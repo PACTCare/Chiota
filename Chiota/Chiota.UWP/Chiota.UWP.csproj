@@ -181,7 +181,8 @@
     <Content Include="addgroup.png" />
     <Content Include="addperson.png" />
     <Content Include="done_white.png" />
-    <Content Include="qrcode.png" />
+    <Content Include="qrcode_24px.png" />
+    <Content Include="qrcode_64px.png" />
     <Content Include="search.png" />
     <Content Include="emoticon.png" />
     <Content Include="keyboard_voice.png" />

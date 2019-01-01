@@ -65,7 +65,7 @@
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Style="{DynamicResource BaseButton}" Grid.Row="1" Grid.Column="1" CornerRadius="32" Image="qr.png" Command="{Binding QrCodeCommand}"/>
+                            <Button Style="{DynamicResource BaseButton}" Grid.Row="1" Grid.Column="1" CornerRadius="32" HeightRequest="24" WidthRequest="24" Image="qrcode_24px.png" Command="{Binding QrCodeCommand}"/>
                         </Grid>
                     </Grid>
 

@@ -24,61 +24,51 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-
-            <!--Chats-->
-            <RelativeLayout Rotation="180">
-                <ContentView IsVisible="{Binding IsNoChatExist}"
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}">
-                    <StackLayout Rotation="180" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
-                        <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoChat}" HorizontalOptions="Center"/>
-                        <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoChatAction}" HorizontalOptions="Center"/>
-                    </StackLayout>
-                </ContentView>
-                <ContentView IsVisible="{Binding IsChatExist}"
-                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                    RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}">
-                    <ListView ItemsSource="{Binding ChatList}" Rotation="180" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HeightRequest="{Binding ChatListHeight}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout Spacing="0">
-                                        <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                            <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                                <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
-                                            </StackLayout>
-
-                                            <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
-                                                <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                                                    <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
-                                                    <StackLayout HorizontalOptions="CenterAndExpand"/>
-                                                    <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
-                                                </StackLayout>
-                                                <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
-                                            </StackLayout>
+            <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0">
+                <StackLayout IsVisible="{Binding IsNoChatExist}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,1,1,1">
+                    <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoChat}" HorizontalOptions="Center"/>
+                    <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoChatAction}" HorizontalOptions="Center"/>
+                </StackLayout>
+                <!--HeightRequest="{Binding ChatListHeight}"-->
+                <ListView IsVisible="{Binding IsChatExist}" ItemsSource="{Binding ChatList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,1,1,1">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Spacing="0">
+                                    <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                            <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
                                         </StackLayout>
 
-                                        <!-- Separator -->
-                                        <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
+                                        <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
+                                            <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                                                <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                                <StackLayout HorizontalOptions="CenterAndExpand"/>
+                                                <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
+                                            </StackLayout>
+                                            <Label Style="{DynamicResource Label14}" Text="{Binding LastMessage}" VerticalOptions="Center" LineBreakMode="TailTruncation" Opacity="0.6"/>
+                                        </StackLayout>
                                     </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
 
-                        <ListView.Behaviors>
-                            <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
-                        </ListView.Behaviors>
-                    </ListView>
-                </ContentView>
+                                    <!-- Separator -->
+                                    <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="{DynamicResource SeparatorColor}" Margin="64, 0, 8, 0"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
 
-                <Frame Style="{DynamicResource RoundedFrame32}" Margin="16" Padding="20" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Image Source="add.png" Rotation="180" HeightRequest="24" WidthRequest="24"/>
+                    <ListView.Behaviors>
+                        <behaviors:ListViewCommandBehavior Command="{Binding TapCommand}"/>
+                    </ListView.Behaviors>
+                </ListView>
+                <Frame Style="{DynamicResource RoundedFrame32}" Margin="20" Padding="18" BackgroundColor="{DynamicResource ButtonColor}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1.0,1.0,-1,-1">
+                    <Image Source="add.png" HeightRequest="28" WidthRequest="28" Margin="0, 0, 2, 2"/>
 
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ContactsCommand}"/>
                     </Frame.GestureRecognizers>
                 </Frame>
-            </RelativeLayout>
+            </AbsoluteLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

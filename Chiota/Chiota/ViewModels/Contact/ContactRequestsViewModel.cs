@@ -21,11 +21,7 @@ namespace Chiota.ViewModels.Contact
     {
         #region Attributes
 
-        private const int RequestItemHeight = 65;
-
         private List<ContactBinding> _requestList;
-
-        private int _requestListHeight;
 
         private bool _isRequestExist;
         private bool _isNoRequestExist;
@@ -43,16 +39,6 @@ namespace Chiota.ViewModels.Contact
             {
                 _requestList = value;
                 OnPropertyChanged(nameof(RequestList));
-            }
-        }
-
-        public int RequestListHeight
-        {
-            get => _requestListHeight;
-            set
-            {
-                _requestListHeight = value;
-                OnPropertyChanged(nameof(RequestListHeight));
             }
         }
 
@@ -150,23 +136,6 @@ namespace Chiota.ViewModels.Contact
 
                     var requests = Database.Contact.GetUnacceptedContacts();
 
-                    /*if (requests == null || requests.Count == 0)
-                    {
-                        requests = new List<DbContact>();
-                        for (var i = 0; i < 16; i++)
-                        {
-                            requests.Add(new DbContact()
-                            {
-                                Name = "Test",
-                                ChatKeyAddress = "QRUJNINNFGOUVRSVHHIFOVDPWYMZTUQZOSFVUDFHBQGAIVMFQHESCIRWGSOM9GRKRXIWWGGBNUFJGLXWE",
-                                ChatAddress = "HRIGIBGTKNHHFOVJWFULBHHIOEVBCAGYKMEN9HGLLNKUGRZMNKGSAY9KZEDWSYICPJYQZPNGMBJNVUGNB",
-                                ContactAddress = "JVBKBETSMRYWLBMIAOICHG9JYBMNVSJTPMYTLCNANGOULMKMJGIBLQQBPXNCZYMMEZONPVFDZKDVB99MD",
-                                PublicKeyAddress = "EL9XDHECBKNKAZJMIWLCMZNURJZOZEPQEMVMLHSDJCXBIBKOFELLDMLHWZGNV9GOUSNSJCU9HKKCGPVTV",
-                                Accepted = false
-                            });
-                        }
-                    }*/
-
                     if (requests != null && requests.Count > 0)
                     {
                         foreach (var item in requests)
@@ -177,17 +146,13 @@ namespace Chiota.ViewModels.Contact
 
                         //Update the request list.
                         if (RequestList == null || RequestList.Count != contactRequests.Count)
-                        {
                             RequestList = contactRequests;
-                            RequestListHeight = contactRequests.Count * RequestItemHeight;
-                        }
                     }
                     else
                     {
                         //Reset the request list.
                         RequestList = null;
                         IsRequestExist = false;
-                        RequestListHeight = 0;
                     }
 
                     //Set flag to show the contact requests.

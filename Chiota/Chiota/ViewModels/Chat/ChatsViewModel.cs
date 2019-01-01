@@ -21,11 +21,7 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private const int ChatItemHeight = 73;
-
         private List<ChatBinding> _chatList;
-
-        private int _chatListHeight;
 
         private bool _isChatExist;
         private bool _isNoChatExist;
@@ -43,16 +39,6 @@ namespace Chiota.ViewModels.Chat
             {
                 _chatList = value;
                 OnPropertyChanged(nameof(ChatList));
-            }
-        }
-
-        public int ChatListHeight
-        {
-            get => _chatListHeight;
-            set
-            {
-                _chatListHeight = value;
-                OnPropertyChanged(nameof(ChatListHeight));
             }
         }
 
@@ -174,10 +160,7 @@ namespace Chiota.ViewModels.Chat
                     //Update the chat list.
                     var changed = IsChatListChanged(chats);
                     if (changed)
-                    {
                         ChatList = chats;
-                        ChatListHeight = chats.Count * ChatItemHeight;
-                    }
 
                     //Set flag to show the chats.
                     IsChatExist = chats.Count > 0;

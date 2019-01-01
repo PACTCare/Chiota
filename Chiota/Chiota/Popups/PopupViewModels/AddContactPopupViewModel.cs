@@ -192,6 +192,7 @@ namespace Chiota.Popups.PopupViewModels
                                     });
 
                                 await PopPopupAsync();
+                                await PopPopupAsync();
 
                                 switch (response.Code)
                                 {
@@ -211,6 +212,7 @@ namespace Chiota.Popups.PopupViewModels
                             }
                             catch (Exception)
                             {
+                                await PopPopupAsync();
                                 await PopPopupAsync();
                                 await new UnknownException(new ExcInfo()).ShowAlertAsync();
 
