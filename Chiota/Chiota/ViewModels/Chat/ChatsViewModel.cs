@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Chiota.Exceptions;
 using Chiota.Extensions;
 using Chiota.Models.Binding;
+using Chiota.Models.Database;
 using Chiota.ViewModels.Base;
 using Chiota.Views.Chat;
 using Chiota.Views.Contact;
@@ -128,7 +129,7 @@ namespace Chiota.ViewModels.Chat
         private bool UpdateView()
         {
             //Show the contact requests and the chats of the user.
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -139,22 +140,12 @@ namespace Chiota.ViewModels.Chat
                     foreach (var item in contacts)
                     {
                         //Get the last message of the contact.
-                        var lastMessage = Database.Message.GetLastMessagesByPublicKeyAddress(item.PublicKeyAddress);
+                        var lastMessage = Database.Message.GetLastMessagesByChatAddress(item.ChatAddress);
 
                         if (lastMessage == null) continue;
 
                         //If there is a message, load the chat of the contact.
-                        var contact = new Pact.Palantir.Entity.Contact()
-                        {
-                            Name = item.Name,
-                            ImagePath = item.ImagePath,
-                            ChatAddress = item.ChatAddress,
-                            ChatKeyAddress = item.ChatKeyAddress,
-                            ContactAddress = item.ContactAddress,
-                            PublicKeyAddress = item.PublicKeyAddress,
-                            Rejected = !item.Accepted
-                        };
-                        chats.Add(new ChatBinding(contact, lastMessage.Value, lastMessage.Date));
+                        chats.Add(new ChatBinding(item, lastMessage.Value, lastMessage.Date));
                     }
 
                     //Update the chat list.
@@ -166,10 +157,9 @@ namespace Chiota.ViewModels.Chat
                     IsChatExist = chats.Count > 0;
                     IsNoChatExist = !(chats.Count > 0);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    //Unknown exception during update the chats view.
-                    await new UnknownException(new ExcInfo()).ShowAlertAsync();
+                    //Ignore
                     _isUpdating = false;
                 }
             });

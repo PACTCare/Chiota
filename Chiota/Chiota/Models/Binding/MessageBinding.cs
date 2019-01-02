@@ -1,6 +1,7 @@
 ﻿#region References
 
 using System;
+using Chiota.Models.Database;
 using Chiota.Models.Database.Base;
 
 #endregion
@@ -15,17 +16,20 @@ namespace Chiota.Models.Binding
 
         public DateTime DateTime { get; }
 
+        public int Status { get; } 
+            
         public bool IsOwner { get; }
 
         #endregion
 
         #region Constructors
 
-        public MessageBinding(string value, bool isOwner, DateTime dateTime)
+        public MessageBinding(string value, DateTime dateTime, MessageStatus status, bool isOwner)
         {
             Value = value;
-            IsOwner = isOwner;
             DateTime = dateTime;
+            Status = (int) status;
+            IsOwner = isOwner;
         }
 
         #endregion

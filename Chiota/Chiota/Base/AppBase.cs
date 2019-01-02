@@ -88,7 +88,7 @@ namespace Chiota.Base
                 //Start the background service for receiving notifications of the tangle,
                 //to update the user outside of the app.
                 DependencyService.Get<IBackgroundJobWorker>().Run<ContactRequestBackgroundJob>(UserService.CurrentUser);
-                DependencyService.Get<IBackgroundJobWorker>().Run<ChatMessageBackgroundJob>(UserService.CurrentUser);
+                DependencyService.Get<IBackgroundJobWorker>().Run<ReceiveMessageBackgroundJob>(UserService.CurrentUser);
             }
             catch (Exception ex)
             {

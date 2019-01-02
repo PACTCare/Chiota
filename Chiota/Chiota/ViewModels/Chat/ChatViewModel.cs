@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Chiota.Controls.InfiniteScrolling;
 using Chiota.Models.Binding;
-using Chiota.Services.DependencyInjection;
+using Chiota.Models.Database;
+using Chiota.Services.BackgroundServices;
+using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
-using Pact.Palantir.Usecase;
-using Pact.Palantir.Usecase.SendMessage;
-using Tangle.Net.Entity;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
 
@@ -23,10 +22,11 @@ namespace Chiota.ViewModels.Chat
     {
         #region Attributes
 
-        private const int MessageSize = 64;
+        //Max count messages for reloading for the infinitive scroll view. 
+        private const int MessageSize = 32;
 
         private IAsymmetricKeyPair _chatKeyPair;
-        private Pact.Palantir.Entity.Contact _contact;
+        private DbContact _contact;
         private string _message;
         private InfiniteScrollCollection<MessageBinding> _messageList;
         private MessageBinding _lastMessage;
@@ -42,7 +42,7 @@ namespace Chiota.ViewModels.Chat
 
         #region Properties
 
-        public Pact.Palantir.Entity.Contact Contact
+        public DbContact Contact
         {
             get => _contact;
             set
@@ -159,10 +159,10 @@ namespace Chiota.ViewModels.Chat
         {
             base.Init(data);
 
-            if (!(data is Pact.Palantir.Entity.Contact)) return;
+            if (!(data is DbContact)) return;
 
             //Set the contact property.
-            Contact = (Pact.Palantir.Entity.Contact)data;
+            Contact = (DbContact)data;
 
             //Load the first package of message from the database.
             LoadMessages();
@@ -208,14 +208,11 @@ namespace Chiota.ViewModels.Chat
             {
                 try
                 {
-                    /*var messages = Database.Message.GetMessagesByPublicKeyAddress(_contact.PublicKeyAddress);
+                    var messages = Database.Message.GetMessagesByChatAddress(_contact.ChatAddress);
                     var list = new List<MessageBinding>();
 
                     foreach (var item in messages)
-                    {
-                        var message = new MessageBinding(item.Value, item.Owner, item.Date);
-                        list.Add(message);
-                    }
+                        list.Add(new MessageBinding(item.Value, item.Date, (MessageStatus)item.Status, item.Owner));
 
                     if (MessageList.Count != list.Count)
                     {
@@ -227,9 +224,9 @@ namespace Chiota.ViewModels.Chat
 
                         MessageList.AddRange(newMessages);
                         MessageListHeight = MessageList.Count * 43;
-                    }*/
+                    }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //Ignore
                 }
@@ -244,27 +241,33 @@ namespace Chiota.ViewModels.Chat
 
         #region SendMessage
 
-        private async Task<bool> SendMessageAsync(string message)
+        private void SendMessage(string value)
         {
-            if (string.IsNullOrEmpty(message))
-                return false;
+            if (string.IsNullOrEmpty(value))
+                return;
 
-            var tmp = message;
-            Message = string.Empty;
-
-            var response = await DependencyResolver.Resolve<IUsecaseInteractor<SendMessageRequest, SendMessageResponse>>().ExecuteAsync(new SendMessageRequest
+            try
             {
-                ChatAddress = new Address(Contact.ChatAddress),
-                ChatKeyAddress = new Address(Contact.ChatKeyAddress),
-                UserKeyPair = UserService.CurrentUser.NtruKeyPair,
-                UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                Message = tmp
-            });
+                //Add the new message to the database.
+                var message = new DbMessage()
+                {
+                    ChatKeyAddress = Contact.ChatKeyAddress,
+                    ChatAddress = Contact.ChatAddress,
+                    Value = value,
+                    Date = DateTime.Now,
+                    Status = (int) MessageStatus.Written,
+                    Signature = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30),
+                    Owner = true
+                };
+                message = Database.Message.AddObject(message);
 
-            if (response.Code == ResponseCode.Success)
-                return true;
-
-            return false;
+                //Start a new background job to send a message. 
+                DependencyService.Get<IBackgroundJobWorker>().Run<SendMessageBackgroundJob>(UserService.CurrentUser, message);
+            }
+            catch (Exception)
+            {
+                //Ignore
+            }
         }
 
         #endregion
@@ -279,13 +282,13 @@ namespace Chiota.ViewModels.Chat
         {
             get
             {
-                return new Command(async () =>
+                return new Command(() =>
                 {
                     if (string.IsNullOrEmpty(Message))
                         return;
 
                     //Send new message;
-                    await SendMessageAsync(Message);
+                    SendMessage(Message);
                 });
             }
         }

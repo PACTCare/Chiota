@@ -29,7 +29,7 @@
                     <Label Style="{DynamicResource Label16}" Text="{extensions:Translate DlgNoChat}" HorizontalOptions="Center"/>
                     <Label Style="{DynamicResource Label12}" Text="{extensions:Translate DlgNoChatAction}" HorizontalOptions="Center"/>
                 </StackLayout>
-                <!--HeightRequest="{Binding ChatListHeight}"-->
+
                 <ListView IsVisible="{Binding IsChatExist}" ItemsSource="{Binding ChatList}" HasUnevenRows="True" SelectionMode="None" SeparatorVisibility="None" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,1,1,1">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -37,12 +37,12 @@
                                 <StackLayout Spacing="0">
                                     <StackLayout Orientation="Horizontal" Padding="8, 8, 16, 8" Spacing="8" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                            <abstractions:CircleImage Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
+                                            <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}" HeightRequest="56" WidthRequest="56"/>
                                         </StackLayout>
 
                                         <StackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="4">
                                             <StackLayout Orientation="Horizontal" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                                                <Label Style="{DynamicResource Label16}" Text="{Binding Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                                                <Label Style="{DynamicResource Label16}" Text="{Binding Contact.Name}" VerticalOptions="Center" HorizontalOptions="Start"/>
                                                 <StackLayout HorizontalOptions="CenterAndExpand"/>
                                                 <Label Style="{DynamicResource Label12}" Text="{Binding LastMessageDateTime, Converter={StaticResource DateToString}}" VerticalOptions="Center" Opacity="0.6" HorizontalOptions="End"/>
                                             </StackLayout>

@@ -28,7 +28,7 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ChatMessageBackgroundJob : BaseSecurityBackgroundJob
+    public class ReceiveMessageBackgroundJob : BaseSecurityBackgroundJob
     {
         #region Attributes
 
@@ -82,6 +82,7 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
+                //TODO For Future use chat, after refactoring Palantir (Differ contact and chat).
                 //Get all accepted contacts of the user.
                 var contacts = _database.Query(_contactTableMapping, "SELECT * FROM " + _contactTableMapping.TableName + " WHERE " + nameof(DbContact.Accepted) + "=1 AND " + nameof(DbContact.ChatKeyAddress) + " IS NOT NULL AND " + nameof(DbContact.ContactAddress) + " IS NOT NULL AND " + nameof(DbContact.Name) + " IS NOT NULL;").Cast<DbContact>().ToList();
 
@@ -126,7 +127,6 @@ namespace Chiota.Services.BackgroundServices
                         //Add the new message to the database and show a notification.
                         var message = new DbMessage()
                         {
-                            PublicKeyAddress = contact.PublicKeyAddress,
                             ChatAddress = response.CurrentChatAddress.Value,
                             Value = item.Message,
                             Date = item.Date,
@@ -135,13 +135,12 @@ namespace Chiota.Services.BackgroundServices
                         };
 
                         //Show a notification, if the user is not the sender.
-                        if (!message.Owner)
+                        if (!owner)
                             _notification.Show(contact.Name, message.Value);
 
                         EncryptModel(message);
                         _database.Insert(message);
                     }
-
                     return true;
                 }
 

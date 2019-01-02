@@ -1,9 +1,10 @@
 ﻿#region References
 
 using System;
+using System.IO;
 using Chiota.Helper;
+using Chiota.Models.Database;
 using Chiota.Models.Database.Base;
-using Pact.Palantir.Entity;
 using Xamarin.Forms;
 
 #endregion
@@ -14,7 +15,7 @@ namespace Chiota.Models.Binding
     {
         #region Properties
 
-        public string Name { get; }
+        public DbContact Contact { get; set; }
 
         public string LastMessage { get; set; }
 
@@ -22,24 +23,23 @@ namespace Chiota.Models.Binding
 
         public ImageSource ImageSource { get; }
 
-        public Contact Contact { get; }
-
         #endregion
 
         #region Constructors
 
-        public ChatBinding(Contact contact, string lastMessage, DateTime lastMessageDateTime)
+        public ChatBinding(DbContact contact, string lastMessage, DateTime lastMessageDateTime)
         {
-            Name = contact.Name;
+            Contact = contact;
+
             LastMessage = lastMessage;
             LastMessageDateTime = lastMessageDateTime;
 
-            if (string.IsNullOrEmpty(contact.ImagePath))
-                ImageSource = null;
+            if (!string.IsNullOrEmpty(contact.ImageBase64))
+                ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(contact.ImageBase64)));
+            else if (!string.IsNullOrEmpty(contact.ImagePath))
+                ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
             else
-                ImageSource = ImageSource.FromUri(new Uri(ChiotaConstants.IpfsHashGateway + contact.ImagePath));
-
-            Contact = contact;
+                ImageSource = null;
         }
 
         #endregion
