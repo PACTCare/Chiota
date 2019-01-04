@@ -396,4 +396,7 @@
   <data name="NotifyFailedAnswerContactRequest" xml:space="preserve">
     <value>Failed answer contact request.</value>
   </data>
+  <data name="CmnInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
 </root>

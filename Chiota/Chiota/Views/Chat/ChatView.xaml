@@ -10,9 +10,10 @@
              xmlns:converter="clr-namespace:Chiota.Converter;assembly=Chiota"
              xmlns:infiniteScrolling="clr-namespace:Chiota.Controls.InfiniteScrolling;assembly=Chiota"
              xmlns:base="clr-namespace:Chiota.ViewModels.Base;assembly=Chiota"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:behaviors="clr-namespace:Chiota.Behaviors;assembly=Chiota"
              mc:Ignorable="design"
-             design:DataContext="{design:DesignInstance chat:ChatViewModel}"
-             Title="{Binding Contact.Name}">
+             design:DataContext="{design:DesignInstance chat:ChatViewModel}">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -21,6 +22,9 @@
             <converter:MessageIsOwnerToLayoutOptionConverter x:Key="BoolToLayoutOptions"/>
             <converter:MessageDateTimeToDateStringConverter x:Key="DateToString"/>
             <converter:MessageDateTimeToTimeStringConverter x:Key="TimeToString"/>
+
+            <converter:ProfileImageSourceConverter x:Key="ProfileImageSource"/>
+            <converter:ProfileImageSourceOpacityConverter x:Key="ProfileImageSourceToOpacity"/>
 
             <Style x:Key="MessageEntry" TargetType="Entry">
                 <Setter Property="TextColor" Value="{DynamicResource TextColor}"/>
@@ -31,29 +35,48 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Center" Spacing="16">
+            <abstractions:CircleImage Aspect="AspectFill" Source="{Binding ChatBinding.ImageSource, Converter={StaticResource ProfileImageSource}}" Opacity="{Binding ChatBinding.ImageSource, Converter={StaticResource ProfileImageSourceToOpacity}}">
+                <abstractions:CircleImage.HeightRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="Android, iOS">40</On>
+                        <On Platform="UWP">32</On>
+                    </OnPlatform>
+                </abstractions:CircleImage.HeightRequest>
+                <abstractions:CircleImage.WidthRequest>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="Android, iOS">40</On>
+                        <On Platform="UWP">32</On>
+                    </OnPlatform>
+                </abstractions:CircleImage.WidthRequest>
+            </abstractions:CircleImage>
+            <Label Text="{Binding ChatBinding.Contact.Name}" TextColor="{DynamicResource BrightTextColor}" FontSize="18" VerticalOptions="Center"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Secondary" Text="{extensions:Translate CmnInfo}" Command="{Binding InfoCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="4">
-                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" HasUnevenRows="True" CachingStrategy="RecycleElement" VerticalOptions="StartAndExpand" HeightRequest="{Binding MessageListHeight}" SeparatorVisibility="None" Rotation="180">
-                    <ListView.Header>
-                        <StackLayout>
-                            <Label Text="Loading" IsVisible="{Binding IsBusy}"/>
-                        </StackLayout>
-                    </ListView.Header>
-
+            <!--HeightRequest="{Binding MessageListHeight}"-->
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="4">
+                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" SeparatorVisibility="None" HasUnevenRows="True" CachingStrategy="RecycleElement" Rotation="180">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell IsEnabled="False">
                                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0, 4" Spacing="8" Rotation="180">
-                                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#bdbdbd" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsVisible}">
+                                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#bdbdbd" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsDateVisible}">
                                         <StackLayout Padding="8">
-                                            <Label Style="{DynamicResource Label12}" Text="{Binding DateTime, Converter={StaticResource DateToString}}" TextColor="#424242"/>
+                                            <Label Style="{DynamicResource Label12}" Text="{Binding Date, Converter={StaticResource DateToString}}" TextColor="#424242"/>
                                         </StackLayout>
                                     </Frame>
                                     <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{Binding IsOwner, Converter={StaticResource BoolToColor}}" HorizontalOptions="{Binding IsOwner, Converter={StaticResource BoolToLayoutOptions}}">
                                         <StackLayout Orientation="Horizontal" Padding="8" Spacing="4">
                                             <Label Style="{DynamicResource Label14}" Text="{Binding Value}" LineBreakMode="WordWrap" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalOptions="Center"/>
-                                            <Label FontSize="10" TextColor="#757575" Text="{Binding DateTime, Converter={StaticResource TimeToString}}" VerticalOptions="EndAndExpand"/>
+                                            <Label FontSize="10" TextColor="#757575" Text="{Binding Date, Converter={StaticResource TimeToString}}" VerticalOptions="EndAndExpand"/>
                                         </StackLayout>
                                     </Frame>
                                 </StackLayout>

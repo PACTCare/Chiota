@@ -27,12 +27,9 @@ namespace Chiota.Models.Binding
 
         #region Constructors
 
-        public ChatBinding(DbContact contact, string lastMessage, DateTime lastMessageDateTime)
+        public ChatBinding(DbContact contact)
         {
             Contact = contact;
-
-            LastMessage = lastMessage;
-            LastMessageDateTime = lastMessageDateTime;
 
             if (!string.IsNullOrEmpty(contact.ImageBase64))
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(contact.ImageBase64)));
@@ -40,6 +37,12 @@ namespace Chiota.Models.Binding
                 ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
             else
                 ImageSource = null;
+        }
+
+        public ChatBinding(DbContact contact, string lastMessage, DateTime lastMessageDateTime) : this(contact)
+        {
+            LastMessage = lastMessage;
+            LastMessageDateTime = lastMessageDateTime;
         }
 
         #endregion

@@ -25,30 +25,25 @@ namespace Chiota.ViewModels.Chat
         //Max count messages for reloading for the infinitive scroll view. 
         private const int MessageSize = 32;
 
-        private IAsymmetricKeyPair _chatKeyPair;
-        private DbContact _contact;
-        private string _message;
+        private ChatBinding _chatBinding;
         private InfiniteScrollCollection<MessageBinding> _messageList;
-        private MessageBinding _lastMessage;
-        private ImageSource _keyboardImageSource;
 
+        private string _message;
         private int _messageListHeight;
 
-        private bool _isBusy;
-        private bool _isKeyboardDefault;
         private bool _isLoadingMessages;
 
         #endregion
 
         #region Properties
 
-        public DbContact Contact
+        public ChatBinding ChatBinding
         {
-            get => _contact;
+            get => _chatBinding;
             set
             {
-                _contact = value;
-                OnPropertyChanged(nameof(Contact));
+                _chatBinding = value;
+                OnPropertyChanged(nameof(ChatBinding));
             }
         }
 
@@ -72,26 +67,6 @@ namespace Chiota.ViewModels.Chat
             }
         }
 
-        public MessageBinding LastMessage
-        {
-            get => _lastMessage;
-            set
-            {
-                _lastMessage = value;
-                OnPropertyChanged(nameof(LastMessage));
-            }
-        }
-
-        public ImageSource KeyboardImageSource
-        {
-            get => _keyboardImageSource;
-            set
-            {
-                _keyboardImageSource = value;
-                OnPropertyChanged(nameof(KeyboardImageSource));
-            }
-        }
-
         public int MessageListHeight
         {
             get => _messageListHeight;
@@ -99,16 +74,6 @@ namespace Chiota.ViewModels.Chat
             {
                 _messageListHeight = value;
                 OnPropertyChanged(nameof(MessageListHeight));
-            }
-        }
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                _isBusy = value;
-                OnPropertyChanged(nameof(IsBusy));
             }
         }
 
@@ -124,14 +89,14 @@ namespace Chiota.ViewModels.Chat
             {
                 OnLoadMore = async () =>
                 {
-                    IsBusy = true;
+                    //IsBusy = true;
 
                     //Load more messages.
                     /*var messages = MessageList.Count / MessageSize;
                     var messageService = DependencyResolver.Resolve<MessageService>();
                     var items = await messageService.GetMessagesAsync(Contact, _chatKeyPair, messages, MessageSize);*/
 
-                    IsBusy = false;
+                    //IsBusy = false;
 
                     return null;
                 },
@@ -162,7 +127,7 @@ namespace Chiota.ViewModels.Chat
             if (!(data is DbContact)) return;
 
             //Set the contact property.
-            Contact = (DbContact)data;
+            ChatBinding = new ChatBinding((DbContact)data);
 
             //Load the first package of message from the database.
             LoadMessages();
@@ -176,8 +141,8 @@ namespace Chiota.ViewModels.Chat
         {
             base.ViewIsAppearing();
 
-            KeyboardImageSource = ImageSource.FromFile("emoticon.png");
-            _isKeyboardDefault = true;
+            //KeyboardImageSource = ImageSource.FromFile("emoticon.png");
+            //_isKeyboardDefault = true;
 
             //Start event for loading messages.
             _isLoadingMessages = true;
@@ -208,11 +173,23 @@ namespace Chiota.ViewModels.Chat
             {
                 try
                 {
-                    var messages = Database.Message.GetMessagesByChatAddress(_contact.ChatAddress);
+                    var messages = Database.Message.GetMessagesByChatAddress(_chatBinding.Contact.ChatAddress);
                     var list = new List<MessageBinding>();
+                    var dateCounter = 0;
 
                     foreach (var item in messages)
-                        list.Add(new MessageBinding(item.Value, item.Date, (MessageStatus)item.Status, item.Owner));
+                    {
+                        //Check, if it is necessary to show the date above the message in the ui.
+                        var isSameDate = false;
+
+                        if (list.Count > 0)
+                            isSameDate = list[list.Count - 1].Date.Date == item.Date.Date;
+
+                        if (!isSameDate)
+                            dateCounter++;
+
+                        list.Add(new MessageBinding(item.Value, item.Date, (MessageStatus)item.Status, item.Owner, !isSameDate));
+                    }
 
                     if (MessageList.Count != list.Count)
                     {
@@ -223,7 +200,7 @@ namespace Chiota.ViewModels.Chat
                         }
 
                         MessageList.AddRange(newMessages);
-                        MessageListHeight = MessageList.Count * 43;
+                        //MessageListHeight = MessageList.Count * 43;
                     }
                 }
                 catch (Exception)
@@ -251,8 +228,8 @@ namespace Chiota.ViewModels.Chat
                 //Add the new message to the database.
                 var message = new DbMessage()
                 {
-                    ChatKeyAddress = Contact.ChatKeyAddress,
-                    ChatAddress = Contact.ChatAddress,
+                    ChatKeyAddress = ChatBinding.Contact.ChatKeyAddress,
+                    ChatAddress = ChatBinding.Contact.ChatAddress,
                     Value = value,
                     Date = DateTime.Now,
                     Status = (int) MessageStatus.Written,
@@ -275,6 +252,21 @@ namespace Chiota.ViewModels.Chat
         #endregion
 
         #region Commands
+
+        #region Info
+
+        public ICommand InfoCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+
+                });
+            }
+        }
+
+        #endregion
 
         #region Action
 

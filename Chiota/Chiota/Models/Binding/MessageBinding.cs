@@ -14,22 +14,25 @@ namespace Chiota.Models.Binding
 
         public string Value { get; }
 
-        public DateTime DateTime { get; }
+        public DateTime Date { get; }
 
         public int Status { get; } 
             
         public bool IsOwner { get; }
 
+        public bool IsDateVisible { get; }
+
         #endregion
 
         #region Constructors
 
-        public MessageBinding(string value, DateTime dateTime, MessageStatus status, bool isOwner)
+        public MessageBinding(string value, DateTime date, MessageStatus status, bool isOwner, bool isDateVisible)
         {
             Value = value;
-            DateTime = dateTime;
+            Date = date;
             Status = (int) status;
             IsOwner = isOwner;
+            IsDateVisible = isDateVisible;
         }
 
         #endregion

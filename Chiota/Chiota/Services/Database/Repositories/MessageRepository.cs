@@ -33,7 +33,7 @@ namespace Chiota.Services.Database.Repositories
             try
             {
                 var value = Encrypt(publicKeyAddress);
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + " DESC LIMIT 1;", value).Cast<DbMessage>().ToList();
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + ";", value).Cast<DbMessage>().ToList();
 
                 for (var i = 0; i < query.Count; i++)
                     query[i] = DecryptModel(query[i]);
