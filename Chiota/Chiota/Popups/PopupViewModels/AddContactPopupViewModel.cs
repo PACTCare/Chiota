@@ -179,6 +179,7 @@ namespace Chiota.Popups.PopupViewModels
                                 IsVisible = false;
                                 await PushPopupAsync<LoadingPopupViewModel, LoadingPopupModel>(new LoadingPopupView(), new LoadingPopupModel { Message = AppResources.DlgAddContact });
 
+                                //TODO refactor to background job.
                                 var addContactInteractor = DependencyResolver.Resolve<IUsecaseInteractor<AddContactRequest, AddContactResponse>>();
                                 var response = await addContactInteractor.ExecuteAsync(
                                     new AddContactRequest

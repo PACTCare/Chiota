@@ -127,7 +127,9 @@ namespace Chiota.Services.BackgroundServices
                                     PublicKeyAddress = item.PublicKeyAddress,
                                     ChatKeyAddress = item.ChatKeyAddress,
                                     ChatAddress = item.ChatAddress,
-                                    Accepted = false
+                                    CurrentChatAddress = item.ChatAddress,
+                                    Accepted = false,
+                                    UserId = _user.Id
                                 };
 
                                  _notification.Show(AppResources.NotifyNewContactRequest, item.Name);
@@ -165,6 +167,7 @@ namespace Chiota.Services.BackgroundServices
                                 contact.ContactAddress = item.ContactAddress;
                                 contact.PublicKeyAddress = item.PublicKeyAddress;
                                 contact.Accepted = !item.Rejected;
+                                contact.UserId = _user.Id;
 
                                 _notification.Show(AppResources.NotifyNewContact, contact.Name);
 

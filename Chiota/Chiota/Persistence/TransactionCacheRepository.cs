@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chiota.Base;
 using Chiota.Models.Database;
+using Chiota.Models.Database.Cache;
 using Pact.Palantir.Cache;
 using Tangle.Net.Entity;
 

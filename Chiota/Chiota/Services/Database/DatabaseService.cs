@@ -3,6 +3,7 @@
 using Chiota.Models;
 using Chiota.Services.Database.Base;
 using Chiota.Services.Database.Repositories;
+using Chiota.Services.Database.Repositories.Cache;
 
 #endregion
 
@@ -13,6 +14,8 @@ namespace Chiota.Services.Database
         #region Properties
 
         public TransactionCacheRepository TransactionCache { get; }
+        public ContactCacheRepository ContactCache { get; }
+
         public UserRepository User { get; }
         public ContactRepository Contact { get; }
         public MessageRepository Message { get; }
@@ -27,6 +30,8 @@ namespace Chiota.Services.Database
             var database = sqlite.GetDatabaseConnection();
 
             TransactionCache = new TransactionCacheRepository(database, encryptionKey);
+            ContactCache = new ContactCacheRepository(database, encryptionKey);
+
             User = new UserRepository(database, encryptionKey);
             Contact = new ContactRepository(database, encryptionKey);
             Message = new MessageRepository(database, encryptionKey);

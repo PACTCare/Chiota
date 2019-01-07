@@ -49,6 +49,33 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
+        #region GetMessagesByChatAddress
+
+        /// <summary>
+        /// Get the messages by the chat address.
+        /// </summary>
+        /// <returns>List of the table objects</returns>
+        public List<DbMessage> GetMessagesByChatAddress(string chatAddress, int range, int startIndex = 0)
+        {
+            try
+            {
+                var value = Encrypt(chatAddress);
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + " DESC LIMIT ?;", value, range).Cast<DbMessage>().ToList();
+
+                for (var i = 0; i < query.Count; i++)
+                    query[i] = DecryptModel(query[i]);
+
+                return query;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        #endregion
+
         #region GetLastMessagesByChatAddress
 
         /// <summary>

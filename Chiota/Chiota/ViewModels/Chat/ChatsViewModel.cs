@@ -103,7 +103,7 @@ namespace Chiota.ViewModels.Chat
             base.ViewIsAppearing();
         
             _isUpdating = true;
-            Device.StartTimer(TimeSpan.FromSeconds(5), UpdateView);
+            Device.StartTimer(TimeSpan.FromSeconds(1), UpdateView);
         }
 
         #endregion
@@ -139,6 +139,8 @@ namespace Chiota.ViewModels.Chat
                     var contacts = Database.Contact.GetAcceptedContacts();
                     foreach (var item in contacts)
                     {
+                        if(item.Name == null || item.ChatKeyAddress == null || item.CurrentChatAddress == null || item.ChatAddress == null || item.ContactAddress == null) continue;
+
                         //Get the last message of the contact.
                         var lastMessage = Database.Message.GetLastMessagesByChatAddress(item.ChatAddress);
 
@@ -152,6 +154,16 @@ namespace Chiota.ViewModels.Chat
                     var changed = IsChatListChanged(chats);
                     if (changed)
                         ChatList = chats;
+                    else
+                    {
+                        for (var i = 0; i < ChatList.Count; i++)
+                        {
+                            //Update the last message if changed.
+                            if (ChatList[i].LastMessage == chats[i].LastMessage) continue;
+                            ChatList = chats;
+                            break;
+                        }
+                    }
 
                     //Set flag to show the chats.
                     IsChatExist = chats.Count > 0;

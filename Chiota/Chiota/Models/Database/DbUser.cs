@@ -1,8 +1,10 @@
 ﻿#region References
 
+using System.Collections.Generic;
 using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
 using SQLite;
+using SQLiteNetExtensions.Attributes;
 using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 
 #endregion
@@ -41,6 +43,14 @@ namespace Chiota.Models.Database
         [JsonProperty("encryptionkey")]
         [Ignore]
         public EncryptionKey EncryptionKey { get; set; }
+
+        #endregion
+
+        #region ForeignKeys
+
+        [JsonProperty("contacts")]
+        [OneToMany]
+        public List<DbContact> Contacts { get; set; }
 
         #endregion
     }

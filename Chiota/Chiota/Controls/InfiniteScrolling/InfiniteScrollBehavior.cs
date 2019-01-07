@@ -53,7 +53,7 @@ namespace Chiota.Controls.InfiniteScrolling
 
         #region OnAttachedTo
 
-	    protected override void OnAttachedTo(ListView bindable)
+        protected override void OnAttachedTo(ListView bindable)
 	    {
 	        base.OnAttachedTo(bindable);
 
@@ -158,7 +158,7 @@ namespace Chiota.Controls.InfiniteScrolling
 
         #region OnLoadingMore
 
-	    private void OnLoadingMore(object sender, LoadingMoreEventArgs e)
+        private void OnLoadingMore(object sender, LoadingMoreEventArgs e)
 	    {
 	        UpdateIsLoadingMore(null, e.IsLoadingMore);
 	    }

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 #endregion
 
-namespace Chiota.Models.Database
+namespace Chiota.Models.Database.Cache
 {
     public class DbTransactionCache : BaseModel
     {

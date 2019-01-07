@@ -18,7 +18,7 @@ namespace Chiota.UWP
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<TransactionCacheRepository>().As<ITransactionCache>();
-            builder.RegisterType<ContactRepository>().As<IContactRepository>().PropertiesAutowired();
+            builder.RegisterType<ContactCacheRepository>().As<IContactRepository>().PropertiesAutowired();
         }
     }
 }

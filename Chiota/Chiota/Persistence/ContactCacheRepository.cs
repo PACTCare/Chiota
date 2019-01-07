@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chiota.Base;
 using Chiota.Extensions;
-using Chiota.Models.Database;
+using Chiota.Models.Database.Cache;
 using Chiota.Services.UserServices;
 using Pact.Palantir.Entity;
 using Pact.Palantir.Repository;
@@ -16,11 +16,11 @@ using Tangle.Net.Cryptography.Signing;
 
 namespace Chiota.Persistence
 {
-    public class ContactRepository : AbstractTangleContactRepository
+    public class ContactCacheRepository : AbstractTangleContactRepository
     {
         #region Constructors
 
-        public ContactRepository(IMessenger messenger, ISignatureValidator signatureValidator) : base(messenger, signatureValidator)
+        public ContactCacheRepository(IMessenger messenger, ISignatureValidator signatureValidator) : base(messenger, signatureValidator)
         {
         }
 
@@ -34,17 +34,17 @@ namespace Chiota.Persistence
         {
             await Task.Run(() =>
             {
-                var exist = AppBase.Database.Contact.GetContactByPublicKeyAddress(publicKeyAddress);
+                var exist = AppBase.Database.ContactCache.GetContactCacheByPublicKeyAddress(publicKeyAddress);
                 if(exist != null) return;
 
-                var contact = new DbContact()
+                var contact = new DbContactCache()
                 {
                     ChatAddress = address,
                     PublicKeyAddress = publicKeyAddress,
                     Accepted = accepted
                 };
 
-                AppBase.Database.Contact.AddObject(contact);
+                AppBase.Database.ContactCache.AddObject(contact);
             });
         }
 
@@ -58,7 +58,7 @@ namespace Chiota.Persistence
             {
                 try
                 {
-                    var contacts = AppBase.Database.Contact.GetAcceptedContactsByPublicKeyAddress(publicKeyAddress);
+                    var contacts = AppBase.Database.ContactCache.GetAcceptedContactCachesByPublicKeyAddress(publicKeyAddress);
                     contacts = contacts.DecryptObjectList(UserService.CurrentUser.EncryptionKey);
                     var list = new List<Contact>();
 

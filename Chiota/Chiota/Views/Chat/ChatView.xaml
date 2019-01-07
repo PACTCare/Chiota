@@ -61,46 +61,54 @@
 
     <ContentPage.Content>
         <StackLayout Style="{DynamicResource BaseBackgroundStackLayout}">
-            <!--HeightRequest="{Binding MessageListHeight}"-->
-            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="4">
-                <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" SeparatorVisibility="None" HasUnevenRows="True" CachingStrategy="RecycleElement" Rotation="180">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell IsEnabled="False">
-                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0, 4" Spacing="8" Rotation="180">
-                                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#bdbdbd" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsDateVisible}">
-                                        <StackLayout Padding="8">
-                                            <Label Style="{DynamicResource Label12}" Text="{Binding Date, Converter={StaticResource DateToString}}" TextColor="#424242"/>
-                                        </StackLayout>
-                                    </Frame>
-                                    <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{Binding IsOwner, Converter={StaticResource BoolToColor}}" HorizontalOptions="{Binding IsOwner, Converter={StaticResource BoolToLayoutOptions}}">
-                                        <StackLayout Orientation="Horizontal" Padding="8" Spacing="4">
-                                            <Label Style="{DynamicResource Label14}" Text="{Binding Value}" LineBreakMode="WordWrap" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalOptions="Center"/>
-                                            <Label FontSize="10" TextColor="#757575" Text="{Binding Date, Converter={StaticResource TimeToString}}" VerticalOptions="EndAndExpand"/>
-                                        </StackLayout>
-                                    </Frame>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+            <StackLayout BackgroundColor="{DynamicResource ChatColor}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="4">
+                    <ListView ItemsSource="{Binding MessageList}" SelectionMode="None" SeparatorVisibility="None" HasUnevenRows="True" CachingStrategy="RecycleElement" Rotation="180">
+                        <ListView.Footer>
+                            <StackLayout Rotation="180">
+                                <Label Text="Loading" IsVisible="{Binding IsBusy}"/>
+                            </StackLayout>
+                        </ListView.Footer>
 
-                    <ListView.Behaviors>
-                        <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
-                    </ListView.Behaviors>
-                </ListView>
-            </StackLayout>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell IsEnabled="False">
+                                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="0, 4" Spacing="8" Rotation="180">
+                                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="#e0e0e0" HorizontalOptions="CenterAndExpand" IsVisible="{Binding IsDateVisible}">
+                                            <StackLayout Padding="8">
+                                                <Label Style="{DynamicResource Label12}" Text="{Binding Date, Converter={StaticResource DateToString}}" TextColor="#96000000"/>
+                                            </StackLayout>
+                                        </Frame>
+                                        <Frame Style="{DynamicResource RoundedFrame8}" BackgroundColor="{Binding IsOwner, Converter={StaticResource BoolToColor}}" HorizontalOptions="{Binding IsOwner, Converter={StaticResource BoolToLayoutOptions}}">
+                                            <StackLayout Orientation="Horizontal" Padding="8" Spacing="4">
+                                                <Label Style="{DynamicResource Label14}" Text="{Binding Value}" LineBreakMode="WordWrap" HorizontalTextAlignment="Start" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                                <Label FontSize="10" TextColor="#757575" Text="{Binding Date, Converter={StaticResource TimeToString}}" VerticalOptions="EndAndExpand"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
 
-            <!-- Message -->
-            <StackLayout Orientation="Horizontal" Spacing="4" Padding="4" HorizontalOptions="FillAndExpand" VerticalOptions="End">
-                <Frame Style="{DynamicResource RoundedFrame16}" Padding="8, 0" BackgroundColor="#24000000" HorizontalOptions="FillAndExpand">
-                    <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat"/>
-                </Frame>
-                <Frame Style="{DynamicResource RoundedFrame32}" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="End" HeightRequest="48" WidthRequest="48">
-                    <Image Source="send.png" HeightRequest="20" WidthRequest="20" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ActionCommand}"/>
-                    </Frame.GestureRecognizers>
-                </Frame>
+                        <ListView.Behaviors>
+                            <infiniteScrolling:InfiniteScrollBehavior IsLoadingMore="{Binding IsBusy}"/>
+                        </ListView.Behaviors>
+                    </ListView>
+                </StackLayout>
+
+                <!-- Message -->
+                <StackLayout Orientation="Horizontal" Spacing="4" Padding="4" HorizontalOptions="FillAndExpand" VerticalOptions="End">
+                    <Frame Style="{DynamicResource RoundedFrame16}" Padding="8, 0" BackgroundColor="{DynamicResource ChatMessageColor}" HorizontalOptions="FillAndExpand">
+                        <Entry Style="{DynamicResource MessageEntry}" Placeholder="{extensions:Translate DlgMessage}" Text="{Binding Message}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Chat"/>
+                    </Frame>
+                    <Button Image="send.png" CornerRadius="32" HeightRequest="48" WidthRequest="48" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="End" Command="{Binding ActionCommand}"/>
+                    <!--<Frame Style="{DynamicResource RoundedFrame32}" BackgroundColor="{DynamicResource ButtonColor}" HorizontalOptions="End" HeightRequest="48" WidthRequest="48">
+                        <Image Source="send.png" HeightRequest="20" WidthRequest="20" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ActionCommand}"/>
+                        </Frame.GestureRecognizers>
+                    </Frame>-->
+                </StackLayout>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

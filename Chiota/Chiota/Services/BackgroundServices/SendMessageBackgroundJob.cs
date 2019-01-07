@@ -10,10 +10,8 @@ using Chiota.Services.Iota;
 using Chiota.Services.UserServices;
 using Pact.Palantir.Cache;
 using Pact.Palantir.Encryption;
-using Pact.Palantir.Entity;
 using Pact.Palantir.Service;
 using Pact.Palantir.Usecase;
-using Pact.Palantir.Usecase.GetMessages;
 using Pact.Palantir.Usecase.SendMessage;
 using SQLite;
 using Tangle.Net.Entity;
@@ -29,8 +27,9 @@ namespace Chiota.Services.BackgroundServices
 
         private SQLiteConnection _database;
 
+        private TableMapping _messageTableMapping;
+
         private DbUser _user;
-        private DbMessage _message;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
         private static SendMessageInteractor Interactor => new SendMessageInteractor(Messenger, NtruEncryption.Default, NtruEncryption.Key);
@@ -48,6 +47,8 @@ namespace Chiota.Services.BackgroundServices
             //Init the notification interface.
             _database = DependencyService.Get<ISqlite>().GetDatabaseConnection();
 
+            _messageTableMapping = new TableMapping(typeof(DbMessage));
+
             if (data.Length == 0) return;
 
             foreach (var item in data)
@@ -57,9 +58,6 @@ namespace Chiota.Services.BackgroundServices
                     case DbUser user:
                         _user = user;
                         _user.NtruKeyPair = NtruEncryption.Key.CreateAsymmetricKeyPair(_user.Seed.ToLower(), _user.PublicKeyAddress);
-                        break;
-                    case DbMessage message:
-                        _message = message;
                         break;
                 }
             }
@@ -73,26 +71,37 @@ namespace Chiota.Services.BackgroundServices
         {
             try
             {
-                var response = await Interactor.ExecuteAsync(new SendMessageRequest
+                var messagesToSend = _database.Query(_messageTableMapping, "SELECT * FROM " + _messageTableMapping.TableName + " WHERE " + nameof(DbMessage.Owner) + "=1 AND " + nameof(DbMessage.Status) + "=0;").Cast<DbMessage>().ToList();
+
+                if (messagesToSend.Count == 0) return true;
+
+                foreach (var message in messagesToSend)
                 {
-                    ChatAddress = new Address(_message.ChatAddress),
-                    ChatKeyAddress = new Address(_message.ChatKeyAddress),
-                    UserKeyPair = UserService.CurrentUser.NtruKeyPair,
-                    UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
-                    Message = _message.Value
-                });
+                    DecryptModel(message);
 
-                if (response.Code == ResponseCode.Success)
-                    //Send the message successfully, update the database.
-                    _message.Status = (int) MessageStatus.Send;
-                else
-                    //Send the message successfully, update the database.
-                    _message.Status = (int)MessageStatus.Failed;
+                    var response = await Interactor.ExecuteAsync(new SendMessageRequest
+                    {
+                        ChatAddress = new Address(message.ChatAddress),
+                        ChatKeyAddress = new Address(message.ChatKeyAddress),
+                        UserKeyPair = UserService.CurrentUser.NtruKeyPair,
+                        UserPublicKeyAddress = new Address(UserService.CurrentUser.PublicKeyAddress),
+                        Message = message.Value
+                    });
 
-                EncryptModel(_message);
-                _database.Update(_message);
+                    if (response.Code == ResponseCode.Success)
+                        //Send the message successfully, update the database.
+                        message.Status = (int)MessageStatus.Send;
+                    else
+                        //Send the message successfully, update the database.
+                        message.Status = (int)MessageStatus.Failed;
 
-                return false;
+                    message.Date = DateTime.Now;
+
+                    EncryptModel(message);
+                    _database.Update(message);
+                }
+
+               return true;
             }
             catch (Exception)
             {

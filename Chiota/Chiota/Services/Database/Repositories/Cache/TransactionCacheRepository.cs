@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Chiota.Models;
 using Chiota.Models.Database;
+using Chiota.Models.Database.Cache;
 using Chiota.Services.Database.Base;
 using SQLite;
 
 #endregion
 
-namespace Chiota.Services.Database.Repositories
+namespace Chiota.Services.Database.Repositories.Cache
 {
     public class TransactionCacheRepository : SecureRepository<DbTransactionCache>
     {

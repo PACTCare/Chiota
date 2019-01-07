@@ -19,9 +19,9 @@ namespace Chiota.Converter
                 return null;
 
             if ((bool)value)
-                return Color.FromHex("#80d8ff");
+                return (Color) Application.Current.Resources["OwnerMessageColor"];
 
-            return Color.FromHex("#e0e0e0");
+            return (Color)Application.Current.Resources["OthersMessageColor"];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

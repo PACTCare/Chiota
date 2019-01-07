@@ -23,4 +23,9 @@
     <Color x:Key="SeparatorColor">#16000000</Color>
     <Color x:Key="SeparatorTextColor">#616161</Color>
 
+    <Color x:Key="ChatColor">#1603a9f4</Color>
+    <Color x:Key="ChatMessageColor">#ffffff</Color>
+    <Color x:Key="OwnerMessageColor">#16000000</Color>
+    <Color x:Key="OthersMessageColor">#ffffff</Color>
+
 </ResourceDictionary>

@@ -7,11 +7,8 @@ using System.Windows.Input;
 using Chiota.Controls.InfiniteScrolling;
 using Chiota.Models.Binding;
 using Chiota.Models.Database;
-using Chiota.Services.BackgroundServices;
-using Chiota.Services.BackgroundServices.Base;
 using Chiota.Services.UserServices;
 using Chiota.ViewModels.Base;
-using VTDev.Libraries.CEXEngine.Crypto.Cipher.Asymmetric.Interfaces;
 using Xamarin.Forms;
 
 #endregion
@@ -23,13 +20,14 @@ namespace Chiota.ViewModels.Chat
         #region Attributes
 
         //Max count messages for reloading for the infinitive scroll view. 
-        private const int MessageSize = 32;
+        private const int MessageSize = 16;
 
         private ChatBinding _chatBinding;
         private InfiniteScrollCollection<MessageBinding> _messageList;
+        private bool _scrollToEnd;
 
         private string _message;
-        private int _messageListHeight;
+        private int _messageIndex;
 
         private bool _isLoadingMessages;
 
@@ -67,53 +65,14 @@ namespace Chiota.ViewModels.Chat
             }
         }
 
-        public int MessageListHeight
+        public bool ScrollToEnd
         {
-            get => _messageListHeight;
+            get => _scrollToEnd;
             set
             {
-                _messageListHeight = value;
-                OnPropertyChanged(nameof(MessageListHeight));
+                _scrollToEnd = value;
+                OnPropertyChanged(nameof(ScrollToEnd));
             }
-        }
-
-        #endregion
-
-        #region Constructors
-
-        public ChatViewModel()
-        {
-            _messageList = new InfiniteScrollCollection<MessageBinding>();
-
-            MessageList = new InfiniteScrollCollection<MessageBinding>
-            {
-                OnLoadMore = async () =>
-                {
-                    //IsBusy = true;
-
-                    //Load more messages.
-                    /*var messages = MessageList.Count / MessageSize;
-                    var messageService = DependencyResolver.Resolve<MessageService>();
-                    var items = await messageService.GetMessagesAsync(Contact, _chatKeyPair, messages, MessageSize);*/
-
-                    //IsBusy = false;
-
-                    return null;
-                },
-                OnCanLoadMore = () =>
-                {
-                    var result = false;
-                    /*var task = Task.Run(async () =>
-                    {
-                        var messageService = DependencyResolver.Resolve<MessageService>();
-                        var messagesCount = await messageService.GetMessagesCountAsync(Contact, _chatKeyPair);
-                        result = MessageList.Count < messagesCount;
-                    });
-                    task.Wait();*/
-                    
-                    return result;
-                }
-            };
         }
 
         #endregion
@@ -128,9 +87,12 @@ namespace Chiota.ViewModels.Chat
 
             //Set the contact property.
             ChatBinding = new ChatBinding((DbContact)data);
+            _messageIndex = 0;
 
             //Load the first package of message from the database.
             LoadMessages();
+
+            ScrollToEnd = true;
         }
 
         #endregion
@@ -146,7 +108,7 @@ namespace Chiota.ViewModels.Chat
 
             //Start event for loading messages.
             _isLoadingMessages = true;
-            Device.StartTimer(TimeSpan.FromSeconds(1), LoadMessages);
+            Device.StartTimer(TimeSpan.FromMilliseconds(500), LoadMessages);
             
         }
 
@@ -173,34 +135,62 @@ namespace Chiota.ViewModels.Chat
             {
                 try
                 {
-                    var messages = Database.Message.GetMessagesByChatAddress(_chatBinding.Contact.ChatAddress);
+                    var messages = Database.Message.GetMessagesByChatAddress(_chatBinding.Contact.ChatAddress, (_messageIndex + 1) * MessageSize);
                     var list = new List<MessageBinding>();
-                    var dateCounter = 0;
 
                     foreach (var item in messages)
+                        list.Insert(0, new MessageBinding(item.Value, item.Date, (MessageStatus)item.Status, item.Owner));
+
+                    if (MessageList == null || MessageList.Count != list.Count)
                     {
-                        //Check, if it is necessary to show the date above the message in the ui.
-                        var isSameDate = false;
-
-                        if (list.Count > 0)
-                            isSameDate = list[list.Count - 1].Date.Date == item.Date.Date;
-
-                        if (!isSameDate)
-                            dateCounter++;
-
-                        list.Add(new MessageBinding(item.Value, item.Date, (MessageStatus)item.Status, item.Owner, !isSameDate));
-                    }
-
-                    if (MessageList.Count != list.Count)
-                    {
-                        var newMessages = new List<MessageBinding>();
-                        for (var i = (messages.Count - MessageList.Count) - 1; i >= MessageList.Count; i--)
+                        MessageList = new InfiniteScrollCollection<MessageBinding>
                         {
+                            OnLoadMore = async () =>
+                            {
+                                //IsBusy = true;
+
+                                //Load more messages.
+                                /*var messages = MessageList.Count / MessageSize;
+                                var messageService = DependencyResolver.Resolve<MessageService>();
+                                var items = await messageService.GetMessagesAsync(Contact, _chatKeyPair, messages, MessageSize);*/
+
+                                //IsBusy = false;
+
+                                return null;
+                            },
+                            OnCanLoadMore = () =>
+                            {
+                                var result = false;
+                                /*var task = Task.Run(async () =>
+                                {
+                                    var messageService = DependencyResolver.Resolve<MessageService>();
+                                    var messagesCount = await messageService.GetMessagesCountAsync(Contact, _chatKeyPair);
+                                    result = MessageList.Count < messagesCount;
+                                });
+                                task.Wait();*/
+
+                                return result;
+                            }
+                        };
+
+                        var newMessages = new List<MessageBinding>();
+                        //Check, if it is necessary to show the date above the message in the ui.
+                        for (var i = list.Count - 1; i >= MessageList.Count; i--)
+                        {
+                            if (newMessages.Count > 0)
+                            {
+                                var isLastSameDate = list[i].Date.Date == newMessages[newMessages.Count - 1].Date.Date;
+                                if (!isLastSameDate)
+                                    newMessages[newMessages.Count - 1].IsDateVisible = true;
+
+                                if (i == 0)
+                                    list[i].IsDateVisible = true;
+                            }
+
                             newMessages.Add(list[i]);
                         }
 
                         MessageList.AddRange(newMessages);
-                        //MessageListHeight = MessageList.Count * 43;
                     }
                 }
                 catch (Exception)
@@ -229,17 +219,15 @@ namespace Chiota.ViewModels.Chat
                 var message = new DbMessage()
                 {
                     ChatKeyAddress = ChatBinding.Contact.ChatKeyAddress,
-                    ChatAddress = ChatBinding.Contact.ChatAddress,
+                    ChatAddress = ChatBinding.Contact.CurrentChatAddress,
                     Value = value,
                     Date = DateTime.Now,
                     Status = (int) MessageStatus.Written,
                     Signature = UserService.CurrentUser.PublicKeyAddress.Substring(0, 30),
-                    Owner = true
+                    Owner = true,
+                    ContactId = ChatBinding.Contact.Id
                 };
-                message = Database.Message.AddObject(message);
-
-                //Start a new background job to send a message. 
-                DependencyService.Get<IBackgroundJobWorker>().Run<SendMessageBackgroundJob>(UserService.CurrentUser, message);
+                Database.Message.AddObject(message);
             }
             catch (Exception)
             {
@@ -281,6 +269,7 @@ namespace Chiota.ViewModels.Chat
 
                     //Send new message;
                     SendMessage(Message);
+                    Message = string.Empty;
                 });
             }
         }

@@ -89,6 +89,7 @@ namespace Chiota.Base
                 //to update the user outside of the app.
                 DependencyService.Get<IBackgroundJobWorker>().Run<ContactRequestBackgroundJob>(UserService.CurrentUser);
                 DependencyService.Get<IBackgroundJobWorker>().Run<ReceiveMessageBackgroundJob>(UserService.CurrentUser);
+                DependencyService.Get<IBackgroundJobWorker>().Run<SendMessageBackgroundJob>(UserService.CurrentUser);
             }
             catch (Exception ex)
             {

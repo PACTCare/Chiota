@@ -1,7 +1,9 @@
 ﻿#region References
 
+using System.Collections.Generic;
 using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
+using SQLiteNetExtensions.Attributes;
 
 #endregion
 
@@ -26,6 +28,9 @@ namespace Chiota.Models.Database
         [JsonProperty("chataddress")]
         public string ChatAddress { get; set; }
 
+        [JsonProperty("currentchataddress")]
+        public string CurrentChatAddress { get; set; }
+
         [JsonProperty("contactaddress")]
         public string ContactAddress { get; set; }
 
@@ -34,6 +39,17 @@ namespace Chiota.Models.Database
 
         [JsonProperty("accepted")]
         public bool Accepted { get; set; }
+
+        #endregion
+
+        #region ForeignKeys
+
+        [ForeignKey(typeof(DbUser))]
+        public int UserId { get; set; }
+
+        [JsonProperty("messages")]
+        [OneToMany]
+        public List<DbMessage> Messages { get; set; }
 
         #endregion
     }

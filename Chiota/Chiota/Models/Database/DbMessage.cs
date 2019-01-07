@@ -3,6 +3,7 @@
 using System;
 using Chiota.Models.Database.Base;
 using Newtonsoft.Json;
+using SQLiteNetExtensions.Attributes;
 
 #endregion
 
@@ -32,6 +33,13 @@ namespace Chiota.Models.Database
 
         [JsonProperty("owner")]
         public bool Owner { get; set; }
+
+        #endregion
+
+        #region ForeignKeys
+
+        [ForeignKey(typeof(DbContact))]
+        public int ContactId { get; set; }
 
         #endregion
     }

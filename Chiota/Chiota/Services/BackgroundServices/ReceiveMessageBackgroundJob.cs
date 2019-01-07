@@ -98,7 +98,7 @@ namespace Chiota.Services.BackgroundServices
                 var response = await Interactor.ExecuteAsync(
                     new GetMessagesRequest
                     {
-                        ChatAddress = new Address(contact.ChatAddress),
+                        ChatAddress = new Address(contact.CurrentChatAddress),
                         ChatKeyAddress = new Address(contact.ChatKeyAddress),
                         UserKeyPair = _user.NtruKeyPair
                     });
@@ -109,7 +109,7 @@ namespace Chiota.Services.BackgroundServices
                     if (messagesCount.Count >= response.Messages.Count) return true;
 
                     //First update the new chat address.
-                    contact.ChatAddress = response.CurrentChatAddress.Value;
+                    contact.CurrentChatAddress = response.CurrentChatAddress.Value;
                     EncryptModel(contact);
                     _database.Update(contact);
 
@@ -128,10 +128,13 @@ namespace Chiota.Services.BackgroundServices
                         var message = new DbMessage()
                         {
                             ChatAddress = response.CurrentChatAddress.Value,
+                            ChatKeyAddress = contact.ChatKeyAddress,
                             Value = item.Message,
                             Date = item.Date,
+                            Status = (int)MessageStatus.Received,
                             Signature = item.Signature,
-                            Owner = owner
+                            Owner = owner,
+                            ContactId = contact.Id
                         };
 
                         //Show a notification, if the user is not the sender.
