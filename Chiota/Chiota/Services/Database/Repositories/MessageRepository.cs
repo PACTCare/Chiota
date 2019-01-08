@@ -22,45 +22,17 @@ namespace Chiota.Services.Database.Repositories
 
         #endregion
 
-        #region GetMessagesByChatAddress
+        #region GetMessagesByContact
 
         /// <summary>
-        /// Get the messages by the chat address.
+        /// Get the messages by the contact.
         /// </summary>
         /// <returns>List of the table objects</returns>
-        public List<DbMessage> GetMessagesByChatAddress(string publicKeyAddress)
+        public List<DbMessage> GetMessagesByContact(int id, int range, int startIndex = 1)
         {
             try
             {
-                var value = Encrypt(publicKeyAddress);
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + ";", value).Cast<DbMessage>().ToList();
-
-                for (var i = 0; i < query.Count; i++)
-                    query[i] = DecryptModel(query[i]);
-
-                return query;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region GetMessagesByChatAddress
-
-        /// <summary>
-        /// Get the messages by the chat address.
-        /// </summary>
-        /// <returns>List of the table objects</returns>
-        public List<DbMessage> GetMessagesByChatAddress(string chatAddress, int range, int startIndex = 0)
-        {
-            try
-            {
-                var value = Encrypt(chatAddress);
-                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=? ORDER BY " + nameof(DbMessage.Id) + " DESC LIMIT ?;", value, range).Cast<DbMessage>().ToList();
+                var query = Database.Query(TableMapping, "SELECT * FROM " + TableMapping.TableName + " WHERE " + nameof(DbMessage.Id) + ">=? AND " + nameof(DbMessage.ContactId) + "=? ORDER BY " + nameof(DbMessage.Id) + " DESC LIMIT ?;", startIndex, id, range).Cast<DbMessage>().ToList();
 
                 for (var i = 0; i < query.Count; i++)
                     query[i] = DecryptModel(query[i]);

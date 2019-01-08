@@ -135,7 +135,7 @@ namespace Chiota.ViewModels.Chat
             {
                 try
                 {
-                    var messages = Database.Message.GetMessagesByChatAddress(_chatBinding.Contact.ChatAddress, (_messageIndex + 1) * MessageSize);
+                    var messages = Database.Message.GetMessagesByContact(_chatBinding.Contact.Id, (_messageIndex + 1) * MessageSize);
                     var list = new List<MessageBinding>();
 
                     foreach (var item in messages)

@@ -105,15 +105,17 @@ namespace Chiota.Services.BackgroundServices
 
                 if (response.Code == ResponseCode.Success)
                 {
-                    var messagesCount = _database.Query(_messageTableMapping, "SELECT * FROM " + _messageTableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", Encrypt(response.CurrentChatAddress.Value)).Cast<DbMessage>().ToList();
-                    if (messagesCount.Count >= response.Messages.Count) return true;
-
                     //First update the new chat address.
-                    contact.CurrentChatAddress = response.CurrentChatAddress.Value;
-                    EncryptModel(contact);
-                    _database.Update(contact);
+                    if (response.CurrentChatAddress.Value != contact.CurrentChatAddress)
+                    {
+                        contact.CurrentChatAddress = response.CurrentChatAddress.Value;
+                        EncryptModel(contact);
+                        _database.Update(contact);
+                        DecryptModel(contact);
+                    }
 
-                    DecryptModel(contact);
+                    var messagesCount = _database.Query(_messageTableMapping, "SELECT * FROM " + _messageTableMapping.TableName + " WHERE " + nameof(DbMessage.ChatAddress) + "=?;", Encrypt(contact.CurrentChatAddress)).Cast<DbMessage>().ToList();
+                    if ((messagesCount.Count == 0 && response.Messages.Count == 6) || messagesCount.Count >= response.Messages.Count) return true;
 
                     //Insert the new messages into the database.
                     var newMessages = response.Messages.GetRange(messagesCount.Count, response.Messages.Count - messagesCount.Count);
