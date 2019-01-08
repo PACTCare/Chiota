@@ -124,13 +124,15 @@ namespace Chiota.Services.BackgroundServices
 
                         var owner = item.Signature != contact.PublicKeyAddress.Substring(0, 30);
 
+                        var localDate = TimeZoneInfo.ConvertTime(item.Date, TimeZoneInfo.Local);
+
                         //Add the new message to the database and show a notification.
                         var message = new DbMessage()
                         {
                             ChatAddress = response.CurrentChatAddress.Value,
                             ChatKeyAddress = contact.ChatKeyAddress,
                             Value = item.Message,
-                            Date = item.Date,
+                            Date = localDate,
                             Status = (int)MessageStatus.Received,
                             Signature = item.Signature,
                             Owner = owner,

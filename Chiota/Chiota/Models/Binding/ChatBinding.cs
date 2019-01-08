@@ -33,8 +33,8 @@ namespace Chiota.Models.Binding
 
             if (!string.IsNullOrEmpty(contact.ImageBase64))
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(contact.ImageBase64)));
-            else if (!string.IsNullOrEmpty(contact.ImagePath))
-                ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;
+            /*else if (!string.IsNullOrEmpty(contact.ImagePath))
+                ImageSource = ChiotaConstants.IpfsHashGateway + contact.ImagePath;*/
             else
                 ImageSource = null;
         }

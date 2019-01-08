@@ -76,8 +76,8 @@ namespace Chiota.ViewModels.Contact
 
             if (!string.IsNullOrEmpty(_contact.ImageBase64))
                 ImageSource = ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(_contact.ImageBase64)));
-            else if (!string.IsNullOrEmpty(_contact.ImagePath))
-                ImageSource = ChiotaConstants.IpfsHashGateway + _contact.ImagePath;
+            /*else if (!string.IsNullOrEmpty(_contact.ImagePath))
+                ImageSource = ChiotaConstants.IpfsHashGateway + _contact.ImagePath;*/
             else
                 ImageSource = null;
         }

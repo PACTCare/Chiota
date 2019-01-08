@@ -114,8 +114,8 @@ namespace Chiota.Services.BackgroundServices
                             {
                                 //If there is a image path for ipfs load the image and save it as base64 in the database for fast loading.
                                 string imageBase64 = null;
-                                if (!string.IsNullOrEmpty(item.ImagePath))
-                                    imageBase64 = await new IpfsHelper().GetStringAsync(item.ImagePath);
+                                //if (!string.IsNullOrEmpty(item.ImagePath))
+                                    //imageBase64 = await new IpfsHelper().GetStringAsync(item.ImagePath);
 
                                 //Add the new contact request to the database and show a notification.
                                 var request = new DbContact()
