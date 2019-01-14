@@ -32,7 +32,9 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class ContactRequestBackgroundJob : BaseSecurityBackgroundJob
+  using Chiota.Persistence;
+
+  public class ContactRequestBackgroundJob : BaseSecurityBackgroundJob
     {
         #region Attributes
 
@@ -44,7 +46,7 @@ namespace Chiota.Services.BackgroundServices
         private DbUser _user;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
-        private static IContactRepository ContactRepository => new MemoryContactRepository(Messenger, new SignatureValidator());
+        private static IContactRepository ContactRepository => new ContactCacheRepository(Messenger, new SignatureValidator());
         private static GetContactsInteractor Interactor => new GetContactsInteractor(ContactRepository, Messenger, NtruEncryption.Key);
 
         #endregion
@@ -144,7 +146,6 @@ namespace Chiota.Services.BackgroundServices
                     //Update the contacts of the user.
                     await Task.Run(() =>
                     {
-                        //This shoud normally Accepted, not pending BUG in Palantir
                         if (response.ApprovedContacts == null ||
                             response.ApprovedContacts.Count == 0) return;
 

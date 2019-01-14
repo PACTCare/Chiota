@@ -26,7 +26,9 @@ using Xamarin.Forms;
 
 namespace Chiota.Services.BackgroundServices
 {
-    public class AnswerContactRequestBackgroundJob : BaseSecurityBackgroundJob
+  using Chiota.Persistence;
+
+  public class AnswerContactRequestBackgroundJob : BaseSecurityBackgroundJob
     {
         #region Attributes
 
@@ -40,7 +42,7 @@ namespace Chiota.Services.BackgroundServices
         private bool _isAccepted;
 
         private static IMessenger Messenger => new TangleMessenger(new RepositoryFactory().Create(), new MemoryTransactionCache());
-        private static IContactRepository ContactRepository => new MemoryContactRepository(Messenger, new SignatureValidator());
+        private static IContactRepository ContactRepository => new ContactCacheRepository(Messenger, new SignatureValidator());
         private static AcceptContactInteractor AcceptInteractor => new AcceptContactInteractor(ContactRepository, Messenger, NtruEncryption.Key);
         private static DeclineContactInteractor DeclineInteractor => new DeclineContactInteractor(ContactRepository);
 
